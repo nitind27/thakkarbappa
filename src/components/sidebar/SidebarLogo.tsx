@@ -63,14 +63,14 @@ const SidebarLogo = (props: PropsType) => {
         //   width={250}
         //   height={80}
         //   alt="Logo1"
-        //   src="/media/images/truck-logo.png"
+        //   src="/media/logos/logos.png"
         //   className="app-sidebar-logo-default"
         // />
         <Image
         width={100}
         height={10}
         alt="Logo1"
-        src="/media/images/truck-logo.png"
+        src="/media/logos/logos.png"
         className="app-sidebar-logo-default img-fluid"
       />
         ) : (
@@ -79,14 +79,14 @@ const SidebarLogo = (props: PropsType) => {
               width={200}
               height={200}
               alt="Logo"
-              src={"/media/images/truck-logo.png"}
+              src={"/media/logos/logos.png"}
               className="h-25px app-sidebar-logo-default theme-light-show"
             />
             <Image
               width={200}
               height={200}
               alt="Logo"
-              src={"/media/images/truck-logo.png"}
+              src={"/media/logos/logos.png"}
               className="h-25px app-sidebar-logo-default theme-dark-show"
             />
           </>
@@ -96,7 +96,7 @@ const SidebarLogo = (props: PropsType) => {
           width={80}
           height={100}
           alt=""
-          src={"/media/images/truck-logo.png"}
+          src={"/media/logos/logos.png"}
           className="app-sidebar-logo-minimize"
         />
       </Link>

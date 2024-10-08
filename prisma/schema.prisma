@@ -12,7 +12,7 @@ model clusterdata {
   cluster_name  String  @db.VarChar(255) @map("cluster_name")
   status String @db.VarChar(255) @map("status")
   ins_date_time    DateTime @default(now()) @map("ins_date_time") // Insert date and time
-  verify_date_time    DateTime @default(now()) @map("verify_date_time") // Insert date and time
+  update_date_time    DateTime @default(now()) @map("update_date_time") // Insert date and time
 
   @@map("tbl_cluster") 
 }
