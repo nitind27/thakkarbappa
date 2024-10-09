@@ -1,206 +1,180 @@
 "use client";
 import React, { useState } from "react";
-import {
-    useReactTable,
-    getCoreRowModel,
-    getPaginationRowModel,
-    flexRender,
-} from "@tanstack/react-table";
-import { Button, Form, Modal } from "react-bootstrap";
+import Table from "../table/Table"; // Adjust path as necessary
+import { clusterdata } from "../type";
+import { formatDate } from "@/lib/utils";
+import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
-import { useRouter } from "next/navigation";
+import CustomModal from "@/common/CustomModal";
 
-export default function Clusteradd({ data, columns }: any) {
-    const router = useRouter();
-    const [searchQuery, setSearchQuery] = useState("");
-    const [filterStatus, setFilterStatus] = useState("");
-    const [showQrModal, setShowQrModal] = useState(false);
-    const [showPrintModal, setShowPrintModal] = useState(false);
-    const [imageCount, setImageCount] = useState<number>(0);
-    const [error, setError] = useState<string>("");
+type Props = {
+  clusterdata: clusterdata[];
+};
 
-    const handleShowQr = () => setShowQrModal(true);
-    const handleCloseQr = () => setShowQrModal(false);
+const Clusteradd = ({ clusterdata }: Props) => {
+  const [showPrintModal, setShowPrintModal] = useState(false);
+  const [clusterName, setClusterName] = useState("");
+  const [error, setError] = useState<string>("");
+  const [updateClusterId, setUpdateClusterId] = useState<number | null>(null); // State for editing
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = Number(event.target.value);
-        setImageCount(value);
-        if (value < 1) {
-            setError("Please enter a number greater than or equal to 1.");
-        } else {
-            setError("");
-        }
-    };
+  const data = clusterdata.map((cluster) => ({
+    cluster_id: cluster.cluster_id,
+    cluster_name: cluster.cluster_name,
+    status: cluster.status,
+    ins_date_time:
+      typeof cluster.ins_date_time === "string"
+        ? formatDate(cluster.ins_date_time)
+        : formatDate(cluster.ins_date_time.toISOString()),
+  }));
 
-    const handleShowPrint = () => setShowPrintModal(true);
-    const handleClosePrint = () => {
-        setShowPrintModal(false);
-        setImageCount(0);
-        setError("");
-    };
+  const columns = [
+    {
+      accessorKey: "cluster_id",
+      header: "ID",
+    },
+    {
+      accessorKey: "cluster_name",
+      header: "Cluster Name",
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+    },
+    {
+      accessorKey: "ins_date_time",
+      header: "Add Time",
+    },
 
-    const handleSubmit = (event: React.FormEvent) => {
-        event.preventDefault();
-
-        if (imageCount < 1) {
-            setError("Please enter a valid number greater than or equal to 1.");
-            return;
-        }
-
-
-        router.push(`/printcards/${imageCount}`);
-        handleClosePrint();
-    };
-
-    const filteredData = React.useMemo(() => {
-        return data.filter((row: any) => {
-            const matchesSearch = Object.values(row).some((value) =>
-                String(value).toLowerCase().includes(searchQuery.toLowerCase())
-            );
-
-            const matchesStatus =
-                filterStatus === "" || row.status === filterStatus;
-
-            return matchesSearch && matchesStatus;
-        });
-    }, [data, searchQuery, filterStatus]);
-
-    const table = useReactTable({
-        data: filteredData,
-        columns,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-    });
-
-    const currentPage = table.getState().pagination.pageIndex + 1;
-    const pageCount = table.getPageCount();
-
-    const renderPagination = () => {
-        return (
-            <div className="pagination d-flex align-items-center">
-                <button
-                    className="btn btn-outline-dark mx-1 btn-sm"
-                    onClick={() => table.setPageIndex(currentPage - 2)}
-                    disabled={currentPage === 1}
-                >
-                    Previous
-                </button>
-                <span className="btn btn-primary mx-1 btn-sm">
-                    {currentPage}
-                </span>
-                <button
-                    className="btn btn-outline-dark mx-1 btn-sm"
-                    onClick={() => table.setPageIndex(currentPage)}
-                    disabled={currentPage === pageCount || pageCount === 0}
-                >
-                    Next
-                </button>
-            </div>
-        );
-    };
-
-    return (
-        <div className="container mt-5 card card-body p-5">
-            {/* <h2 className="text-center">User Status</h2> */}
-            <div className="row mb-3 align-items-center">
-                <div className="col-auto">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Search..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                </div>
-                <div className="col-auto">
-                    <select
-                        className="form-select"
-                        value={filterStatus}
-                        onChange={(e) => setFilterStatus(e.target.value)}
-                    >
-                        <option value="">All Status</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Approved">Approved</option>
-                        {/* Add more options as needed */}
-                    </select>
-                </div>
-                <div className="col-auto ms-auto"> {/* Add 'ms-auto' to push the button to the left */}
-                    <Button
-                        variant="primary"
-                        onClick={handleShowPrint}
-                        className="btn"
-                        style={{ minWidth: '120px' }}
-                    >
-                        <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
-                        Generate QR
-                    </Button>
-                </div>
-            </div>
-            <div className="table-responsive">
-                <table className="table table-striped table-bordered table-hover">
-                    <thead className="thead-dark">
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <tr key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => (
-                                    <th key={header.id} className="text-start">
-                                        {flexRender(
-                                            header.column.columnDef.header,
-                                            header.getContext()
-                                        )}
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody>
-                        {table.getRowModel().rows.map((row) => (
-                            <tr key={row.id} className="text-start p-2">
-                                {row.getVisibleCells().map((cell) => (
-                                    <td key={cell.id} className="text-start p-2">
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            <div className="d-flex justify-content-between align-items-center mt-3">
-                <span>
-                    Page {currentPage} of {pageCount}
-                </span>
-                {renderPagination()}
-            </div>
-
-            {/* Modal for Print */}
-            <Modal show={showPrintModal} onHide={handleClosePrint}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Generate Print Images</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form onSubmit={handleSubmit}>
-                        <Form.Group controlId="imageCount">
-                            <Form.Label>Enter Number of Images:</Form.Label>
-                            <Form.Control
-                                type="number"
-                                value={imageCount}
-                                onChange={handleInputChange}
-                                placeholder="Enter a number"
-                                min={1}
-                                isInvalid={!!error}
-                            />
-                            {error && (
-                                <div style={{ color: "red", marginTop: "0.25rem" }}>
-                                    {error}
-                                </div>
-                            )}
-                        </Form.Group>
-                        <Button variant="primary" type="submit" className="mt-5">
-                            Submit
-                        </Button>
-                    </Form>
-                </Modal.Body>
-            </Modal>
+    {
+      accessorKey: "actions",
+      header: "Actions",
+      cell: ({ row }: any) => (
+        <div>
+          <span onClick={() => handleEdit(row.original)}>
+            <KTIcon iconName="notepad-edit" className="fs-1" />
+          </span>
+          <span onClick={() => handleDelete(row.original.cluster_id)}>
+            <KTIcon iconName="trash" />
+          </span>
         </div>
-    );
-}
+      ),
+    },
+  ];
+
+  const handleDelete = async (clusterId: number) => {
+    try {
+      const response = await fetch(`/api/clustersapi/clusters/${clusterId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 204) {
+        alert("Cluster deleted successfully!");
+        // Optionally refresh or update state here
+      } else {
+        alert("Failed to delete the cluster.");
+      }
+    } catch (error) {
+      console.error("Error deleting the cluster:", error);
+      alert("An unexpected error occurred.");
+    }
+  };
+
+  // Handle opening and closing modal
+  const handleShowPrint = () => setShowPrintModal(true);
+
+  const handleClosePrint = () => {
+    setShowPrintModal(false);
+    setClusterName("");
+    setError("");
+    setUpdateClusterId(null); // Reset update ID when closing
+  };
+
+  // Handle submitting new or updated cluster name
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!clusterName) {
+      setError("Cluster name is required.");
+      return;
+    }
+
+    try {
+      const method = updateClusterId ? "PUT" : "POST"; // Determine method based on update or insert
+      const url = updateClusterId
+        ? `/api/clustersapi/update/updateCluster`
+        : `/api/clustersapi/insert/clusters`;
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cluster_name: clusterName,
+          ...(updateClusterId && { cluster_id: updateClusterId }), // Include ID if updating
+        }),
+      });
+
+      if (response.ok) {
+        alert(
+          `Cluster ${updateClusterId ? "updated" : "inserted"} successfully!`
+        );
+        handleClosePrint();
+        // Optionally refresh the table data here
+      } else {
+        alert(`Failed to ${updateClusterId ? "update" : "insert"} cluster.`);
+      }
+    } catch (error) {
+      console.error("Error during operation:", error);
+      alert("An unexpected error occurred.");
+    }
+  };
+
+  // Handle editing a cluster
+  const handleEdit = (cluster: any) => {
+    setUpdateClusterId(cluster.cluster_id); // Set ID for updating
+    setClusterName(cluster.cluster_name); // Set current name for editing
+    handleShowPrint(); // Open modal for editing
+  };
+
+  return (
+    <div>
+      <Table
+        data={data}
+        columns={columns}
+        Button={
+          <Button
+            variant="primary"
+            onClick={handleShowPrint}
+            className="btn"
+            style={{ minWidth: "120px" }}
+          >
+            <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
+            Add Cluster
+          </Button>
+        }
+      />
+
+      {/* Use CustomModal for adding/updating a cluster */}
+      <CustomModal
+        show={showPrintModal}
+        handleClose={handleClosePrint}
+        handleSubmit={handleSubmit}
+        title={updateClusterId ? "Update Cluster Name" : "Insert Cluster Name"}
+        formData={{
+          label: "Enter Cluster Name:",
+          value: clusterName,
+          placeholder: "Enter cluster name",
+          error: error,
+          onChange: (e) => setClusterName(e.target.value),
+        }}
+        submitButtonLabel="Submit"
+      />
+    </div>
+  );
+};
+
+export default Clusteradd;

@@ -23,6 +23,7 @@ const nextConfig = {
     i18n: {
         locales: ['en', 'hi', 'mr'], // Supported languages
         defaultLocale: 'en', // Default language
+        localeDetection: false,
     },
 };
 

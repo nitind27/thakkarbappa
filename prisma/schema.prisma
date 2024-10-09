@@ -7,13 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model clusterdata {
-  cluster_id        Int    @id @default(autoincrement()) @map("cluster_id")
-  cluster_name  String  @db.VarChar(255) @map("cluster_name")
-  status String @db.VarChar(255) @map("status")
-  ins_date_time    DateTime @default(now()) @map("ins_date_time") // Insert date and time
-  update_date_time    DateTime @default(now()) @map("update_date_time") // Insert date and time
+model ClusterData {
+  cluster_id        Int       @id @default(autoincrement()) @map("cluster_id")
+  cluster_name      String    @db.VarChar(255) @map("cluster_name")
+  status            String    @db.VarChar(255) @map("status")
+  ins_date_time     DateTime  @default(now()) @map("ins_date_time") // Automatically set insertion date
+  update_date_time  DateTime? @map("update_date_time")              // Nullable DateTime, typically for updates
 
-  @@map("tbl_cluster") 
+  @@map("tbl_cluster") // Map the model to the "tbl_cluster" table in your database
 }
-
