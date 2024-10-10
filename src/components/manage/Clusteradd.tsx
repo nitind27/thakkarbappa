@@ -1,11 +1,13 @@
 "use client";
 import React, { useState } from "react";
+
 import Table from "../table/Table"; // Adjust path as necessary
 import { clusterdata } from "../type";
 import { formatDate } from "@/lib/utils";
 import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
+import { toast } from "react-toastify";
 
 type Props = {
   clusterdata: clusterdata[];
@@ -44,41 +46,50 @@ const Clusteradd = ({ clusterdata }: Props) => {
       accessorKey: "ins_date_time",
       header: "Add Time",
     },
-
     {
       accessorKey: "actions",
       header: "Actions",
       cell: ({ row }: any) => (
         <div>
-          <span onClick={() => handleEdit(row.original)}>
-            <KTIcon iconName="notepad-edit" className="fs-1" />
-          </span>
-          <span onClick={() => handleDelete(row.original.cluster_id)}>
-            <KTIcon iconName="trash" />
-          </span>
+          <button className="btn btn-sm btn-primary" onClick={() => handleEdit(row.original)}>Edit</button>
+          <button
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"} ms-5`}
+            onClick={() => handleDeactivate(row.original.cluster_id, row.original.status)}
+          >
+            {row.original.status === "Active" ? "Deactivate" : "Activate"}
+          </button>
         </div>
       ),
     },
   ];
 
-  const handleDelete = async (clusterId: number) => {
-    try {
-      const response = await fetch(`/api/clustersapi/clusters/${clusterId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+  const handleDeactivate = async (clusterId: any, currentStatus: any) => {
+    const confirmMessage = currentStatus === "Active"
+      ? "Are you sure you want to deactivate this cluster?"
+      : "Are you sure you want to activate this cluster?";
 
-      if (response.status === 204) {
-        alert("Cluster deleted successfully!");
-        // Optionally refresh or update state here
-      } else {
-        alert("Failed to delete the cluster.");
+    if (window.confirm(confirmMessage)) {
+      try {
+        const response = await fetch(`/api/clustersapi/clusters/${clusterId}`, {
+          method: "PATCH", // Use PATCH for updating status
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: currentStatus === "Active" ? "Deactive" : "Active", // Toggle status
+          }),
+        });
+
+        if (response.ok) {
+          toast.success(`Cluster ${currentStatus === "Active" ? "deactivated" : "activated"} successfully!`);
+          // Optionally refresh or update state here
+        } else {
+          toast.error("Failed to change the cluster status.");
+        }
+      } catch (error) {
+        console.error("Error changing the cluster status:", error);
+        toast.error("An unexpected error occurred.");
       }
-    } catch (error) {
-      console.error("Error deleting the cluster:", error);
-      alert("An unexpected error occurred.");
     }
   };
 
@@ -119,17 +130,15 @@ const Clusteradd = ({ clusterdata }: Props) => {
       });
 
       if (response.ok) {
-        alert(
-          `Cluster ${updateClusterId ? "updated" : "inserted"} successfully!`
-        );
+        toast.success(`Cluster ${updateClusterId ? "updated" : "inserted"} successfully!`);
         handleClosePrint();
         // Optionally refresh the table data here
       } else {
-        alert(`Failed to ${updateClusterId ? "update" : "insert"} cluster.`);
+        toast.error(`Failed to ${updateClusterId ? "update" : "insert"} cluster.`);
       }
     } catch (error) {
       console.error("Error during operation:", error);
-      alert("An unexpected error occurred.");
+      toast.error("An unexpected error occurred.");
     }
   };
 
@@ -165,14 +174,21 @@ const Clusteradd = ({ clusterdata }: Props) => {
         handleSubmit={handleSubmit}
         title={updateClusterId ? "Update Cluster Name" : "Insert Cluster Name"}
         formData={{
-          label: "Enter Cluster Name:",
-          value: clusterName,
-          placeholder: "Enter cluster name",
-          error: error,
-          onChange: (e) => setClusterName(e.target.value),
+          fields: [
+            {
+              label: "Enter Cluster Name:",
+              value: clusterName,
+              placeholder: "Enter Cluster name",
+              error,
+              onChange: (e) => setClusterName(e.target.value),
+            },
+          ],
+          error,
         }}
         submitButtonLabel="Submit"
       />
+
+
     </div>
   );
 };

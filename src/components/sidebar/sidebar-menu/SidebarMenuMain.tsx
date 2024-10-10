@@ -14,13 +14,13 @@ const SidebarMenuMain = () => {
         title="Dashboard"
         fontIcon="bi-app-indicator"
       />
-      <SidebarMenuItem
+      {/* <SidebarMenuItem
         to="/manage"
         icon="calendar"
         title="Manage"
         fontIcon="calendar"
 
-      />
+      /> */}
 
 
       <SidebarMenuItemWithSub
@@ -29,10 +29,10 @@ const SidebarMenuMain = () => {
         fontIcon='bi-chat-left'
         icon='message-text-2'
       >
-        <SidebarMenuItem to='/apps/chat/private-chat' title='Cluster' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/group-chat' title='Town' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/drawer-chat' title='Gram Panchayat' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/drawer-chat' title='mahsul gaav' hasBullet={true} />
+        <SidebarMenuItem to='/manage/cluster' title='Cluster' hasBullet={true} />
+        <SidebarMenuItem to='/manage/town' title='Town' hasBullet={true} />
+        <SidebarMenuItem to='/manage/grampanchayat' title='Gram Panchayat' hasBullet={true} />
+        <SidebarMenuItem to='/manage/mahsulgaav' title='mahsul gaav' hasBullet={true} />
         <SidebarMenuItem to='/apps/chat/drawer-chat' title='school' hasBullet={true} />
         <SidebarMenuItem to='/apps/chat/drawer-chat' title='student' hasBullet={true} />
         <SidebarMenuItem to='/apps/chat/drawer-chat' title='suvidha' hasBullet={true} />

@@ -1,17 +1,22 @@
 import React from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
+type FormField = {
+  label: string;
+  value: string | number; // Allow number for population and ID
+  placeholder: string;
+  error?: string; // Optional error message
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
 type CustomModalProps = {
   show: boolean;
   handleClose: () => void;
   handleSubmit: (event: React.FormEvent) => void;
   title: string;
   formData: {
-    label: string;
-    value: string;
-    placeholder: string;
-    error: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    fields: FormField[]; // Array of form fields
+    error?: string; // Optional error for the entire form
   };
   submitButtonLabel?: string;
 };
@@ -31,22 +36,29 @@ const CustomModal: React.FC<CustomModalProps> = ({
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formField">
-            <Form.Label>{formData.label}</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.value}
-              onChange={formData.onChange}
-              placeholder={formData.placeholder}
-              isInvalid={!!formData.error}
-            />
-            {formData.error && (
-              <div style={{ color: "red", marginTop: "0.25rem" }}>
-                {formData.error}
-              </div>
-            )}
-          </Form.Group>
-          <Button variant="primary" type="submit" className="mt-5">
+          {formData.fields.map((field, index) => (
+            <Form.Group controlId={`formField${index}`} key={index}>
+              <Form.Label>{field.label}</Form.Label>
+              <Form.Control
+                type="text"
+                value={field.value}
+                onChange={field.onChange}
+                placeholder={field.placeholder}
+                isInvalid={!!field.error}
+              />
+              {field.error && (
+                <div style={{ color: "red", marginTop: "0.25rem" }}>
+                  {field.error}
+                </div>
+              )}
+            </Form.Group>
+          ))}
+          {formData.error && (
+            <div style={{ color: "red", marginTop: "0.25rem" }}>
+              {formData.error}
+            </div>
+          )}
+          <Button variant="primary" type="submit" className="mt-3">
             {submitButtonLabel}
           </Button>
         </Form>

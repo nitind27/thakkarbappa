@@ -12,7 +12,43 @@ model ClusterData {
   cluster_name      String    @db.VarChar(255) @map("cluster_name")
   status            String    @db.VarChar(255) @map("status")
   ins_date_time     DateTime  @default(now()) @map("ins_date_time") // Automatically set insertion date
-  update_date_time  DateTime? @map("update_date_time")              // Nullable DateTime, typically for updates
+  update_date_time  DateTime? @map("update_date_time")              // Nullable DateTime
 
   @@map("tbl_cluster") // Map the model to the "tbl_cluster" table in your database
+}
+
+model TalukasData {
+  id           BigInt    @id @map("id") @default(autoincrement())
+  name         String    @db.VarChar(255) @map("name")
+  name_marathi String     @db.VarChar(20) @map("name_marathi")
+  status       String    @db.VarChar(10) @default("Active") @map("status")
+
+  @@map("talukas") // Map the model to the "talukas" table in your database
+}
+
+model Grampanchayat {
+  id           Int       @id @default(autoincrement()) @map("id")
+  name         String    @db.VarChar(100) @map("name")
+  name_marathi String    @db.VarChar(100) @map("name_marathi")
+  taluka_id    Int       @map("taluka_id")
+  population   Int       @map("population")
+  status       String    @db.VarChar(10) @default("Active") @map("status")
+
+  @@map("tbl_gp") // Map the model to the "tbl_gp" table in your database
+}
+
+model Villages {
+  id                Int       @id @default(autoincrement()) @map("id")
+  taluka_id         Int       @map("taluka_id")
+  gp_id             Int       @map("gp_id")
+  name              String    @db.VarChar(50) @map("name")
+  name_marathi      String    @db.VarChar(50) @map("name_marathi")
+  total_population   Int       @map("total_population")
+  trible_population   Int       @map("trible_population")
+  arthik_maryada   Decimal    @db.Decimal(10,2) @map("arthik_maryada")
+  village_type     String     @db.VarChar(10) @map("village_type")
+  status           String     @db.VarChar(10) @default("Active") @map("status")
+
+
+  @@map("villages") // Map the model to the "villages" table in your database
 }

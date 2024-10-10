@@ -7,48 +7,14 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 
-import { useRouter } from "next/navigation";
 
 export default function Table({ data, columns, Button }: any) {
-  const router = useRouter();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
-  const [showQrModal, setShowQrModal] = useState(false);
-  const [showPrintModal, setShowPrintModal] = useState(false);
-  const [imageCount, setImageCount] = useState<number>(0);
-  const [error, setError] = useState<string>("");
 
-  const handleShowQr = () => setShowQrModal(true);
-  const handleCloseQr = () => setShowQrModal(false);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(event.target.value);
-    setImageCount(value);
-    if (value < 1) {
-      setError("Please enter a number greater than or equal to 1.");
-    } else {
-      setError("");
-    }
-  };
 
-  const handleShowPrint = () => setShowPrintModal(true);
-  const handleClosePrint = () => {
-    setShowPrintModal(false);
-    setImageCount(0);
-    setError("");
-  };
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    if (imageCount < 1) {
-      setError("Please enter a valid number greater than or equal to 1.");
-      return;
-    }
-
-    router.push(`/printcards/${imageCount}`);
-    handleClosePrint();
-  };
 
   const filteredData = React.useMemo(() => {
     return data.filter((row: any) => {
@@ -77,18 +43,32 @@ export default function Table({ data, columns, Button }: any) {
       <div className="pagination d-flex align-items-center">
         <button
           className="btn btn-outline-dark mx-1 btn-sm"
+          onClick={() => table.setPageIndex(0)} // Go to first page
+          disabled={currentPage === 1}
+        >
+          {`<<`}
+        </button>
+        <button
+          className="btn btn-outline-dark mx-1 btn-sm"
           onClick={() => table.setPageIndex(currentPage - 2)}
           disabled={currentPage === 1}
         >
-          Previous
+          {`<`}
         </button>
         <span className="btn btn-primary mx-1 btn-sm">{currentPage}</span>
         <button
           className="btn btn-outline-dark mx-1 btn-sm"
-          onClick={() => table.setPageIndex(currentPage)}
+          onClick={() => table.setPageIndex(currentPage)} // Go to next page
           disabled={currentPage === pageCount || pageCount === 0}
         >
-          Next
+          {`>`}
+        </button>
+        <button
+          className="btn btn-outline-dark mx-1 btn-sm"
+          onClick={() => table.setPageIndex(pageCount - 1)} // Go to last page
+          disabled={currentPage === pageCount || pageCount === 0}
+        >
+          {`>>`}
         </button>
       </div>
     );
@@ -96,7 +76,6 @@ export default function Table({ data, columns, Button }: any) {
 
   return (
     <div className="container mt-5 card card-body p-5">
-      {/* <h2 className="text-center">User Status</h2> */}
       <div className="row mb-3 align-items-center">
         <div className="col-auto">
           <input
@@ -114,14 +93,12 @@ export default function Table({ data, columns, Button }: any) {
             onChange={(e) => setFilterStatus(e.target.value)}
           >
             <option value="">All Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
+            <option value="Active">Active</option>
+            <option value="Deactive">Deactive</option>
             {/* Add more options as needed */}
           </select>
         </div>
         <div className="col-auto ms-auto">
-          {" "}
-          {/* Add 'ms-auto' to push the button to the left */}
           {Button}
         </div>
       </div>

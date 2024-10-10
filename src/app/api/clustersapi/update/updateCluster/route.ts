@@ -14,7 +14,7 @@ export async function PUT(req: Request) {
     }
 
     // Update the cluster in the database
-    const updatedCluster = await prisma.clusterdata.update({
+    const updatedCluster = await prisma.clusterData.update({
       where: { cluster_id }, // Use the provided cluster_id to find the correct record
       data: {
         cluster_name,

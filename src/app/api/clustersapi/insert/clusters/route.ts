@@ -13,10 +13,11 @@ export async function POST(req: Request) {
     }
 
     // Insert the new cluster into the database
-    const newCluster = await prisma.clusterdata.create({
+    const newCluster = await prisma.clusterData.create({
       data: {
         cluster_name: cluster_name,
-        status: "active", // Add default status if needed, or get it from the body
+        status: "Active", // Add default status if needed
+        update_date_time: new Date() // Set to current date/time or any valid Date object
       },
     });
 
