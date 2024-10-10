@@ -1,9 +1,13 @@
+import LanguageSelector from '@/components/LanguageSwitcher/LanguageSwitcher'
 import LanguageSwitcher from '@/components/LanguageSwitcher/LanguageSwitcher'
 import React from 'react'
 
 const page = () => {
   return (
-    <div> <LanguageSwitcher /></div>
+    <>
+    <LanguageSelector />
+    <div id="google_translate_element"></div>
+    </>
   )
 }
 
