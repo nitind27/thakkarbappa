@@ -33,13 +33,13 @@ const SidebarMenuMain = () => {
         <SidebarMenuItem to='/manage/town' title='Town' hasBullet={true} />
         <SidebarMenuItem to='/manage/grampanchayat' title='Gram Panchayat' hasBullet={true} />
         <SidebarMenuItem to='/manage/mahsulgaav' title='mahsul gaav' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/drawer-chat' title='school' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/drawer-chat' title='student' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/drawer-chat' title='suvidha' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/drawer-chat' title='pratinidhi' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/drawer-chat' title='vaparkarta' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/drawer-chat' title='Bank' hasBullet={true} />
-        <SidebarMenuItem to='/apps/chat/drawer-chat' title='pranbhik sillak' hasBullet={true} />
+        <SidebarMenuItem to='/manage/school' title='school' hasBullet={true} />
+        <SidebarMenuItem to='/manage/student' title='student' hasBullet={true} />
+        <SidebarMenuItem to='/manage/suvidha' title='suvidha' hasBullet={true} />
+        <SidebarMenuItem to='/manage/representative' title='pratinidhi' hasBullet={true} />
+        <SidebarMenuItem to='/manage/supervisor' title='vaparkarta' hasBullet={true} />
+        <SidebarMenuItem to='/manage/bank' title='Bank' hasBullet={true} />
+        <SidebarMenuItem to='/manage/openingbalance' title='pranbhik sillak' hasBullet={true} />
       </SidebarMenuItemWithSub>
 
 

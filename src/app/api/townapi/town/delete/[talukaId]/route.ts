@@ -1,24 +1,25 @@
 import prisma from '@/lib/db';
 import { NextResponse } from 'next/server';
 
-export async function DELETE(req: Request, { params }: { params: { talukaId: string } }) {
-    const { talukaId } = params;
-    console.log("Received talukaId:", talukaId); // Debugging log
+export async function PATCH(req: Request, { params }: { params: { talukaId: string } }) {
+  const { talukaId } = params;
+  const { status } = await req.json(); // Get new status from request body
 
-    try {
-        // Ensure ID is converted to BigInt
-        await prisma.talukasData.delete({
-            where: { id: BigInt(talukaId) },
-        });
+  try {
+    // Update the cluster's status
+    await prisma.talukasData.update({
+      where: { id: Number(talukaId) },
+      data: { status }, // Update with new status
+    });
 
-        return new NextResponse(null, { status: 204 });
-    } catch (error: any) {
-        console.error("Error during deletion:", error);
+    return new NextResponse(null, { status: 204 });
+  } catch (error: any) {
+    console.error("Error during status update:", error);
 
-        if (error.code === 'P2025') {
-            return NextResponse.json({ error: 'Cluster not found' }, { status: 404 });
-        }
-
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    if (error.code === 'P2025') {
+      return NextResponse.json({ error: 'Cluster not found' }, { status: 404 });
     }
+
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
 }

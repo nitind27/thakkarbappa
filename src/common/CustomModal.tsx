@@ -4,9 +4,13 @@ import { Modal, Button, Form } from "react-bootstrap";
 type FormField = {
   label: string;
   value: string | number; // Allow number for population and ID
-  placeholder: string;
+  placeholder?: string; // Optional for select inputs
   error?: string; // Optional error message
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
+  type: "text" | "select"; // Specify the type of input
+  options?: { value: string | number; label: string }[]; // Only for select inputs
 };
 
 type CustomModalProps = {
@@ -39,13 +43,32 @@ const CustomModal: React.FC<CustomModalProps> = ({
           {formData.fields.map((field, index) => (
             <Form.Group controlId={`formField${index}`} key={index}>
               <Form.Label>{field.label}</Form.Label>
-              <Form.Control
-                type="text"
-                value={field.value}
-                onChange={field.onChange}
-                placeholder={field.placeholder}
-                isInvalid={!!field.error}
-              />
+              {field.type === "text" ? (
+                <Form.Control
+                  type="text"
+                  value={field.value}
+                  onChange={field.onChange as any}
+                  placeholder={field.placeholder}
+                  isInvalid={!!field.error}
+                />
+              ) : field.type === "select" ? (
+                <Form.Control
+                  as="select"
+                  value={field.value}
+                  onChange={field.onChange as any}
+                  isInvalid={!!field.error}
+                >
+                  <option value="" disabled>
+                    {field.placeholder || "Select an option"}
+                  </option>
+                  {field.options?.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </Form.Control>
+              ) : null}
+
               {field.error && (
                 <div style={{ color: "red", marginTop: "0.25rem" }}>
                   {field.error}

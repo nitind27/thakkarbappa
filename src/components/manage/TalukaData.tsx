@@ -5,162 +5,214 @@ import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
 import { talukasdata } from "../type";
+import { toast } from "react-toastify";
 
 type Props = {
-    talukasdata: talukasdata[];
+  talukasdata: talukasdata[];
 };
 
 const TalukaData = ({ talukasdata }: Props) => {
-    const [showPrintModal, setShowPrintModal] = useState(false);
-    const [townName, setTownName] = useState("");
-    const [error, setError] = useState<string>("");
-    const [updateTownId, setUpdateTownId] = useState<number | null>(null);
+  const [showPrintModal, setShowPrintModal] = useState(false);
+  const [townName, setTownName] = useState("");
+  const [error, setError] = useState<string>("");
+  const [updateTownId, setUpdateTownId] = useState<BigInt | null>(null);
+  const [localTalukasData, setLocalTalukasData] =
+    useState<talukasdata[]>(talukasdata); // Local state for talukas data
 
-    const data = talukasdata.map((taluka) => ({
-        Id: taluka.id,
-        name: taluka.name,
-        name_marathi: taluka.name_marathi,
-        status: taluka.status,
-    }));
+  const data = localTalukasData.map((taluka) => ({
+    id: taluka.id,
+    name: taluka.name,
+    name_marathi: taluka.name_marathi,
+    status: taluka.status,
+  }));
 
-    const columns = [
-        { accessorKey: "Id", header: "ID" },
-        { accessorKey: "name", header: "Taluka" },
-        { accessorKey: "name_marathi", header: "Name (Marathi)" },
-        { accessorKey: "status", header: "Status" },
-        {
-            accessorKey: "actions",
-            header: "Actions",
-            cell: ({ row }: any) => (
-                <div>
-                    <span onClick={() => handleEdit(row.original)}>
-                        <KTIcon iconName="notepad-edit" className="fs-1" />
-                    </span>
-                    <span onClick={() => handleDelete(row.original.Id)}>
-                        <KTIcon iconName="trash" />
-                    </span>
-                </div>
-            ),
-        },
-    ];
-
-    const handleDelete = async (talukaId: number) => {
-        try {
-            const response = await fetch(`/api/townapi/town/delete/${talukaId}`, {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-            });
-
-            if (response.ok) {
-                alert("Taluka deleted successfully!");
-                // Optionally refresh state here
-            } else {
-                const data = await response.json();
-                alert(`Failed to delete the Taluka: ${data.error}`);
-            }
-        } catch (error) {
-            console.error("Error deleting the Taluka:", error);
-            alert("An unexpected error occurred.");
-        }
-    };
-
-    const handleShowPrint = () => setShowPrintModal(true);
-
-    const handleClosePrint = () => {
-        setShowPrintModal(false);
-        setTownName("");
-        setError("");
-        setUpdateTownId(null);
-    };
-
-    const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
-
-        if (!townName) {
-            setError("Taluka name is required.");
-            return;
-        }
-
-        try {
-            const method = updateTownId ? "PUT" : "POST";
-            const url = updateTownId
-                ? `/api/townapi/town/update`
-                : `/api/townapi/town/insert`;
-
-            // Prepare data for submission
-            const bodyData = {
-                name: townName,
-                ...(updateTownId && { id: updateTownId.toString() }), // Convert BigInt to string
-            };
-
-            const response = await fetch(url, {
-                method,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(bodyData),
-            });
-
-            if (response.ok) {
-                alert(`Taluka ${updateTownId ? "updated" : "inserted"} successfully!`);
-                handleClosePrint();
-                // Optionally refresh the table data here
-            } else {
-                const data = await response.json();
-                alert(`Failed to ${updateTownId ? "update" : "insert"} Taluka: ${data.error}`);
-            }
-        } catch (error) {
-            console.error("Error during operation:", error);
-            alert("An unexpected error occurred.");
-        }
-    };
-
-    const handleEdit = (taluka: any) => {
-        setUpdateTownId(taluka.Id);
-        setTownName(taluka.name);
-        handleShowPrint();
-    };
-
-    return (
+  const columns = [
+    {
+      accessorKey: "serial_number", // Use a new accessor for the serial number
+      header: "S.No", // Header for the serial number
+      cell: ({ row }: any) => (
         <div>
-            <Table
-                data={data}
-                columns={columns}
-                Button={
-                    <Button
-                        variant="primary"
-                        onClick={handleShowPrint}
-                        className="btn"
-                        style={{ minWidth: "120px" }}
-                    >
-                        <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
-                        Add Taluka
-                    </Button>
-                }
-            />
-
-            <CustomModal
-                show={showPrintModal}
-                handleClose={handleClosePrint}
-                handleSubmit={handleSubmit}
-                title={updateTownId ? "Update Taluka Name" : "Insert Taluka Name"}
-
-
-                formData={{
-                    fields: [
-                        {
-                            label: "Enter Taluka Name:",
-                            value: townName,
-                            placeholder: "Enter taluka name",
-                            error,
-                            onChange: (e) => setTownName(e.target.value),
-                        },
-
-                    ],
-                    error,
-                }}
-                submitButtonLabel="Submit"
-            />
+          {row.index + 1} {/* Display the index + 1 for serial number */}
         </div>
-    );
+      ),
+    },
+    // { accessorKey: "id", header: "ID" },
+    { accessorKey: "name", header: "Taluka" },
+    { accessorKey: "name_marathi", header: "Name (Marathi)" },
+    { accessorKey: "status", header: "Status" },
+    {
+      accessorKey: "actions",
+      header: "Actions",
+      cell: ({ row }: any) => (
+        <div>
+         <button className="btn btn-sm btn-primary" onClick={() => handleEdit(row.original)}>Edit</button>
+          <button
+            className={`btn btn-sm ${
+              row.original.status === "Active" ? "btn-danger" : "btn-warning"
+            } ms-5`}
+            onClick={() =>
+              handleDeactivate(row.original.id, row.original.status)
+            }
+          >
+            {row.original.status === "Active" ? "Deactivate" : "Activate"}
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  const handleDeactivate = async (talukaId: BigInt, currentStatus: string) => {
+    const confirmMessage =
+      currentStatus === "Active"
+        ? "Are you sure you want to deactivate this cluster?"
+        : "Are you sure you want to activate this cluster?";
+  
+    if (window.confirm(confirmMessage)) {
+      try {
+        const newStatus = currentStatus === "Active" ? "Deactive" : "Active";
+        const response = await fetch(`/api/townapi/town/delete/${talukaId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        });
+  
+        if (response.ok) {
+          // Update local state without page reload
+          setLocalTalukasData((prevData) =>
+            prevData.map((taluka :any) =>
+              taluka.id === talukaId
+                ? { ...taluka, status: newStatus }
+                : taluka
+            )
+          );
+          toast.success(`Cluster ${newStatus === "Active" ? "activated" : "deactivated"} successfully!`);
+        } else {
+          const errorData = await response.json();
+          toast.error(`Failed to change the cluster status: ${errorData.error || 'Unknown error'}`);
+        }
+      } catch (error) {
+        console.error("Error changing the cluster status:", error);
+        toast.error("An unexpected error occurred.");
+      }
+    }
+  };
+  const handleShowPrint = () => setShowPrintModal(true);
+
+  const handleClosePrint = () => {
+    setShowPrintModal(false);
+    setTownName("");
+    setError("");
+    setUpdateTownId(null);
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!townName) {
+      setError("Taluka name is required.");
+      return;
+    }
+
+    try {
+      const method = updateTownId ? "PUT" : "POST";
+      const url = updateTownId
+        ? `/api/townapi/town/update`
+        : `/api/townapi/town/insert`;
+
+      // Prepare data for submission
+      const bodyData = {
+        name: townName,
+        ...(updateTownId && { id: updateTownId.toString() }), // Convert BigInt to string
+      };
+
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bodyData),
+      });
+
+      if (response.ok) {
+        if (updateTownId) {
+          // Update local state for edited Taluka
+          setLocalTalukasData((prevData) =>
+            prevData.map((taluka :any) =>
+              taluka.id === updateTownId
+                ? { ...taluka, name: townName }
+                : taluka
+            )
+          );
+          toast.success("Taluka updated successfully!");
+        } else {
+          // Assuming API returns the newly created object including its ID
+          const newTaluka = await response.json();
+          setLocalTalukasData((prevData) => [...prevData, newTaluka]);
+          toast.success("Taluka inserted successfully!");
+        }
+
+        handleClosePrint();
+      } else {
+        const data = await response.json();
+        toast.error(
+          `Failed to ${updateTownId ? "update" : "insert"} Taluka: ${
+            data.error
+          }`
+        );
+      }
+    } catch (error) {
+      console.error("Error during operation:", error);
+      toast.error("An unexpected error occurred.");
+    }
+  };
+
+  const handleEdit = (taluka: any) => {
+    
+    setUpdateTownId(taluka.id);
+    setTownName(taluka.name);
+    handleShowPrint();
+  };
+
+  return (
+    <div>
+      <Table
+        data={data}
+        columns={columns}
+        Button={
+          <Button
+            variant="primary"
+            onClick={handleShowPrint}
+            className="btn"
+            style={{ minWidth: "120px" }}
+          >
+            <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
+            Add Taluka
+          </Button>
+        }
+      />
+
+      <CustomModal
+        show={showPrintModal}
+        handleClose={handleClosePrint}
+        handleSubmit={handleSubmit}
+        title={updateTownId ? "Update Taluka Name" : "Insert Taluka Name"}
+        formData={{
+          fields: [
+            {
+              label: "Enter Taluka Name:",
+              value: townName,
+              type:"text",
+              placeholder: "Enter taluka name",
+              error,
+              onChange: (e) => setTownName(e.target.value),
+            },
+          ],
+          error,
+        }}
+        submitButtonLabel="Submit"
+      />
+    </div>
+  );
 };
 
 export default TalukaData;
