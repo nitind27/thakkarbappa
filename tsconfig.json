@@ -20,8 +20,9 @@
     "paths": {
       "@/*": ["./src/*"],
       "@components/*": ["./src/app/layout/components/*"]
-
-    }
+    },
+    // Optional: Specify a target if needed, but esnext should already be sufficient
+    "target": "esnext" 
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

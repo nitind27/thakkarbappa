@@ -6,6 +6,7 @@ import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
 import { grampanchayat, talukasdata } from "../type";
 import { toast } from "react-toastify";
+import { validateFormgrampanchayat } from "@/utils/Validation";
 
 type Props = {
   grampanchayat: grampanchayat[];
@@ -34,9 +35,10 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
     name: gp.name,
     name_marathi: gp.name_marathi,
     taluka_name: talukaMap[gp.taluka_id] || "Unknown", // Map taluka_id to taluka name
+    t_id: gp.taluka_id,
     population: gp.population,
     status: gp.status,
-  }));
+  })).reverse();
 
   const columns = [
     {
@@ -62,17 +64,19 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
             className="btn btn-sm btn-primary"
             onClick={() => handleEdit(row.original)}
           >
+
+            <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
             Edit
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
           >
-            {row.original.status === "Active" ? "Deactivate" : "Activate"}
+            <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
+            {row.original.status === "Active" ? "Deactive" : "Activate"}
           </button>
         </div>
       ),
@@ -112,15 +116,13 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
             )
           );
           toast.success(
-            `Cluster ${
-              newStatus === "Active" ? "activated" : "deactivated"
+            `Cluster ${newStatus === "Active" ? "activated" : "deactivated"
             } successfully!`
           );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the cluster status: ${
-              errorData.error || "Unknown error"
+            `Failed to change the cluster status: ${errorData.error || "Unknown error"
             }`
           );
         }
@@ -150,10 +152,13 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!townName || !nameMarathi || !talukaId || !population) {
-      setError("All fields are required.");
+    const errorMsg = validateFormgrampanchayat(townName, nameMarathi, String(talukaId), String(population));
+    if (errorMsg) {
+      setError(errorMsg.join("<br />"));
       return;
     }
+
+
 
     try {
       const method = updateTownId ? "PUT" : "POST";
@@ -199,8 +204,7 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
         const data = await response.json();
 
         toast.error(
-          `Failed to ${updateTownId ? "update" : "insert"} Grampanchayat: ${
-            data.error
+          `Failed to ${updateTownId ? "update" : "insert"} Grampanchayat: ${data.error
           }`
         );
       }
@@ -214,7 +218,7 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
     setUpdateTownId(gp.id); // Set the ID of the Grampanchayat being edited
     setTownName(gp.name); // Set the name of the Grampanchayat
     setNameMarathi(gp.name_marathi); // Set the Marathi name
-    setTalukaId(gp.taluka_name); // Set the Taluka ID
+    setTalukaId(gp.t_id); // Set the Taluka ID
     setPopulation(gp.population); // Set the population
     handleShowPrint(); // Show the modal for editing
   };
@@ -234,7 +238,7 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
             className="btn"
             style={{ minWidth: "120px" }}
           >
-            <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
+            <KTIcon iconName={"plus-circle"} className="fs-3" iconType="solid" />
             Add Grampanchayat
           </Button>
         }

@@ -78,9 +78,14 @@ const CustomModal: React.FC<CustomModalProps> = ({
           ))}
           {formData.error && (
             <div style={{ color: "red", marginTop: "0.25rem" }}>
-              {formData.error}
+              <ul style={{ paddingLeft: "1rem" }}>
+                {formData.error.split("<br />").map((err, index) => (
+                  <li key={index}>{err}</li>
+                ))}
+              </ul>
             </div>
           )}
+
           <Button variant="primary" type="submit" className="mt-3">
             {submitButtonLabel}
           </Button>

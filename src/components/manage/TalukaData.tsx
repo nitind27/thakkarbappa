@@ -6,6 +6,7 @@ import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
 import { talukasdata } from "../type";
 import { toast } from "react-toastify";
+import { validateTalukaName } from "@/utils/Validation";
 
 type Props = {
   talukasdata: talukasdata[];
@@ -24,7 +25,9 @@ const TalukaData = ({ talukasdata }: Props) => {
     name: taluka.name,
     name_marathi: taluka.name_marathi,
     status: taluka.status,
-  }));
+    
+  }))
+  .reverse(); 
 
   const columns = [
     {
@@ -45,7 +48,7 @@ const TalukaData = ({ talukasdata }: Props) => {
       header: "Actions",
       cell: ({ row }: any) => (
         <div>
-         <button className="btn btn-sm btn-primary" onClick={() => handleEdit(row.original)}>Edit</button>
+         <button className="btn btn-sm btn-primary" onClick={() => handleEdit(row.original)}><KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />Edit</button>
           <button
             className={`btn btn-sm ${
               row.original.status === "Active" ? "btn-danger" : "btn-warning"
@@ -53,8 +56,8 @@ const TalukaData = ({ talukasdata }: Props) => {
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
-          >
-            {row.original.status === "Active" ? "Deactivate" : "Activate"}
+          ><KTIcon iconName={"status"} className="fs-6" iconType="solid" />
+            {row.original.status === "Active" ? "Deactive" : "Activate"}
           </button>
         </div>
       ),
@@ -110,11 +113,12 @@ const TalukaData = ({ talukasdata }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!townName) {
-      setError("Taluka name is required.");
+
+    const errorMsg = validateTalukaName(townName);
+    if (errorMsg) {
+      setError(errorMsg);
       return;
     }
-
     try {
       const method = updateTownId ? "PUT" : "POST";
       const url = updateTownId
@@ -185,7 +189,7 @@ const TalukaData = ({ talukasdata }: Props) => {
             className="btn"
             style={{ minWidth: "120px" }}
           >
-            <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
+            <KTIcon iconName={"plus-circle"} className="fs-3" iconType="solid" />
             Add Taluka
           </Button>
         }
@@ -207,7 +211,7 @@ const TalukaData = ({ talukasdata }: Props) => {
               onChange: (e) => setTownName(e.target.value),
             },
           ],
-          error,
+        
         }}
         submitButtonLabel="Submit"
       />

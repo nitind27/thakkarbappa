@@ -159,32 +159,33 @@ model UserCategory {
 }
 
 model Bank {
-  id              Int      @id @db.Int
-  name            String   @db.VarChar(100)
-  account_no       String   @db.VarChar(100) // Change this line
-  yojana_year_id  Int      @db.Int
-  amount          Decimal   @db.Decimal(20, 2)
-  status          String    @default("Active") @db.VarChar(10)
-  ins_date_time   DateTime @db.DateTime // Optional and nullable
+  id               Int      @id @default(autoincrement()) @db.Int
+  name             String   @db.VarChar(100)
+  account_no       String   @db.VarChar(100)
+  yojana_year_id   Int      @db.Int
+  amount           Decimal   @db.Decimal(20, 2)
+  status           String    @default("Active") @db.VarChar(10)
+ ins_date_time    DateTime  @default(now()) @map("ins_date_time") // Automatically set insertion date
   update_date_time DateTime? @db.DateTime // Optional and nullable
   @@map("tbl_bank")
 }
+
 model YojanaYear {
-  yojanaYearId Int     @id @db.Int
-  yojanaYear   String  @db.VarChar(20)
-  isDelete     String   @default("No") @db.VarChar(20)
-  yearStatus   String   @db.VarChar(10)
+  yojana_year_id  Int     @id @db.Int
+  yojana_year   String  @db.VarChar(20)
+  is_delete     String   @default("No") @db.VarChar(20)
+  year_status   String   @db.VarChar(10)
 
   @@map("tbl_yojana_year")
 }
 
 model OpeningBalance {
-  open_bal_id          Int      @id @db.Int
+  open_bal_id          Int      @id @default(autoincrement()) @db.Int
   open_bal          Decimal  @db.Decimal(10, 2)
   year_id           Int      @db.Int
   status           String   @default("Active") @db.VarChar(10)
-  ins_date_time      DateTime @db.DateTime
-  update_date_time   DateTime @db.DateTime
+ ins_date_time    DateTime  @default(now()) @map("ins_date_time") // Automatically set insertion date
+  update_date_time DateTime? @db.DateTime // Optional and nullable
 
   @@map("tbl_opening_balance")
 }

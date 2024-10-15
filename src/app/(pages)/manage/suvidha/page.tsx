@@ -3,7 +3,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher";
 import Clusteradd from "@/components/manage/Clusteradd";
 import School from "@/components/manage/School";
 import Suvidha from "@/components/manage/Suvidha";
-import { clusterdata, Facility, Schooldata } from "@/components/type";
+import {  Facility } from "@/components/type";
 import prisma from "@/lib/db";
 import React from "react";
 

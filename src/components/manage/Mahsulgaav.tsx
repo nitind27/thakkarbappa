@@ -6,6 +6,7 @@ import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
 import { grampanchayat, talukasdata, Villages } from "../type";
 import { toast } from "react-toastify";
+import { validateMasulGaav } from "@/utils/Validation";
 
 type Props = {
   Villages: Villages[];
@@ -53,7 +54,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
     arthik_maryada: villages.arthik_maryada,
     village_type: villages.village_type,
     status: villages.status,
-  }));
+  })).reverse();
 
   const columns = [
     {
@@ -83,17 +84,19 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
             className="btn btn-sm btn-primary"
             onClick={() => handleEdit(row.original)}
           >
+
+            <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
             Edit
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
           >
-            {row.original.status === "Active" ? "Deactivate" : "Activate"}
+            <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
+            {row.original.status === "Active" ? "Deactive" : "Activate"}
           </button>
         </div>
       ),
@@ -140,15 +143,13 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
             )
           );
           toast.success(
-            `Cluster ${
-              newStatus === "Active" ? "activated" : "deactivated"
+            `Cluster ${newStatus === "Active" ? "activated" : "deactivated"
             } successfully!`
           );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the cluster status: ${
-              errorData.error || "Unknown error"
+            `Failed to change the cluster status: ${errorData.error || "Unknown error"
             }`
           );
         }
@@ -181,16 +182,20 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (
-      !townName ||
-      !nameMarathi ||
-      !talukaId ||
-      !population ||
-      !triblePopulation ||
-      !arthikMaryada ||
-      !villageType
-    ) {
-      setError("All fields are required.");
+    // Validate fields and get error messages
+    const errorMsg = validateMasulGaav(
+      townName,
+      nameMarathi,
+      String(talukaId),
+      String(population),
+      String(triblePopulation),
+      String(arthikMaryada),
+      villageType
+    );
+
+    // If there are error messages, set them and prevent submission
+    if (errorMsg.length > 0) {
+      setError(errorMsg.join("<br />"));
       return;
     }
 
@@ -202,7 +207,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
 
       // Prepare data for submission
       const bodyData = {
-        id: updateTownId !== null ? updateTownId : undefined, // Ensure id is only included if it's not null
+        id: updateTownId !== null ? updateTownId : undefined,
         taluka_id: talukaId,
         gp_id: townName,
         name: townName,
@@ -220,12 +225,21 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
       });
 
       if (response.ok) {
-        const newVillage = await response.json(); // Assuming API returns the new village object
-        setMahsulgaav((prevData) =>
-          prevData.map((mahasul) =>
-            mahasul.id === updateTownId ? { ...newVillage } : mahasul
-          )
-        );
+
+        if (!updateTownId) {
+          // If inserting a new entry
+          const newVillage = await response.json(); // Assuming API returns the new village object
+        
+          setMahsulgaav((prevData) => [...prevData, newVillage]);
+        } else {
+          // If updating an existing entry
+          setMahsulgaav((prevData: any) =>
+            prevData.map((gp: any) =>
+              gp.id === updateTownId ? { ...gp, ...bodyData } : gp
+            )
+          );
+        }
+
         toast.success(
           `Village ${updateTownId ? "updated" : "inserted"} successfully!`
         );
@@ -233,9 +247,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
       } else {
         const data = await response.json();
         toast.error(
-          `Failed to ${updateTownId ? "update" : "insert"} Village: ${
-            data.error
-          }`
+          `Failed to ${updateTownId ? "update" : "insert"} Village: ${data.error}`
         );
       }
     } catch (error) {
@@ -243,6 +255,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
       toast.error("An unexpected error occurred.");
     }
   };
+
 
   const handleEdit = (gp: any) => {
     setUpdateTownId(gp.id);
@@ -273,8 +286,8 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
             className="btn"
             style={{ minWidth: "120px" }}
           >
-            <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
-            Add Grampanchayat
+            <KTIcon iconName={"plus-circle"} className="fs-3" iconType="solid" />
+            Add MahasulGaav
           </Button>
         }
       />
@@ -300,7 +313,9 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
                 label: taluka.name,
               })),
               placeholder: "Select Taluka", // Optional placeholder for select input
+
             },
+
             {
               label: "Enter Grampanchayat Name:",
               value: townName, // Ensure this uses townName

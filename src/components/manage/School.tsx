@@ -6,14 +6,15 @@ import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
 import { clusterdata, Schooldata, talukasdata } from "../type";
 import { toast } from "react-toastify";
+import { validateSchoolForm } from "@/utils/Validation";
 
 type Props = {
   initialschoolData: Schooldata[];
-  clusterdata:clusterdata[];
-  talukas:talukasdata[];
+  clusterdata: clusterdata[];
+  talukas: talukasdata[];
 };
 
-const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
+const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [schoolId, setSchoolId] = useState<number | string>("");
   const [schoolName, setSchoolName] = useState("");
@@ -41,7 +42,7 @@ const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
 
 
   const clusterMap = clusterdata.reduce((acc, cluster: clusterdata) => {
-    acc[cluster.cluster_id ] = cluster.cluster_name; // Assuming taluka has id and name properties
+    acc[cluster.cluster_id] = cluster.cluster_name; // Assuming taluka has id and name properties
     return acc;
   }, {} as Record<number, string>);
 
@@ -54,8 +55,8 @@ const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
     school_id: school.school_id,
     school_name: school.school_name,
     address: school.address,
-    c_id:school.cluster_id,
-    t_id:school.taluka_id,
+    c_id: school.cluster_id,
+    t_id: school.taluka_id,
     cluster_id: clusterMap[school.cluster_id],
     taluka_id: talukaMap[school.taluka_id],
     udias: school.udias,
@@ -72,14 +73,19 @@ const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
     stri_email: school.stri_email,
     stri_contact: school.stri_contact,
     school_name_mr: school.school_name_mr,
-    status:school.status,
+    status: school.status,
     image_urls: school.image_urls,
-  }));
+  })).reverse();
 
   const columns = [
     {
-      accessorKey: "school_id",
-      header: "ID",
+      accessorKey: "serial_number", // Use a new accessor for the serial number
+      header: "S.No", // Header for the serial number
+      cell: ({ row }: any) => (
+        <div>
+          {row.index + 1} {/* Display the index + 1 for serial number */}
+        </div>
+      ),
     },
     {
       accessorKey: "school_name",
@@ -174,16 +180,15 @@ const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
             Edit
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.school_id, row.original.status)
             }
           >
             {row.original.status === "Active" ? "Deactivate" : "Activate"}
           </button>
-          <button  onClick={() => handleimage(row.original)}>Image</button>
+          <button onClick={() => handleimage(row.original)}>Image</button>
         </div>
       ),
     },
@@ -225,12 +230,11 @@ const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
           toast.success(
             `School ${newStatus === "Active" ? "activated" : "deactivated"} successfully!`
           )
-      
+
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the cluster status: ${
-              errorData.error || "Unknown error"
+            `Failed to change the cluster status: ${errorData.error || "Unknown error"
             }`
           );
         }
@@ -276,15 +280,53 @@ const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
     event.preventDefault();
 
     // Validate required fields
-    if (
-      !schoolName ||
-      !address ||
-      !clusterId ||
-      !talukaId ||
-      !udias ||
-      !emailId
-    ) {
-      setError("All fields are required.");
+    // if (
+    //   !schoolName ||
+    //   !address ||
+    //   !clusterId ||
+    //   !talukaId ||
+    //   !udias ||
+    //   !stds ||
+    //   !medium ||
+    //   !emailId ||
+    //   !mukhyaName ||
+    //   !mukhyaContact ||
+    //   !mukhyaEmail ||
+    //   !purushName ||
+    //   !purushContact ||
+    //   !purushEmail ||
+    //   !striName ||
+    //   !striContact ||
+    //   !striEmail ||
+    //   !schoolNameMr
+    // ) {
+    //   setError("All fields are required.");
+    //   return;
+    // }
+
+    const errors = validateSchoolForm({
+      schoolName,
+      address,
+      clusterId: String(clusterId), // Convert to string
+      talukaId: String(talukaId),
+      udias,
+      stds,
+      medium,
+      emailId,
+      mukhyaName,
+      mukhyaContact,
+      mukhyaEmail,
+      purushName,
+      purushContact,
+      purushEmail,
+      striName,
+      striContact,
+      striEmail,
+      schoolNameMr,
+    });
+    // If there are error messages, set them and prevent submission
+    if (errors.length > 0) {
+      setError(errors.join("<br />"));
       return;
     }
 
@@ -347,8 +389,7 @@ const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
         const data = await response.json();
 
         toast.error(
-          `Failed to ${updateTownId ? "update" : "insert"} School: ${
-            data.error
+          `Failed to ${updateTownId ? "update" : "insert"} School: ${data.error
           }`
         );
       }
@@ -412,7 +453,7 @@ const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
         title={updateTownId ? "Update School Details" : "Insert School Details"}
         formData={{
           fields: [
-           
+
             {
               label: "School Name",
               value: schoolName,
@@ -440,15 +481,6 @@ const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
               })),
               placeholder: "Select Taluka", // Optional placeholder for select input
             },
-          
-            // {
-            //   label: "Taluka ID",
-            //   value: talukaId,
-            //   type: "text",
-            //   placeholder: "Enter Taluka ID",
-            //   onChange: (e) => setTalukaId(e.target.value),
-            // },
-
             {
               label: "Select Taluka:",
               value: talukaId || "", // Default value when updating
@@ -465,8 +497,15 @@ const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
               value: udias,
               type: "text",
               placeholder: "Enter UDIAS",
-              onChange: (e) => setUdias(e.target.value),
+              onChange: (e) => {
+                // Ensure that only digits are allowed and limit to 11 digits
+                const inputValue = e.target.value;
+                if (/^\d*$/.test(inputValue) && inputValue.length <= 11) {
+                  setUdias(inputValue);
+                }
+              },
             },
+            
             {
               label: "STDS",
               value: stds,
@@ -474,14 +513,14 @@ const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
               placeholder: "Enter STDS",
               onChange: (e) => setStds(e.target.value),
             },
-      
+
 
             {
               label: "Medium",
               value: medium || "", // Default value when updating
               onChange: (e) => setMedium(e.target.value),
               type: "select",
-        
+
               options: [
                 { label: "Semi English /Marathi", value: "Semi English /Marathi" },
                 { label: "Semi English", value: "Semi English" },
@@ -489,7 +528,7 @@ const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
               ],
               placeholder: "Enter Medium", // Optional placeholder for select input
             },
-          
+
             {
               label: "Email ID",
               value: emailId,
@@ -567,8 +606,9 @@ const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
               placeholder: "Enter School Name (MR)",
               onChange: (e) => setSchoolNameMr(e.target.value),
             },
-     
+
           ],
+          error,
         }}
         submitButtonLabel="Submit"
       />
@@ -577,3 +617,7 @@ const School = ({ initialschoolData ,clusterdata ,talukas }: Props) => {
 };
 
 export default School;
+
+
+
+

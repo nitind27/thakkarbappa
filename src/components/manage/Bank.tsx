@@ -7,9 +7,10 @@ import CustomModal from "@/common/CustomModal";
 import type {
   Bank,
   grampanchayat,
-  Supervisor,
+
   talukasdata,
   Villages,
+  YojanaYear,
 } from "../type";
 import { toast } from "react-toastify";
 import { formatDate } from "@/lib/utils";
@@ -19,47 +20,41 @@ type Props = {
   talukas: talukasdata[]; // To store the fetched talukasData
   grampanchayat: grampanchayat[];
   initialBankData: Bank[];
+  YojnaYear: YojanaYear[];
 };
 
-const BankData = ({ initialBankData }: Props) => {
+const BankData = ({ initialBankData, YojnaYear }: Props) => {
   const [showPrintModal, setShowPrintModal] = useState(false);
-  const [townName, setTownName] = useState("");
-  const [nameMarathi, setNameMarathi] = useState("");
-  const [talukaId, setTalukaId] = useState<number | string>("");
-  const [population, setPopulation] = useState<number | string>("");
-  const [triblePopulation, setTriblePopulation] = useState<number | string>("");
-  const [arthikMaryada, setArthikMaryada] = useState<number | string>("");
-  const [villageType, setVillageType] = useState<string>("");
+  const [bankName, setBankName] = useState("");
+  const [accountNo, setaccountNo] = useState("");
+  const [yojanayearid, setyojanayearid] = useState<number | string>("");
+  const [amount, setamount] = useState<number | string>("");
+
   const [status, setStatus] = useState<string>("Active");
   const [error, setError] = useState<string>("");
   const [updateTownId, setUpdateTownId] = useState<number | null>(null);
-  const [filteredGrampanchayat, setFilteredGrampanchayat] = useState<
-    grampanchayat[]
-  >([]);
 
-  const [Supervisor, setSupervisor] = useState<Bank[]>(initialBankData);
 
-  //   const talukaMap = talukas.reduce((acc, taluka: any) => {
-  //     acc[taluka.id] = taluka.name; // Assuming taluka has id and name properties
-  //     return acc;
-  //   }, {} as Record<number, string>);
-  //   const gpMap = grampanchayat.reduce((acc, gp: any) => {
-  //     acc[gp.id] = gp.name; // Assuming taluka has id and name properties
-  //     return acc;
-  //   }, {} as Record<number, string>);
+  const [BankData, setBankData] = useState<Bank[]>(initialBankData);
 
-  const data = Supervisor.map((supervisor) => ({
-    id: supervisor.id,
-    name: supervisor.name,
-    account_no: supervisor.account_no,
-    yojana_year_id: supervisor.yojana_year_id,
-    amount: supervisor.amount,
-    status: supervisor.status,
-    // ins_date_time:supervisor.ins_date_time,
+  const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
+    acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
+    return acc;
+  }, {} as Record<number, string>);
+
+  const data = BankData.map((BankData) => ({
+    id: BankData.id,
+    name: BankData.name,
+    year_id: BankData.yojana_year_id,
+    account_no: BankData.account_no,
+    yojana_year_id: yojna_year[BankData.yojana_year_id],
+    amount: BankData.amount,
+    status: BankData.status,
+    // ins_date_time:BankData.ins_date_time,
     ins_date_time:
-      typeof supervisor.ins_date_time === "string"
-        ? formatDate(supervisor.ins_date_time)
-        : formatDate(supervisor.ins_date_time.toISOString()),
+      typeof BankData.ins_date_time === "string"
+        ? formatDate(BankData.ins_date_time)
+        : formatDate(BankData.ins_date_time.toISOString()),
 
   }));
 
@@ -71,20 +66,18 @@ const BankData = ({ initialBankData }: Props) => {
     { accessorKey: "amount", header: "Amount" },
     { accessorKey: "status", header: "Status" },
     { accessorKey: "ins_date_time", header: "Ins Date" },
-    
+
 
     {
       accessorKey: "actions",
       header: "Actions",
       cell: ({ row }: any) => (
-        <div>
-          <span onClick={() => handleEdit(row.original)}>
-            <KTIcon iconName="notepad-edit" className="fs-1" />
-          </span>
+        <div style={{ display: 'flex' }}>
+
+          <button className="btn btn-sm btn-primary" onClick={() => handleEdit(row.original)}>Edit</button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
@@ -96,18 +89,10 @@ const BankData = ({ initialBankData }: Props) => {
     },
   ];
 
-  //   useEffect(() => {
-  //     if (talukaId) {
-  //       const filtered = grampanchayat.filter((gp) => gp.taluka_id == talukaId);
 
-  //       setFilteredGrampanchayat(filtered);
-  //     } else {
-  //       setFilteredGrampanchayat(grampanchayat); // Reset if no Taluka is selected
-  //     }
-  //   }, [talukaId, grampanchayat]);
 
   const handleDeactivate = async (
-    mahasulid: number | string,
+    bankid: number | string,
     currentStatus: string
   ) => {
     const confirmMessage =
@@ -119,7 +104,7 @@ const BankData = ({ initialBankData }: Props) => {
       try {
         const newStatus = currentStatus === "Active" ? "Deactive" : "Active";
 
-        const response = await fetch(`/api/mahasulgaav/delete/${mahasulid}`, {
+        const response = await fetch(`/api/bank/delete/${bankid}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -128,23 +113,21 @@ const BankData = ({ initialBankData }: Props) => {
         });
 
         if (response.ok) {
-          setSupervisor((prevData) =>
+          setBankData((prevData) =>
             prevData.map((mahasul) =>
-              mahasul.id === mahasulid
+              mahasul.id === bankid
                 ? { ...mahasul, status: newStatus }
                 : mahasul
             )
           );
           toast.success(
-            `Cluster ${
-              newStatus === "Active" ? "activated" : "deactivated"
+            `Cluster ${newStatus === "Active" ? "activated" : "deactivated"
             } successfully!`
           );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the cluster status: ${
-              errorData.error || "Unknown error"
+            `Failed to change the cluster status: ${errorData.error || "Unknown error"
             }`
           );
         }
@@ -163,52 +146,37 @@ const BankData = ({ initialBankData }: Props) => {
   };
 
   const resetForm = () => {
-    setTownName("");
-    setNameMarathi("");
-    setTalukaId("");
-    setPopulation("");
-    setTriblePopulation("");
-    setArthikMaryada("");
-    setVillageType("");
+    setBankName("");
+    setaccountNo("");
+    setyojanayearid("");
+    setamount("");
+
     setStatus("Active");
     setError("");
     setUpdateTownId(null);
   };
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (
-      !townName ||
-      !nameMarathi ||
-      !talukaId ||
-      !population ||
-      !triblePopulation ||
-      !arthikMaryada ||
-      !villageType
-    ) {
+    // Validate input fields
+    if (!bankName || !accountNo || !yojanayearid || !amount) {
       setError("All fields are required.");
       return;
     }
 
+    // Ensure the id is included for updates
+    const bodyData = {
+      id: updateTownId, // Include the ID for updates
+      yojana_year_id: yojanayearid,
+      name: bankName,
+      account_no: accountNo,
+      amount,
+      status,
+    };
+
     try {
       const method = updateTownId ? "PUT" : "POST";
-      const url = updateTownId
-        ? `/api/mahasulgaav/update`
-        : `/api/mahasulgaav/insert`; // Update URL for villages
-
-      // Prepare data for submission
-      const bodyData = {
-        taluka_id: talukaId,
-        gp_id: townName, // Assuming this is the GP ID
-        name: townName,
-        name_marathi: nameMarathi,
-        total_population: population,
-        trible_population: triblePopulation,
-        arthik_maryada: arthikMaryada,
-        village_type: villageType,
-        status,
-      };
+      const url = updateTownId ? `/api/bank/update` : `/api/bank/insert`;
 
       const response = await fetch(url, {
         method,
@@ -222,11 +190,7 @@ const BankData = ({ initialBankData }: Props) => {
         // Optionally refresh the table data here
       } else {
         const data = await response.json();
-        alert(
-          `Failed to ${updateTownId ? "update" : "insert"} Village: ${
-            data.error
-          }`
-        );
+        alert(`Failed to ${updateTownId ? "update" : "insert"} Village: ${data.error}`);
       }
     } catch (error) {
       console.error("Error during operation:", error);
@@ -236,13 +200,11 @@ const BankData = ({ initialBankData }: Props) => {
 
   const handleEdit = (gp: any) => {
     setUpdateTownId(gp.id);
-    setTownName(gp.gp_id); // Use gp.gp_id to set the townName
-    setNameMarathi(gp.name_marathi);
-    setTalukaId(gp.taluka_id);
-    setPopulation(gp.total_population);
-    setTriblePopulation(gp.trible_population);
-    setArthikMaryada(gp.arthik_maryada);
-    setVillageType(gp.village_type);
+    setBankName(gp.name); // Use gp.gp_id to set the bankName
+    setaccountNo(gp.account_no);
+    setyojanayearid(gp.year_id);
+    setamount(gp.amount);
+
     setStatus(gp.status);
 
     handleShowPrint();
@@ -275,74 +237,45 @@ const BankData = ({ initialBankData }: Props) => {
         handleSubmit={handleSubmit}
         title={
           updateTownId
-            ? "Update Grampanchayat Details"
-            : "Insert Grampanchayat Details"
+            ? "Update Bank Details"
+            : "Insert Bank Details"
         }
         formData={{
           fields: [
-            // {
-            //     label: "Select Taluka:",
-            //     value: talukaId,
-            //     onChange: (e) => setTalukaId(e.target.value),
-            //     type: "select",
-            //     options: sup.map((taluka: any) => ({
-            //       value: taluka.id,
-            //       label: taluka.name,
-            //     })),
-            //     placeholder: "Select Taluka", // Optional placeholder for select input
-            //   },
             {
-              label: "Enter Grampanchayat Name:",
-              value: townName, // Ensure this uses townName
+              label: "Select Year",
+              value: yojanayearid,
+              onChange: (e) => setyojanayearid(e.target.value),
               type: "select",
-              placeholder: "Enter grampanchayat name",
-              onChange: (e) => setTownName(e.target.value), // Keep this to set townName
-              options: filteredGrampanchayat.map((gp: any) => ({
-                value: gp.id,
-                label: gp.name,
+              options: YojnaYear.map((year: YojanaYear) => ({
+                value: year.yojana_year_id,
+                label: year.yojana_year,
               })),
+              placeholder: "Select Taluka", // Optional placeholder for select input
+            },
+            {
+              label: "Bank Name:",
+              value: bankName, // Ensure this uses bankName
+              type: "text",
+              placeholder: "Enter Bank name",
+              onChange: (e) => setBankName(e.target.value), // Keep this to set bankName
+
             },
 
             {
-              label: "Mahsul Gaav",
-              value: nameMarathi || "",
+              label: "Account No",
+              value: accountNo || "",
               type: "text",
-              placeholder: "Enter Arthik Maryada",
-              onChange: (e) => setNameMarathi(e.target.value),
-            },
-            {
-              label: "Enter Village Type",
-              value: villageType,
-              type: "select",
-              placeholder: "Enter grampanchayat name",
-              onChange: (e) => setVillageType(e.target.value), // Keep this to set townName
-              options: [
-                { label: "TCP", value: "TCP" },
-                { label: "OTSP", value: "OTSP" },
-                // Add other options here if needed
-              ],
+              placeholder: "Enter Account No",
+              onChange: (e) => setaccountNo(e.target.value),
             },
 
             {
-              label: "population",
-              value: population || "",
+              label: "Amount",
+              value: amount || "",
               type: "text",
-              placeholder: "Enter Total Population",
-              onChange: (e) => setPopulation(e.target.value),
-            },
-            {
-              label: "Enter Trible Population:",
-              value: triblePopulation || "",
-              type: "text",
-              placeholder: "Enter Trible Population",
-              onChange: (e) => setTriblePopulation(e.target.value),
-            },
-            {
-              label: "Enter Arthik Maryada:",
-              value: arthikMaryada || "",
-              type: "text",
-              placeholder: "Enter Arthik Maryada",
-              onChange: (e) => setArthikMaryada(e.target.value),
+              placeholder: "Enter Account No",
+              onChange: (e) => setamount(e.target.value),
             },
           ],
           error,

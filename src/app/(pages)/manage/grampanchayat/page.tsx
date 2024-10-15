@@ -28,7 +28,7 @@ const page = async () => {
   return (
     <div>
       
-      <h1 className="text-center">Cluster Management</h1>
+      <h1 className="card card-body mt-5">Cluster Management</h1>
       <Grampanchayat grampanchayat={grampanchayat} talukas={talukas} />
     </div>
   );

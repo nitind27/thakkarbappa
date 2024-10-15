@@ -22,13 +22,19 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
     id: suvidha.id,
     name: suvidha.name,
     status: suvidha.status,
-  }));
+  })).reverse();
 
   const columns = [
     {
-      accessorKey: "id",
-      header: "ID",
+      accessorKey: "serial_number", // Use a new accessor for the serial number
+      header: "S.No", // Header for the serial number
+      cell: ({ row }: any) => (
+        <div>
+          {row.index + 1} {/* Display the index + 1 for serial number */}
+        </div>
+      ),
     },
+
     {
       accessorKey: "name",
       header: "Suvidha Name",
@@ -49,9 +55,8 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
             Edit
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
@@ -89,22 +94,20 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
 
         if (response.ok) {
           setFacility((prevData) =>
-            prevData.map((taluka :any) =>
+            prevData.map((taluka: any) =>
               taluka.id == grampanchayatid
                 ? { ...taluka, status: newStatus }
                 : taluka
             )
           );
           toast.success(
-            `Suvidha ${
-              newStatus === "Active" ? "activated" : "deactivated"
+            `Suvidha ${newStatus === "Active" ? "activated" : "deactivated"
             } successfully!`
           );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the Suvidha status: ${
-              errorData.error || "Unknown error"
+            `Failed to change the Suvidha status: ${errorData.error || "Unknown error"
             }`
           );
         }
@@ -125,22 +128,22 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-  
+
     if (!suvidhaName) {
       setError("Suvidha name is required.");
       return;
     }
-  
+
     try {
       const method = suvidhaid ? "PUT" : "POST";
       const url = suvidhaid ? `/api/suvidha/update` : `/api/suvidha/insert`;
 
-  
+
       const bodyData = {
         name: suvidhaName,
         ...(suvidhaid && { id: suvidhaid.toString() }), // Convert BigInt to string
       };
-  
+
       const response = await fetch(url, {
         method,
         headers: {
@@ -148,7 +151,7 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
         },
         body: JSON.stringify(bodyData),
       });
-  
+
       if (response.ok) {
         if (suvidhaid) {
           setFacility((prevData) =>
@@ -162,13 +165,12 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
           setFacility((prevData) => [...prevData, createdData]);
           toast.success("Suvidha inserted successfully!");
         }
-  
+
         handleClosePrint();
       } else {
         const errorData = await response.json();
         toast.error(
-          `Failed to ${suvidhaid ? "update" : "insert"} Suvidha: ${
-            errorData.message || "Unknown error"
+          `Failed to ${suvidhaid ? "update" : "insert"} Suvidha: ${errorData.message || "Unknown error"
           }`
         );
       }
@@ -176,7 +178,7 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
       toast.error("An unexpected error occurred.");
     }
   };
-  
+
 
   const handleEdit = (suvidha: any) => {
     setUpdateSuvidha(suvidha.id); // Set the ID of the facility being edited
@@ -197,7 +199,7 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
             style={{ minWidth: "120px" }}
           >
             <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
-            Add Grampanchayat
+            Add Suvidha
           </Button>
         }
       />
