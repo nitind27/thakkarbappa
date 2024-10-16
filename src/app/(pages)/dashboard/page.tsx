@@ -1,16 +1,13 @@
+import LanguageSelector from "@/components/LanguageSwitcher/LanguageSwitcher";
 
-import LanguageSwitcher from '@/components/LanguageSwitcher/LanguageSwitcher'
-
-import React from 'react'
-
-  
-const page = () => {
+const HomePage = () => {
   return (
-    <>
+    <div>
+      <h1>Welcome to Our Website</h1>
+      <LanguageSelector />
+      {/* Other components */}
+    </div>
+  );
+};
 
-    <LanguageSwitcher />
-    </>
-  )
-}
-
-export default page
+export default HomePage;

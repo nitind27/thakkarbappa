@@ -279,30 +279,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Validate required fields
-    // if (
-    //   !schoolName ||
-    //   !address ||
-    //   !clusterId ||
-    //   !talukaId ||
-    //   !udias ||
-    //   !stds ||
-    //   !medium ||
-    //   !emailId ||
-    //   !mukhyaName ||
-    //   !mukhyaContact ||
-    //   !mukhyaEmail ||
-    //   !purushName ||
-    //   !purushContact ||
-    //   !purushEmail ||
-    //   !striName ||
-    //   !striContact ||
-    //   !striEmail ||
-    //   !schoolNameMr
-    // ) {
-    //   setError("All fields are required.");
-    //   return;
-    // }
+ 
 
     const errors = validateSchoolForm({
       schoolName,
@@ -441,7 +418,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             style={{ minWidth: "120px" }}
           >
             <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
-            Add Grampanchayat
+            Add School
           </Button>
         }
       />
@@ -505,7 +482,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
                 }
               },
             },
-            
+
             {
               label: "STDS",
               value: stds,
@@ -548,7 +525,14 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
               value: mukhyaContact,
               type: "text",
               placeholder: "Enter Mukhya Contact",
-              onChange: (e) => setMukhyaContact(e.target.value),
+
+              onChange: (e) => {
+                // Ensure that only digits are allowed and limit to 11 digits
+                const inputValue = e.target.value;
+                if (/^\d*$/.test(inputValue) && inputValue.length <= 10) {
+                  setMukhyaContact(inputValue);
+                }
+              },
             },
             {
               label: "Mukhya Email",
@@ -569,7 +553,14 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
               value: purushContact,
               type: "text",
               placeholder: "Enter Purush Contact",
-              onChange: (e) => setPurushContact(e.target.value),
+
+              onChange: (e) => {
+                // Ensure that only digits are allowed and limit to 11 digits
+                const inputValue = e.target.value;
+                if (/^\d*$/.test(inputValue) && inputValue.length <= 10) {
+                  setPurushContact(inputValue);
+                }
+              },
             },
             {
               label: "Purush Email",
@@ -586,17 +577,24 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
               onChange: (e) => setStriName(e.target.value),
             },
             {
-              label: "Stri Email",
+              label: "Stri Contact",
               value: striContact,
               type: "text",
               placeholder: "Enter Stri Contact",
-              onChange: (e) => setStriContact(e.target.value),
+
+              onChange: (e) => {
+                // Ensure that only digits are allowed and limit to 11 digits
+                const inputValue = e.target.value;
+                if (/^\d*$/.test(inputValue) && inputValue.length <= 10) {
+                  setStriContact(inputValue);
+                }
+              },
             },
             {
-              label: "Stri Contact",
+              label: "Stri Email",
               value: striEmail,
               type: "text",
-              placeholder: "Enter Stri Contact",
+              placeholder: "Enter Stri Email",
               onChange: (e) => setStriEmail(e.target.value),
             },
             {

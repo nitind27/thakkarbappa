@@ -27,7 +27,7 @@ const Page = async () => {
 
   return (
     <div>
-      <h1 className="card card-body mt-5">Cluster Detail</h1>
+      <h1 className="card card-body mt-5">SuperVisor Detail</h1>
       <Supervisor initialSupervisorlData={Supervisordata} UserCategory={UserCategory} Padname={Padname} />
     </div>
   );

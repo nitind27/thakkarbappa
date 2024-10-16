@@ -14,6 +14,7 @@ import type {
 } from "../type";
 import { toast } from "react-toastify";
 import { formatDate } from "@/lib/utils";
+import { validationBank } from "@/utils/Validation";
 
 type Props = {
   Villages: Villages[];
@@ -56,10 +57,18 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
         ? formatDate(BankData.ins_date_time)
         : formatDate(BankData.ins_date_time.toISOString()),
 
-  }));
+  })).reverse();
 
   const columns = [
-    { accessorKey: "id", header: "ID" },
+    {
+      accessorKey: "serial_number", // Use a new accessor for the serial number
+      header: "S.No", // Header for the serial number
+      cell: ({ row }: any) => (
+        <div>
+          {row.index + 1} {/* Display the index + 1 for serial number */}
+        </div>
+      ),
+    },
     { accessorKey: "name", header: "Name" },
     { accessorKey: "account_no", header: "Account No" },
     { accessorKey: "yojana_year_id", header: "Yojana" },
@@ -158,11 +167,14 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Validate input fields
-    if (!bankName || !accountNo || !yojanayearid || !amount) {
-      setError("All fields are required.");
+
+    const errorMsg = validationBank(bankName, accountNo, yojanayearid, String(amount));
+
+    if (errorMsg.length > 0) {
+      setError(errorMsg.join("<br />"));
       return;
     }
+
 
     // Ensure the id is included for updates
     const bodyData = {
@@ -185,6 +197,22 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
       });
 
       if (response.ok) {
+
+        if (!updateTownId) {
+          // If inserting a new entry
+          const bankdata = await response.json();
+
+          setBankData((prevData) => [...prevData, bankdata]);
+        } else {
+          // If updating an existing entry
+          setBankData((prevData: any) =>
+            prevData.map((balance: any) =>
+              balance.id === updateTownId
+                ? { ...balance, ...bodyData }
+                : balance
+            )
+          );
+        }
         alert(`Village ${updateTownId ? "updated" : "inserted"} successfully!`);
         handleClosePrint();
         // Optionally refresh the table data here
@@ -226,7 +254,7 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
             style={{ minWidth: "120px" }}
           >
             <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
-            Add Grampanchayat
+            Add Bank Detail
           </Button>
         }
       />
@@ -267,7 +295,14 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
               value: accountNo || "",
               type: "text",
               placeholder: "Enter Account No",
-              onChange: (e) => setaccountNo(e.target.value),
+
+              onChange: (e) => {
+                // Ensure that only digits are allowed and limit to 11 digits
+                const inputValue = e.target.value;
+                if (/^\d*$/.test(inputValue) && inputValue.length <= 16) {
+                  setaccountNo(inputValue);
+                }
+              },
             },
 
             {

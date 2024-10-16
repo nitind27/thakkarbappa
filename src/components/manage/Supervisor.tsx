@@ -6,6 +6,7 @@ import { KTIcon } from "@/_metronic/helpers"; // Adjust if needed
 import CustomModal from "@/common/CustomModal"; // Adjust path if necessary
 import type { grampanchayat, Padnam, Supervisor, UserCategory } from "../type";
 import { toast } from "react-toastify";
+import { validateFormsupervisor } from "@/utils/Validation";
 
 type Props = {
   UserCategory: UserCategory[];
@@ -54,10 +55,18 @@ const Supervisor = ({
     category_id: UserCategorys[supervisor.category_id],
     padnam_id: Padnames[supervisor.padnam_id],
     sup_status: supervisor.sup_status,
-  }));
+  })).reverse();
 
   const columns = [
-    { accessorKey: "sup_id", header: "ID" },
+    {
+      accessorKey: "serial_number", // Use a new accessor for the serial number
+      header: "S.No", // Header for the serial number
+      cell: ({ row }: any) => (
+        <div>
+          {row.index + 1} {/* Display the index + 1 for serial number */}
+        </div>
+      ),
+    },
     { accessorKey: "sup_name", header: "Supervisor Name" },
     { accessorKey: "sup_contact", header: "Contact Number" },
     { accessorKey: "sup_address", header: "Address" },
@@ -79,14 +88,13 @@ const Supervisor = ({
               Edit
             </button>
             <button
-              className={`btn btn-sm ${
-                row.original.status === "Active" ? "btn-danger" : "btn-warning"
-              } ms-5`}
+              className={`btn btn-sm ${row.original.sup_status === "Active" ? "btn-danger" : "btn-warning"
+                } ms-5`}
               onClick={() =>
-                handleDeactivate(row.original.sup_id, row.original.status)
+                handleDeactivate(row.original.sup_id, row.original.sup_status)
               }
             >
-           {row.original.status === "Active" ? "Deactivate" : "Activate"}
+              {row.original.sup_status === "Active" ? "Deactivate" : "Activate"}
             </button>
           </div>
         </div>
@@ -94,29 +102,29 @@ const Supervisor = ({
     },
   ];
 
-  const handleDeactivate = async (clusterId: any, currentStatus: any) => {
+  const handleDeactivate = async (supervisorid: any, currentStatus: any) => {
     const confirmMessage = currentStatus === "Active"
       ? "Are you sure you want to deactivate this cluster?"
       : "Are you sure you want to activate this cluster?";
 
     if (window.confirm(confirmMessage)) {
       try {
-        const response = await fetch(`/api/supervisor/delete/${clusterId}`, {
+        const response = await fetch(`/api/supervisor/delete/${supervisorid}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            status: currentStatus === "Active" ? "Deactive" : "Active",
+            sup_status: currentStatus === "Active" ? "Deactive" : "Active", // Consistent key
           }),
         });
 
         if (response.ok) {
           // Update local state without page reload
-          setSupervisors(prevData => 
-            prevData.map(cluster => 
-              cluster.sup_id === clusterId 
-                ? { ...cluster, status: currentStatus === "Active" ? "Deactive" : "Active" }
+          setSupervisors(prevData =>
+            prevData.map(cluster =>
+              cluster.sup_id === supervisorid
+                ? { ...cluster, sup_status: currentStatus === "Active" ? "Inactive" : "Active" } // Consistent key
                 : cluster
             )
           );
@@ -153,18 +161,14 @@ const Supervisor = ({
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (
-      !username ||
-      !PadName ||
-      !Category ||
-      !contactNo ||
-      !Password ||
-      !address
-    ) {
-      setError("All fields are required.");
+
+    const errorMsg = validateFormsupervisor(username, PadName, Category, contactNo, Password, address);
+
+    if (errorMsg.length > 0) {
+      // Set error by joining messages with <br /> for multiline display
+      setError(errorMsg.join("<br />"));
       return;
     }
-
     try {
       const method = updateTownId ? "PUT" : "POST";
       const url = updateTownId
@@ -189,6 +193,22 @@ const Supervisor = ({
       });
 
       if (response.ok) {
+
+        if (!updateTownId) {
+          // If inserting a new entry
+          const supervisordata = await response.json();
+
+          setSupervisors((prevData) => [...prevData, supervisordata]);
+        } else {
+          // If updating an existing entry
+          setSupervisors((prevData: any) =>
+            prevData.map((balance: any) =>
+              balance.sup_id === updateTownId
+                ? { ...balance, ...bodyData }
+                : balance
+            )
+          );
+        }
         toast.success(
           `Supervisor ${updateTownId ? "updated" : "inserted"} successfully!`
         );
@@ -196,8 +216,7 @@ const Supervisor = ({
       } else {
         const data = await response.json();
         toast.error(
-          `Failed to ${updateTownId ? "update" : "insert"} supervisor: ${
-            data.error
+          `Failed to ${updateTownId ? "update" : "insert"} supervisor: ${data.error
           }`
         );
       }
@@ -282,7 +301,15 @@ const Supervisor = ({
               label: "Contact Number",
               value: contactNo,
               type: "text",
-              onChange: (e) => setContactNo(e.target.value),
+              // onChange: (e) => setContactNo(e.target.value),
+
+              onChange: (e) => {
+                // Ensure that only digits are allowed and limit to 11 digits
+                const inputValue = e.target.value;
+                if (/^\d*$/.test(inputValue) && inputValue.length <= 10) {
+                  setContactNo(inputValue);
+                }
+              },
             },
             {
               label: "Password",

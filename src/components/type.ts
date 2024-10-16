@@ -150,12 +150,11 @@ export type YojanaYear = {
   year_status: string; // Represents varchar(10)
 };
 
-
 export type OpeningBalance = {
   open_bal_id: number; // Represents int(11)
   open_bal: any; // Change from number to Decimal
   year_id: number; // Represents int(11)
   status: string; // Represents varchar(10) with default value 'Active'
   ins_date_time: Date; // Represents datetime
-  update_date_time: Date; // Represents datetime
-};
+  update_date_time: Date | null; // Allow null values
+}

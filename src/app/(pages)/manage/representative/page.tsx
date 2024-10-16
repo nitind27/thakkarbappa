@@ -22,7 +22,7 @@ const Page = async () => {
 
   return (
     <div>
-      <h1 className="card card-body mt-5">Cluster Detail</h1>
+      <h1 className="card card-body mt-5">Representative Detail</h1>
       <Representative initialRepresentative={representatives} />
     </div>
   );

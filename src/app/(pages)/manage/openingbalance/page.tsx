@@ -23,7 +23,7 @@ const Page = async () => {
 
   return (
     <div>
-      <h1 className="card card-body mt-5">Cluster Detail</h1>
+      <h1 className="card card-body mt-5">OpenBalance Detail</h1>
       <Openingbalanceadd initialOpenBalanceData={OpeningBalance} YojnaYear={YojnaYear} />
     </div>
   );

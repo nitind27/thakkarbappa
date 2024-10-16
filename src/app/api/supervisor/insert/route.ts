@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     }
 
     // Hash the password
-    const hashedPassword = await bcrypt.hash(sup_password, 10);
+    // const hashedPassword = await bcrypt.hash(sup_password, 10);
 
     // Create new Supervisor entry
     const newSupervisor = await prisma.supervisor.create({
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
         sup_name,
         sup_contact,
         sup_address,
-        sup_password: hashedPassword,
+        sup_password,
         category_id: categoryIdInt, // Use the converted integer
         padnam_id: padnamIdInt,     // Use the converted integer
         sup_status: sup_status || 'Active', // Default to 'Active' if not provided

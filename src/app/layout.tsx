@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
-import "../_metronic/assets/sass/style.react.scss";
-import "../_metronic/assets/fonticon/fonticon.css";
-import "../_metronic/assets/keenicons/duotone/style.css";
-import "../_metronic/assets/keenicons/outline/style.css";
-import "../_metronic/assets/keenicons/solid/style.css";
-import "../_metronic/assets/sass/style.scss";
-import "../_metronic/assets/sass/custom/main.module.scss";
-import "../_metronic/assets/sass/custom/common.scss";
+import "./../_metronic/assets/sass/style.react.scss";
+import "./../_metronic/assets/fonticon/fonticon.css";
+import "./../_metronic/assets/keenicons/duotone/style.css";
+import "./../_metronic/assets/keenicons/outline/style.css";
+import "./../_metronic/assets/keenicons/solid/style.css";
+import "./../_metronic/assets/sass/style.scss";
+import "./../_metronic/assets/sass/custom/main.module.scss";
+import "./../_metronic/assets/sass/custom/common.scss";
 import "react-toastify/dist/ReactToastify.css";
+
 import { ThemeModeProvider } from "@/_metronic/partials";
+import { LanguageProvider } from "@/components/LanguageSwitcher/LanguageContext";
 
 export const metadata: Metadata = {
   title: "Politics",
@@ -30,8 +32,10 @@ export default function RootLayout({
                   <MasterLayout>
                   <AuthProvider>
                    <ToastContainer /> */}
+        <LanguageProvider>
 
-        <ThemeModeProvider>{children}</ThemeModeProvider>
+          <ThemeModeProvider>{children}</ThemeModeProvider>
+        </LanguageProvider>
         {/* </AuthProvider>
                     </MasterLayout>
                   <MasterInit />

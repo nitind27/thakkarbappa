@@ -118,11 +118,11 @@ export default function Table({ data, columns, Button }: any) {
               </tr>
             ))}
           </thead>
-          <tbody>
+          <tbody >
             {table.getRowModel().rows.map((row) => (
               <tr key={row.id} className="text-start p-2">
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="text-start p-2">
+                  <td key={cell.id} className="text-start p-2" >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}

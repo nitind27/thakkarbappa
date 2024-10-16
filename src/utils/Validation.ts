@@ -226,25 +226,40 @@ export const validateSchoolForm = ({
     });
 
     // UDIAS should be a maximum of 11 digits
-    if (udias && udias.length > 11) {
-        errors.push("UDIAS must not exceed 11 digits.");
+    // UDIAS should be exactly 11 digits
+    if (!udias) {
+        errors.push("UDIAS is required.");
+    } else if (udias.length !== 11) {
+        errors.push("UDIAS must be exactly 11 digits.");
     }
 
-    // Validate striEmail format
-    if (striEmail && !/\S+@\S+\.\S+/.test(striEmail)) {
-        errors.push("Stri Email must be a valid email format.");
-    }
+
+    // Validate email formats (required and must be valid)
+    const validateEmail = (email: string, name: string) => {
+        if (!email) {
+            errors.push(`${name} is required.`);
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            errors.push(`${name} must be a valid email format.`);
+        }
+    };
+
+    validateEmail(emailId, "Email ID");
+    validateEmail(mukhyaEmail, "Mukhya Email");
+    validateEmail(purushEmail, "Purush Email");
+    validateEmail(striEmail, "Stri Email");
 
     // Validate contact formats (10 digits)
     const validateContact = (contact: string, name: string) => {
-        if (contact && !/^\d{10}$/.test(contact)) {
+        if (!contact) {
+            errors.push(`${name} is required.`);
+        } else if (!/^\d{10}$/.test(contact)) {
             errors.push(`${name} must be a 10-digit number.`);
         }
     };
 
-    // validateContact(striContact, "Stri Contact");
-    // validateContact(mukhyaContact, "Mukhya Contact");
-    // validateContact(purushContact, "Purush Contact");
+    validateContact(mukhyaContact, "Mukhya Contact");
+    validateContact(purushContact, "Purush Contact");
+    validateContact(striContact, "Stri Contact");
 
     return errors; // Returns an array of error messages
 };
@@ -253,9 +268,199 @@ export const validateSchoolForm = ({
 
 
 
+export const validateSuvidhaname = (name: string): string | null => {
+    if (!name) {
+        return "Suvidha name is required.";
+    }
+    if (!isAlphaWithSpaces(name)) {
+        return "Suvidha name must contain only alphabetic characters and spaces.";
+    }
+    return null; // No errors
+};
+
+
+
+
+
+export const validaterepresentative = (name: string): string | null => {
+    if (!name) {
+        return "Representative name is required.";
+    }
+    if (!isAlphaWithSpaces(name)) {
+        return "Representative name must contain only alphabetic characters and spaces.";
+    }
+    return null; // No errors
+};
 
 
 
 
 
 
+// Function to validate alphanumeric characters in any language
+export const isAlphaNumeric = (value: string): boolean => {
+    return /^[A-Za-zÀ-ÿ\u0900-\u097F0-9]+$/.test(value);
+};
+
+// Function to validate contact number (numeric only)
+
+
+// Validation functions for each field
+export const validateUsername = (username: string): string | null => {
+    if (!username) {
+        return "Username is required.";
+    }
+    if (!isAlphaNumeric(username)) {
+        return "Username must contain only alphanumeric characters.";
+    }
+    return null;
+};
+
+export const validatePadName = (padName: string): string | null => {
+    if (!padName) {
+        return "Pad Name is required.";
+    }
+    return null;
+};
+
+export const validateCategory = (category: string): string | null => {
+    if (!category) {
+        return "Category is required.";
+    }
+    return null;
+};
+
+export const validateContactNo = (contactNo: string): string | null => {
+    if (!contactNo) {
+        return "Contact Number is required.";
+    }
+    if (!isNumeric(contactNo)) {
+        return "Contact Number must contain only numbers.";
+    }
+    if (contactNo.length !== 10) {
+        return "Contact Number must be exactly 10 digits.";
+    }
+    return null;
+};
+
+
+export const validatePassword = (password: string): string | null => {
+    if (!password) {
+        return "Password is required.";
+    }
+    return null;
+};
+
+export const validateAddress = (address: string): string | null => {
+    if (!address) {
+        return "Address is required.";
+    }
+    return null;
+};
+
+// Main validation function
+export const validateFormsupervisor = (
+    username: string,
+    padName: string,
+    category: string,
+    contactNo: string,
+    password: string,
+    address: string
+): string[] => {
+    const errors: string[] = [];
+
+    const usernameError = validateUsername(username);
+    if (usernameError) errors.push(usernameError);
+
+    const padNameError = validatePadName(padName);
+    if (padNameError) errors.push(padNameError);
+
+    const categoryError = validateCategory(category);
+    if (categoryError) errors.push(categoryError);
+
+    const contactNoError = validateContactNo(contactNo);
+    if (contactNoError) errors.push(contactNoError);
+
+    const passwordError = validatePassword(password);
+    if (passwordError) errors.push(passwordError);
+
+    const addressError = validateAddress(address);
+    if (addressError) errors.push(addressError);
+
+    return errors; // Returns an array of error messages
+};
+
+
+
+
+
+// Helper function to check if a string contains only alphanumeric characters (no special characters)
+export const isAlphaNumericbank = (value: string): boolean => {
+    return /^[A-Za-z0-9\s]+$/.test(value);
+};
+
+
+
+// Validation function for the bank form
+export const validationBank = (
+    bankName: string,
+    accountNo: string,
+    yojanayearid: string | number,
+    amount: string
+): string[] => {
+    const errors: string[] = [];
+
+    // Validate bankName (required and no special characters)
+    if (!bankName) {
+        errors.push("Bank Name is required.");
+    } else if (!isAlphaNumericbank(bankName)) {
+        errors.push("Bank Name must not contain special characters.");
+    }
+
+    // Validate accountNo (required, no special characters, and between 11 to 16 digits)
+    if (!accountNo) {
+        errors.push("Bank Account Number is required.");
+    } else if (!isNumeric(accountNo)) {
+        errors.push("Bank Account Number must contain only numbers.");
+    } else if (accountNo.length < 11 || accountNo.length > 16) {
+        errors.push("Bank Account Number must be between 11 and 16 digits.");
+    }
+
+    // Validate yojanayearid (required)
+    if (!yojanayearid) {
+        errors.push("Yojana Year ID is required.");
+    }
+
+    // Validate amount (required, must be a number)
+    if (!amount) {
+        errors.push("Amount is required.");
+    } else if (!isNumeric(amount)) {
+        errors.push("Amount must contain only numbers.");
+    }
+
+    return errors; // Return the array of error messages
+};
+
+
+
+export const validationOpenBalance = (
+    bankyear: string | number, // Accepting string or number for bankyear
+    openbalance: string
+  ): string[] => {
+    const errors: string[] = [];
+  
+    // Validate bankyear (required)
+    if (!bankyear) {
+      errors.push("Bank Year is required.");
+    }
+  
+    // Validate openbalance (required and only numbers allowed)
+    if (!openbalance) {
+      errors.push("Open Balance is required.");
+    } else if (!isNumeric(openbalance)) {
+      errors.push("Open Balance must contain only numbers.");
+    }
+  
+    return errors; // Return an array of error messages
+  };
+  

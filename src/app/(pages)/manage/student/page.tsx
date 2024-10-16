@@ -22,8 +22,8 @@ const Page = async () => {
 
   return (
     <div>
-      <h1 className="card card-body mt-5">Cluster Detail</h1>
-      <School initialschoolData={schooldata} />
+      <h1 className="card card-body mt-5">student Detail</h1>
+      {/* <School initialschoolData={schooldata} /> */}
     </div>
   );
 };

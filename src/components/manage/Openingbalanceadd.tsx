@@ -8,6 +8,7 @@ import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
 import { toast } from "react-toastify";
+import { validationOpenBalance } from "@/utils/Validation";
 
 type Props = {
   initialOpenBalanceData: OpeningBalance[];
@@ -38,12 +39,17 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
       typeof balance.ins_date_time === "string"
         ? formatDate(balance.ins_date_time)
         : formatDate(balance.ins_date_time.toISOString()),
-  }));
+  })).reverse();
 
   const columns = [
     {
-      accessorKey: "open_bal_id ",
-      header: "ID",
+      accessorKey: "serial_number", // Use a new accessor for the serial number
+      header: "S.No", // Header for the serial number
+      cell: ({ row }: any) => (
+        <div>
+          {row.index + 1} {/* Display the index + 1 for serial number */}
+        </div>
+      ),
     },
     {
       accessorKey: "open_bal",
@@ -118,12 +124,13 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Validate input fields
-    if (!bankyear || !openbalance) {
-      setError("All fields are required.");
+
+    const errorMsg = validationOpenBalance(bankyear, openbalance);
+
+    if (errorMsg.length > 0) {
+      setError(errorMsg.join("<br />"));
       return;
     }
-
     // Ensure the id is included for updates
     const bodyData = {
 
@@ -143,6 +150,23 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
       });
 
       if (response.ok) {
+
+  
+        if (!updateClusterId) {
+          // If inserting a new entry
+          const balancedata = await response.json();
+
+          setopenbalanceData((prevData) => [...prevData, balancedata]);
+        } else {
+          // If updating an existing entry
+          setopenbalanceData((prevData: any) =>
+            prevData.map((balance: any) =>
+              balance.open_bal_id === updateClusterId
+                ? { ...balance, ...bodyData }
+                : balance
+            )
+          );
+        }
         alert(`Village ${updateClusterId ? "updated" : "inserted"} successfully!`);
         handleClosePrint();
 
@@ -190,7 +214,7 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
             style={{ minWidth: "120px" }}
           >
             <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
-            Add Cluster
+            Add Balance
           </Button>
         }
       />
@@ -219,7 +243,7 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
               value: openbalance,
               type: "text",
               placeholder: "Enter Amount",
-              error,
+
               onChange: (e) => setOpenBalanceAdd(e.target.value),
             },
           ],

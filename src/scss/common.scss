@@ -530,3 +530,40 @@ footer{
 .dropdown::after{
   display: none !important; 
 }
+
+
+
+
+
+
+/* Hide the Google Translate bar and other elements */
+.goog-te-banner-frame {
+  display: none !important; /* Hide the translation banner frame */
+}
+
+.goog-te-gadget-simple {
+  display: none !important; /* Hide the Google Translate dropdown */
+}
+
+.goog-te-combo {
+  display: none !important; /* Hide the dropdown in the iframe */
+}
+
+/* Hide the "Show original" and "Translate" toolbar */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+/* Hide the white space that may be created by the banner */
+body {
+  top: 0px !important; /* Prevent body being pushed down */
+}
+
+/* Hides the Google Translate logo */
+.goog-logo-link {
+  display: none !important;
+}
+
+.goog-te-gadget {
+  color: transparent !important;
+}

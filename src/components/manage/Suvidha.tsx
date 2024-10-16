@@ -6,6 +6,7 @@ import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
 import { Facility } from "../type";
 import { toast } from "react-toastify";
+import { validateSuvidhaname } from "@/utils/Validation";
 
 type Props = {
   initialfacilitydata: Facility[];
@@ -129,8 +130,10 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!suvidhaName) {
-      setError("Suvidha name is required.");
+
+    const errorMsg = validateSuvidhaname(suvidhaName);
+    if (errorMsg) {
+      setError(errorMsg);
       return;
     }
 
@@ -219,6 +222,7 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
               onChange: (e) => setSuvidhaName(e.target.value),
             },
           ],
+          error,
         }}
         submitButtonLabel="Submit"
       />

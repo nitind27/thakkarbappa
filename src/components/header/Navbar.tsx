@@ -33,7 +33,7 @@ const Navbar = () => {
         </div>
         <HeaderNotificationsMenu />
       </div>
-
+    
       <div className={clsx("app-navbar-item", itemClass)}>
         <ThemeModeSwitcher
           toggleBtnClass={clsx("btn-active-light-primary btn-custom")}

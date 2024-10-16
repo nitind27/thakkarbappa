@@ -6,6 +6,7 @@ import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
 import { toast } from "react-toastify";
 import type { Representative } from "../type";
+import { validaterepresentative } from "@/utils/Validation";
 
 const STATUS_MESSAGES = {
   ACTIVE: "Active",
@@ -25,7 +26,7 @@ type Props = {
 
 const Representative = ({ initialRepresentative }: Props) => {
   const [showPrintModal, setShowPrintModal] = useState(false);
-  const [suvidhaName, setSuvidhaName] = useState("");
+  const [representativeName, setrepresentativeName] = useState("");
   const [error, setError] = useState<string>("");
   const [representativeId, setUpdateRepresentative] = useState<bigint | null>(null);
   const [representative, setRepresentative] = useState<Representative[]>(initialRepresentative);
@@ -34,12 +35,17 @@ const Representative = ({ initialRepresentative }: Props) => {
     id,
     name,
     status,
-  }));
+  })).reverse();
 
   const columns = [
     {
-      accessorKey: "id",
-      header: "ID",
+      accessorKey: "serial_number", // Use a new accessor for the serial number
+      header: "S.No", // Header for the serial number
+      cell: ({ row }: any) => (
+        <div>
+          {row.index + 1} {/* Display the index + 1 for serial number */}
+        </div>
+      ),
     },
     {
       accessorKey: "name",
@@ -104,24 +110,27 @@ const Representative = ({ initialRepresentative }: Props) => {
 
   const handleClosePrint = () => {
     setShowPrintModal(false);
-    setSuvidhaName(""); // Clear input field on close
+    setrepresentativeName(""); // Clear input field on close
     setUpdateRepresentative(null); // Reset ID on close
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!suvidhaName) {
-      setError("Representative name is required.");
+
+    const errorMsg = validaterepresentative(representativeName);
+    if (errorMsg) {
+      setError(errorMsg);
       return;
     }
+
 
     try {
       const method = representativeId ? "PUT" : "POST";
       const url = representativeId ? `/api/Representative/update` : `/api/Representative/insert`;
 
       const bodyData = {
-        name: suvidhaName,
+        name: representativeName,
         ...(representativeId && { id: representativeId }), // Include ID only if updating
       };
 
@@ -138,7 +147,7 @@ const Representative = ({ initialRepresentative }: Props) => {
           // Update local state for updated Representative
           setRepresentative((prevData) =>
             prevData.map((rep) =>
-              rep.id === representativeId ? { ...rep, name: suvidhaName } : rep
+              rep.id === representativeId ? { ...rep, name: representativeName } : rep
             )
           );
           toast.success(STATUS_MESSAGES.SUCCESS_UPDATE);
@@ -159,9 +168,9 @@ const Representative = ({ initialRepresentative }: Props) => {
     }
   };
 
-  const handleEdit = (suvidha: any) => {
-    setUpdateRepresentative(suvidha.id); // Set the ID of the facility being edited
-    setSuvidhaName(suvidha.name); // Set the name for editing
+  const handleEdit = (representative: any) => {
+    setUpdateRepresentative(representative.id); // Set the ID of the facility being edited
+    setrepresentativeName(representative.name); // Set the name for editing
     handleShowPrint(); // Show the modal for editing
   };
 
@@ -173,7 +182,7 @@ const Representative = ({ initialRepresentative }: Props) => {
         Button={
           <Button variant="primary" onClick={handleShowPrint} className="btn" style={{ minWidth: "120px" }}>
             <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
-            Add Grampanchayat
+            Add Representative
           </Button>
         }
       />
@@ -182,18 +191,19 @@ const Representative = ({ initialRepresentative }: Props) => {
         show={showPrintModal}
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
-        title={representativeId ? "Update Suvidha Details" : "Insert Suvidha Details"}
+        title={representativeId ? "Update Representative Details" : "Insert Representative Details"}
         formData={{
           fields: [
             {
-              label: "Suvidha Name", 
-              value: suvidhaName,
+              label: "Representative Name", 
+              value: representativeName,
               type: "text",
-              placeholder: "Enter Suvidha Name", 
-              onChange: (e) => setSuvidhaName(e.target.value),
+              placeholder: "Enter Representative Name", 
+              onChange: (e) => setrepresentativeName(e.target.value),
               // errorMessage: error,
             },
           ],
+          error,
         }}
         submitButtonLabel="Submit"
       />
