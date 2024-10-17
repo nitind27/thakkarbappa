@@ -1,47 +1,39 @@
 import { SidebarMenuItem } from "./SidebarMenuItem";
 import { SidebarMenuItemWithSub } from "./SidebarMenuItemWithSub";
 // import { useIntl } from 'react-intl';
-
+import { useLocale, useTranslations } from 'next-intl';
 const SidebarMenuMain = () => {
   // const intl = useIntl();
+  const t = useTranslations('Sidebar');
 
+  const localActive = useLocale();
   return (
     <>
-      <SidebarMenuItem
-        to="/dashboard"
-        icon="home"
-        // title={intl.formatMessage({ id: "MENU.DASHBOARD" })}
-        title="Dashboard"
-        fontIcon="bi-app-indicator"
-      />
-      {/* <SidebarMenuItem
-        to="/manage"
-        icon="calendar"
-        title="Manage"
-        fontIcon="calendar"
+     <SidebarMenuItem
+  to={`/${localActive}/dashboard`}
+  icon="home"
+  title={t('dashboard')}
+  fontIcon="bi-app-indicator"
+/>
 
-      /> */}
-
-
-      <SidebarMenuItemWithSub
-        to='/apps/chat'
-        title='Manage'
-        fontIcon='bi-chat-left'
-        icon='message-text-2'
-      >
-        <SidebarMenuItem to='/manage/cluster' title='Cluster' hasBullet={true} />
-        <SidebarMenuItem to='/manage/town' title='Town' hasBullet={true} />
-        <SidebarMenuItem to='/manage/grampanchayat' title='Gram Panchayat' hasBullet={true} />
-        <SidebarMenuItem to='/manage/mahsulgaav' title='mahsul gaav' hasBullet={true} />
-        <SidebarMenuItem to='/manage/school' title='school' hasBullet={true} />
-        <SidebarMenuItem to='/manage/student' title='student' hasBullet={true} />
-        <SidebarMenuItem to='/manage/suvidha' title='suvidha' hasBullet={true} />
-        <SidebarMenuItem to='/manage/representative' title='pratinidhi' hasBullet={true} />
-        <SidebarMenuItem to='/manage/supervisor' title='vaparkarta' hasBullet={true} />
-        <SidebarMenuItem to='/manage/bank' title='Bank' hasBullet={true} />
-        <SidebarMenuItem to='/manage/openingbalance' title='pranbhik sillak' hasBullet={true} />
-      </SidebarMenuItemWithSub>
-
+<SidebarMenuItemWithSub
+  to='/apps/chat'
+  title='Manage'
+  fontIcon='bi-chat-left'
+  icon='message-text-2'
+>
+  <SidebarMenuItem to={`/${localActive}/manage/cluster`} title={t('clustermenu')} hasBullet={true} />
+  <SidebarMenuItem to={`/${localActive}/manage/town`} title={t('townmenu')} hasBullet={true} />
+  <SidebarMenuItem to={`/${localActive}/manage/grampanchayat`} title={t('GramPanchayat')} hasBullet={true} />
+  <SidebarMenuItem to={`/${localActive}/manage/mahsulgaav`} title={t('Mahsulgaav')} hasBullet={true} />
+  <SidebarMenuItem to={`/${localActive}/manage/school`} title={t('school')} hasBullet={true} />
+  <SidebarMenuItem to={`/${localActive}/manage/student`} title={t('student')} hasBullet={true} />
+  <SidebarMenuItem to={`/${localActive}/manage/suvidha`} title={t('suvidha')} hasBullet={true} />
+  <SidebarMenuItem to={`/${localActive}/manage/representative`} title={t('pratinidhi')} hasBullet={true} />
+  <SidebarMenuItem to={`/${localActive}/manage/supervisor`} title={t('vaparkarta')} hasBullet={true} />
+  <SidebarMenuItem to={`/${localActive}/manage/bank`} title={t('Bank')} hasBullet={true} />
+  <SidebarMenuItem to={`/${localActive}/manage/openingbalance`} title={t('PraranbhikSillak')} hasBullet={true} />
+</SidebarMenuItemWithSub>
 
     </>
   );

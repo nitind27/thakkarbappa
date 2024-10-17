@@ -7,6 +7,7 @@ import CustomModal from "@/common/CustomModal";
 import { grampanchayat, talukasdata } from "../type";
 import { toast } from "react-toastify";
 import { validateFormgrampanchayat } from "@/utils/Validation";
+import { useTranslations } from "next-intl";
 
 type Props = {
   grampanchayat: grampanchayat[];
@@ -14,6 +15,8 @@ type Props = {
 };
 
 const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
+  const t = useTranslations('Grampanchayat');
+
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [townName, setTownName] = useState("");
   const [nameMarathi, setNameMarathi] = useState("");
@@ -43,21 +46,22 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
   const columns = [
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
-      header: "S.No", // Header for the serial number
+      header: `${t('SrNo')}`, // Header for the serial number
       cell: ({ row }: any) => (
         <div>
           {row.index + 1} {/* Display the index + 1 for serial number */}
         </div>
       ),
     },
-    { accessorKey: "name", header: "Grampanchayat" },
-    { accessorKey: "name_marathi", header: "Name (Marathi)" },
-    { accessorKey: "taluka_name", header: "Taluka Name" },
-    { accessorKey: "population", header: "Population" },
-    { accessorKey: "status", header: "Status" },
+    { accessorKey: "name", header: `${t('grampanchayatname')}` },
+    { accessorKey: "name_marathi", header: `${t('marathigrampanchayatname')}` },
+    { accessorKey: "taluka_name", header: `${t('talukaName')}` },
+    { accessorKey: "population", header: `${t('population')}` },
+    { accessorKey: "status", header: `${t('status')}` },
     {
       accessorKey: "actions",
-      header: "Actions",
+      header: `${t('Action')}`,
+
       cell: ({ row }: any) => (
         <div style={{ display: "flex" }}>
           <button
@@ -66,7 +70,7 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
           >
 
             <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
-            Edit
+            {t('edit')}
           </button>
           <button
             className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
@@ -76,7 +80,7 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
             }
           >
             <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-            {row.original.status === "Active" ? "Deactive" : "Activate"}
+            {row.original.status === "Active" ? `${t('Deactive')}` : `${t('Active')}`}
           </button>
         </div>
       ),
@@ -239,7 +243,7 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
             style={{ minWidth: "120px" }}
           >
             <KTIcon iconName={"plus-circle"} className="fs-3" iconType="solid" />
-            Add Grampanchayat
+            {t('addgrampanchayat')}
           </Button>
         }
       />
@@ -250,27 +254,27 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
         handleSubmit={handleSubmit}
         title={
           updateTownId
-            ? "Update Grampanchayat Details"
-            : "Insert Grampanchayat Details"
+            ? `${t('updatepage')}`
+            : `${t('insertpage')}`
         }
         formData={{
           fields: [
             {
-              label: "Enter Grampanchayat Name:",
+              label: `${t('enterGrampanchayatname')}`,
               value: townName,
               onChange: (e) => setTownName(e.target.value),
               type: "text",
-              placeholder: "Enter grampanchayat name",
+              placeholder: `${t('enterGrampanchayatname')}`,
             },
             {
-              label: "Enter Name (Marathi):",
+              label: `${t('enternamemarathi')}`,
               value: nameMarathi,
               type: "text",
-              placeholder: "Enter Marathi name",
+              placeholder: `${t('enternamemarathi')}`,
               onChange: (e) => setNameMarathi(e.target.value),
             },
             {
-              label: "Select Taluka:",
+              label: `${t('selecttaluka')}`,
               value: talukaId,
               onChange: (e) => setTalukaId(e.target.value),
               type: "select",
@@ -278,20 +282,20 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
                 value: taluka.id,
                 label: taluka.name,
               })),
-              placeholder: "Select Taluka", // Optional placeholder for select input
+              placeholder:`${t('selecttaluka')}`, // Optional placeholder for select input
             },
 
             {
-              label: "Enter Population:",
+              label: `${t('enterpopulation')}`,
               value: population || "",
               type: "text",
-              placeholder: "Enter Population",
+              placeholder: `${t('enterpopulation')}`,
               onChange: (e) => setPopulation(e.target.value),
             },
           ],
           error,
         }}
-        submitButtonLabel="Submit"
+        submitButtonLabel={t('submit')}
       />
     </div>
   );

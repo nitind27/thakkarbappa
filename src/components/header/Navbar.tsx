@@ -7,6 +7,7 @@ import HeaderNotificationsMenu from "@/_metronic/partials/layout/header-menus/He
 import Image from "next/image";
 
 import { useLayout } from "@/layout/core";
+import LocalSwitcher from "../LanguageSwitcher/local-switcher";
 
 const itemClass = "ms-1 ms-md-4";
 const btnClass = "btn btn-icon btn-active-light-primary btn-custom";
@@ -19,6 +20,7 @@ const Navbar = () => {
   return (
     <div className="app-navbar flex-shrink-0">
       <div className={clsx("app-navbar-item", itemClass)}>
+      <LocalSwitcher />
         <div
           data-kt-menu-trigger="{default: 'click'}"
           data-kt-menu-attach="parent"
@@ -31,6 +33,7 @@ const Navbar = () => {
             className={btnIconClass}
           />
         </div>
+        
         <HeaderNotificationsMenu />
       </div>
     

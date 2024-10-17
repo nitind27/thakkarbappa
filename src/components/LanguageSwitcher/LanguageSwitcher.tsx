@@ -5,6 +5,7 @@ import { useLanguage } from './LanguageContext';
 const LanguageSelector = () => {
   const { language, setLanguage } = useLanguage();
 
+
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(event.target.value); // Set the new language
   };

@@ -7,6 +7,7 @@ import CustomModal from "@/common/CustomModal";
 import { toast } from "react-toastify";
 import type { Representative } from "../type";
 import { validaterepresentative } from "@/utils/Validation";
+import { useTranslations } from "next-intl";
 
 const STATUS_MESSAGES = {
   ACTIVE: "Active",
@@ -30,6 +31,7 @@ const Representative = ({ initialRepresentative }: Props) => {
   const [error, setError] = useState<string>("");
   const [representativeId, setUpdateRepresentative] = useState<bigint | null>(null);
   const [representative, setRepresentative] = useState<Representative[]>(initialRepresentative);
+  const t = useTranslations('Representative');
 
   const data = representative.map(({ id, name, status }) => ({
     id,
@@ -40,7 +42,7 @@ const Representative = ({ initialRepresentative }: Props) => {
   const columns = [
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
-      header: "S.No", // Header for the serial number
+      header: `${t('SrNo')}`, // Header for the serial number
       cell: ({ row }: any) => (
         <div>
           {row.index + 1} {/* Display the index + 1 for serial number */}
@@ -49,25 +51,25 @@ const Representative = ({ initialRepresentative }: Props) => {
     },
     {
       accessorKey: "name",
-      header: "Pratinidhi",
+      header: `${t('pratinidhi')}`,
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: `${t('status')}`,
     },
     {
       accessorKey: "actions",
-      header: "Actions",
+      header: `${t('Action')}`,
       cell: ({ row }: any) => (
         <div style={{ display: "flex" }}>
           <button className="btn btn-sm btn-primary" onClick={() => handleEdit(row.original)}>
-            Edit
+          {t('edit')}
           </button>
           <button
             className={`btn btn-sm ${row.original.status === STATUS_MESSAGES.ACTIVE ? 'btn-danger' : 'btn-warning'} ms-5`}
             onClick={() => handleDeactivate(row.original.id, row.original.status)}
           >
-            {row.original.status === STATUS_MESSAGES.ACTIVE ? 'Deactivate' : 'Activate'}
+            {row.original.status === STATUS_MESSAGES.ACTIVE ? `${t('Deactive')}` : `${t('Active')}`}
           </button>
         </div>
       ),
@@ -182,7 +184,7 @@ const Representative = ({ initialRepresentative }: Props) => {
         Button={
           <Button variant="primary" onClick={handleShowPrint} className="btn" style={{ minWidth: "120px" }}>
             <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
-            Add Representative
+            {t('addrepresentative')}
           </Button>
         }
       />
@@ -191,21 +193,21 @@ const Representative = ({ initialRepresentative }: Props) => {
         show={showPrintModal}
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
-        title={representativeId ? "Update Representative Details" : "Insert Representative Details"}
+        title={representativeId ? `${t('updatepage')}` : `${t('insertpage')}`}
         formData={{
           fields: [
             {
-              label: "Representative Name", 
+              label: `${t('enterrepresentativename')}`, 
               value: representativeName,
               type: "text",
-              placeholder: "Enter Representative Name", 
+              placeholder: `${t('enterrepresentativename')}`, 
               onChange: (e) => setrepresentativeName(e.target.value),
               // errorMessage: error,
             },
           ],
           error,
         }}
-        submitButtonLabel="Submit"
+        submitButtonLabel={t('submit')}
       />
     </div>
   );

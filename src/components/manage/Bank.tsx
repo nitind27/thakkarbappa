@@ -7,7 +7,6 @@ import CustomModal from "@/common/CustomModal";
 import type {
   Bank,
   grampanchayat,
-
   talukasdata,
   Villages,
   YojanaYear,
@@ -15,6 +14,7 @@ import type {
 import { toast } from "react-toastify";
 import { formatDate } from "@/lib/utils";
 import { validationBank } from "@/utils/Validation";
+import { useTranslations } from "next-intl";
 
 type Props = {
   Villages: Villages[];
@@ -35,8 +35,8 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
   const [error, setError] = useState<string>("");
   const [updateTownId, setUpdateTownId] = useState<number | null>(null);
 
-
   const [BankData, setBankData] = useState<Bank[]>(initialBankData);
+  const t = useTranslations("Bank");
 
   const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
     acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
@@ -56,49 +56,52 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
       typeof BankData.ins_date_time === "string"
         ? formatDate(BankData.ins_date_time)
         : formatDate(BankData.ins_date_time.toISOString()),
-
   })).reverse();
 
   const columns = [
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
-      header: "S.No", // Header for the serial number
+      header: `${t("SrNo")}`, // Header for the serial number
       cell: ({ row }: any) => (
         <div>
           {row.index + 1} {/* Display the index + 1 for serial number */}
         </div>
       ),
     },
-    { accessorKey: "name", header: "Name" },
-    { accessorKey: "account_no", header: "Account No" },
-    { accessorKey: "yojana_year_id", header: "Yojana" },
-    { accessorKey: "amount", header: "Amount" },
-    { accessorKey: "status", header: "Status" },
-    { accessorKey: "ins_date_time", header: "Ins Date" },
-
+    { accessorKey: "name", header: `${t("Bankname")}` },
+    { accessorKey: "account_no", header: `${t("accoutno")}` },
+    { accessorKey: "yojana_year_id", header: `${t("yojna")}` },
+    { accessorKey: "amount", header: `${t("amount")}` },
+    { accessorKey: "status", header: `${t("status")}` },
+    { accessorKey: "ins_date_time", header: `${t("addtime")}` },
 
     {
       accessorKey: "actions",
-      header: "Actions",
+      header: `${t("Action")}`,
       cell: ({ row }: any) => (
-        <div style={{ display: 'flex' }}>
-
-          <button className="btn btn-sm btn-primary" onClick={() => handleEdit(row.original)}>Edit</button>
+        <div style={{ display: "flex" }}>
           <button
-            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
-              } ms-5`}
+            className="btn btn-sm btn-primary"
+            onClick={() => handleEdit(row.original)}
+          >
+            {t("edit")}
+          </button>
+          <button
+            className={`btn btn-sm ${
+              row.original.status === "Active" ? "btn-danger" : "btn-warning"
+            } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
           >
-            {row.original.status === "Active" ? "Deactivate" : "Activate"}
+            {row.original.status === "Active"
+              ? `${t("Deactive")}`
+              : `${t("Active")}`}
           </button>
         </div>
       ),
     },
   ];
-
-
 
   const handleDeactivate = async (
     bankid: number | string,
@@ -130,13 +133,15 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
             )
           );
           toast.success(
-            `Cluster ${newStatus === "Active" ? "activated" : "deactivated"
+            `Cluster ${
+              newStatus === "Active" ? "activated" : "deactivated"
             } successfully!`
           );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the cluster status: ${errorData.error || "Unknown error"
+            `Failed to change the cluster status: ${
+              errorData.error || "Unknown error"
             }`
           );
         }
@@ -167,14 +172,17 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-
-    const errorMsg = validationBank(bankName, accountNo, yojanayearid, String(amount));
+    const errorMsg = validationBank(
+      bankName,
+      accountNo,
+      yojanayearid,
+      String(amount)
+    );
 
     if (errorMsg.length > 0) {
       setError(errorMsg.join("<br />"));
       return;
     }
-
 
     // Ensure the id is included for updates
     const bodyData = {
@@ -197,7 +205,6 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
       });
 
       if (response.ok) {
-
         if (!updateTownId) {
           // If inserting a new entry
           const bankdata = await response.json();
@@ -218,7 +225,11 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
         // Optionally refresh the table data here
       } else {
         const data = await response.json();
-        alert(`Failed to ${updateTownId ? "update" : "insert"} Village: ${data.error}`);
+        alert(
+          `Failed to ${updateTownId ? "update" : "insert"} Village: ${
+            data.error
+          }`
+        );
       }
     } catch (error) {
       console.error("Error during operation:", error);
@@ -254,7 +265,8 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
             style={{ minWidth: "120px" }}
           >
             <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
-            Add Bank Detail
+
+            {t("addbank")}
           </Button>
         }
       />
@@ -263,15 +275,11 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
         show={showPrintModal}
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
-        title={
-          updateTownId
-            ? "Update Bank Details"
-            : "Insert Bank Details"
-        }
+        title={updateTownId ? `${t("updatepage")}` : `${t("insertpage")}`}
         formData={{
           fields: [
             {
-              label: "Select Year",
+              label: `${t("selectyear")}`,
               value: yojanayearid,
               onChange: (e) => setyojanayearid(e.target.value),
               type: "select",
@@ -279,22 +287,21 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
                 value: year.yojana_year_id,
                 label: year.yojana_year,
               })),
-              placeholder: "Select Taluka", // Optional placeholder for select input
+              placeholder: `${t("selectyear")}`, // Optional placeholder for select input
             },
             {
-              label: "Bank Name:",
+              label: `${t("enterbankname")}`,
               value: bankName, // Ensure this uses bankName
               type: "text",
-              placeholder: "Enter Bank name",
+              placeholder: `${t("enterbankname")}`,
               onChange: (e) => setBankName(e.target.value), // Keep this to set bankName
-
             },
 
             {
-              label: "Account No",
+              label: `${t("enteraccountno")}`,
               value: accountNo || "",
               type: "text",
-              placeholder: "Enter Account No",
+              placeholder: `${t("enteraccountno")}`,
 
               onChange: (e) => {
                 // Ensure that only digits are allowed and limit to 11 digits
@@ -306,16 +313,16 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
             },
 
             {
-              label: "Amount",
+              label: `${t("enteramount")}`,
               value: amount || "",
               type: "text",
-              placeholder: "Enter Account No",
+              placeholder: `${t("enteramount")}`,
               onChange: (e) => setamount(e.target.value),
             },
           ],
           error,
         }}
-        submitButtonLabel="Submit"
+        submitButtonLabel={t("submit")}
       />
     </div>
   );

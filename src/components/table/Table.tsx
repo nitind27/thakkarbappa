@@ -6,12 +6,14 @@ import {
   getPaginationRowModel,
   flexRender,
 } from "@tanstack/react-table";
+import { useTranslations } from "next-intl";
 
 
 export default function Table({ data, columns, Button }: any) {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
+  const t = useTranslations('IndexPage');
 
 
 
@@ -81,7 +83,7 @@ export default function Table({ data, columns, Button }: any) {
           <input
             type="text"
             className="form-control"
-            placeholder="Search..."
+            placeholder={t('search')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -92,9 +94,9 @@ export default function Table({ data, columns, Button }: any) {
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
           >
-            <option value="">All Status</option>
-            <option value="Active">Active</option>
-            <option value="Deactive">Deactive</option>
+            <option value="">{t('AllStatus')}</option>
+            <option value="Active">{t('Active')}</option>
+            <option value="Deactive">{t('Deactive')}</option>
             {/* Add more options as needed */}
           </select>
         </div>
@@ -133,7 +135,7 @@ export default function Table({ data, columns, Button }: any) {
       </div>
       <div className="d-flex justify-content-between align-items-center mt-3">
         <span>
-          Page {currentPage} of {pageCount}
+          {t('page')} {currentPage} of {pageCount}
         </span>
         {renderPagination()}
       </div>

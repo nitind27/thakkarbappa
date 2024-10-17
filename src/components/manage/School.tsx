@@ -7,6 +7,7 @@ import CustomModal from "@/common/CustomModal";
 import { clusterdata, Schooldata, talukasdata } from "../type";
 import { toast } from "react-toastify";
 import { validateSchoolForm } from "@/utils/Validation";
+import { useTranslations } from "next-intl";
 
 type Props = {
   initialschoolData: Schooldata[];
@@ -39,7 +40,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
   const [error, setError] = useState<string>("");
   const [updateTownId, setUpdateTownId] = useState<number | null>(null);
   const [schooldata, setSchooldata] = useState<Schooldata[]>(initialschoolData);
-
+  const t = useTranslations("School");
 
   const clusterMap = clusterdata.reduce((acc, cluster: clusterdata) => {
     acc[cluster.cluster_id] = cluster.cluster_name; // Assuming taluka has id and name properties
@@ -51,36 +52,38 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
     return acc;
   }, {} as Record<number, string>);
 
-  const data = schooldata.map((school) => ({
-    school_id: school.school_id,
-    school_name: school.school_name,
-    address: school.address,
-    c_id: school.cluster_id,
-    t_id: school.taluka_id,
-    cluster_id: clusterMap[school.cluster_id],
-    taluka_id: talukaMap[school.taluka_id],
-    udias: school.udias,
-    stds: school.stds,
-    medium: school.school_name,
-    email_id: school.email_id,
-    mukhya_name: school.mukhya_name,
-    mukhya_contact: school.mukhya_contact,
-    mukhya_email: school.mukhya_email,
-    purush_name: school.purush_name,
-    purush_contact: school.purush_contact,
-    purush_email: school.purush_email,
-    stri_name: school.stri_name,
-    stri_email: school.stri_email,
-    stri_contact: school.stri_contact,
-    school_name_mr: school.school_name_mr,
-    status: school.status,
-    image_urls: school.image_urls,
-  })).reverse();
+  const data = schooldata
+    .map((school) => ({
+      school_id: school.school_id,
+      school_name: school.school_name,
+      address: school.address,
+      c_id: school.cluster_id,
+      t_id: school.taluka_id,
+      cluster_id: clusterMap[school.cluster_id],
+      taluka_id: talukaMap[school.taluka_id],
+      udias: school.udias,
+      stds: school.stds,
+      medium: school.school_name,
+      email_id: school.email_id,
+      mukhya_name: school.mukhya_name,
+      mukhya_contact: school.mukhya_contact,
+      mukhya_email: school.mukhya_email,
+      purush_name: school.purush_name,
+      purush_contact: school.purush_contact,
+      purush_email: school.purush_email,
+      stri_name: school.stri_name,
+      stri_email: school.stri_email,
+      stri_contact: school.stri_contact,
+      school_name_mr: school.school_name_mr,
+      // status: school.status,
+      image_urls: school.image_urls,
+    }))
+    .reverse();
 
   const columns = [
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
-      header: "S.No", // Header for the serial number
+      header: `${t("SrNo")}`, // Header for the serial number
       cell: ({ row }: any) => (
         <div>
           {row.index + 1} {/* Display the index + 1 for serial number */}
@@ -89,111 +92,111 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
     },
     {
       accessorKey: "school_name",
-      header: "School Name",
+      header: `${t("schoolname")}`,
     },
     {
       accessorKey: "address",
-      header: "Address",
+      header: `${t("address")}`,
     },
     {
       accessorKey: "cluster_id",
-      header: "Cluster Id",
+      header: `${t("clustername")}`,
     },
     {
       accessorKey: "taluka_id",
-      header: "Taluka",
+      header: `${t("taluksname")}`,
     },
     {
       accessorKey: "udias",
-      header: "UDIAS",
+      header: `${t("udiasno")}`,
     },
     {
       accessorKey: "stds",
-      header: "STDS",
+      header: `${t("division")}`,
     },
     {
       accessorKey: "medium",
-      header: "Medium",
+      header: `${t("medium")}`,
     },
     {
       accessorKey: "email_id",
-      header: "Email Id",
+      header: `${t("schoolemail")}`,
     },
     {
       accessorKey: "mukhya_name",
-      header: "Mukhya Name",
+      header: `${t("mukhyaname")}`,
     },
     {
       accessorKey: "mukhya_contact",
-      header: "Mukhya Contact",
+      header: `${t("mukhyacontact")}`,
     },
     {
       accessorKey: "mukhya_email",
-      header: "Mukhya Email",
+      header: `${t("mukhyaemail")}`,
     },
     {
       accessorKey: "purush_name",
-      header: "Purush Name",
+      header: `${t("purushname")}`,
     },
     {
       accessorKey: "purush_contact",
-      header: "Purush Contact",
+      header: `${t("purushmobile")}`,
     },
     {
       accessorKey: "purush_email",
-      header: "Purush Email",
+      header: `${t("purushemail")}`,
     },
     {
       accessorKey: "stri_name",
-      header: "Stri Name",
+      header: `${t("striname")}`,
     },
     {
       accessorKey: "stri_contact",
-      header: "Stri Contact",
+      header: `${t("stricontact")}`,
     },
     {
       accessorKey: "stri_email",
-      header: "Stri Email",
+      header: `${t("striemail")}`,
     },
 
     {
       accessorKey: "school_name_mr",
-      header: "School Name",
+      header: `${t("enterschoolname")}`,
     },
-    {
-      accessorKey: "status",
-      header: "Status",
-    },
+    // {
+    //   accessorKey: "status",
+    //   header: `${t('SrNo')}`,
+    // },
     {
       accessorKey: "image_urls",
       header: "Image Url",
     },
     {
       accessorKey: "actions",
-      header: "Actions",
+      header: `${t("Action")}`,
       cell: ({ row }: any) => (
         <div style={{ display: "flex" }}>
           <button
             className="btn btn-sm btn-primary"
             onClick={() => handleEdit(row.original)}
           >
-            Edit
+            {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
-              } ms-5`}
+            className={`btn btn-sm ${
+              row.original.status === "Active" ? "btn-danger" : "btn-warning"
+            } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.school_id, row.original.status)
             }
           >
-            {row.original.status === "Active" ? "Deactivate" : "Activate"}
+            {row.original.status === "Active" ? `${t("Deactive")}` : `${t('Active')}`}
           </button>
           <button onClick={() => handleimage(row.original)}>Image</button>
         </div>
       ),
     },
   ];
-
 
   const handleDeactivate = async (
     school_id: number | string,
@@ -208,16 +211,13 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
       try {
         const newStatus = currentStatus === "Active" ? "Deactive" : "Active";
 
-        const response = await fetch(
-          `/api/school/delete/${school_id}`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ status: newStatus }),
-          }
-        );
+        const response = await fetch(`/api/school/delete/${school_id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        });
 
         if (response.ok) {
           setSchooldata((prevData) =>
@@ -228,13 +228,15 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             )
           );
           toast.success(
-            `School ${newStatus === "Active" ? "activated" : "deactivated"} successfully!`
-          )
-
+            `School ${
+              newStatus === "Active" ? "activated" : "deactivated"
+            } successfully!`
+          );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the cluster status: ${errorData.error || "Unknown error"
+            `Failed to change the cluster status: ${
+              errorData.error || "Unknown error"
             }`
           );
         }
@@ -278,8 +280,6 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
   };
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
- 
 
     const errors = validateSchoolForm({
       schoolName,
@@ -366,7 +366,8 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
         const data = await response.json();
 
         toast.error(
-          `Failed to ${updateTownId ? "update" : "insert"} School: ${data.error
+          `Failed to ${updateTownId ? "update" : "insert"} School: ${
+            data.error
           }`
         );
       }
@@ -418,7 +419,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             style={{ minWidth: "120px" }}
           >
             <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
-            Add School
+            {t('addschool')}
           </Button>
         }
       />
@@ -427,28 +428,26 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
         show={showPrintModal}
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
-        title={updateTownId ? "Update School Details" : "Insert School Details"}
+        title={updateTownId ? `${t('insertpage')}`: `${t('insertpage')}`}
         formData={{
           fields: [
-
             {
-              label: "School Name",
+              label: `${t('enterschoolname')}`,
               value: schoolName,
               type: "text",
-              placeholder: "Enter School Name",
+              placeholder: `${t('enterschoolname')}`,
               onChange: (e) => setSchoolName(e.target.value),
             },
             {
-              label: "Address",
+              label: `${t('enterschooladdress')}`,
               value: address,
               type: "text",
-              placeholder: "Enter Address",
+              placeholder: `${t('enterschooladdress')}`,
               onChange: (e) => setAddress(e.target.value),
             },
 
-
             {
-              label: "Select Taluka:",
+              label: `${t('enterschoolname')}`,
               value: clusterId || "", // Default value when updating
               onChange: (e) => setClusterId(e.target.value),
               type: "select",
@@ -456,10 +455,10 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
                 value: cluster.cluster_id,
                 label: cluster.cluster_name,
               })),
-              placeholder: "Select Taluka", // Optional placeholder for select input
+              placeholder: `${t('enterschoolname')}`, // Optional placeholder for select input
             },
             {
-              label: "Select Taluka:",
+              label: `${t('selecttaluka')}`,
               value: talukaId || "", // Default value when updating
               onChange: (e) => setTalukaId(e.target.value),
               type: "select",
@@ -467,13 +466,13 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
                 value: taluka.id,
                 label: taluka.name,
               })),
-              placeholder: "Select Taluka", // Optional placeholder for select input
+              placeholder: `${t('selecttaluka')}`, // Optional placeholder for select input
             },
             {
-              label: "UDIAS",
+              label: `${t('enterudiasno')}`,
               value: udias,
               type: "text",
-              placeholder: "Enter UDIAS",
+              placeholder: `${t('enterudiasno')}`,
               onChange: (e) => {
                 // Ensure that only digits are allowed and limit to 11 digits
                 const inputValue = e.target.value;
@@ -484,47 +483,49 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             },
 
             {
-              label: "STDS",
+              label: `${t('enterdivision')}`,
               value: stds,
               type: "text",
-              placeholder: "Enter STDS",
+              placeholder: `${t('enterdivision')}`,
               onChange: (e) => setStds(e.target.value),
             },
 
-
             {
-              label: "Medium",
+              label: `${t('entermedium')}`,
               value: medium || "", // Default value when updating
               onChange: (e) => setMedium(e.target.value),
               type: "select",
 
               options: [
-                { label: "Semi English /Marathi", value: "Semi English /Marathi" },
+                {
+                  label: "Semi English /Marathi",
+                  value: "Semi English /Marathi",
+                },
                 { label: "Semi English", value: "Semi English" },
                 { label: "Marathi", value: "Marathi" },
               ],
-              placeholder: "Enter Medium", // Optional placeholder for select input
+              placeholder: `${t('entermedium')}`, // Optional placeholder for select input
             },
 
             {
-              label: "Email ID",
+              label: `${t('enterschoolname')}`,
               value: emailId,
               type: "text",
-              placeholder: "Enter Email ID",
+              placeholder: `${t('enterschoolname')}`,
               onChange: (e) => setEmailId(e.target.value),
             },
             {
-              label: "Mukhya Name",
+              label: `${t('entermukhyaname')}`,
               value: mukhyaName,
               type: "text",
-              placeholder: "Enter Mukhya Name",
+              placeholder: `${t('entermukhyaname')}`,
               onChange: (e) => setMukhyaName(e.target.value),
             },
             {
-              label: "Mukhya Contact",
+              label: `${t('entermukhyacontact')}`,
               value: mukhyaContact,
               type: "text",
-              placeholder: "Enter Mukhya Contact",
+              placeholder: `${t('entermukhyacontact')}`,
 
               onChange: (e) => {
                 // Ensure that only digits are allowed and limit to 11 digits
@@ -535,24 +536,24 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
               },
             },
             {
-              label: "Mukhya Email",
+              label: `${t('entermukhyaemail')}`,
               value: mukhyaEmail,
               type: "text",
-              placeholder: "Enter Mukhya Email",
+              placeholder: `${t('entermukhyaemail')}`,
               onChange: (e) => setMukhyaEmail(e.target.value),
             },
             {
-              label: "Purush Name",
+              label: `${t('enterpurushname')}`,
               value: purushName,
               type: "text",
-              placeholder: "Enter Purush Name",
+              placeholder: `${t('enterpurushname')}`,
               onChange: (e) => setPurushName(e.target.value),
             },
             {
-              label: "Purush Contact",
+              label: `${t('enterpurushcontact')}`,
               value: purushContact,
               type: "text",
-              placeholder: "Enter Purush Contact",
+              placeholder: `${t('enterpurushcontact')}`,
 
               onChange: (e) => {
                 // Ensure that only digits are allowed and limit to 11 digits
@@ -563,24 +564,24 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
               },
             },
             {
-              label: "Purush Email",
+              label: `${t('enterpurushemail')}`,
               value: purushEmail,
               type: "text",
-              placeholder: "Enter Purush Email",
+              placeholder: `${t('enterpurushemail')}`,
               onChange: (e) => setPurushEmail(e.target.value),
             },
             {
-              label: "Stri Name",
+              label: `${t('enterstriname')}`,
               value: striName,
               type: "text",
-              placeholder: "Enter Stri Name",
+              placeholder: `${t('enterstriname')}`,
               onChange: (e) => setStriName(e.target.value),
             },
             {
-              label: "Stri Contact",
+              label: `${t('enterstricontact')}`,
               value: striContact,
               type: "text",
-              placeholder: "Enter Stri Contact",
+              placeholder: `${t('enterstricontact')}`,
 
               onChange: (e) => {
                 // Ensure that only digits are allowed and limit to 11 digits
@@ -591,31 +592,26 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
               },
             },
             {
-              label: "Stri Email",
+              label: `${t('enterstreeemail')}`,
               value: striEmail,
               type: "text",
-              placeholder: "Enter Stri Email",
+              placeholder: `${t('enterstreeemail')}`,
               onChange: (e) => setStriEmail(e.target.value),
             },
             {
-              label: "School Name (MR)",
+              label:`${t('enterschoolname')}`,
               value: schoolNameMr,
               type: "text",
-              placeholder: "Enter School Name (MR)",
+              placeholder: `${t('enterschoolname')}`,
               onChange: (e) => setSchoolNameMr(e.target.value),
             },
-
           ],
           error,
         }}
-        submitButtonLabel="Submit"
+        submitButtonLabel={t('submit')}
       />
     </div>
   );
 };
 
 export default School;
-
-
-
-

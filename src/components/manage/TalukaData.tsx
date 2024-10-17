@@ -7,6 +7,7 @@ import CustomModal from "@/common/CustomModal";
 import { talukasdata } from "../type";
 import { toast } from "react-toastify";
 import { validateTalukaName } from "@/utils/Validation";
+import { useTranslations } from "next-intl";
 
 type Props = {
   talukasdata: talukasdata[];
@@ -19,6 +20,7 @@ const TalukaData = ({ talukasdata }: Props) => {
   const [updateTownId, setUpdateTownId] = useState<BigInt | null>(null);
   const [localTalukasData, setLocalTalukasData] =
     useState<talukasdata[]>(talukasdata); // Local state for talukas data
+    const t = useTranslations('Townpage');
 
   const data = localTalukasData.map((taluka) => ({
     id: taluka.id,
@@ -32,7 +34,7 @@ const TalukaData = ({ talukasdata }: Props) => {
   const columns = [
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
-      header: "S.No", // Header for the serial number
+      header: `${t('SrNo')}`, // Header for the serial number
       cell: ({ row }: any) => (
         <div>
           {row.index + 1} {/* Display the index + 1 for serial number */}
@@ -40,15 +42,15 @@ const TalukaData = ({ talukasdata }: Props) => {
       ),
     },
     // { accessorKey: "id", header: "ID" },
-    { accessorKey: "name", header: "Taluka" },
-    { accessorKey: "name_marathi", header: "Name (Marathi)" },
-    { accessorKey: "status", header: "Status" },
+    { accessorKey: "name", header: `${t('taluka')}` },
+    { accessorKey: "name_marathi", header: `${t('marathiname')}` },
+    { accessorKey: "status", header:`${t('Status')}` },
     {
       accessorKey: "actions",
-      header: "Actions",
+      header: `${t("Action")}`,
       cell: ({ row }: any) => (
         <div>
-         <button className="btn btn-sm btn-primary" onClick={() => handleEdit(row.original)}><KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />Edit</button>
+         <button className="btn btn-sm btn-primary" onClick={() => handleEdit(row.original)}><KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />{t('edit')}</button>
           <button
             className={`btn btn-sm ${
               row.original.status === "Active" ? "btn-danger" : "btn-warning"
@@ -57,7 +59,7 @@ const TalukaData = ({ talukasdata }: Props) => {
               handleDeactivate(row.original.id, row.original.status)
             }
           ><KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-            {row.original.status === "Active" ? "Deactive" : "Activate"}
+            {row.original.status === "Active" ? `${t('Deactive')}` : `${t('Active')}`}
           </button>
         </div>
       ),
@@ -190,7 +192,7 @@ const TalukaData = ({ talukasdata }: Props) => {
             style={{ minWidth: "120px" }}
           >
             <KTIcon iconName={"plus-circle"} className="fs-3" iconType="solid" />
-            Add Taluka
+            {t('addtaluka')}
           </Button>
         }
       />
@@ -199,21 +201,21 @@ const TalukaData = ({ talukasdata }: Props) => {
         show={showPrintModal}
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
-        title={updateTownId ? "Update Taluka Name" : "Insert Taluka Name"}
+        title={updateTownId ? `${t('updatepage')}` :  `${t('insertpage')}`}
         formData={{
           fields: [
             {
-              label: "Enter Taluka Name:",
+              label: `${t('entertalukaname')}`,
               value: townName,
               type:"text",
-              placeholder: "Enter taluka name",
+              placeholder: `${t('entertalukaname')}`,
               error,
               onChange: (e) => setTownName(e.target.value),
             },
           ],
         
         }}
-        submitButtonLabel="Submit"
+        submitButtonLabel={t('submit')}
       />
     </div>
   );

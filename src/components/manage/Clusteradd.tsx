@@ -9,18 +9,20 @@ import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
 import { toast } from "react-toastify";
 import { validateClusterName } from "@/utils/Validation";
+import { useTranslations } from "next-intl";
 
 type Props = {
   initialClusterData: clusterdata[];
 };
 
 const Clusteradd = ({ initialClusterData }: Props) => {
+  const t = useTranslations("IndexPage");
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [clusterName, setClusterName] = useState("");
   const [error, setError] = useState<string>("");
   const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
-  const [clusterData, setClusterData] = useState<clusterdata[]>(initialClusterData); // State for cluster data
-
+  const [clusterData, setClusterData] =
+    useState<clusterdata[]>(initialClusterData); // State for cluster data
 
   const data = clusterData
     .map((cluster) => ({
@@ -37,7 +39,7 @@ const Clusteradd = ({ initialClusterData }: Props) => {
   const columns = [
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
-      header: "S.No", // Header for the serial number
+      header: `${t('Srno')}`, // Header for the serial number
       cell: ({ row }: any) => (
         <div>
           {row.index + 1} {/* Display the index + 1 for serial number */}
@@ -47,27 +49,41 @@ const Clusteradd = ({ initialClusterData }: Props) => {
 
     {
       accessorKey: "cluster_name",
-      header: "Cluster Name",
+      header: `${t('clustername')}`,
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: `${t('Status')}`,
     },
     {
       accessorKey: "ins_date_time",
-      header: "Add Time",
+      header: `${t('AddTime')}`,
     },
     {
       accessorKey: "actions",
-      header: "Actions",
+      header: `${t('Action')}`,
       cell: ({ row }: any) => (
-        <div style={{ display: 'flex' }}>
-          <button className="btn btn-sm btn-primary" onClick={() => handleEdit(row.original)}> <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />Edit</button>
+        <div style={{ display: "flex" }}>
           <button
-            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"} ms-5`}
-            onClick={() => handleDeactivate(row.original.cluster_id, row.original.status)}
-          ><KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-            {row.original.status === "Active" ? "Deactive" : "Activate"}
+            className="btn btn-sm btn-primary"
+            onClick={() => handleEdit(row.original)}
+          >
+            {" "}
+            <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
+            {t("edit")}
+          </button>
+          <button
+            className={`btn btn-sm ${
+              row.original.status === "Active" ? "btn-danger" : "btn-warning"
+            } ms-5`}
+            onClick={() =>
+              handleDeactivate(row.original.cluster_id, row.original.status)
+            }
+          >
+            <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
+            {row.original.status === "Active"
+              ? `${t("Deactive")}`
+              : `${t("Active")}`}
           </button>
         </div>
       ),
@@ -75,9 +91,10 @@ const Clusteradd = ({ initialClusterData }: Props) => {
   ];
 
   const handleDeactivate = async (clusterId: any, currentStatus: any) => {
-    const confirmMessage = currentStatus === "Active"
-      ? "Are you sure you want to deactivate this cluster?"
-      : "Are you sure you want to activate this cluster?";
+    const confirmMessage =
+      currentStatus === "Active"
+        ? "Are you sure you want to deactivate this cluster?"
+        : "Are you sure you want to activate this cluster?";
 
     if (window.confirm(confirmMessage)) {
       try {
@@ -93,14 +110,21 @@ const Clusteradd = ({ initialClusterData }: Props) => {
 
         if (response.ok) {
           // Update local state without page reload
-          setClusterData(prevData =>
-            prevData.map(cluster =>
+          setClusterData((prevData) =>
+            prevData.map((cluster) =>
               cluster.cluster_id === clusterId
-                ? { ...cluster, status: currentStatus === "Active" ? "Deactive" : "Active" }
+                ? {
+                    ...cluster,
+                    status: currentStatus === "Active" ? "Deactive" : "Active",
+                  }
                 : cluster
             )
           );
-          toast.success(`Cluster ${currentStatus === "Active" ? "deactivated" : "activated"} successfully!`);
+          toast.success(
+            `Cluster ${
+              currentStatus === "Active" ? "deactivated" : "activated"
+            } successfully!`
+          );
         } else {
           toast.error("Failed to change the cluster status.");
         }
@@ -115,58 +139,60 @@ const Clusteradd = ({ initialClusterData }: Props) => {
     event.preventDefault();
     const errorMsg = validateClusterName(clusterName);
     if (errorMsg) {
-        setError(errorMsg);
-        return;
+      setError(errorMsg);
+      return;
     }
 
     try {
-        const method = updateClusterId ? "PUT" : "POST";
-        const url = updateClusterId
-            ? `/api/clustersapi/update/updateCluster`
-            : `/api/clustersapi/insert/clusters`;
+      const method = updateClusterId ? "PUT" : "POST";
+      const url = updateClusterId
+        ? `/api/clustersapi/update/updateCluster`
+        : `/api/clustersapi/insert/clusters`;
 
-        // Prepare the request body based on whether we're updating or inserting
-        const requestBody = {
-            cluster_name: clusterName,
-            ...(updateClusterId && { cluster_id: updateClusterId }),
-        };
+      // Prepare the request body based on whether we're updating or inserting
+      const requestBody = {
+        cluster_name: clusterName,
+        ...(updateClusterId && { cluster_id: updateClusterId }),
+      };
 
-        const response = await fetch(url, {
-            method,
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestBody),
-        });
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
 
-        if (response.ok) {
-            // Handle successful response
-            if (updateClusterId) {
-                // Update local state for the updated cluster
-                setClusterData(prevData =>
-                    prevData.map(cluster =>
-                        cluster.cluster_id === updateClusterId
-                            ? { ...cluster, cluster_name: clusterName }
-                            : cluster
-                    )
-                );
-                toast.success("Cluster updated successfully!");
-            } else {
-                // New Cluster object without ID since it's auto-incremented
-                const createdData = await response.json(); // Assuming API returns created data
-                setClusterData(prevData => [...prevData, createdData]); // Add created data to state
-                toast.success("Cluster inserted successfully!");
-            }
-
-            handleClosePrint();
+      if (response.ok) {
+        // Handle successful response
+        if (updateClusterId) {
+          // Update local state for the updated cluster
+          setClusterData((prevData) =>
+            prevData.map((cluster) =>
+              cluster.cluster_id === updateClusterId
+                ? { ...cluster, cluster_name: clusterName }
+                : cluster
+            )
+          );
+          toast.success("Cluster updated successfully!");
         } else {
-            toast.error(`Failed to ${updateClusterId ? "update" : "insert"} cluster.`);
+          // New Cluster object without ID since it's auto-incremented
+          const createdData = await response.json(); // Assuming API returns created data
+          setClusterData((prevData) => [...prevData, createdData]); // Add created data to state
+          toast.success("Cluster inserted successfully!");
         }
+
+        handleClosePrint();
+      } else {
+        toast.error(
+          `Failed to ${updateClusterId ? "update" : "insert"} cluster.`
+        );
+      }
     } catch (error) {
-        console.error("Error during operation:", error);
-        toast.error("An unexpected error occurred.");
+      console.error("Error during operation:", error);
+      toast.error("An unexpected error occurred.");
     }
-};
+  };
 
   const handleEdit = (cluster: any) => {
     setUpdateClusterId(cluster.cluster_id); // Set ID for updating
@@ -195,8 +221,12 @@ const Clusteradd = ({ initialClusterData }: Props) => {
             className="btn"
             style={{ minWidth: "120px" }}
           >
-            <KTIcon iconName={"plus-circle"} className="fs-3" iconType="solid" />
-            Add Cluster
+            <KTIcon
+              iconName={"plus-circle"}
+              className="fs-3"
+              iconType="solid"
+            />
+            {t("AddCluster")}
           </Button>
         }
       />
@@ -205,24 +235,22 @@ const Clusteradd = ({ initialClusterData }: Props) => {
         show={showPrintModal}
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
-        title={updateClusterId ? "Update Cluster Name" : "Insert Cluster Name"}
+        title={updateClusterId ? `${t('updatepage')}` :  `${t('insertpage')}`}
         formData={{
           fields: [
             {
-              label: "Enter Cluster Name:",
+              label: `${t('enterclustername')}`,
               value: clusterName,
               type: "text",
-              placeholder: "Enter Cluster name",
+              placeholder: `${t('enterclustername')}`,
 
               onChange: (e) => setClusterName(e.target.value),
             },
           ],
           error,
-
         }}
-        submitButtonLabel="Submit"
+        submitButtonLabel={t('submit')}
       />
-
     </div>
   );
 };

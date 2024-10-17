@@ -144,12 +144,11 @@ export type Bank = {
   update_date_time?: Date | null; // Represents datetime
 };
 export type YojanaYear = {
-  yojana_year_id: number; // Represents int(11)
-  yojana_year: string; // Represents varchar(20)
-  is_delete: string; // Represents varchar(20) with default value 'No'
-  year_status: string; // Represents varchar(10)
+  yojana_year_id: any; // Represents int(11)
+  yojana_year: any; // Represents varchar(20)
+  is_delete: any; // Represents varchar(20) with default value 'No'
+  year_status: any; // Represents varchar(10)
 };
-
 export type OpeningBalance = {
   open_bal_id: number; // Represents int(11)
   open_bal: any; // Change from number to Decimal

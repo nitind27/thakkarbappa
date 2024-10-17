@@ -7,6 +7,7 @@ import CustomModal from "@/common/CustomModal";
 import { Facility } from "../type";
 import { toast } from "react-toastify";
 import { validateSuvidhaname } from "@/utils/Validation";
+import { useTranslations } from "next-intl";
 
 type Props = {
   initialfacilitydata: Facility[];
@@ -18,17 +19,20 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
   const [error, setError] = useState<string>("");
   const [suvidhaid, setUpdateSuvidha] = useState<BigInt | null>(null);
   const [facilitydata, setFacility] = useState<Facility[]>(initialfacilitydata);
+  const t = useTranslations("Suvidha");
 
-  const data = facilitydata.map((suvidha) => ({
-    id: suvidha.id,
-    name: suvidha.name,
-    status: suvidha.status,
-  })).reverse();
+  const data = facilitydata
+    .map((suvidha) => ({
+      id: suvidha.id,
+      name: suvidha.name,
+      status: suvidha.status,
+    }))
+    .reverse();
 
   const columns = [
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
-      header: "S.No", // Header for the serial number
+      header: `${t("SrNo")}`, // Header for the serial number
       cell: ({ row }: any) => (
         <div>
           {row.index + 1} {/* Display the index + 1 for serial number */}
@@ -38,31 +42,34 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
 
     {
       accessorKey: "name",
-      header: "Suvidha Name",
+      header: `${t("suvidhaname")}`,
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: `${t("status")}`,
     },
     {
       accessorKey: "actions",
-      header: "Actions",
+      header: `${t("Action")}`,
       cell: ({ row }: any) => (
         <div style={{ display: "flex" }}>
           <button
             className="btn btn-sm btn-primary"
             onClick={() => handleEdit(row.original)}
           >
-            Edit
+           {t('edit')}
           </button>
           <button
-            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
-              } ms-5`}
+            className={`btn btn-sm ${
+              row.original.status === "Active" ? "btn-danger" : "btn-warning"
+            } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
           >
-            {row.original.status === "Active" ? "Deactivate" : "Activate"}
+            {row.original.status === "Active"
+              ? `${t("Deactive")}`
+              : `${t("Active")}`}
           </button>
         </div>
       ),
@@ -80,18 +87,14 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
 
     if (window.confirm(confirmMessage)) {
       try {
-
         const newStatus = currentStatus === "Active" ? "Deactive" : "Active";
-        const response = await fetch(
-          `/api/suvidha/delete/${grampanchayatid}`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ status: newStatus }),
-          }
-        );
+        const response = await fetch(`/api/suvidha/delete/${grampanchayatid}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        });
 
         if (response.ok) {
           setFacility((prevData) =>
@@ -102,13 +105,15 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
             )
           );
           toast.success(
-            `Suvidha ${newStatus === "Active" ? "activated" : "deactivated"
+            `Suvidha ${
+              newStatus === "Active" ? "activated" : "deactivated"
             } successfully!`
           );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the Suvidha status: ${errorData.error || "Unknown error"
+            `Failed to change the Suvidha status: ${
+              errorData.error || "Unknown error"
             }`
           );
         }
@@ -130,7 +135,6 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-
     const errorMsg = validateSuvidhaname(suvidhaName);
     if (errorMsg) {
       setError(errorMsg);
@@ -140,7 +144,6 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
     try {
       const method = suvidhaid ? "PUT" : "POST";
       const url = suvidhaid ? `/api/suvidha/update` : `/api/suvidha/insert`;
-
 
       const bodyData = {
         name: suvidhaName,
@@ -159,7 +162,9 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
         if (suvidhaid) {
           setFacility((prevData) =>
             prevData.map((suvidha) =>
-              suvidha.id === suvidhaid ? { ...suvidha, name: suvidhaName } : suvidha
+              suvidha.id === suvidhaid
+                ? { ...suvidha, name: suvidhaName }
+                : suvidha
             )
           );
           toast.success("Suvidha updated successfully!");
@@ -173,7 +178,8 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
       } else {
         const errorData = await response.json();
         toast.error(
-          `Failed to ${suvidhaid ? "update" : "insert"} Suvidha: ${errorData.message || "Unknown error"
+          `Failed to ${suvidhaid ? "update" : "insert"} Suvidha: ${
+            errorData.message || "Unknown error"
           }`
         );
       }
@@ -181,7 +187,6 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
       toast.error("An unexpected error occurred.");
     }
   };
-
 
   const handleEdit = (suvidha: any) => {
     setUpdateSuvidha(suvidha.id); // Set the ID of the facility being edited
@@ -202,7 +207,7 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
             style={{ minWidth: "120px" }}
           >
             <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
-            Add Suvidha
+            {t('addsuvidha')}
           </Button>
         }
       />
@@ -211,20 +216,20 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
         show={showPrintModal}
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
-        title={suvidhaid ? "Update Suvidha Details" : "Insert Suvidha Details"}
+        title={suvidhaid ? `${t('updatepage')}` : `${t('insertpage')}`}
         formData={{
           fields: [
             {
-              label: "Suvidha Name", // Updated label for clarity
+              label: `${t('entersuvidhaname')}`, // Updated label for clarity
               value: suvidhaName,
               type: "text",
-              placeholder: "Enter Suvidha Name", // Updated placeholder for clarity
+              placeholder: `${t('entersuvidhaname')}`, // Updated placeholder for clarity
               onChange: (e) => setSuvidhaName(e.target.value),
             },
           ],
           error,
         }}
-        submitButtonLabel="Submit"
+        submitButtonLabel={t('submit')}
       />
     </div>
   );

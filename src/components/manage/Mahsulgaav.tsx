@@ -7,6 +7,7 @@ import CustomModal from "@/common/CustomModal";
 import { grampanchayat, talukasdata, Villages } from "../type";
 import { toast } from "react-toastify";
 import { validateMasulGaav } from "@/utils/Validation";
+import { useTranslations } from "next-intl";
 
 type Props = {
   Villages: Villages[];
@@ -15,6 +16,8 @@ type Props = {
 };
 
 const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
+  const t = useTranslations('MahasulGaav');
+
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [townName, setTownName] = useState("");
   const [nameMarathi, setNameMarathi] = useState("");
@@ -59,25 +62,25 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
   const columns = [
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
-      header: "S.No", // Header for the serial number
+      header: `${t('SrNo')}`, // Header for the serial number
       cell: ({ row }: any) => (
         <div>
           {row.index + 1} {/* Display the index + 1 for serial number */}
         </div>
       ),
     },
-    { accessorKey: "taluka_id", header: "Taluka ID" },
-    { accessorKey: "gp_id", header: "Gp ID" },
-    { accessorKey: "name", header: "Name" },
-    { accessorKey: "name_marathi", header: "Name (Marathi)" },
-    { accessorKey: "total_population", header: "Total Population" },
-    { accessorKey: "trible_population", header: "Trible Population" },
-    { accessorKey: "arthik_maryada", header: "Arthik Maryada" },
-    { accessorKey: "village_type", header: "Village Type" },
-    { accessorKey: "status", header: "Status" },
+    { accessorKey: "taluka_id", header: `${t('talukaName')}` },
+    { accessorKey: "gp_id", header: `${t('gpid')}` },
+
+    { accessorKey: "name_marathi", header: `${t('MahasulGaavname')}` },
+    { accessorKey: "total_population", header: `${t('population')}` },
+    { accessorKey: "trible_population", header: `${t('triblepopulation')}` },
+    { accessorKey: "arthik_maryada", header: `${t('Income')}` },
+    { accessorKey: "village_type", header: `${t('villagetype')}`},
+    { accessorKey: "status", header: `${t('status')}` },
     {
       accessorKey: "actions",
-      header: "Actions",
+      header: `${t('Action')}`,
       cell: ({ row }: any) => (
         <div>
           <button
@@ -86,7 +89,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
           >
 
             <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
-            Edit
+            {t('edit')}
           </button>
           <button
             className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
@@ -96,7 +99,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
             }
           >
             <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-            {row.original.status === "Active" ? "Deactive" : "Activate"}
+            {row.original.status === "Active" ? `${t('Deactive')}` : `${t('Active')}`}
           </button>
         </div>
       ),
@@ -124,7 +127,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
 
     if (window.confirm(confirmMessage)) {
       try {
-        const newStatus = currentStatus === "Active" ? "Deactive" : "Active";
+        const newStatus = currentStatus === "Active" ? `${t('Deactive')}` : `${t('Active')}`;
 
         const response = await fetch(`/api/mahasulgaav/delete/${mahasulid}`, {
           method: "PATCH",
@@ -210,7 +213,6 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
         id: updateTownId !== null ? updateTownId : undefined,
         taluka_id: talukaId,
         gp_id: townName,
-        name: townName,
         name_marathi: nameMarathi,
         total_population: population,
         trible_population: triblePopulation,
@@ -287,7 +289,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
             style={{ minWidth: "120px" }}
           >
             <KTIcon iconName={"plus-circle"} className="fs-3" iconType="solid" />
-            Add MahasulGaav
+           {t('addmahasulgaav')}
           </Button>
         }
       />
@@ -298,13 +300,13 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
         handleSubmit={handleSubmit}
         title={
           updateTownId
-            ? "Update Mahsulgaav Details"
-            : "Insert Mahsulgaav Details"
+            ? `${t('updatepage')}`
+            : `${t('insertpage')}`
         }
         formData={{
           fields: [
             {
-              label: "Select Taluka:",
+              label: `${t('selecttaluka')}`,
               value: talukaId || "", // Default value when updating
               onChange: (e) => setTalukaId(e.target.value),
               type: "select",
@@ -312,15 +314,15 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
                 value: taluka.id,
                 label: taluka.name,
               })),
-              placeholder: "Select Taluka", // Optional placeholder for select input
+              placeholder: `${t('selecttaluka')}`, // Optional placeholder for select input
 
             },
 
             {
-              label: "Enter Grampanchayat Name:",
+              label: `${t('selectmahasul')}`,
               value: townName, // Ensure this uses townName
               type: "select",
-              placeholder: "Enter grampanchayat name",
+              placeholder: `${t('selectmahasul')}`,
               onChange: (e) => setTownName(e.target.value), // Keep this to set townName
               options: filteredGrampanchayat.map((gp: any) => ({
                 value: gp.id,
@@ -329,17 +331,17 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
             },
 
             {
-              label: "Mahsul Gaav",
+              label: `${t('entermahasulgaav')}`,
               value: nameMarathi || "",
               type: "text",
-              placeholder: "Enter Arthik Maryada",
+              placeholder: `${t('entermahasulgaav')}`,
               onChange: (e) => setNameMarathi(e.target.value),
             },
             {
-              label: "Enter Village Type",
+              label: `${t('entervillagetype')}`,
               value: villageType,
               type: "select",
-              placeholder: "Enter grampanchayat name",
+              placeholder: `${t('entervillagetype')}`,
               onChange: (e) => setVillageType(e.target.value), // Keep this to set townName
               options: [
                 { label: "TCP", value: "TCP" },
@@ -349,30 +351,30 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
             },
 
             {
-              label: "population",
+              label: `${t('entertotalpopulation')}`,
               value: population || "",
               type: "text",
-              placeholder: "Enter Total Population",
+              placeholder: `${t('entertotalpopulation')}`,
               onChange: (e) => setPopulation(e.target.value),
             },
             {
-              label: "Enter Trible Population:",
+              label:`${t('entertribalepopulation')}`,
               value: triblePopulation || "",
               type: "text",
-              placeholder: "Enter Trible Population",
+              placeholder: `${t('entertribalepopulation')}`,
               onChange: (e) => setTriblePopulation(e.target.value),
             },
             {
-              label: "Enter Arthik Maryada:",
+              label: `${t('enterincome')}`,
               value: arthikMaryada || "",
               type: "text",
-              placeholder: "Enter Arthik Maryada",
+              placeholder: `${t('enterincome')}`,
               onChange: (e) => setArthikMaryada(e.target.value),
             },
           ],
           error,
         }}
-        submitButtonLabel="Submit"
+        submitButtonLabel={t('submit')}
       />
     </div>
   );

@@ -1,15 +1,10 @@
-// /** @type {import('next').NextConfig} */
-// const nextConfig = {};
+import createNextIntlPlugin from 'next-intl/plugin';
 
-// @type {import('next').NextConfig}
+/** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
         domains: [
             "localhost"
-            // "dev.talentslist.com",
-            // "talentslist-staging.s3.us-east-2.amazonaws.com",
-            // "192.168.1.27",
-            // "talentslist-staging.s3.us-east-2.amazonaws.com",
         ],
         remotePatterns: [
             {
@@ -20,11 +15,11 @@ const nextConfig = {
             },
         ],
     },
-    i18n: {
-        locales: ['en', 'hi', 'mr'], // Supported languages
-        defaultLocale: 'en', // Default language
-        localeDetection: false,
-    },
 };
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin();
+
+/** @type {import('next').NextConfig} */
+const finalConfig = withNextIntl(nextConfig);
+
+export default finalConfig;
