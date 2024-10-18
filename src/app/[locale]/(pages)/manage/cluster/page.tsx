@@ -1,7 +1,5 @@
 // app/page.tsx
-import Cluster from "@/app/[locale]/title/cluster";
-import Dashboard from "@/components/Dashboard/Dashboard";
-import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher";
+import Cluster from "@/app/[locale]/title/cluster";;
 import Clusteradd from "@/components/manage/Clusteradd";
 import { clusterdata } from "@/components/type";
 import prisma from "@/lib/db";

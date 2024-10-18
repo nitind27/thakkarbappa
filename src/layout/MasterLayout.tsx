@@ -33,7 +33,8 @@ const MasterLayout = ({ children }: { children: React.ReactNode }) => {
               className="app-main flex-column flex-row-fluid"
               id="kt_app_main"
             >
-              <div className="app-container container-xxl d-flex flex-column flex-column-fluid">
+              <div className="app-container container-xxl d-flex flex-column flex-column-fluid" >
+
                 {children}
               </div>
               <FooterWrapper />

@@ -20,7 +20,8 @@ const Navbar = () => {
   return (
     <div className="app-navbar flex-shrink-0">
       <div className={clsx("app-navbar-item", itemClass)}>
-      <LocalSwitcher />
+
+        <LocalSwitcher />
         <div
           data-kt-menu-trigger="{default: 'click'}"
           data-kt-menu-attach="parent"
@@ -33,10 +34,10 @@ const Navbar = () => {
             className={btnIconClass}
           />
         </div>
-        
+
         <HeaderNotificationsMenu />
       </div>
-    
+
       <div className={clsx("app-navbar-item", itemClass)}>
         <ThemeModeSwitcher
           toggleBtnClass={clsx("btn-active-light-primary btn-custom")}
@@ -70,11 +71,11 @@ const Navbar = () => {
             />
           )} */}
           <Image
-              src={("/media/images/avtar.jpg")}
-              alt="Profile"
-              width={100}
-              height={100}
-            />
+            src={("/media/images/avtar.jpg")}
+            alt="Profile"
+            width={100}
+            height={100}
+          />
         </div>
         <HeaderUserMenu />
       </div>

@@ -180,6 +180,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             className="btn btn-sm btn-primary"
             onClick={() => handleEdit(row.original)}
           >
+             <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
             {t("edit")}
           </button>
           <button
@@ -190,6 +191,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
               handleDeactivate(row.original.school_id, row.original.status)
             }
           >
+             <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
             {row.original.status === "Active" ? `${t("Deactive")}` : `${t('Active')}`}
           </button>
           <button onClick={() => handleimage(row.original)}>Image</button>
@@ -418,7 +420,11 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             className="btn"
             style={{ minWidth: "120px" }}
           >
-            <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
+             <KTIcon
+              iconName={"plus-circle"}
+              className="fs-3"
+              iconType="solid"
+            />
             {t('addschool')}
           </Button>
         }

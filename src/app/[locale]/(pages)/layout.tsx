@@ -8,6 +8,8 @@ import { MasterInit } from "@/layout/MasterInit";
 import { MasterLayout } from "@/layout/MasterLayout";
 import { LayoutSplashScreen, LayoutProvider } from "@/layout/core";
 import { AuthInit, AuthProvider } from "@/modules/auth";
+import Zoom from "@/common/Zoom";
+import { LocationProvider } from "@/common/LocationComponent";
 
 export const metadata: Metadata = {
   title: "Politics",
@@ -34,17 +36,23 @@ export default async function RootLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={translations}>
+
       <Suspense fallback={<LayoutSplashScreen />}>
         <LayoutProvider>
           {/* Uncomment these if needed */}
           {/* <ThemeModeProvider> */}
           {/* <ServiceProvider> */}
           <AuthInit>
+
             <MasterLayout>
               <AuthProvider>
                 <ToastContainer />
+                <LocationProvider>
 
-                {children}
+                  <Zoom>
+                    {children}
+                  </Zoom>
+                </LocationProvider>
               </AuthProvider>
             </MasterLayout>
             <MasterInit />
@@ -53,6 +61,6 @@ export default async function RootLayout({
           {/* </ThemeModeProvider> */}
         </LayoutProvider>
       </Suspense>
-    </NextIntlClientProvider>
+    </NextIntlClientProvider >
   );
 }

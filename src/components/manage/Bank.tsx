@@ -80,10 +80,12 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
       header: `${t("Action")}`,
       cell: ({ row }: any) => (
         <div style={{ display: "flex" }}>
+         
           <button
             className="btn btn-sm btn-primary"
             onClick={() => handleEdit(row.original)}
           >
+              <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
             {t("edit")}
           </button>
           <button
@@ -94,6 +96,7 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
               handleDeactivate(row.original.id, row.original.status)
             }
           >
+             <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
             {row.original.status === "Active"
               ? `${t("Deactive")}`
               : `${t("Active")}`}
@@ -264,7 +267,11 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
             className="btn"
             style={{ minWidth: "120px" }}
           >
-            <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
+            <KTIcon
+              iconName={"plus-circle"}
+              className="fs-3"
+              iconType="solid"
+            />
 
             {t("addbank")}
           </Button>

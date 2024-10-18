@@ -7,6 +7,7 @@ import CustomModal from "@/common/CustomModal"; // Adjust path if necessary
 import type { grampanchayat, Padnam, Supervisor, UserCategory } from "../type";
 import { toast } from "react-toastify";
 import { validateFormsupervisor } from "@/utils/Validation";
+import { useTranslations } from "next-intl";
 
 type Props = {
   UserCategory: UserCategory[];
@@ -32,6 +33,7 @@ const Supervisor = ({
   const [supervisors, setSupervisors] = useState<Supervisor[]>(
     initialSupervisorlData
   );
+  const t = useTranslations('Supervisor');
 
   const UserCategorys = UserCategory.reduce((acc, category) => {
     acc[category.user_cat_id] = category.category_name;
@@ -60,32 +62,32 @@ const Supervisor = ({
   const columns = [
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
-      header: "S.No", // Header for the serial number
+      header: `${t('SrNo')}`, // Header for the serial number
       cell: ({ row }: any) => (
         <div>
           {row.index + 1} {/* Display the index + 1 for serial number */}
         </div>
       ),
     },
-    { accessorKey: "sup_name", header: "Supervisor Name" },
-    { accessorKey: "sup_contact", header: "Contact Number" },
-    { accessorKey: "sup_address", header: "Address" },
-    { accessorKey: "sup_password", header: "Password" },
-    { accessorKey: "imei_number", header: "IMEI Number" },
-    { accessorKey: "category_id", header: "Category" },
-    { accessorKey: "padnam_id", header: "Padnam" },
-    { accessorKey: "sup_status", header: "Status" },
+    { accessorKey: "sup_name", header: `${t('SupervisorName')}` },
+    { accessorKey: "sup_contact", header: `${t('Contactnumber')}` },
+    { accessorKey: "sup_address", header: `${t('address')}` },
+    { accessorKey: "sup_password", header: `${t('password')}` },
+    { accessorKey: "imei_number", header: `${t('imeino')}` },
+    { accessorKey: "category_id", header: `${t('category')}` },
+    { accessorKey: "padnam_id", header: `${t('padname')}` },
+    { accessorKey: "sup_status", header: `${t('status')}` },
     {
       accessorKey: "actions",
-      header: "Actions",
+      header: `${t('Action')}`,
       cell: ({ row }: any) => (
         <div>
           <div style={{ display: "flex" }}>
             <button
               className="btn btn-sm btn-primary"
               onClick={() => handleEdit(row.original)}
-            >
-              Edit
+            > <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
+              {t('edit')}
             </button>
             <button
               className={`btn btn-sm ${row.original.sup_status === "Active" ? "btn-danger" : "btn-warning"
@@ -93,8 +95,8 @@ const Supervisor = ({
               onClick={() =>
                 handleDeactivate(row.original.sup_id, row.original.sup_status)
               }
-            >
-              {row.original.sup_status === "Active" ? "Deactivate" : "Activate"}
+            > <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
+              {row.original.sup_status === "Active" ? `${t('Deactive')}` : `${t('Active')}`}
             </button>
           </div>
         </div>
@@ -254,8 +256,12 @@ const Supervisor = ({
             className="btn"
             style={{ minWidth: "120px" }}
           >
-            <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
-            Add Supervisor
+            <KTIcon
+              iconName={"plus-circle"}
+              className="fs-3"
+              iconType="solid"
+            />
+            {t('addSupervisor')}
           </Button>
         }
       />
@@ -266,19 +272,20 @@ const Supervisor = ({
         handleSubmit={handleSubmit}
         title={
           updateTownId
-            ? "Update Supervisor Details"
-            : "Insert Supervisor Details"
+            ? `${t('updatepage')}`
+            : `${t('insertpage')}`
         }
         formData={{
           fields: [
             {
-              label: "User Name",
+              label: `${t('enterusername')}`,
               value: username,
               type: "text",
               onChange: (e) => setUserName(e.target.value),
+
             },
             {
-              label: "PadName",
+              label: `${t('enterpadname')}`,
               value: PadName,
               onChange: (e) => setPadName(e.target.value),
               type: "select",
@@ -288,7 +295,7 @@ const Supervisor = ({
               })),
             },
             {
-              label: "Category",
+              label: `${t('entercategory')}`,
               value: Category,
               onChange: (e) => setCategory(e.target.value),
               type: "select",
@@ -298,7 +305,7 @@ const Supervisor = ({
               })),
             },
             {
-              label: "Contact Number",
+              label: `${t('entercontactno')}`,
               value: contactNo,
               type: "text",
               // onChange: (e) => setContactNo(e.target.value),
@@ -312,13 +319,13 @@ const Supervisor = ({
               },
             },
             {
-              label: "Password",
+              label: `${t('enterpassword')}`,
               value: Password,
               type: "text",
               onChange: (e) => setPassword(e.target.value),
             },
             {
-              label: "Address",
+              label:`${t('enteraddress')}`,
               value: address,
               type: "text",
               onChange: (e) => setAddress(e.target.value),
@@ -326,7 +333,7 @@ const Supervisor = ({
           ],
           error,
         }}
-        submitButtonLabel="Submit"
+        submitButtonLabel={t('submit')}
       />
     </div>
   );

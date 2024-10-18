@@ -189,3 +189,47 @@ model OpeningBalance {
 
   @@map("tbl_opening_balance")
 }
+
+model NidhiVitaran {
+  id             BigInt   @id @default(autoincrement())
+  work_master_id   BigInt
+  date           DateTime? @db.Date
+  installment    String
+  amount         Float    @default(0.00)
+  photo          String
+  latitude       String   @default("")
+  longitude      String   @default("")
+  address        String   @default("")
+  status         String   @default("Active")
+  created_at      DateTime? @default(now()) @db.Timestamp(6)
+  updated_at      DateTime? @updatedAt @db.Timestamp(6)
+
+  @@map("nidhi_vitaran") // Maps to the existing table name in the database
+}
+
+
+model WorkMaster {
+  id                         BigInt   @id @default(autoincrement())
+  taluka_id                  BigInt
+  gp_id                      BigInt
+  village_id                 BigInt
+  facility_id                BigInt
+  representative_id          BigInt
+  representative_name         String
+  name                       String
+  estimated_amount           Float    @default(0.00)
+  tantrik_manyata_amount     Float    @default(0.00)
+  photo                      String
+  prashashakiya_manyata      String   @db.VarChar(5)
+  prashashakiya_manyata_no   String
+  prashashakiya_manyata_date DateTime? @db.Date
+  prashashakiya_manyata_amount Float
+  latitude                   String   @default("")
+  longitude                  String   @default("")
+  address                    String   @default("")
+  status                     String   @default("Active") @db.VarChar(10)
+  created_at                 DateTime? @db.Date
+  updated_at                 DateTime? @db.Date
+
+  @@map("work_master")
+}

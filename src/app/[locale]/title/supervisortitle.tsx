@@ -2,8 +2,8 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 
-const Schooltitle = () => {
-    const t = useTranslations('School');
+const Supervisortitle = () => {
+    const t = useTranslations('Supervisor');
 
     return (
         <div>
@@ -12,4 +12,4 @@ const Schooltitle = () => {
     );
 }
 
-export default Schooltitle;
+export default Supervisortitle;

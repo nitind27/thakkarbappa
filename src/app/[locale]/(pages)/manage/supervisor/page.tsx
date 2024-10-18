@@ -1,5 +1,6 @@
 // app/page.tsx
 
+import Supervisortitle from "@/app/[locale]/title/supervisortitle";
 import School from "@/components/manage/School";
 import Supervisor from "@/components/manage/Supervisor";
 import { Padnam, Supervisor as SupervisorType, UserCategory } from "@/components/type";
@@ -27,7 +28,7 @@ const Page = async () => {
 
   return (
     <div>
-      <h1 className="card card-body mt-5">SuperVisor Detail</h1>
+      <h1 className="card card-body mt-5"><Supervisortitle /></h1>
       <Supervisor initialSupervisorlData={Supervisordata} UserCategory={UserCategory} Padname={Padname} />
     </div>
   );

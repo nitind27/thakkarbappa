@@ -31,7 +31,8 @@
     "pratinidhi": "प्रतिनिधि",
     "vaparkarta": "वापरकर्ता",
     "Bank": "बैंक",
-    "PraranbhikSillak": "प्रारंभिक सिलक"
+    "PraranbhikSillak": "प्रारंभिक सिलक",
+    "disbursementfunds": "संवितरण निधि"
   },
   "Townpage": {
     "title": "नगर प्रबंधन",
@@ -97,7 +98,7 @@
     "enterincome": "आय दर्ज करें",
     "submit": "जमा करें"
   },
-"School": {
+  "School": {
     "title": "स्कूल विवरण",
     "addschool": "स्कूल जोड़ें",
     "SrNo": "क्रम संख्या",
@@ -144,7 +145,7 @@
     "enterstricontact": "स्त्री संपर्क दर्ज करें",
     "enterstreeemail": "स्त्री ईमेल आईडी दर्ज करें",
     "submit": "जमा करें"
-},
+  },
   "Suvidha": {
     "title": "सुविधा विवरण",
     "addsuvidha": "सुविधा जोड़ें",
@@ -174,8 +175,34 @@
     "updatepage": "प्रतिनिधि विवरण अपडेट करें",
     "enterrepresentativename": "प्रतिनिधि का नाम दर्ज करें",
     "submit": "जमा करें"
-},
-"Bank": {
+  },
+  "Supervisor": {
+    "title": "सुपरवाइज़र विवरण",
+    "addSupervisor": "सुपरवाइज़र जोड़ें",
+    "SrNo": "क्रम संख्या",
+    "SupervisorName": "सुपरवाइज़र का नाम",
+    "Contactnumber": "संपर्क नंबर",
+    "address": "पता",
+    "password": "पासवर्ड",
+    "imeino": "IMEI नंबर",
+    "category": "श्रेणी",
+    "padname": "पैड का नाम",
+    "status": "स्थिति",
+    "Action": "कार्य",
+    "edit": "संपादित करें",
+    "Active": "सक्रिय",
+    "Deactive": "निष्क्रिय",
+    "insertpage": "सुपरवाइज़र विवरण डालें",
+    "updatepage": "सुपरवाइज़र विवरण अपडेट करें",
+    "enterusername": "उपयोगकर्ता नाम दर्ज करें",
+    "enterpadname": "पैड का नाम चुनें",
+    "entercategory": "श्रेणी चुनें",
+    "entercontactno": "संपर्क नंबर दर्ज करें",
+    "enterpassword": "पासवर्ड दर्ज करें",
+    "enteraddress": "पता दर्ज करें",
+    "submit": "जमा करें"
+  },
+  "Bank": {
     "title": "बैंक विवरण",
     "addbank": "बैंक जोड़ें",
     "SrNo": "क्रम संख्या",
@@ -196,23 +223,54 @@
     "enteraccountno": "खाता संख्या दर्ज करें",
     "enteramount": "राशि दर्ज करें",
     "submit": "जमा करें"
-},
-"PraranbhikSillak": {
-  "title": "ओपन बैलेंस विवरण",
-  "addbalance": "बैलेंस जोड़ें",
-  "SrNo": "क्रम संख्या",
-  "clustername": "क्लस्टर नाम",
-  "year": "वर्ष",
-  "status": "स्थिति",
-  "addtime": "जोड़ने का समय",
-  "Action": "कार्य",
-  "edit": "संपादित करें",
-  "Active": "सक्रिय",
-  "Deactive": "निष्क्रिय",
-  "insertpage": "बैलेंस विवरण डालें",
-  "updatepage": "बैलेंस विवरण अपडेट करें",
-  "selectyear": "वर्ष चुनें",
-  "enteramount": "राशि दर्ज करें",
-  "submit": "जमा करें"
+  },
+  "PraranbhikSillak": {
+    "title": "ओपन बैलेंस विवरण",
+    "addbalance": "बैलेंस जोड़ें",
+    "SrNo": "क्रम संख्या",
+    "clustername": "क्लस्टर नाम",
+    "year": "वर्ष",
+    "status": "स्थिति",
+    "addtime": "जोड़ने का समय",
+    "Action": "कार्य",
+    "edit": "संपादित करें",
+    "Active": "सक्रिय",
+    "Deactive": "निष्क्रिय",
+    "insertpage": "बैलेंस विवरण डालें",
+    "updatepage": "बैलेंस विवरण अपडेट करें",
+    "selectyear": "वर्ष चुनें",
+    "enteramount": "राशि दर्ज करें",
+    "submit": "जमा करें"
+  },
+  "Disbursementfunds": {
+    "title": "धन वितरण",
+    "addDisbursement": "धन वितरण जोड़ें",
+    "SrNo": "क्र.सं.",
+    "work": "कार्य",
+    "VitranDate": "वितरण तिथि",
+    "Installment": "किस्त",
+    "amount": "राशि",
+    "attechments": "संलग्नक",
+    "latlong": "अक्षांश|देशांतर",
+    "address": "पता",
+    "status": "स्थिति",
+    "inserted": "डाला गया",
+    "updated": "अपडेट किया गया",
+    "Action": "कार्यवाही",
+    "edit": "संपादित करें",
+    "Active": "सक्रिय",
+    "Deactive": "निष्क्रिय",
+    "insertpage": "धन वितरण डालें",
+    "updatepage": "धन वितरण अपडेट करें",
+    "enterwork": "कार्य चुनें",
+    "ImagePreview": "छवि पूर्वावलोकन",
+    "vitrandate": "वितरण तिथि",
+    "selectInstallment": "किस्त चुनें",
+    "enteramount": "राशि दर्ज करें",
+    "enterimage": "छवि दर्ज करें",
+    "Latitude": "अक्षांश",
+    "Longitude": "देशांतर",
+    "enteraddress": "पता दर्ज करें",
+    "submit": "जमा करें"
 }
 }

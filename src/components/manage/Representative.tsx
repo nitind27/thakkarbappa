@@ -63,12 +63,13 @@ const Representative = ({ initialRepresentative }: Props) => {
       cell: ({ row }: any) => (
         <div style={{ display: "flex" }}>
           <button className="btn btn-sm btn-primary" onClick={() => handleEdit(row.original)}>
+          <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
           {t('edit')}
           </button>
           <button
             className={`btn btn-sm ${row.original.status === STATUS_MESSAGES.ACTIVE ? 'btn-danger' : 'btn-warning'} ms-5`}
             onClick={() => handleDeactivate(row.original.id, row.original.status)}
-          >
+          > <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
             {row.original.status === STATUS_MESSAGES.ACTIVE ? `${t('Deactive')}` : `${t('Active')}`}
           </button>
         </div>
@@ -183,7 +184,11 @@ const Representative = ({ initialRepresentative }: Props) => {
         columns={columns}
         Button={
           <Button variant="primary" onClick={handleShowPrint} className="btn" style={{ minWidth: "120px" }}>
-            <KTIcon iconName={"printer"} className="fs-3" iconType="solid" />
+            <KTIcon
+              iconName={"plus-circle"}
+              className="fs-3"
+              iconType="solid"
+            />
             {t('addrepresentative')}
           </Button>
         }

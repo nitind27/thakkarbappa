@@ -20,16 +20,16 @@ const TalukaData = ({ talukasdata }: Props) => {
   const [updateTownId, setUpdateTownId] = useState<BigInt | null>(null);
   const [localTalukasData, setLocalTalukasData] =
     useState<talukasdata[]>(talukasdata); // Local state for talukas data
-    const t = useTranslations('Townpage');
+  const t = useTranslations('Townpage');
 
   const data = localTalukasData.map((taluka) => ({
     id: taluka.id,
     name: taluka.name,
     name_marathi: taluka.name_marathi,
     status: taluka.status,
-    
+
   }))
-  .reverse(); 
+    .reverse();
 
   const columns = [
     {
@@ -44,17 +44,16 @@ const TalukaData = ({ talukasdata }: Props) => {
     // { accessorKey: "id", header: "ID" },
     { accessorKey: "name", header: `${t('taluka')}` },
     { accessorKey: "name_marathi", header: `${t('marathiname')}` },
-    { accessorKey: "status", header:`${t('Status')}` },
+    { accessorKey: "status", header: `${t('Status')}` },
     {
       accessorKey: "actions",
       header: `${t("Action")}`,
       cell: ({ row }: any) => (
         <div>
-         <button className="btn btn-sm btn-primary" onClick={() => handleEdit(row.original)}><KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />{t('edit')}</button>
+          <button className="btn btn-sm btn-primary" onClick={() => handleEdit(row.original)}><KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />{t('edit')}</button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
@@ -71,7 +70,7 @@ const TalukaData = ({ talukasdata }: Props) => {
       currentStatus === "Active"
         ? "Are you sure you want to deactivate this cluster?"
         : "Are you sure you want to activate this cluster?";
-  
+
     if (window.confirm(confirmMessage)) {
       try {
         const newStatus = currentStatus === "Active" ? "Deactive" : "Active";
@@ -82,11 +81,11 @@ const TalukaData = ({ talukasdata }: Props) => {
           },
           body: JSON.stringify({ status: newStatus }),
         });
-  
+
         if (response.ok) {
           // Update local state without page reload
           setLocalTalukasData((prevData) =>
-            prevData.map((taluka :any) =>
+            prevData.map((taluka: any) =>
               taluka.id === talukaId
                 ? { ...taluka, status: newStatus }
                 : taluka
@@ -143,7 +142,7 @@ const TalukaData = ({ talukasdata }: Props) => {
         if (updateTownId) {
           // Update local state for edited Taluka
           setLocalTalukasData((prevData) =>
-            prevData.map((taluka :any) =>
+            prevData.map((taluka: any) =>
               taluka.id === updateTownId
                 ? { ...taluka, name: townName }
                 : taluka
@@ -161,8 +160,7 @@ const TalukaData = ({ talukasdata }: Props) => {
       } else {
         const data = await response.json();
         toast.error(
-          `Failed to ${updateTownId ? "update" : "insert"} Taluka: ${
-            data.error
+          `Failed to ${updateTownId ? "update" : "insert"} Taluka: ${data.error
           }`
         );
       }
@@ -173,7 +171,7 @@ const TalukaData = ({ talukasdata }: Props) => {
   };
 
   const handleEdit = (taluka: any) => {
-    
+
     setUpdateTownId(taluka.id);
     setTownName(taluka.name);
     handleShowPrint();
@@ -201,19 +199,19 @@ const TalukaData = ({ talukasdata }: Props) => {
         show={showPrintModal}
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
-        title={updateTownId ? `${t('updatepage')}` :  `${t('insertpage')}`}
+        title={updateTownId ? `${t('updatepage')}` : `${t('insertpage')}`}
         formData={{
           fields: [
             {
               label: `${t('entertalukaname')}`,
               value: townName,
-              type:"text",
+              type: "text",
               placeholder: `${t('entertalukaname')}`,
               error,
               onChange: (e) => setTownName(e.target.value),
             },
           ],
-        
+
         }}
         submitButtonLabel={t('submit')}
       />

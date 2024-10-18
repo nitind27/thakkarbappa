@@ -3,13 +3,13 @@ import { Modal, Button, Form } from "react-bootstrap";
 
 type FormField = {
   label: string;
-  value: string | number; // Allow number for population and ID
+  value: string | number | File | null; // Allow File for image preview
   placeholder?: string; // Optional for select inputs
   error?: string; // Optional error message
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
-  type: "text" | "select"; // Specify the type of input
+  type: "text" | "select" | "file"; // Added file type
   options?: { value: string | number; label: string }[]; // Only for select inputs
 };
 
@@ -18,6 +18,7 @@ type CustomModalProps = {
   handleClose: () => void;
   handleSubmit: (event: React.FormEvent) => void;
   title: string;
+  imagepriview?: any;
   formData: {
     fields: FormField[]; // Array of form fields
     error?: string; // Optional error for the entire form
@@ -31,6 +32,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
   handleSubmit,
   title,
   formData,
+  imagepriview,
   submitButtonLabel = "Submit",
 }) => {
   return (
@@ -39,14 +41,18 @@ const CustomModal: React.FC<CustomModalProps> = ({
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        <span style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
+          {imagepriview}
+        </span>
         <Form onSubmit={handleSubmit}>
           {formData.fields.map((field, index) => (
             <Form.Group controlId={`formField${index}`} key={index}>
               <Form.Label>{field.label}</Form.Label>
+
               {field.type === "text" ? (
                 <Form.Control
                   type="text"
-                  value={field.value}
+                  value={field.value as string}
                   onChange={field.onChange as any}
                   placeholder={field.placeholder}
                   isInvalid={!!field.error}
@@ -54,7 +60,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
               ) : field.type === "select" ? (
                 <Form.Control
                   as="select"
-                  value={field.value}
+                  value={field.value as string}
                   onChange={field.onChange as any}
                   isInvalid={!!field.error}
                 >
@@ -67,6 +73,26 @@ const CustomModal: React.FC<CustomModalProps> = ({
                     </option>
                   ))}
                 </Form.Control>
+              ) : field.type === "file" ? (
+                <>
+                  <Form.Control
+                    type="file"
+                    onChange={(e: any) => {
+                      if (e.target.files) {
+                        field.onChange(e);
+                      }
+                    }}
+                    isInvalid={!!field.error}
+                  />
+                  {/* Image preview logic */}
+                  {field.value && typeof field.value === "string" && (
+                    <img
+                      src={field.value}
+                      alt="Image Preview"
+                      style={{ maxWidth: "100px", marginTop: "10px" }}
+                    />
+                  )}
+                </>
               ) : null}
 
               {field.error && (
@@ -76,6 +102,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
               )}
             </Form.Group>
           ))}
+
           {formData.error && (
             <div style={{ color: "red", marginTop: "0.25rem" }}>
               <ul style={{ paddingLeft: "1rem" }}>

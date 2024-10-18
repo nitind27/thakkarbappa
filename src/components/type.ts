@@ -157,3 +157,41 @@ export type OpeningBalance = {
   ins_date_time: Date; // Represents datetime
   update_date_time: Date | null; // Allow null values
 }
+export type NidhiVitaran = {
+  id: bigint;
+  work_master_id: bigint;
+  date?: Date | null; // Optional date
+  installment: string;
+  amount: number; // Corresponds to Float in Prisma
+  photo: string;
+  latitude: string;
+  longitude: string;
+  address: string;
+  status: string; // Default is 'Active'
+  created_at?: Date | null; // Optional timestamp
+  updatedAt?: Date | null; // Optional timestamp
+};
+
+export type WorkMaster = {
+  id: bigint;
+  taluka_id: bigint;
+  gp_id: bigint;
+  village_id: bigint;
+  facility_id: bigint;
+  representative_id: bigint;
+  representative_name: string;
+  name: string;
+  estimated_amount: number; // Using number for Float in TypeScript
+  tantrik_manyata_amount: number; // Using number for Float in TypeScript
+  photo: string;
+  prashashakiya_manyata: string; // Limited to 5 characters
+  prashashakiya_manyata_no: string;
+  prashashakiya_manyata_date?: Date | null; // Optional date field
+  prashashakiya_manyata_amount: number; // Using number for Float in TypeScript
+  latitude: string;
+  longitude: string;
+  address: string;
+  status: string; // Default is 'Active'
+  created_at?: Date | null; // Optional date field
+  updated_at?: Date | null; // Optional date field
+};
