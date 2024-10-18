@@ -11,6 +11,8 @@ import { toast } from "react-toastify";
 
 import { useTranslations } from "next-intl";
 import { useLocation } from "@/common/LocationComponent";
+import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
   initialdisbursementfunds: NidhiVitaran[];
@@ -22,11 +24,12 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
   const { latitude, longitude } = useLocation();
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [selectwork, setSelectwork] = useState("");
+  console.log('fadsf', selectwork)
   const [vitrandate, setVitrandate] = useState("");
   const [Installment, setInstallment] = useState("");
   const [Amount, setAmount] = useState("");
-  const [Latitude, setLatitude] = useState("");
-  const [Longitude, setLongitude] = useState("");
+  const [Latitude, setLatitude] = useState(latitude);
+  const [Longitude, setLongitude] = useState(longitude);
   const [Adress, setAdress] = useState("");
   const [error, setError] = useState<string>("");
   const [updateClusterId, setUpdateClusterId] = useState<bigint | null>(null);
@@ -35,14 +38,20 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
   const [insertImage, setInsertImage] = React.useState<File | null>(null); // File object for the selected image
 
   const [imagePreview, setImagePreview] = React.useState<string>(""); // URL for image preview
-  // const clusterMap = workmaster.reduce((acc, cluster: WorkMaster) => {
-  //   acc[cluster.id] = cluster.name; // Assuming taluka has id and name properties
-  //   return acc;
-  // }, {} as Record<number, string>);
+  const clusterMap = workmaster.reduce((acc, work: WorkMaster) => {
+    acc[work.id.toString()] = work.name; // Convert bigint to string
+    return acc;
+  }, {} as Record<string, string>); // Change Record<number, string> to Record<string, string>
   const data = clusterData
     .map((NidhiVitaran) => ({
-      work_master_id: NidhiVitaran.work_master_id,
-      date: NidhiVitaran.date,
+      work_master_id: clusterMap[NidhiVitaran.work_master_id.toString()],
+      work_id: NidhiVitaran.work_master_id,
+      date:
+        (NidhiVitaran.date && typeof NidhiVitaran.date === "string")
+          ? formatDate(NidhiVitaran.date)
+          : (NidhiVitaran.date instanceof Date)
+            ? formatDate(NidhiVitaran.date.toISOString())
+            : "Invalid date",
       installment: NidhiVitaran.installment,
       amount: NidhiVitaran.amount,
       photo: NidhiVitaran.photo,
@@ -50,8 +59,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
       address: NidhiVitaran.address,
       status: NidhiVitaran.status,
 
-    }))
-    .reverse(); // Reverse the order to show the last added items first
+    })).reverse();
   const columns = [
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
@@ -78,9 +86,31 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
       accessorKey: "amount",
       header: `${t('amount')}`,
     },
+    // {
+    //   accessorKey: "photo",
+    //   header: `${t('attechments')}`,
+    // },
     {
       accessorKey: "photo",
       header: `${t('attechments')}`,
+      cell: ({ row }: any) => {
+        const photoSrc = row.original.photo.startsWith('/') ? row.original.photo : `/${row.original.photo}`;
+        return (
+          <div style={{ textAlign: 'center' }}>
+            <Image
+              src={photoSrc}
+              alt={t('image')}
+              style={{ objectFit: 'cover' }}
+              height={100} // Adjust size as needed
+              width={100}
+            />
+            <br />
+            <Link href={photoSrc} target="_blank" rel="noopener noreferrer">
+              view
+            </Link>
+          </div>
+        );
+      },
     },
     {
       accessorKey: "latitude",
@@ -124,6 +154,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
       ),
     },
   ];
+
   const handleDeactivate = async (clusterId: any, currentStatus: any) => {
     const confirmMessage =
       currentStatus === "Active"
@@ -167,62 +198,80 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
       }
     }
   };
+
+
+
+  const resetForm = () => {
+    setSelectwork("");
+    setVitrandate("");
+    setInstallment("");
+    setAmount("");
+    setAdress("");
+
+    setImagePreview("");
+    setAdress("");
+    setAdress("");
+
+  };
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    // Create FormData to handle both file and form data
+    const formData = new FormData();
+    formData.append('work_master_id', selectwork);
+    formData.append('date', vitrandate);
+    formData.append('installment', Installment);
+    formData.append('amount', Amount);
+    formData.append('latitude', latitude !== null ? latitude.toString() : '');
+    formData.append('longitude', longitude !== null ? longitude.toString() : '');
+    formData.append('address', Adress);
+
+    // Add the image file to the form data if there's an image to upload
+    if (insertImage) {
+      formData.append('photo', insertImage);
+    }
+
     try {
+      // Determine if this is an insert or update operation
       const method = updateClusterId ? "PUT" : "POST";
       const url = updateClusterId
-        ? `/api/disbursementfunds/insert`
-        : `/api/disbursementfunds/insert`;
+        ? `/api/disbursementfunds/update`  // If updating, call the update endpoint
+        : `/api/disbursementfunds/insert`; // If inserting, call the insert endpoint
 
-      // Prepare the request body based on whether we're updating or inserting
-      const requestBody = {
-        work_master_id: selectwork,
-        date: new Date(vitrandate).toISOString(),
-        installment: Installment,
-        amount: parseFloat(Amount),
-        photo: insertImage?.name,
-        latitude: Latitude.toString(),
-        longitude: Longitude.toString(),
-        address: Adress,
+      // If updating, include the cluster ID
+      if (updateClusterId) {
+        formData.append('id', updateClusterId.toString());
+      }
 
-        ...(updateClusterId && { cluster_id: updateClusterId }),
-      };
-
+      // Send the form data to the backend
       const response = await fetch(url, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
+        body: formData, // Use FormData instead of JSON string
       });
 
       if (response.ok) {
-        // Handle successful response
-        if (updateClusterId) {
-          // Update local state for the updated cluster
+        const createdData = await response.json();
+
+        if (!updateClusterId) {
+          // If inserting a new entry, update the state with the new data
+          setClusterData((prevData) => [...prevData, createdData]);
+          toast.success("Cluster inserted successfully!");
+        } else {
+          // If updating an existing entry, update the specific item in the state
           setClusterData((prevData) =>
-            prevData.map((cluster: any) =>
-              cluster.id == updateClusterId
-                ? { ...cluster, ...requestBody }
-                : cluster
+            prevData.map((cluster) =>
+              cluster.id === updateClusterId ? { ...cluster, ...createdData } : cluster
             )
           );
           toast.success("Cluster updated successfully!");
-        } else {
-          // New Cluster object without ID since it's auto-incremented
-          const createdData = await response.json(); // Assuming API returns created data
-          setClusterData((prevData) => [...prevData, createdData]); // Add created data to state
-          toast.success("Cluster inserted successfully!");
         }
 
-
-
+        // Reset form and close modal after successful submission
+        resetForm();
         handleClosePrint();
       } else {
-        toast.error(
-          `Failed to ${updateClusterId ? "update" : "insert"} cluster.`
-        );
+        // Handle errors from the server
+        toast.error(`Failed to ${updateClusterId ? "update" : "insert"} cluster.`);
       }
     } catch (error) {
       console.error("Error during operation:", error);
@@ -231,17 +280,25 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
   };
 
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]; // Get the selected file
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const file = (e.target as HTMLInputElement).files?.[0]; // Type assertion to HTMLInputElement
     if (file) {
       setInsertImage(file); // Store the actual file object
       setImagePreview(URL.createObjectURL(file)); // Create a preview URL
     }
   };
-  const handleEdit = (cluster: any) => {
-    setUpdateClusterId(cluster.cluster_id); // Set ID for updating
-    // setClusterName(cluster.cluster_name); // Set current name for editing
-    handleShowPrint(); // Open modal for editing
+  const handleEdit = (NidhiVitaran: any) => {
+    setUpdateClusterId(NidhiVitaran.id); // Set the ID of the school being edited
+    setSelectwork(NidhiVitaran.work_id.toString());
+    setVitrandate(NidhiVitaran.date);
+    setInstallment(NidhiVitaran.installment);
+    setAdress(NidhiVitaran.address);
+    setAmount(NidhiVitaran.amount);
+
+    setImagePreview(NidhiVitaran.photo);
+
+    handleShowPrint(); // Show the modal for editing
   };
 
   const handleShowPrint = () => setShowPrintModal(true);
@@ -308,16 +365,22 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
             {
               label: `${t('vitrandate')}`,
               value: vitrandate,
-              type: "text",
+              type: "date",
               placeholder: `${t('vitrandate')}`,
               onChange: (e) => setVitrandate(e.target.value),
             },
             {
               label: `${t('selectInstallment')}`,
               value: Installment,
-              type: "text",
+              type: "select",
               placeholder: `${t('selectInstallment')}`,
               onChange: (e) => setInstallment(e.target.value),
+              options: [
+                { label: "1", value: "1" },
+                { label: "2", value: "2" },
+                { label: "3", value: "3" },
+                // Add other options here if needed
+              ],
             },
             {
               label: `${t('enteramount')}`,
@@ -335,17 +398,17 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
             },
             {
               label: `${t('Latitude')}`,
-              value: Latitude,
+              value: latitude,
               type: "text",
               placeholder: `${t('Latitude')}`,
-              onChange: (e) => setLatitude(e.target.value),
+              onChange: (e) => setLatitude(latitude),
             },
             {
               label: `${t('Longitude')}`,
-              value: Longitude,
+              value: longitude,
               type: "text",
               placeholder: `${t('Longitude')}`,
-              onChange: (e) => setLongitude(e.target.value),
+              onChange: (e) => setLongitude(longitude),
             },
             {
               label: `${t('enteraddress')}`,

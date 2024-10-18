@@ -1,6 +1,6 @@
 // app/page.tsx
 import Schooltitle from "@/app/[locale]/title/schooltitle";
-import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher";
+
 import Clusteradd from "@/components/manage/Clusteradd";
 import School from "@/components/manage/School";
 import { clusterdata, Schooldata, talukasdata } from "@/components/type";

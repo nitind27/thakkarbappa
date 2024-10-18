@@ -1,6 +1,5 @@
 import Towntitle from "@/app/[locale]/title/towntitle";
-import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher";
-import Clusteradd from "@/components/manage/Clusteradd";
+
 import TalukaData from "@/components/manage/TalukaData";
 import { talukasdata } from "@/components/type";
 
