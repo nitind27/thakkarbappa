@@ -9,7 +9,7 @@ type FormField = {
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
-  type: "text" | "select" | "file"; // Added file type
+  type: "text" | "select" | "file" | "date"; // Added date type
   options?: { value: string | number; label: string }[]; // Only for select inputs
 };
 
@@ -93,6 +93,13 @@ const CustomModal: React.FC<CustomModalProps> = ({
                     />
                   )}
                 </>
+              ) : field.type === "date" ? ( // Added case for date input
+                <Form.Control
+                  type="date"
+                  value={field.value as string} // Assuming the value is a date string
+                  onChange={field.onChange as any}
+                  isInvalid={!!field.error}
+                />
               ) : null}
 
               {field.error && (
