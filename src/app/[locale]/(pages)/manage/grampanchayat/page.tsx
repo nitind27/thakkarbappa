@@ -1,5 +1,5 @@
 import Grampanchayatitle from "@/app/[locale]/title/grampanchayat";
-import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher";
+
 import Grampanchayat from "@/components/manage/Grampanchayat";
 import { grampanchayat, talukasdata } from "@/components/type";
 import prisma from "@/lib/db";

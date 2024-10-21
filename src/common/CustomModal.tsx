@@ -1,16 +1,18 @@
 import React from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/themes/material_blue.css"; // Adjust the theme based on your preference
 
 type FormField = {
   label: string;
-  value: string | number | File | null; // Allow File for image preview
-  placeholder?: string; // Optional for select inputs
-  error?: string; // Optional error message
+  value: string | number | File | null;
+  placeholder?: string;
+  error?: string;
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
-  type: "text" | "select" | "file" | "date"; // Added date type
-  options?: { value: string | number; label: string }[]; // Only for select inputs
+  type: "text" | "select" | "file" | "date";
+  options?: { value: string | number; label: string }[];
 };
 
 type CustomModalProps = {
@@ -20,8 +22,8 @@ type CustomModalProps = {
   title: string;
   imagepriview?: any;
   formData: {
-    fields: FormField[]; // Array of form fields
-    error?: string; // Optional error for the entire form
+    fields: FormField[];
+    error?: string;
   };
   submitButtonLabel?: string;
 };
@@ -41,7 +43,13 @@ const CustomModal: React.FC<CustomModalProps> = ({
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <span style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
+        <span
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           {imagepriview}
         </span>
         <Form onSubmit={handleSubmit}>
@@ -93,12 +101,18 @@ const CustomModal: React.FC<CustomModalProps> = ({
                     />
                   )}
                 </>
-              ) : field.type === "date" ? ( // Added case for date input
-                <Form.Control
-                  type="date"
-                  value={field.value as string} // Assuming the value is a date string
-                  onChange={field.onChange as any}
-                  isInvalid={!!field.error}
+              ) : field.type === "date" ? (
+                <Flatpickr
+               value={field.value ? new Date(field.value as any) : ''} // Assuming the value is a date string
+                  onChange={(date) =>
+                    field.onChange({
+                      target: { value: date[0] }, // Convert Flatpickr's array format to a single value
+                    } as any)
+                  }
+                  options={{
+                    dateFormat: "Y-m-d", // Adjust the format based on your needs
+                  }}
+                  className="form-control"
                 />
               ) : null}
 

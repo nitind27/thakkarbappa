@@ -1,7 +1,6 @@
 // app/page.tsx
-import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher";
-import Clusteradd from "@/components/manage/Clusteradd";
-import School from "@/components/manage/School";
+
+
 import { clusterdata, Schooldata } from "@/components/type";
 import prisma from "@/lib/db";
 import React from "react";

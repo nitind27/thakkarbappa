@@ -23,7 +23,7 @@ const SidebarMenuMain = () => {
           to='/apps/chat'
           title='Manage'
           fontIcon='bi-chat-left'
-          icon='message-text-2'
+          icon='burger-menu-2'
         >
           <SidebarMenuItem to={`/${localActive}/manage/cluster`} title={t('clustermenu')} hasBullet={true} />
           <SidebarMenuItem to={`/${localActive}/manage/town`} title={t('townmenu')} hasBullet={true} />

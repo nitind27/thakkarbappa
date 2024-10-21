@@ -53,15 +53,22 @@ const SidebarMenuItemWithSub: React.FC<Props & WithChildren> = ({
             <span className="bullet bullet-dot"></span>
           </span>
         )}
+
         {icon && app?.sidebar?.default?.menu?.iconType === "svg" && (
           <span className="menu-icon">
-            <KTIcon iconName={icon} className="fs-2" />
+            {" "}
+            <KTIcon
+              iconName={icon}
+              className={clsx("fs-2 text-gray-600  me-2", {
+                "text-blue": isActive,
+              })}
+            />
           </span>
         )}
         {fontIcon && app?.sidebar?.default?.menu?.iconType === "font" && (
           <i className={clsx("bi fs-3", fontIcon)}></i>
         )}
-        <span className="menu-title">{title}</span>
+        <span className="menu-title text-light">{title}</span>
         <span className="menu-arrow"></span>
       </span>
       <div

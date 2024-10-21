@@ -78,8 +78,9 @@ export default function Table({ data, columns, Button }: any) {
 
   return (
     <div className="container mt-5 card card-body p-5">
-      <div className="row mb-3 align-items-center">
+      <div className="row mb-3 align-items-center" style={{display:"flex"}}>
         <div className="col-auto">
+          
           <input
             type="text"
             className="form-control"

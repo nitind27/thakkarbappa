@@ -1,8 +1,7 @@
 import Mahasulgaavtitle from "@/app/[locale]/title/mahasulgaav";
-import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher";
-import Grampanchayat from "@/components/manage/Grampanchayat";
+
 import Mahsulgaav from "@/components/manage/Mahsulgaav";
-import TalukaData from "@/components/manage/TalukaData";
+
 import { grampanchayat, talukasdata, Villages } from "@/components/type";
 
 import prisma from "@/lib/db";

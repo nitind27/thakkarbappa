@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { ThemeModeProvider } from "@/_metronic/partials";
-import { LanguageProvider } from "@/components/LanguageSwitcher/LanguageContext";
 
 export const metadata: Metadata = {
   title: "thakkarbappa",
