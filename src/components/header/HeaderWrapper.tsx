@@ -54,13 +54,12 @@ export function HeaderWrapper() {
                 <div className="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
                   <Link href="/dashboard" className="d-lg-none">
                     <Image
-                      width={100}
-                      height={100}
+                      width={55}
+                      height={55}
                       alt="Logo"
-                      src={toAbsoluteUrl(
-                        "/media/logos/default-small.svg"
-                      )}
-                      className="h-30px"
+                      src={"/media/logos/logos.png"}
+                      // className="h-65px"
+                
                     />
                   </Link>
                 </div>

@@ -24,8 +24,8 @@ const SidebarLogo = (props: PropsType) => {
   const toggleType = appSidebarDefaultCollapseDesktopEnabled
     ? "collapse"
     : appSidebarDefaultMinimizeDesktopEnabled
-    ? "minimize"
-    : "";
+      ? "minimize"
+      : "";
   const toggleState = appSidebarDefaultMinimizeDesktopEnabled ? "active" : "";
   const appSidebarDefaultMinimizeDefault =
     config.app?.sidebar?.default?.minimize?.desktop?.default;
@@ -58,34 +58,34 @@ const SidebarLogo = (props: PropsType) => {
     <div className="app-sidebar-logo bg-dark " id="kt_app_sidebar_logo">
       <Link href="/dashboard">
         {config.layoutType === "dark-sidebar" ? (
-          
-        //   <Image
-        //   width={250}
-        //   height={80}
-        //   alt="Logo1"
-        //   src="/media/logos/logos.png"
-        //   className="app-sidebar-logo-default"
-        // />
-        <Image
-        width={100}
-        height={10}
-        alt="Logo1"
-        src="/media/logos/logos.png"
-        className="app-sidebar-logo-default img-fluid"
-      />
+
+          //   <Image
+          //   width={250}
+          //   height={80}
+          //   alt="Logo1"
+          //   src="/media/logos/clocks horizntal.png"
+          //   className="app-sidebar-logo-default"
+          // />
+          <Image
+            width={220}
+            height={10}
+            alt="Logo5"
+            src="/media/logos/clocks horizntal.png"
+            className="app-sidebar-logo-default img-fluid"
+          />
         ) : (
-          <> 
+          <>
             <Image
               width={200}
               height={200}
-              alt="Logo"
+              alt="Logo2"
               src={"/media/logos/logos.png"}
               className="h-25px app-sidebar-logo-default theme-light-show"
             />
             <Image
               width={200}
               height={200}
-              alt="Logo"
+              alt="Logo3"
               src={"/media/logos/logos.png"}
               className="h-25px app-sidebar-logo-default theme-dark-show"
             />
@@ -94,8 +94,8 @@ const SidebarLogo = (props: PropsType) => {
 
         <Image
           width={80}
-          height={100}
-          alt=""
+          height={85}
+          alt="logo4"
           src={"/media/logos/logos.png"}
           className="app-sidebar-logo-minimize"
         />
@@ -103,21 +103,21 @@ const SidebarLogo = (props: PropsType) => {
 
       {(appSidebarDefaultMinimizeDesktopEnabled ||
         appSidebarDefaultCollapseDesktopEnabled) && (
-        <div
-          ref={toggleRef}
-          id="kt_app_sidebar_toggle"
-          className={clsx(
-            "app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted h-30px w-30px position-absolute top-50 start-100 translate-middle rotate",
-            { active: appSidebarDefaultMinimizeDefault }
-          )}
-          data-kt-toggle="true"
-          data-kt-toggle-state={toggleState}
-          data-kt-toggle-target="body"
-          data-kt-toggle-name={`app-sidebar-${toggleType}`}
-        >
-          <KTIcon iconName="double-left" className="fs-2 rotate-180 ms-1 " />
-        </div>
-      )}
+          <div
+            ref={toggleRef}
+            id="kt_app_sidebar_toggle"
+            className={clsx(
+              "app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted h-30px w-30px position-absolute top-50 start-100 translate-middle rotate",
+              { active: appSidebarDefaultMinimizeDefault }
+            )}
+            data-kt-toggle="true"
+            data-kt-toggle-state={toggleState}
+            data-kt-toggle-target="body"
+            data-kt-toggle-name={`app-sidebar-${toggleType}`}
+          >
+            <KTIcon iconName="double-left" className="fs-2 rotate-180 ms-1 " />
+          </div>
+        )}
     </div>
   );
 };

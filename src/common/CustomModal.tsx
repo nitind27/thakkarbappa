@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import Flatpickr from "react-flatpickr";
-import "flatpickr/dist/themes/material_green.css"; // Adjust the theme based on your preference
+import "flatpickr/dist/themes/material_blue.css"; // Adjust the theme based on your preference
 
 type FormField = {
   label: string;
@@ -103,7 +103,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
                 </>
               ) : field.type === "date" ? (
                 <Flatpickr
-                  value={field.value as string} // Assuming the value is a date string
+               value={field.value ? new Date(field.value as any) : ''} // Assuming the value is a date string
                   onChange={(date) =>
                     field.onChange({
                       target: { value: date[0] }, // Convert Flatpickr's array format to a single value

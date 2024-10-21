@@ -44,6 +44,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
   }, {} as Record<string, string>); // Change Record<number, string> to Record<string, string>
   const data = clusterData
     .map((NidhiVitaran) => ({
+      id: NidhiVitaran.id,
       work_master_id: clusterMap[NidhiVitaran.work_master_id.toString()],
       work_id: NidhiVitaran.work_master_id,
       date:
@@ -142,7 +143,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
             className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
               } ms-5`}
             onClick={() =>
-              handleDeactivate(row.original.cluster_id, row.original.status)
+              handleDeactivate(row.original.id, row.original.status)
             }
           >
             <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
@@ -155,15 +156,15 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
     },
   ];
 
-  const handleDeactivate = async (clusterId: any, currentStatus: any) => {
+  const handleDeactivate = async (id: any, currentStatus: any) => {
     const confirmMessage =
       currentStatus === "Active"
-        ? "Are you sure you want to deactivate this cluster?"
-        : "Are you sure you want to activate this cluster?";
+        ? "Are you sure you want to deactivate this Disbursementfundes?"
+        : "Are you sure you want to activate this Disbursementfundes?";
 
     if (window.confirm(confirmMessage)) {
       try {
-        const response = await fetch(`/api/clustersapi/clusters/${clusterId}`, {
+        const response = await fetch(`/api/disbursementfunds/delete/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -177,7 +178,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
           // Update local state without page reload
           setClusterData((prevData) =>
             prevData.map((cluster) =>
-              cluster.id === clusterId
+              cluster.id === id
                 ? {
                   ...cluster,
                   status: currentStatus === "Active" ? "Deactive" : "Active",
@@ -186,7 +187,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
             )
           );
           toast.success(
-            `Cluster ${currentStatus === "Active" ? "deactivated" : "activated"
+            `Disbursementfundes ${currentStatus === "Active" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
@@ -211,6 +212,8 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
     setImagePreview("");
     setAdress("");
     setAdress("");
+    setUpdateClusterId(null);
+
 
   };
   const handleSubmit = async (event: React.FormEvent) => {
@@ -233,7 +236,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
 
     try {
       // Determine if this is an insert or update operation
-      const method = updateClusterId ? "PUT" : "POST";
+      const method = updateClusterId ? "PATCH" : "POST";
       const url = updateClusterId
         ? `/api/disbursementfunds/update`  // If updating, call the update endpoint
         : `/api/disbursementfunds/insert`; // If inserting, call the insert endpoint
@@ -255,7 +258,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
         if (!updateClusterId) {
           // If inserting a new entry, update the state with the new data
           setClusterData((prevData) => [...prevData, createdData]);
-          toast.success("Cluster inserted successfully!");
+          toast.success("Disbursementfundes inserted successfully!");
         } else {
           // If updating an existing entry, update the specific item in the state
           setClusterData((prevData) =>
@@ -263,7 +266,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
               cluster.id === updateClusterId ? { ...cluster, ...createdData } : cluster
             )
           );
-          toast.success("Cluster updated successfully!");
+          toast.success("Disbursementfundes updated successfully!");
         }
 
         // Reset form and close modal after successful submission
@@ -289,7 +292,8 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
     }
   };
   const handleEdit = (NidhiVitaran: any) => {
-    setUpdateClusterId(NidhiVitaran.id); // Set the ID of the school being edited
+
+    setUpdateClusterId(NidhiVitaran.id);
     setSelectwork(NidhiVitaran.work_id.toString());
     setVitrandate(NidhiVitaran.date);
     setInstallment(NidhiVitaran.installment);
