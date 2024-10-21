@@ -14,13 +14,30 @@ const btnClass = "btn btn-icon btn-active-light-primary btn-custom";
 const userAvatarClass = "symbol-35px";
 const btnIconClass = "fs-1";
 
-const Navbar = () => {
+const Navbar = ({ increase, decrease, resetsize }: any) => {
   const { config } = useLayout();
 
   return (
     <div className="app-navbar flex-shrink-0">
       <div className={clsx("app-navbar-item", itemClass)}>
-
+        <button
+          className="btn btn-outline-secondary btn-sm me-3"
+          onClick={increase} // Call the passed function on click
+        >
+          +A
+        </button>
+        <button
+          className="btn btn-outline-secondary btn-sm me-3"
+          onClick={decrease} // Call the passed function on click
+        >
+          -A
+        </button>
+        <button
+          className="btn btn-outline-secondary btn-sm me-3"
+          onClick={resetsize} // Call the passed function on click
+        >
+          A
+        </button>
         <LocalSwitcher />
         <div
           data-kt-menu-trigger="{default: 'click'}"
@@ -71,7 +88,7 @@ const Navbar = () => {
             />
           )} */}
           <Image
-            src={("/media/images/avtar.jpg")}
+            src={"/media/images/avtar.jpg"}
             alt="Profile"
             width={100}
             height={100}

@@ -36,23 +36,16 @@ export default async function RootLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={translations}>
-
       <Suspense fallback={<LayoutSplashScreen />}>
         <LayoutProvider>
           {/* Uncomment these if needed */}
           {/* <ThemeModeProvider> */}
           {/* <ServiceProvider> */}
           <AuthInit>
-
             <MasterLayout>
               <AuthProvider>
                 <ToastContainer />
-                <LocationProvider>
-
-                  <Zoom>
-                    {children}
-                  </Zoom>
-                </LocationProvider>
+                <LocationProvider>{children}</LocationProvider>
               </AuthProvider>
             </MasterLayout>
             <MasterInit />
@@ -61,6 +54,6 @@ export default async function RootLayout({
           {/* </ThemeModeProvider> */}
         </LayoutProvider>
       </Suspense>
-    </NextIntlClientProvider >
+    </NextIntlClientProvider>
   );
 }

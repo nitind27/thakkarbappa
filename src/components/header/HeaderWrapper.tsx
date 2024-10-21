@@ -8,7 +8,7 @@ import Image from "next/image";
 import { KTIcon, toAbsoluteUrl } from "@/_metronic/helpers";
 import { LayoutSetup, useLayout } from "@/layout/core";
 
-export function HeaderWrapper() {
+export function HeaderWrapper({ increase,decrease ,resetsize}: any) {
   const { config, classes } = useLayout();
   if (config.app?.header?.default?.container === "fluid") {
     LayoutSetup.classes.headerContainer.push("container-fluid");
@@ -57,9 +57,7 @@ export function HeaderWrapper() {
                       width={100}
                       height={100}
                       alt="Logo"
-                      src={toAbsoluteUrl(
-                        "/media/logos/default-small.svg"
-                      )}
+                      src={toAbsoluteUrl("/media/logos/default-small.svg")}
                       className="h-30px"
                     />
                   </Link>
@@ -127,7 +125,7 @@ export function HeaderWrapper() {
                 <Header />
               </div>
             )}
-          <Navbar />
+          <Navbar increase={increase} decrease={decrease} resetsize={resetsize}/>
         </div>
       </div>
     </div>
