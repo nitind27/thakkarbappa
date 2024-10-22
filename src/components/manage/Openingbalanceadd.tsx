@@ -79,7 +79,7 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
       accessorKey: "actions",
       header: `${t("Action")}`,
       cell: ({ row }: any) => (
-        <div>
+        <div style={{ display: "flex",whiteSpace:"nowrap" }}>
           <button
             className="btn btn-sm btn-primary"
             onClick={() => handleEdit(row.original)}

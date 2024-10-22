@@ -19,7 +19,7 @@ const SidebarMenuMain = () => {
       setLoading(true);
       setTimeout(() => {
         setLoading(false);
-      }, 1500); // 3000 milliseconds = 3 seconds
+      }, 500); 
     }
   };
 

@@ -10,6 +10,8 @@ import { validateSchoolForm } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
 import { createConfirmation } from "react-confirm";
+import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
   initialschoolData: Schooldata[];
@@ -44,7 +46,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
   const [schooldata, setSchooldata] = useState<Schooldata[]>(initialschoolData);
   const t = useTranslations("School");
   const confirm = createConfirmation(ConfirmationDialog);
-
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const clusterMap = clusterdata.reduce((acc, cluster: clusterdata) => {
     acc[cluster.cluster_id] = cluster.cluster_name; // Assuming taluka has id and name properties
     return acc;
@@ -174,11 +176,37 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
       accessorKey: "image_urls",
       header: "Image Url",
     },
+
+
+
+    {
+      accessorKey: "photo",
+      header: `${t('attechments')}`,
+      cell: ({ row }: any) => {
+        const photoSrc = row.original.image_urls.startsWith('/') ? row.original.image_urls : `/${row.original.image_urls}`;
+        const notfound ='/media/img/imgenotfound.jpg'
+        return (
+          <div style={{ textAlign: 'center' }}>
+            <Image
+              src={photoSrc}
+              alt={t('image')}
+              style={{ objectFit: 'cover' }}
+              height={100} // Adjust size as needed
+              width={100}
+            />
+            <br />
+            {/* <Link href={photoSrc} target="_blank" rel="noopener noreferrer">
+              view
+            </Link> */}
+          </div>
+        );
+      },
+    },
     {
       accessorKey: "actions",
       header: `${t("Action")}`,
       cell: ({ row }: any) => (
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex",whiteSpace:"nowrap" }}>
           <button
             className="btn btn-sm btn-primary"
             onClick={() => handleEdit(row.original)}
@@ -196,11 +224,62 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
             {row.original.status === "Active" ? `${t("Deactive")}` : `${t('Active')}`}
           </button>
-          <button onClick={() => handleimage(row.original)}>Image</button>
+          <button
+            className="btn btn-sm btn-primary ms-5"
+            onClick={() => handleImageClick(row.original.school_id)}
+          >
+            Upload Image
+          </button>
         </div>
       ),
     },
   ];
+
+
+  const handleImageClick = (schoolId: number) => {
+    // Open file input to select image
+    setSchoolId(schoolId);
+    document.getElementById("fileInput")?.click();
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && schoolId) {
+      setSelectedFile(file);
+      await uploadImage(schoolId as any, file);
+    }
+  };
+
+  const uploadImage = async (schoolId: number, file: File) => {
+    const formData = new FormData();
+    formData.append("photo", file);
+
+    try {
+      const res = await fetch(`/api/school/upload/${schoolId}`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Image uploaded successfully!");
+
+        // Update the school data with the new image URL
+        const updatedData = schooldata.map((school) =>
+          school.school_id === schoolId ? { ...school, image_urls: data.image_urls } : school
+        );
+        setSchooldata(updatedData);
+      } else {
+        toast.error(data.error || "Failed to upload image.");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Error uploading image.");
+    }
+  };
+
+
+
 
 
   const handleDeactivate = async (
@@ -615,6 +694,13 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
           error,
         }}
         submitButtonLabel={t('submit')}
+      />
+      <input
+        type="file"
+        id="fileInput"
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+        accept="image/*"
       />
     </div>
   );

@@ -55,7 +55,7 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
       accessorKey: "actions",
       header: `${t("Action")}`,
       cell: ({ row }: any) => (
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex",whiteSpace:"nowrap" }}>
           <button
             className="btn btn-sm btn-primary"
             onClick={() => handleEdit(row.original)}

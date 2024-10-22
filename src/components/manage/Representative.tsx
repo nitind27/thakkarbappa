@@ -64,7 +64,7 @@ const Representative = ({ initialRepresentative }: Props) => {
       accessorKey: "actions",
       header: `${t('Action')}`,
       cell: ({ row }: any) => (
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex",whiteSpace:"nowrap" }}>
           <button className="btn btn-sm btn-primary" onClick={() => handleEdit(row.original)}>
           <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
           {t('edit')}
