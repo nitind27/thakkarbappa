@@ -23,15 +23,15 @@ const Sidebar = () => {
     <>
       {(config.layoutType === "dark-sidebar" ||
         config.layoutType === "light-sidebar") && (
-        <div
-          ref={sidebarRef}
-          id="kt_app_sidebar"
-          className={clsx("app-sidebar", config.app?.sidebar?.default?.class)}
-        >
-          <SidebarLogo sidebarRef={sidebarRef} />
-          <SidebarMenu />
-        </div>
-      )}
+          <div
+            ref={sidebarRef}
+            id="kt_app_sidebar"
+            className={clsx("app-sidebar", config.app?.sidebar?.default?.class)}
+          >
+            <SidebarLogo sidebarRef={sidebarRef} />
+            <SidebarMenu />
+          </div>
+        )}
     </>
   );
 };
@@ -106,8 +106,8 @@ const updateDOM = (config: ILayout) => {
     if (appSidebarDefaultDrawerEnabled) {
       appSidebarDefaultDrawerAttributes = config.app?.sidebar?.default?.drawer
         ?.attributes as {
-        [attrName: string]: string;
-      };
+          [attrName: string]: string;
+        };
     }
 
     const appSidebarDefaultStickyEnabled =
@@ -116,8 +116,8 @@ const updateDOM = (config: ILayout) => {
     if (appSidebarDefaultStickyEnabled) {
       appSidebarDefaultStickyAttributes = config.app?.sidebar?.default?.sticky
         ?.attributes as {
-        [attrName: string]: string;
-      };
+          [attrName: string]: string;
+        };
     }
 
     setTimeout(() => {

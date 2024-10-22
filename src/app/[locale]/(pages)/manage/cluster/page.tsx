@@ -1,5 +1,6 @@
 // app/page.tsx
-import Cluster from "@/app/[locale]/title/cluster";;
+import Cluster from "@/app/[locale]/title/cluster"; import Loader from "@/common/Loader ";
+;
 import Clusteradd from "@/components/manage/Clusteradd";
 import { clusterdata } from "@/components/type";
 import prisma from "@/lib/db";
@@ -17,6 +18,14 @@ const Page = async () => {
         <h1>Error fetching Data</h1>
       </div>
     );
+  }
+
+  if (!clusterdata) {
+    return (
+      <>
+        <Loader />
+      </>
+    )
   }
 
   return (

@@ -55,7 +55,7 @@ const SidebarLogo = (props: PropsType) => {
   }, [toggleRef, props.sidebarRef]);
 
   return (
-    <div className="app-sidebar-logo bg-dark " id="kt_app_sidebar_logo">
+    <div className="app-sidebar-logo bg-light " id="kt_app_sidebar_logo">
       <Link href="/dashboard">
         {config.layoutType === "dark-sidebar" ? (
 

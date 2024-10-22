@@ -1,15 +1,16 @@
+import Loader from "@/common/Loader ";
 
 
 
-const HomePage = () => {
+const page = () => {
 
   return (
     <div>
+
       <h1>Welcome to Our Website</h1>
 
-      {/* Other components */}
     </div>
   );
 };
 
-export default HomePage;
+export default page;

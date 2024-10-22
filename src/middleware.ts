@@ -1,8 +1,8 @@
 import createMiddleware from 'next-intl/middleware';
 
 export default createMiddleware({
-  locales: ['en', 'hi', 'mr'],
-  defaultLocale: 'en',
+  locales: ['mr', 'en', 'hi'],  // Supported locales
+  defaultLocale: 'mr',          // Default locale set to Marathi
 });
 
 export const config = {
@@ -12,4 +12,4 @@ export const config = {
     '/(hi|mr|en)/dashboard',
     '/(hi|mr|en)/manage/:path*'
   ],
-};
+}

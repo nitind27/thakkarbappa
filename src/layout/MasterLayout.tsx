@@ -27,6 +27,8 @@ const MasterLayout = ({ children }: { children: React.ReactNode }) => {
   const resetsize = () => {
     setFontSize(14);
   };
+
+
   return (
     <PageDataProvider>
       <div className="d-flex flex-column flex-root app-root" id="kt_app_root">
@@ -34,6 +36,7 @@ const MasterLayout = ({ children }: { children: React.ReactNode }) => {
           className="app-page flex-column flex-column-fluid"
           id="kt_app_page"
         >
+
           <HeaderWrapper
             decrease={decrease}
             increase={increase}

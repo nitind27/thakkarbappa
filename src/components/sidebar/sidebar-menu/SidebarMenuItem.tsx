@@ -79,8 +79,8 @@ type Props = {
   icon?: string;
   fontIcon?: string;
   hasBullet?: boolean;
+  onClick?: () => void; // Add this line
 };
-
 const SidebarMenuItem: FC<Props & WithChildren> = ({
   children,
   to,
@@ -88,6 +88,7 @@ const SidebarMenuItem: FC<Props & WithChildren> = ({
   icon,
   fontIcon,
   hasBullet = false,
+  onClick, // Destructure onClick
 }) => {
   const pathname = usePathname();
   const isActive = checkIsActive(pathname, to);
@@ -95,7 +96,7 @@ const SidebarMenuItem: FC<Props & WithChildren> = ({
   const { app } = config;
 
   return (
-    <div className="menu-item rounded-2 border-0">
+    <div className="menu-item rounded-2 border-0" onClick={onClick}>
       <Link
         className={clsx("menu-link ", {
           active: isActive,
@@ -105,15 +106,14 @@ const SidebarMenuItem: FC<Props & WithChildren> = ({
       >
         {hasBullet && (
           <span className="menu-icon">
-            {/* <span className='bullet bullet-dot'></span> */}
+            {/* Bullet can be added here */}
           </span>
         )}
         {icon && app?.sidebar?.default?.menu?.iconType === "svg" && (
           <span className="menu-icon">
-            {" "}
             <KTIcon
               iconName={icon}
-              className={clsx("fs-2 text-gray-600  me-2", {
+              className={clsx("fs-2 text-gray-600 me-2", {
                 "text-blue": isActive,
               })}
             />
@@ -123,7 +123,7 @@ const SidebarMenuItem: FC<Props & WithChildren> = ({
           <i className={clsx("bi fs-3", fontIcon)}></i>
         )}
         <div
-          className={clsx(" menu-title text-light fs-6", {
+          className={clsx("menu-title text-light fs-6", {
             "text-light": isActive,
           })}
         >

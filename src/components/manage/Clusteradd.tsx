@@ -25,7 +25,7 @@ const Clusteradd = ({ initialClusterData }: Props) => {
   const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
   const [clusterData, setClusterData] =
     useState<clusterdata[]>(initialClusterData); // State for cluster data
-    const confirm = createConfirmation(ConfirmationDialog);
+  const confirm = createConfirmation(ConfirmationDialog);
 
   const data = clusterData
     .map((cluster) => ({
@@ -76,9 +76,8 @@ const Clusteradd = ({ initialClusterData }: Props) => {
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.cluster_id, row.original.status)
             }
@@ -98,7 +97,7 @@ const Clusteradd = ({ initialClusterData }: Props) => {
       currentStatus === "Active"
         ? "Are you sure you want to deactivate this cluster?"
         : "Are you sure you want to activate this cluster?";
-        const confirmed = await confirm({ confirmation: confirmMessage });
+    const confirmed = await confirm({ confirmation: confirmMessage });
     if (confirmed) {
       try {
         const response = await fetch(`/api/clustersapi/clusters/${clusterId}`, {
@@ -117,15 +116,14 @@ const Clusteradd = ({ initialClusterData }: Props) => {
             prevData.map((cluster) =>
               cluster.cluster_id === clusterId
                 ? {
-                    ...cluster,
-                    status: currentStatus === "Active" ? "Deactive" : "Active",
-                  }
+                  ...cluster,
+                  status: currentStatus === "Active" ? "Deactive" : "Active",
+                }
                 : cluster
             )
           );
           toast.success(
-            `Cluster ${
-              currentStatus === "Active" ? "deactivated" : "activated"
+            `Cluster ${currentStatus === "Active" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
@@ -238,7 +236,7 @@ const Clusteradd = ({ initialClusterData }: Props) => {
         show={showPrintModal}
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
-        title={updateClusterId ? `${t('updatepage')}` :  `${t('insertpage')}`}
+        title={updateClusterId ? `${t('updatepage')}` : `${t('insertpage')}`}
         formData={{
           fields: [
             {

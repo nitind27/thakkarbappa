@@ -29,9 +29,9 @@ export default function LocalSwitcher() {
         onChange={onSelectChange}
         disabled={isPending}
       >
-        <option value='en'>English</option>
-        <option value='hi'>Hindi</option>
         <option value='mr'>Marathi</option>
+        <option value='hi'>Hindi</option>
+        <option value='en'>English</option>
       </select>
     </label>
   );
