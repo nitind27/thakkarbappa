@@ -8,6 +8,8 @@ import { talukasdata } from "../type";
 import { toast } from "react-toastify";
 import { validateTalukaName } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
+import { createConfirmation } from "react-confirm";
+import ConfirmationDialog from "@/common/ConfirmationDialog";
 
 type Props = {
   talukasdata: talukasdata[];
@@ -21,6 +23,7 @@ const TalukaData = ({ talukasdata }: Props) => {
   const [localTalukasData, setLocalTalukasData] =
     useState<talukasdata[]>(talukasdata); // Local state for talukas data
   const t = useTranslations('Townpage');
+  const confirm = createConfirmation(ConfirmationDialog);
 
   const data = localTalukasData.map((taluka) => ({
     id: taluka.id,
@@ -68,10 +71,11 @@ const TalukaData = ({ talukasdata }: Props) => {
   const handleDeactivate = async (talukaId: BigInt, currentStatus: string) => {
     const confirmMessage =
       currentStatus === "Active"
-        ? "Are you sure you want to deactivate this cluster?"
-        : "Are you sure you want to activate this cluster?";
+        ? "Are you sure you want to deactivate this Town?"
+        : "Are you sure you want to activate this Town?";
 
-    if (window.confirm(confirmMessage)) {
+        const confirmed = await confirm({ confirmation: confirmMessage });
+    if (confirmed) {
       try {
         const newStatus = currentStatus === "Active" ? "Deactive" : "Active";
         const response = await fetch(`/api/townapi/town/delete/${talukaId}`, {

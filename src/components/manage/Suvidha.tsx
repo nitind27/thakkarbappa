@@ -8,6 +8,8 @@ import { Facility } from "../type";
 import { toast } from "react-toastify";
 import { validateSuvidhaname } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
+import { createConfirmation } from "react-confirm";
+import ConfirmationDialog from "@/common/ConfirmationDialog";
 
 type Props = {
   initialfacilitydata: Facility[];
@@ -20,6 +22,7 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
   const [suvidhaid, setUpdateSuvidha] = useState<BigInt | null>(null);
   const [facilitydata, setFacility] = useState<Facility[]>(initialfacilitydata);
   const t = useTranslations("Suvidha");
+  const confirm = createConfirmation(ConfirmationDialog);
 
   const data = facilitydata
     .map((suvidha) => ({
@@ -57,18 +60,17 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
             className="btn btn-sm btn-primary"
             onClick={() => handleEdit(row.original)}
           >
-             <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
-           {t('edit')}
+            <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
+            {t('edit')}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
           >
-             <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
+            <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
             {row.original.status === "Active"
               ? `${t("Deactive")}`
               : `${t("Active")}`}
@@ -86,8 +88,8 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
       currentStatus === "Active"
         ? "Are you sure you want to deactivate this Suvidha?"
         : "Are you sure you want to activate this Suvidha?";
-
-    if (window.confirm(confirmMessage)) {
+        const confirmed = await confirm({ confirmation: confirmMessage });
+    if (confirmed) {
       try {
         const newStatus = currentStatus === "Active" ? "Deactive" : "Active";
         const response = await fetch(`/api/suvidha/delete/${grampanchayatid}`, {
@@ -107,15 +109,13 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
             )
           );
           toast.success(
-            `Suvidha ${
-              newStatus === "Active" ? "activated" : "deactivated"
+            `Suvidha ${newStatus === "Active" ? "activated" : "deactivated"
             } successfully!`
           );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the Suvidha status: ${
-              errorData.error || "Unknown error"
+            `Failed to change the Suvidha status: ${errorData.error || "Unknown error"
             }`
           );
         }
@@ -180,8 +180,7 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
       } else {
         const errorData = await response.json();
         toast.error(
-          `Failed to ${suvidhaid ? "update" : "insert"} Suvidha: ${
-            errorData.message || "Unknown error"
+          `Failed to ${suvidhaid ? "update" : "insert"} Suvidha: ${errorData.message || "Unknown error"
           }`
         );
       }

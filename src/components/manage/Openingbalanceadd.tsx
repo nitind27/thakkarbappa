@@ -10,6 +10,8 @@ import CustomModal from "@/common/CustomModal";
 import { toast } from "react-toastify";
 import { validationOpenBalance } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
+import ConfirmationDialog from "@/common/ConfirmationDialog";
+import { createConfirmation } from "react-confirm";
 
 type Props = {
   initialOpenBalanceData: OpeningBalance[];
@@ -26,6 +28,7 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
     initialOpenBalanceData
   ); // State for cluster data
   const t = useTranslations("PraranbhikSillak");
+  const confirm = createConfirmation(ConfirmationDialog);
 
   const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
     acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
@@ -84,9 +87,8 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.open_bal_id, row.original.status)
             }
@@ -103,10 +105,10 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
   const handleDeactivate = async (balanceid: any, currentStatus: any) => {
     const confirmMessage =
       currentStatus === "Active"
-        ? "Are you sure you want to deactivate this cluster?"
-        : "Are you sure you want to activate this cluster?";
-
-    if (window.confirm(confirmMessage)) {
+        ? "Are you sure you want to deactivate this Openbalance?"
+        : "Are you sure you want to activate this Openbalance?";
+    const confirmed = await confirm({ confirmation: confirmMessage });
+    if (confirmed) {
       try {
         const response = await fetch(
           `/api/openbalanceadd/delete/${balanceid}`,
@@ -127,15 +129,14 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
             prevData.map((cluster) =>
               cluster.open_bal_id === balanceid
                 ? {
-                    ...cluster,
-                    status: currentStatus === "Active" ? "Deactive" : "Active",
-                  }
+                  ...cluster,
+                  status: currentStatus === "Active" ? "Deactive" : "Active",
+                }
                 : cluster
             )
           );
           toast.success(
-            `Cluster ${
-              currentStatus === "Active" ? "deactivated" : "activated"
+            `Cluster ${currentStatus === "Active" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
@@ -201,8 +202,7 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
       } else {
         const data = await response.json();
         alert(
-          `Failed to ${updateClusterId ? "update" : "insert"} Village: ${
-            data.error
+          `Failed to ${updateClusterId ? "update" : "insert"} Village: ${data.error
           }`
         );
       }

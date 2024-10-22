@@ -21,19 +21,19 @@ const Navbar = ({ increase, decrease, resetsize }: any) => {
     <div className="app-navbar flex-shrink-0">
       <div className={clsx("app-navbar-item", itemClass)}>
         <button
-          className="btn btn-outline-secondary btn-sm me-3"
+          className="btn btn-outline-secondary btn-sm me-1"
           onClick={increase} // Call the passed function on click
         >
           +A
         </button>
         <button
-          className="btn btn-outline-secondary btn-sm me-3"
+          className="btn btn-outline-secondary btn-sm me-1"
           onClick={decrease} // Call the passed function on click
         >
           -A
         </button>
         <button
-          className="btn btn-outline-secondary btn-sm me-3"
+          className="btn btn-outline-secondary btn-sm me-1"
           onClick={resetsize} // Call the passed function on click
         >
           A

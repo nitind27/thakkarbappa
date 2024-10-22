@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import type { Representative } from "../type";
 import { validaterepresentative } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
+import ConfirmationDialog from "@/common/ConfirmationDialog";
+import { createConfirmation } from "react-confirm";
 
 const STATUS_MESSAGES = {
   ACTIVE: "Active",
@@ -32,6 +34,7 @@ const Representative = ({ initialRepresentative }: Props) => {
   const [representativeId, setUpdateRepresentative] = useState<bigint | null>(null);
   const [representative, setRepresentative] = useState<Representative[]>(initialRepresentative);
   const t = useTranslations('Representative');
+  const confirm = createConfirmation(ConfirmationDialog);
 
   const data = representative.map(({ id, name, status }) => ({
     id,
@@ -80,8 +83,8 @@ const Representative = ({ initialRepresentative }: Props) => {
   const handleDeactivate = async (id: number | string, currentStatus: string) => {
     const newStatus = currentStatus === STATUS_MESSAGES.ACTIVE ? STATUS_MESSAGES.DEACTIVE : STATUS_MESSAGES.ACTIVE;
     const confirmMessage = `Are you sure you want to ${newStatus.toLowerCase()} this Representative?`;
-
-    if (window.confirm(confirmMessage)) {
+    const confirmed = await confirm({ confirmation: confirmMessage });
+    if (confirmed) {
       try {
         const response = await fetch(`/api/Representative/delete/${id}`, {
           method: "PATCH",

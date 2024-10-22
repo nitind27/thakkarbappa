@@ -8,6 +8,8 @@ import { grampanchayat, talukasdata } from "../type";
 import { toast } from "react-toastify";
 import { validateFormgrampanchayat } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
+import { createConfirmation } from "react-confirm";
+import ConfirmationDialog from "@/common/ConfirmationDialog";
 
 type Props = {
   grampanchayat: grampanchayat[];
@@ -16,6 +18,7 @@ type Props = {
 
 const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
   const t = useTranslations('Grampanchayat');
+  const confirm = createConfirmation(ConfirmationDialog);
 
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [townName, setTownName] = useState("");
@@ -93,10 +96,12 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
   ) => {
     const confirmMessage =
       currentStatus === "Active"
-        ? "Are you sure you want to deactivate this cluster?"
-        : "Are you sure you want to activate this cluster?";
+        ? "Are you sure you want to deactivate this grampanchayat?"
+        : "Are you sure you want to activate this grampanchayat?";
 
-    if (window.confirm(confirmMessage)) {
+
+    const confirmed = await confirm({ confirmation: confirmMessage });
+    if (confirmed) {
       try {
         const newStatus = currentStatus === "Active" ? "Deactive" : "Active";
 
@@ -282,7 +287,7 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
                 value: taluka.id,
                 label: taluka.name,
               })),
-              placeholder:`${t('selecttaluka')}`, // Optional placeholder for select input
+              placeholder: `${t('selecttaluka')}`, // Optional placeholder for select input
             },
 
             {

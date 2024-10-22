@@ -8,6 +8,8 @@ import type { grampanchayat, Padnam, Supervisor, UserCategory } from "../type";
 import { toast } from "react-toastify";
 import { validateFormsupervisor } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
+import { createConfirmation } from "react-confirm";
+import ConfirmationDialog from "@/common/ConfirmationDialog";
 
 type Props = {
   UserCategory: UserCategory[];
@@ -34,6 +36,7 @@ const Supervisor = ({
     initialSupervisorlData
   );
   const t = useTranslations('Supervisor');
+  const confirm = createConfirmation(ConfirmationDialog);
 
   const UserCategorys = UserCategory.reduce((acc, category) => {
     acc[category.user_cat_id] = category.category_name;
@@ -106,10 +109,11 @@ const Supervisor = ({
 
   const handleDeactivate = async (supervisorid: any, currentStatus: any) => {
     const confirmMessage = currentStatus === "Active"
-      ? "Are you sure you want to deactivate this cluster?"
-      : "Are you sure you want to activate this cluster?";
+      ? "Are you sure you want to deactivate this Supervisor?"
+      : "Are you sure you want to activate this Supervisor?";
 
-    if (window.confirm(confirmMessage)) {
+      const confirmed = await confirm({ confirmation: confirmMessage });
+    if (confirmed) {
       try {
         const response = await fetch(`/api/supervisor/delete/${supervisorid}`, {
           method: "PATCH",

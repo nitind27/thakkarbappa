@@ -9,6 +9,9 @@ import { toast } from "react-toastify";
 import { validateMasulGaav } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
 
+import { createConfirmation } from "react-confirm";
+import ConfirmationDialog from "@/common/ConfirmationDialog";
+
 type Props = {
   Villages: Villages[];
   talukas: talukasdata[]; // To store the fetched talukasData
@@ -32,6 +35,9 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
   const [filteredGrampanchayat, setFilteredGrampanchayat] = useState<
     grampanchayat[]
   >([]);
+
+
+  const confirm = createConfirmation(ConfirmationDialog);
 
   const [mahsulgaav, setMahsulgaav] = useState<Villages[]>(Villages);
 
@@ -76,7 +82,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
     { accessorKey: "total_population", header: `${t('population')}` },
     { accessorKey: "trible_population", header: `${t('triblepopulation')}` },
     { accessorKey: "arthik_maryada", header: `${t('Income')}` },
-    { accessorKey: "village_type", header: `${t('villagetype')}`},
+    { accessorKey: "village_type", header: `${t('villagetype')}` },
     { accessorKey: "status", header: `${t('status')}` },
     {
       accessorKey: "actions",
@@ -116,18 +122,20 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
     }
   }, [talukaId, grampanchayat]);
 
-  const handleDeactivate = async (
-    mahasulid: number | string,
-    currentStatus: string
-  ) => {
+  const handleDeactivate = async (mahasulid: number | string, currentStatus: string) => {
+    console.log("Handle Deactivate Called", mahasulid, currentStatus); // Log for debugging
+
     const confirmMessage =
       currentStatus === "Active"
         ? "Are you sure you want to deactivate this cluster?"
         : "Are you sure you want to activate this cluster?";
 
-    if (window.confirm(confirmMessage)) {
+    const confirmed = await confirm({ confirmation: confirmMessage });
+    console.log("Confirmation Result:", confirmed); // Log the confirmation result
+
+    if (confirmed) {
       try {
-        const newStatus = currentStatus === "Active" ? `${t('Deactive')}` : `${t('Active')}`;
+        const newStatus = currentStatus === "Active" ? "Inactive" : "Active"; // Adjust the status text accordingly
 
         const response = await fetch(`/api/mahasulgaav/delete/${mahasulid}`, {
           method: "PATCH",
@@ -231,7 +239,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
         if (!updateTownId) {
           // If inserting a new entry
           const newVillage = await response.json(); // Assuming API returns the new village object
-        
+
           setMahsulgaav((prevData) => [...prevData, newVillage]);
         } else {
           // If updating an existing entry
@@ -289,7 +297,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
             style={{ minWidth: "120px" }}
           >
             <KTIcon iconName={"plus-circle"} className="fs-3" iconType="solid" />
-           {t('addmahasulgaav')}
+            {t('addmahasulgaav')}
           </Button>
         }
       />
@@ -358,7 +366,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
               onChange: (e) => setPopulation(e.target.value),
             },
             {
-              label:`${t('entertribalepopulation')}`,
+              label: `${t('entertribalepopulation')}`,
               value: triblePopulation || "",
               type: "text",
               placeholder: `${t('entertribalepopulation')}`,

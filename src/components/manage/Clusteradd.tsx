@@ -10,6 +10,8 @@ import CustomModal from "@/common/CustomModal";
 import { toast } from "react-toastify";
 import { validateClusterName } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
+import { createConfirmation } from "react-confirm";
+import ConfirmationDialog from "@/common/ConfirmationDialog";
 
 type Props = {
   initialClusterData: clusterdata[];
@@ -23,6 +25,7 @@ const Clusteradd = ({ initialClusterData }: Props) => {
   const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
   const [clusterData, setClusterData] =
     useState<clusterdata[]>(initialClusterData); // State for cluster data
+    const confirm = createConfirmation(ConfirmationDialog);
 
   const data = clusterData
     .map((cluster) => ({
@@ -95,8 +98,8 @@ const Clusteradd = ({ initialClusterData }: Props) => {
       currentStatus === "Active"
         ? "Are you sure you want to deactivate this cluster?"
         : "Are you sure you want to activate this cluster?";
-
-    if (window.confirm(confirmMessage)) {
+        const confirmed = await confirm({ confirmation: confirmMessage });
+    if (confirmed) {
       try {
         const response = await fetch(`/api/clustersapi/clusters/${clusterId}`, {
           method: "PATCH",

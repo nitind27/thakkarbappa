@@ -8,6 +8,8 @@ import { clusterdata, Schooldata, talukasdata } from "../type";
 import { toast } from "react-toastify";
 import { validateSchoolForm } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
+import ConfirmationDialog from "@/common/ConfirmationDialog";
+import { createConfirmation } from "react-confirm";
 
 type Props = {
   initialschoolData: Schooldata[];
@@ -41,6 +43,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
   const [updateTownId, setUpdateTownId] = useState<number | null>(null);
   const [schooldata, setSchooldata] = useState<Schooldata[]>(initialschoolData);
   const t = useTranslations("School");
+  const confirm = createConfirmation(ConfirmationDialog);
 
   const clusterMap = clusterdata.reduce((acc, cluster: clusterdata) => {
     acc[cluster.cluster_id] = cluster.cluster_name; // Assuming taluka has id and name properties
@@ -180,18 +183,17 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             className="btn btn-sm btn-primary"
             onClick={() => handleEdit(row.original)}
           >
-             <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
+            <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.school_id, row.original.status)
             }
           >
-             <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
+            <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
             {row.original.status === "Active" ? `${t("Deactive")}` : `${t('Active')}`}
           </button>
           <button onClick={() => handleimage(row.original)}>Image</button>
@@ -200,16 +202,17 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
     },
   ];
 
+
   const handleDeactivate = async (
     school_id: number | string,
     currentStatus: string
   ) => {
     const confirmMessage =
       currentStatus === "Active"
-        ? "Are you sure you want to deactivate this cluster?"
-        : "Are you sure you want to activate this cluster?";
-
-    if (window.confirm(confirmMessage)) {
+        ? "Are you sure you want to deactivate this School?"
+        : "Are you sure you want to activate this School?";
+    const confirmed = await confirm({ confirmation: confirmMessage });
+    if (confirmed) {
       try {
         const newStatus = currentStatus === "Active" ? "Deactive" : "Active";
 
@@ -230,15 +233,13 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             )
           );
           toast.success(
-            `School ${
-              newStatus === "Active" ? "activated" : "deactivated"
+            `School ${newStatus === "Active" ? "activated" : "deactivated"
             } successfully!`
           );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the cluster status: ${
-              errorData.error || "Unknown error"
+            `Failed to change the cluster status: ${errorData.error || "Unknown error"
             }`
           );
         }
@@ -368,8 +369,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
         const data = await response.json();
 
         toast.error(
-          `Failed to ${updateTownId ? "update" : "insert"} School: ${
-            data.error
+          `Failed to ${updateTownId ? "update" : "insert"} School: ${data.error
           }`
         );
       }
@@ -420,7 +420,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             className="btn"
             style={{ minWidth: "120px" }}
           >
-             <KTIcon
+            <KTIcon
               iconName={"plus-circle"}
               className="fs-3"
               iconType="solid"
@@ -434,7 +434,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
         show={showPrintModal}
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
-        title={updateTownId ? `${t('insertpage')}`: `${t('insertpage')}`}
+        title={updateTownId ? `${t('insertpage')}` : `${t('insertpage')}`}
         formData={{
           fields: [
             {
@@ -605,7 +605,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
               onChange: (e) => setStriEmail(e.target.value),
             },
             {
-              label:`${t('enterschoolname')}`,
+              label: `${t('enterschoolname')}`,
               value: schoolNameMr,
               type: "text",
               placeholder: `${t('enterschoolname')}`,

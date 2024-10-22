@@ -1,32 +1,33 @@
 // components/ConfirmationModal.tsx
+"use client"
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
 interface ConfirmationModalProps {
   show: boolean;
-  message: string;
+  onHide: () => void;
   onConfirm: () => void;
-  onCancel: () => void;
+  message: string;
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   show,
-  message,
+  onHide,
   onConfirm,
-  onCancel,
+  message,
 }) => {
   return (
-    <Modal show={show} onHide={onCancel}>
+    <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>
         <Modal.Title>Confirm Action</Modal.Title>
       </Modal.Header>
       <Modal.Body>{message}</Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onCancel}>
-          No
+        <Button variant="secondary" onClick={onHide}>
+          Cancel
         </Button>
         <Button variant="primary" onClick={onConfirm}>
-          Yes
+          Confirm
         </Button>
       </Modal.Footer>
     </Modal>

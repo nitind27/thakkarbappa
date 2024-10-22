@@ -15,6 +15,8 @@ import { toast } from "react-toastify";
 import { formatDate } from "@/lib/utils";
 import { validationBank } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
+import { createConfirmation } from "react-confirm";
+import ConfirmationDialog from "@/common/ConfirmationDialog";
 
 type Props = {
   Villages: Villages[];
@@ -37,6 +39,7 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
 
   const [BankData, setBankData] = useState<Bank[]>(initialBankData);
   const t = useTranslations("Bank");
+  const confirm = createConfirmation(ConfirmationDialog);
 
   const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
     acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
@@ -80,23 +83,22 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
       header: `${t("Action")}`,
       cell: ({ row }: any) => (
         <div style={{ display: "flex" }}>
-         
+
           <button
             className="btn btn-sm btn-primary"
             onClick={() => handleEdit(row.original)}
           >
-              <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
+            <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
           >
-             <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
+            <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
             {row.original.status === "Active"
               ? `${t("Deactive")}`
               : `${t("Active")}`}
@@ -112,10 +114,11 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
   ) => {
     const confirmMessage =
       currentStatus === "Active"
-        ? "Are you sure you want to deactivate this cluster?"
-        : "Are you sure you want to activate this cluster?";
+        ? "Are you sure you want to deactivate this Bank?"
+        : "Are you sure you want to activate this Bank?";
 
-    if (window.confirm(confirmMessage)) {
+    const confirmed = await confirm({ confirmation: confirmMessage });
+    if (confirmed) {
       try {
         const newStatus = currentStatus === "Active" ? "Deactive" : "Active";
 
@@ -136,15 +139,13 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
             )
           );
           toast.success(
-            `Cluster ${
-              newStatus === "Active" ? "activated" : "deactivated"
+            `Cluster ${newStatus === "Active" ? "activated" : "deactivated"
             } successfully!`
           );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the cluster status: ${
-              errorData.error || "Unknown error"
+            `Failed to change the cluster status: ${errorData.error || "Unknown error"
             }`
           );
         }
@@ -229,8 +230,7 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
       } else {
         const data = await response.json();
         alert(
-          `Failed to ${updateTownId ? "update" : "insert"} Village: ${
-            data.error
+          `Failed to ${updateTownId ? "update" : "insert"} Village: ${data.error
           }`
         );
       }
