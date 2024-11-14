@@ -1,0 +1,326 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+ </head>
+ <body>
+    <div class="modal-body">
+        <div class="row">
+                    
+                    <div class="col-lg-12">
+                        <div class="">
+                            
+                            <form class="user" name="myForm" id="myForm">
+                                <div class="form-group row">
+                                    <input type="hidden" class="form-control form-control-user" id="txt_id" name="txt_id" placeholder="">
+                                   
+                                    <div class="col-sm-3 mb-3 mb-sm-0">
+                                        <!--<lable class="form-group small">Category</lable>-->
+                                        <lable class="form-group small">श्रेणी</lable>
+                                        <select class="form-control dropdown selectpicker" data-live-search="true" id="selCategory" name="selCategory" tabindex="1">
+                                            <!--<option value="">-- Choose one --</option>-->
+                                            <option value="">-- निवड करा --</option>
+                                                                                                <option value="1">केंद्रीय योजना</option>
+                                                                                                        <option value="2">नुक्लिअस बजेट योजना (केंद्रवर्ती अर्थसंकल्प)</option>
+                                                                                                        <option value="6">Project Office</option>
+                                                                                                        <option value="7">Salary</option>
+                                                                                                        <option value="8">Travell Allowance</option>
+                                                                                                        <option value="9">Contigency Bills</option>
+                                                                                                        <option value="10">Miscellaneous</option>
+                                                                                                        <option value="11">Government Receipt Received Amt </option>
+                                                                                            </select>
+                                        <input type="hidden" class="form-control input-sm" name="txt_category_id" id="txt_category_id" placeholder="" tabindex="1">
+                                    </div>
+                                    
+                                    <div class="col-sm-3 mb-3 mb-sm-0">
+                                        <!--<lable class="form-group small">Sub Category</lable>-->
+                                        <lable class="form-group small">उप श्रेणी</lable>
+                                        <select class="form-control dropdown selectpicker" data-live-search="true" id="selSubCategory" name="selSubCategory" tabindex="1"><option value="">-- Choose one --</option>
+	<option value="4">अ गट याेजना ( 10000.00 )</option>
+		<option value="5">"क" गट योजना ( 20000.00 )</option>
+	 
+<option value="0">Other</option>
+<option value="0" style="font-weight:bold;">Total : 30000</option></select>
+                                        <input type="hidden" class="form-control input-sm" name="txt_sc_id" id="txt_sc_id" placeholder="" tabindex="1">
+                                    </div>
+                                    
+                                    <div class="col-sm-3 mb-3 mb-sm-0">
+                                        <!--<lable class="form-group small">Year</lable>-->
+                                        <lable class="form-group small">वर्ष</lable>
+                                        <select class="form-control dropdown selectpicker" data-live-search="true" id="selYear" name="selYear" tabindex="1">
+                                            <!--<option value="">-- Choose one --</option>-->
+                                            <option value="">-- निवड करा --</option>
+                                                                                                <option value="1">2020-21</option>
+                                                                                                        <option value="2">2021-22</option>
+                                                                                                        <option value="3">2022-23</option>
+                                                                                                        <option value="4">2023-24</option>
+                                                                                                        <option value="10">2015-16</option>
+                                                                                                        <option value="11">2016-17</option>
+                                                                                                        <option value="12">2017-18</option>
+                                                                                                        <option value="13">2018-19</option>
+                                                                                                        <option value="14">2019-20</option>
+                                                                                            </select>
+                                        
+                                    </div>
+                                    
+                                    <!--<div class="col-sm-3 mb-3 mb-sm-0">
+                                        <lable class="form-group small">Yojana Type</lable>
+                                        <lable class="form-group small">योजना प्रकार</lable>
+                                        <select class="form-control dropdown selectpicker" data-live-search="true" id="selYojanaType" name="selYojanaType" tabindex="1">
+                                            <!--<option value="">-- Choose one --</option>
+                                            <option value="">-- निवड करा --</option>
+                                            <option value="Individual">वैयक्तीक योजना</option>
+                                            <option value="Saving">बचत गट योजना</option>
+                                            
+                                        </select>
+                                        
+                                    </div>-->
+                                    
+                                    <div class="col-sm-3 mb-3 mb-sm-0">
+                                        <lable class="form-group small">योजना प्रकार</lable>
+                                        <select class="form-control dropdown selectpicker" data-live-search="true" id="selYojanaType" name="selYojanaType" tabindex="1"><option value="">-- Choose one --</option>
+	<option value="1">वैयक्तीक योजना</option>
+		<option value="2">बचत गट योजना</option>
+		<option value="3">संस्थेमार्फत राबविलेल्या योजना</option>
+	 
+<!--<option value="0">Other</option>	-->		  </select>
+                                        <input type="hidden" class="form-control input-sm" name="txt_yp_id" id="txt_yp_id" placeholder="" tabindex="1">
+                                    </div>
+                                    
+                                    <!--</div>
+                                    
+                                    <div class="form-group row"> -->
+                                    
+                                    <div class="col-sm-12 mb-3 mb-sm-0">
+                                        <lable class="form-group small">योजना नाव</lable>
+                                        <select class="form-control dropdown selectpicker" data-live-search="true" id="selYojana" name="selYojana" tabindex="1"><option value="">-- Choose one --</option>
+</select>
+                                        <input type="hidden" class="form-control input-sm" name="txt_yojana_id" id="txt_yojana_id" placeholder="" tabindex="1">
+                                    </div>
+                                    
+                                    <!--</div>
+                                    
+                                    <div class="form-group row">-->
+                                    <div class="col-sm-4">
+                                        <lable class="form-group small">तालुका</lable>
+                                        <select class="form-control dropdown selectpicker" data-live-search="true" id="selTaluka" name="selTaluka" tabindex="1">
+                                            <!--<option value="">-- Choose one --</option>-->
+                                            <option value="">-- निवड करा --</option>
+                                                                                                <option value="1">आमगांव</option>
+                                                                                                        <option value="2">अर्जुनी मोरगांव</option>
+                                                                                                        <option value="3">देवरी</option>
+                                                                                                        <option value="4">गोंदिया</option>
+                                                                                                        <option value="5">गोरेगांव</option>
+                                                                                                        <option value="6">सडकअर्जुनी</option>
+                                                                                                        <option value="7">सालेकसा</option>
+                                                                                                        <option value="8">तिरोडा</option>
+                                                                                                        <option value="13">fasfd</option>
+                                                                                            </select>
+                                    </div>
+                                    
+                                    <div class="col-sm-4">
+                                        <lable class="form-group small">ग्राम पंचायत</lable>
+                                        <select class="form-control dropdown selectpicker" data-live-search="true" id="selGP" name="selGP" tabindex="1">
+                                            <!--<option value="">-- Choose one --</option>-->
+                                            <option value="">-- निवड करा --</option>
+                                        </select>
+                                        <input type="hidden" class="form-control input-sm" name="txt_m_gp_id" id="txt_m_gp_id" placeholder="" tabindex="1">
+                                    </div>
+                                    
+                                    <div class="col-sm-4 divKGatGav">
+                                        <lable class="form-group small">महसूल गाव</lable>
+                                        <select class="form-control dropdown selectpicker" data-live-search="true" id="selVillage" name="selVillage" tabindex="1">
+                                            <!--<option value="">-- Choose one --</option>-->
+                                            <option value="">-- निवड करा --</option>
+                                        </select>
+                                        <input type="hidden" class="form-control input-sm" name="txt_village_id" id="txt_village_id" placeholder="" tabindex="1">
+                                    </div>
+                                    <!--</div>
+                                    
+                                    <div class="form-group row">-->
+                                    
+                                    <div class="divName col-sm-12 row" style="">
+                                    <div class="col-sm-3">
+                                        <!--<lable class="form-group small">Surname</lable>-->
+                                        <lable class="form-group small">आडनाव</lable>
+                                        <input type="text" class="form-control form-control-user alphaonly" id="txtSurname" name="txtSurname" placeholder="" tabindex="1" autocomplete="off" maxlength="20">
+                                    </div>
+                                    
+                                    <div class="col-sm-3">
+                                        <!--<lable class="form-group small">First Name</lable>-->
+                                        <lable class="form-group small">नाव</lable>
+                                        <input type="text" class="form-control form-control-user alphaonly" id="txtFirstname" name="txtFirstname" placeholder="" tabindex="1" autocomplete="off" maxlength="30">
+                                    </div>
+                                    
+                                    <div class="col-sm-3">
+                                        <!--<lable class="form-group small">Middel Name</lable>-->
+                                        <lable class="form-group small">वडिलांचे नाव/पतीचे नाव</lable>
+                                        <input type="text" class="form-control form-control-user alphaonly" id="txtMiddelname" name="txtMiddelname" placeholder="" tabindex="1" autocomplete="off" maxlength="30">
+                                    </div>
+                                    </div>
+                                    
+                                    <div class="divGatName col-sm-12 row" style="display: none;">
+                                    <div class="col-sm-4">
+                                        <!--<lable class="form-group small">Bachat Gat Name</lable>-->
+                                        <lable class="form-group small">बचत गट नाव</lable>
+                                        <input type="text" class="form-control form-control-user alphaonly" id="txtBachatGat" name="txtBachatGat" placeholder="" tabindex="1" autocomplete="off" maxlength="100">
+                                    </div>
+                                    
+                                    <div class="col-sm-4">
+                                        <!--<lable class="form-group small">Certificate</lable>-->
+                                        <lable class="form-group small">नोंदणी प्रमाणपत्र</lable>
+                                        <input type="text" class="form-control form-control-user" id="txtCertificate" name="txtCertificate" placeholder="" tabindex="1" autocomplete="off" maxlength="50" onkeypress="return isAlphaNumericKey(event)">
+                                    </div>
+                                    
+                                    <div class="col-sm-4">
+                                        <!--<lable class="form-group small">Member Nos</lable>-->
+                                        <lable class="form-group small">सदस्य संख्या</lable>
+                                        <input type="number" class="form-control form-control-user" id="txtMember" name="txtMember" placeholder="" tabindex="1" autocomplete="off" maxlength="2">
+                                    </div>
+                                    
+                                    </div>
+                                    
+                                    <div class="divOrganizationName col-sm-12 row" style="display: none;">
+                                    <div class="col-sm-4">
+                                        <!--<lable class="form-group small">Bachat Gat Name</lable>-->
+                                        <lable class="form-group small">संस्थेचे नाव</lable>
+                                        <input type="text" class="form-control form-control-user alphaonly" id="txtSansthaname" name="txtBachatGat" placeholder="" tabindex="1" autocomplete="off" maxlength="100">
+                                    </div>
+                                    
+                                    <div class="col-sm-4">
+                                        <!--<lable class="form-group small">Certificate</lable>-->
+                                        <lable class="form-group small">कार्यारंभ आदेश दिनांक</lable>
+                                        <input type="date" class="form-control form-control-user" id="txtWorkOrderDate" name="txtWorkOrderDate" placeholder="" tabindex="1" autocomplete="off" maxlength="" onkeypress="">
+                                    </div>
+                                    
+                                    </div>
+                                    
+                                    <div class="divSadasya col-sm-12 row" style="">
+                                    <div class="col-sm-2">
+                                        <!--<lable class="form-group small">Caste</lable>-->
+                                        <lable class="form-group small">जात</lable>
+                                        <select class="form-control dropdown selectpicker" data-live-search="true" id="selCaste" name="selCaste" tabindex="1">
+                                            <option value="">-- निवड करा --</option>
+                                                                                                <option value="1">गोंड</option>
+                                                                                                        <option value="2">प्रधान</option>
+                                                                                                        <option value="3">माना</option>
+                                                                                                        <option value="4">नगारची</option>
+                                                                                                        <option value="5">हलबी</option>
+                                                                                                        <option value="6">कवर</option>
+                                                                                                        <option value="7">बिंजेवार</option>
+                                                                                                        <option value="8">इतर</option>
+                                                                                            </select>
+                                    </div>
+                                    
+                                    <div class="col-sm-2">
+                                        <!--<lable class="form-group small">Beneficiary Type</lable>-->
+                                        <lable class="form-group small">लाभार्थ्यांचा प्रकार</lable>
+                                        <select class="form-control dropdown selectpicker" data-live-search="true" id="selBeneficiaryType" name="selBeneficiaryType" tabindex="1">
+                                            <option value="">-- निवड करा --</option>
+                                            <option value="Handicap">अपंग</option>
+                                            <option value="BPL">B.P.L</option>
+                                            <option value="Van">वन पट्टेधारक</option>
+                                            <option value="Widow">विधवा</option>
+                                            <option value="History">परितक्त्या</option>
+                                            <option value="Other">इतर</option>
+                                        </select>
+                                    </div>
+                                    <!--</div>
+                                    
+                                    <div class="form-group row">-->
+                                    <div class="col-sm-3">
+                                        <!--<lable class="form-group small">Rashion Card No</lable>-->
+                                        <lable class="form-group small">रेशन कार्ड क्रमांक</lable>
+                                        <input type="text" class="form-control form-control-user" id="txtRashion" name="txtRashion" placeholder="" tabindex="1" autocomplete="off" maxlength="20" onkeypress="return isNumberKey(event)">
+                                    </div>
+                                    
+                                    <div class="col-sm-3">
+                                        <!--<lable class="form-group small">Aadhar Card No</lable>-->
+                                        <lable class="form-group small">आधार कार्ड क्रमांक</lable>
+                                        <input type="number" class="form-control form-control-user" id="txtAadhar" name="txtAadhar" placeholder="" tabindex="1" autocomplete="off" maxlength="12" minlength="12" onkeypress="return isNumberKey(event)">
+                                    </div>
+                                    
+                                    <div class="col-sm-2">
+                                        <!--<lable class="form-group small">Mobile No</lable>-->
+                                        <lable class="form-group small">मोबाईल क्रमांक</lable>
+                                        <input type="number" class="form-control form-control-user" id="txtMobile" name="txtMobile" placeholder="" tabindex="1" autocomplete="off" maxlength="10" onkeypress="return isNumberKey(event)">
+                                    </div>
+                                    </div>
+                                <!--</div>
+                                
+                                <div class="form-group row"> -->
+                                    <div class="col-sm-4">
+                                        <!--<lable class="form-group small">Bank Name</lable>-->
+                                        <lable class="form-group small">बॅकेंचे नाव</lable>
+                                        <input type="text" class="form-control form-control-user alphaonly" id="txtBank" name="txtBank" placeholder="" tabindex="1" autocomplete="off" maxlength="">
+                                    </div>
+                                    
+                                    <div class="col-sm-4">
+                                        <!--<lable class="form-group small">IFSC Code</lable>-->
+                                        <lable class="form-group small">IFSC कोड</lable>
+                                        <input type="text" class="form-control form-control-user" id="txtIFSC" name="txtIFSC" placeholder="" tabindex="1" autocomplete="off" maxlength="11">
+                                    </div>
+                                    
+                                    <div class="col-sm-4">
+                                        <!--<lable class="form-group small">Bank A/C No</lable>-->
+                                        <lable class="form-group small">बॅक खाते क्रमांक</lable>
+                                        <input type="number" class="form-control form-control-user" id="txtBankAc" name="txtBankAc" placeholder="" tabindex="1" autocomplete="off" maxlength="30" onkeypress="return isNumberKey(event)">
+                                    </div>
+                                <!--</div>
+                                
+                                <div class="form-group row"> -->
+                                    <div class="col-sm-3">
+                                        <!--<lable class="form-group small">Total Financial Assi. Amount</lable>-->
+                                        <lable class="form-group small">एकुण अर्थसहाय्य रक्कम</lable>
+                                        <input type="number" class="form-control form-control-user" id="txtFinancial" name="txtFinancial" placeholder="" tabindex="1" autocomplete="off" maxlength="10" step=".01">
+                                    </div>
+                                    
+                                    <div class="divAGat col-sm-3" style="">
+                                        <!--<lable class="form-group small">Amount to be paid</lable>-->
+                                        <lable class="form-group small">अदा करावयाची रक्कम</lable>
+                                        <!--<input type="text" class="form-control form-control-user" id="txtEligibility" name="txtEligibility"
+                                            placeholder="" maxlength="" tabindex="1" autocomplete="off">-->
+                                        <div class="form" style="font-size:18px;">
+                                            
+                                            <label class="checkbox-inline">
+                                              <input type="checkbox" class="get_value" value="40"> 40%
+                                            </label>
+                                            <label class="checkbox-inline">
+                                              <input type="checkbox" class="get_value" value="60"> 60%
+                                            </label>
+                                            <label class="checkbox-inline">
+                                              <input type="checkbox" class="get_value" value="100"> 100%
+                                            </label>
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="divKGat col-sm-5" style="display: none;">
+                                        <!--<lable class="form-group small">Amount to be paid</lable>-->
+                                        <lable class="form-group small">अदा करावयाची रक्कम (%)</lable>
+                                        <div class="row">
+                                        <div class="col-sm-3">
+                                        <input type="text" class="form-control form-control-user get_value_k" id="txtAmount" name="txtAmount" placeholder="%" maxlength="" tabindex="1" autocomplete="off">    
+                                        </div>
+                                        <div class="col-sm-3">
+                                        <input type="text" class="form-control form-control-user get_value_k" id="txtAmount" name="txtAmount" placeholder="%" maxlength="" tabindex="1" autocomplete="off">    
+                                        </div>
+                                        <div class="col-sm-3">
+                                        <input type="text" class="form-control form-control-user get_value_k" id="txtAmount" name="txtAmount" placeholder="%" maxlength="" tabindex="1" autocomplete="off">    
+                                        </div>
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                </div>
+                                
+                            </form>
+                           
+                        </div>
+                    </div>
+                </div>
+      </div>
+ </body>
+ </html>
