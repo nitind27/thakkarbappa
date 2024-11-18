@@ -1,4 +1,5 @@
 // app/page.tsx
+import Categorytitle from "@/app/[locale]/title/category";
 import Cluster from "@/app/[locale]/title/cluster"; import Loader from "@/common/Loader ";
 ;
 import Clusteradd from "@/components/manage/Clusteradd";
@@ -32,7 +33,7 @@ const Page = async () => {
     return (
         <div>
             <h1 className="card card-body mt-5">
-                <Cluster />
+                <Categorytitle />
             </h1>
 
             <Category initialcategoryData={category} />

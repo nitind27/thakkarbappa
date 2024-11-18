@@ -2,8 +2,8 @@
 "use client";
 import React, { useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
-import { Bank, Categorys, clusterdata, SubCategory, YojanaYear } from "../type";
-import { formatDate } from "@/lib/utils";
+import { Bank, Categorys, SubCategory, YojanaYear } from "../type";
+
 import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
@@ -21,7 +21,7 @@ type Props = {
 };
 
 const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Props) => {
-    const t = useTranslations("IndexPage");
+    const t = useTranslations("Subcategory");
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [categoryName, setCategoryName] = useState("");
     const [subcategoryName, setSubCategoryName] = useState("");
@@ -33,7 +33,7 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
     const [isLoading, setIsLoading] = useState(false);
     const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
     const [clusterData, setClusterData] =
-        useState<SubCategory[]>(initialcategoryData); // State for cluster data
+        useState<SubCategory[]>(initialcategoryData); // State for Sub Category data
     const confirm = createConfirmation(ConfirmationDialog);
     const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
         acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
@@ -70,7 +70,7 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
     const columns = [
         {
             accessorKey: "serial_number", // Use a new accessor for the serial number
-            header: `${t("Srno")}`, // Header for the serial number
+            header: `${t("SrNo")}`, // Header for the serial number
             cell: ({ row }: any) => (
                 <div>
                     {row.index + 1} {/* Display the index + 1 for serial number */}
@@ -80,23 +80,23 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
 
         {
             accessorKey: "category_id",
-            header: `${t("categoryName")}`,
+            header: `${t("categoryname")}`,
         },
         {
             accessorKey: "sub_category_name",
-            header: `${t("Status")}`,
+            header: `${t("subcategoryname")}`,
         },
         {
             accessorKey: "yojana_year_id",
-            header: `${t("Status")}`,
+            header: `${t("year")}`,
         },
         {
             accessorKey: "bank_id",
-            header: `bank_id`,
+            header: `Bankname`,
         },
         {
             accessorKey: "amount",
-            header: `${t("Status")}`,
+            header: `${t("amount")}`,
         },
         {
             accessorKey: "status",
@@ -105,7 +105,7 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
 
         {
             accessorKey: "for_app",
-            header: `${t("AddTime")}`,
+            header: `${t("appyojna")}`,
         },
         {
             accessorKey: "actions",
@@ -140,8 +140,8 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
     const handleDeactivate = async (category_id: any, currentStatus: any) => {
         const confirmMessage =
             currentStatus === "Active"
-                ? "Are you sure you want to deactivate this cluster?"
-                : "Are you sure you want to activate this cluster?";
+                ? "Are you sure you want to deactivate this subCategory ?"
+                : "Are you sure you want to activate this subCategory?";
         const confirmed = await confirm({ confirmation: confirmMessage });
         if (confirmed) {
             try {
@@ -168,14 +168,14 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
                         )
                     );
                     toast.success(
-                        `Cluster ${currentStatus === "Active" ? "deactivated" : "activated"
+                        `Sub Category ${currentStatus === "Active" ? "deactivated" : "activated"
                         } successfully!`
                     );
                 } else {
-                    toast.error("Failed to change the cluster status.");
+                    toast.error("Failed to change the Sub Category status.");
                 }
             } catch (error) {
-                console.error("Error changing the cluster status:", error);
+                console.error("Error changing the Sub Category status:", error);
                 toast.error("An unexpected error occurred.");
             }
         }
@@ -226,11 +226,11 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
                                 : cluster
                         )
                     );
-                    toast.success("Cluster updated successfully!");
+                    toast.success("Sub Category updated successfully!");
                 } else {
                     const createdData = await response.json();
                     setClusterData((prevData) => [...prevData, createdData]);
-                    toast.success("Cluster inserted successfully!");
+                    toast.success("Sub Category inserted successfully!");
                 }
 
                 handleClosePrint();
@@ -258,8 +258,17 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
     };
 
     const handleShowPrint = () => setShowPrintModal(true);
-
+    const reset = () => {
+        setCategoryName("");
+        setSubCategoryName("");
+        setYojnaYear("");
+        setBankname("");
+        setError("");
+        setAmount("");
+        
+    }
     const handleClosePrint = () => {
+        reset();
         setShowPrintModal(false);
         setCategoryName("");
         setError("");
@@ -282,7 +291,7 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
                             className="fs-3"
                             iconType="solid"
                         />
-                        {t("AddCluster")}
+                        {t("addsubcategory")}
                     </Button>
                 }
             />
@@ -295,7 +304,7 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
                 formData={{
                     fields: [
                         {
-                            label: `${t("selectyear")}`,
+                            label: `${t("categoryname")}`,
                             value: categoryName,
                             onChange: (e) => setCategoryName(e.target.value),
                             type: "select",
@@ -303,26 +312,18 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
                                 value: category.category_id,
                                 label: category.category_name,
                             })),
-                            placeholder: `${t("selectyear")}`, // Optional placeholder for select input
+                            placeholder: `${t("categoryname")}`, // Optional placeholder for select input
                         },
                         {
-                            label: `${t("entercategoryName")}`,
+                            label: `${t("subcategoryname")}`,
                             value: subcategoryName,
                             type: "text",
-                            placeholder: `${t("entercategoryName")}`,
+                            placeholder: `${t("subcategoryname")}`,
 
                             onChange: (e) => setSubCategoryName(e.target.value),
                         },
                         {
-                            label: `${t("entercategoryName")}`,
-                            value: amount,
-                            type: "text",
-                            placeholder: `${t("entercategoryName")}`,
-
-                            onChange: (e) => setAmount(e.target.value),
-                        },
-                        {
-                            label: `${t("selectyear")}`,
+                            label: `${t("year")}`,
                             value: yojnayear,
                             onChange: (e) => setYojnaYear(e.target.value),
                             type: "select",
@@ -330,10 +331,12 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
                                 value: year.yojana_year_id,
                                 label: year.yojana_year,
                             })),
-                            placeholder: `${t("selectyear")}`, // Optional placeholder for select input
+                            placeholder: `${t("year")}`, // Optional placeholder for select input
                         },
+
+
                         {
-                            label: `${t("selectyear")}`,
+                            label: `${t("Bankname")}`,
                             value: bankname,
                             onChange: (e) => setBankname(e.target.value),
                             type: "select",
@@ -341,7 +344,15 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
                                 value: Bank.id,
                                 label: Bank.name,
                             })),
-                            placeholder: `${t("selectyear")}`, // Optional placeholder for select input
+                            placeholder: `${t("Bankname")}`, // Optional placeholder for select input
+                        },
+                        {
+                            label: `${t("amount")}`,
+                            value: amount,
+                            type: "text",
+                            placeholder: `${t("amount")}`,
+
+                            onChange: (e) => setAmount(e.target.value),
                         },
                     ],
                     error,

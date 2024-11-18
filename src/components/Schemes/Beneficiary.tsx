@@ -2,8 +2,8 @@
 "use client";
 import React, { useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
-import { Bank, Categorys, clusterdata, grampanchayat, SubCategory, talukasdata, TblBeneficiary, TblYojanaType, Villages, YojanaMaster, YojanaYear } from "../type";
-import { formatDate } from "@/lib/utils";
+import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, TblBeneficiary, TblYojanaType, Villages, YojanaMaster, YojanaYear } from "../type";
+
 import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
@@ -27,7 +27,7 @@ type Props = {
 };
 
 const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages }: Props) => {
-    const t = useTranslations("IndexPage");
+    const t = useTranslations("beneficiary");
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [categoryName, setCategoryName] = useState("");
     const [subcategoryName, setSubCategoryName] = useState("");
@@ -41,12 +41,27 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
     const [ifccode, setIFCcode] = useState("");
     const [accountno, setAccountno] = useState("");
     const [amount, setAmount] = useState("");
-
+    const [surname, setSurname] = useState("");
+    const [firstname, setFistname] = useState("");
+    const [parentsname, setParentsname] = useState("");
+    const [organizationname, setorganizationname] = useState("");
+    const [Commencementdate, setCommencementdate] = useState("");
+    const [cast, setcast] = useState("");
+    const [beneficiariestype, setbeneficiariestype] = useState("");
+    const [rationcardnumber, setrationcardnumber] = useState("");
+    const [aadharcardnumber, setaddharcardnumber] = useState("");
+    const [mobilenumber, setmobilenumber] = useState("");
+    const [savinggroupname, setsavinggroupname] = useState("");
+    const [Registrationerti, setRegistrationerti] = useState("");
+    const [numberofmember, setnumberofmember] = useState("");
+    const [fourty, setfourty] = useState("");
+    const [sixty, setsixty] = useState("");
+    const [hundred, sethundred] = useState("");
     const [error, setError] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
     const [clusterData, setClusterData] =
-        useState<TblBeneficiary[]>(beneficiary); // State for cluster data
+        useState<TblBeneficiary[]>(beneficiary); // State for Beneficiary data
     const confirm = createConfirmation(ConfirmationDialog);
     const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
         acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
@@ -90,17 +105,25 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         .map((beneficiary) => ({
             beneficiary_id: beneficiary.beneficiary_id,
             category_id: categorydata[beneficiary.category_id],
+            categoryid: beneficiary.category_id,
             sub_category_id: subcat[beneficiary.sub_category_id],
+            subcategoryid: beneficiary.sub_category_id,
             yojana_year_id: yojna_year[beneficiary.yojana_year_id],
+            yojanayearid: beneficiary.yojana_year_id,
             yojana_type: yojnatypes[beneficiary.yojana_type as any],
+            yojanatype: beneficiary.yojana_type,
             yojana_id: yojnamastername[beneficiary.yojana_id],
+            yojanaid: beneficiary.yojana_id,
             taluka_id: talukaMap[beneficiary.taluka_id],
+            talukaid: beneficiary.taluka_id,
             gp_id: gpmap[beneficiary.gp_id],
+            gpid: beneficiary.gp_id,
             village_id: village[beneficiary.village_id],
+            villageid: beneficiary.village_id,
             surname: beneficiary.surname,
             firstname: beneficiary.firstname,
             middlename: beneficiary.middlename,
-            fullname: beneficiary.fullname,
+            fullname: beneficiary.surname + beneficiary.firstname + beneficiary.middlename,
             gat_name: beneficiary.gat_name,
             gat_certificate: beneficiary.gat_certificate,
             member: beneficiary.member,
@@ -114,9 +137,9 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             ac_no: beneficiary.ac_no,
             tot_finance: beneficiary.tot_finance,
             amount_paid: beneficiary.amount_paid,
-            fourty: beneficiary.fourty,
-            sixty: beneficiary.sixty,
-            hundred: beneficiary.hundred,
+            fourty: beneficiary.fourty == '1' ? "Yes" : "No",
+            sixty: beneficiary.sixty == '1' ? "Yes" : "No",
+            hundred: beneficiary.hundred == '1' ? "Yes" : "No",
             status: beneficiary.status,
             date_ins: beneficiary.date_ins,
             date_update: beneficiary.date_update,
@@ -128,7 +151,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
     const columns = [
         {
             accessorKey: "serial_number", // Use a new accessor for the serial number
-            header: `${t("Srno")}`, // Header for the serial number
+            header: `${t("SrNo")}`, // Header for the serial number
             cell: ({ row }: any) => (
                 <div>
                     {row.index + 1} {/* Display the index + 1 for serial number */}
@@ -136,139 +159,120 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             ),
         },
 
-
-
         {
             accessorKey: "category_id",
-            header: "Categoryb ID",
+            header: `${t("categoryname")}`,
         },
         {
             accessorKey: "sub_category_id",
-            header: "Sub Category ID",
+            header: `${t("subcategoryname")}`,
         },
         {
             accessorKey: "yojana_year_id",
-            header: "Yojana Year ID",
+            header: `${t("year")}`,
         },
         {
             accessorKey: "yojana_type",
-            header: "Yojana Type",
+            header: `${t("yojnatype")}`,
         },
         {
             accessorKey: "yojana_id",
-            header: "Yojana ID",
+            header: `${t("yojnaname")}`,
         },
         {
             accessorKey: "taluka_id",
-            header: "Taluka ID",
+            header: `${t("dist")}`,
         },
         {
             accessorKey: "gp_id",
-            header: "GP ID",
+            header: `${t("GramPanchayat")}`,
         },
         {
             accessorKey: "village_id",
-            header: "Village ID",
+            header: `${t("Village")}`,
         },
-        {
-            accessorKey: "surname",
-            header: "Surname",
-        },
-        {
-            accessorKey: "firstname",
-            header: "First Name",
-        },
-        {
-            accessorKey: "middlename",
-            header: "Middle Name",
-        },
+
+
         {
             accessorKey: "fullname",
-            header: "Full Name",
+            header: `${t("FullName")}`,
         },
         {
             accessorKey: "gat_name",
-            header: "Gat Name",
+            header: `${t("bachtgat")}`,
         },
         {
             accessorKey: "gat_certificate",
-            header: "Gat Certificate",
+            header: `${t("registerdcert")}`,
         },
         {
             accessorKey: "member",
-            header: "Member Status",
+            header: `${t("members")}`,
         },
         {
             accessorKey: "caste_id",
-            header: "Caste ID",
+            header: `${t("Cast")}`,
         },
         {
             accessorKey: "beneficiary_type",
-            header: "Beneficiary Type",
+            header: `${t("beneficiarytype")}`,
         },
         {
             accessorKey: "rashion_no",
-            header: "Ration No.",
+            header: `${t("Registrationcard")}`,
         },
         {
             accessorKey: "aadhar",
-            header: "Aadhar No.",
+            header: `${t("aadharcard")}`,
         },
         {
             accessorKey: "mobile",
-            header: "Mobile No.",
+            header: `${t("Contact")}`,
         },
         {
             accessorKey: "bank_name",
-            header: "Bank Name",
+            header: `${t("BankName")}`,
         },
         {
             accessorKey: "ifsc",
-            header: "IFSC Code",
+            header: `${t("IFSCCode")}`,
         },
         {
             accessorKey: "ac_no",
-            header: "Account No.",
+            header: `${t("AccountNo")}`,
         },
         {
             accessorKey: "tot_finance",
-            header: "Total Finance Allocated",
+            header: `${t("TotalFinanceAllocated")}`,
         },
         {
             accessorKey: "amount_paid",
-            header: "Amount Paid",
+            header: `${t("AmountPaid")}`,
         },
         {
             accessorKey: "fourty", // Assuming this is a status indicator
-            header: "% Eligible (40)",
+            header: `${t("Eligible40")}`,
         },
         {
             accessorKey: "sixty", // Assuming this is a status indicator
-            header: "% Eligible (60)",
+            header: `${t("Eligible60")}`,
         },
         {
             accessorKey: "hundred", // Assuming this is a status indicator
-            header: "% Eligible (100)",
+            header: `${t("Eligible100")}`,
         },
         {
             accessorKey: "status", // Current status of the beneficiary
-            header: "Status",
+            header: `${t("Status")}`,
         },
-        {
-            accessorKey: "date_ins", // Date of insertion
-            header: "Date of Insertion"
-        },
-        {
-            accessorKey: "date_update", // Date of last update
-            header: "Date of Update"
-        },
+
         {
             accessorKey: "organization", // Organization managing the scheme
-            header: "Organization"
+            header: `${t("Organization")}`
         },
         {
             accessorKey: "work_order_date", // Date related to work orders issued
-            header: "Work Order Date"
+            header: `${t("Commencementorderdate")}`
         },
         {
             accessorKey: "actions",
@@ -284,14 +288,14 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                         {t("edit")}
                     </button>
                     <button
-                        className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+                        className={`btn btn-sm ${row.original.status == "Active" ? "btn-danger" : "btn-warning"
                             } ms-5`}
                         onClick={() =>
-                            handleDeactivate(row.original.sub_category_id, row.original.status)
+                            handleDeactivate(row.original.beneficiary_id, row.original.status)
                         }
                     >
                         <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-                        {row.original.status === "Active"
+                        {row.original.status == "Active"
                             ? `${t("Deactive")}`
                             : `${t("Active")}`}
                     </button>
@@ -302,19 +306,19 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
 
     const handleDeactivate = async (category_id: any, currentStatus: any) => {
         const confirmMessage =
-            currentStatus === "Active"
-                ? "Are you sure you want to deactivate this cluster?"
-                : "Are you sure you want to activate this cluster?";
+            currentStatus == "Active"
+                ? "Are you sure you want to deactivate this Beneficiary?"
+                : "Are you sure you want to activate this Beneficiary?";
         const confirmed = await confirm({ confirmation: confirmMessage });
         if (confirmed) {
             try {
-                const response = await fetch(`/api/subcategory/delete/${category_id}`, {
+                const response = await fetch(`/api/benefucuary/delete/${category_id}`, {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        status: currentStatus === "Active" ? "Deactive" : "Active",
+                        status: currentStatus == "Active" ? "Deactive" : "Active",
                     }),
                 });
 
@@ -322,23 +326,23 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                     // Update local state without page reload
                     setClusterData((prevData) =>
                         prevData.map((cluster) =>
-                            cluster.sub_category_id === category_id
+                            cluster.beneficiary_id == category_id
                                 ? {
                                     ...cluster,
-                                    status: currentStatus === "Active" ? "Deactive" : "Active",
+                                    status: currentStatus == "Active" ? "Deactive" : "Active",
                                 }
                                 : cluster
                         )
                     );
                     toast.success(
-                        `Cluster ${currentStatus === "Active" ? "deactivated" : "activated"
+                        `Beneficiary ${currentStatus == "Active" ? "deactivated" : "activated"
                         } successfully!`
                     );
                 } else {
-                    toast.error("Failed to change the cluster status.");
+                    toast.error("Failed to change the Beneficiary status.");
                 }
             } catch (error) {
-                console.error("Error changing the cluster status:", error);
+                console.error("Error changing the Beneficiary status:", error);
                 toast.error("An unexpected error occurred.");
             }
         }
@@ -357,19 +361,42 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         try {
             const method = updateClusterId ? "PUT" : "POST";
             const url = updateClusterId
-                ? `/api/subcategory/update`
-                : `/api/subcategory/insert`;
+                ? `/api/benefucuary/update`
+                : `/api/benefucuary/insert`;
 
             // Prepare the request body
             const requestBody = {
                 category_id: categoryName,
-                sub_category_name: subcategoryName,
+                sub_category_id: subcategoryName,
                 yojana_year_id: yojnayear,
-                bank_id: bankname,
-                amount: amount,
-
-
-                ...(updateClusterId && { sub_category_id: updateClusterId }),
+                yojana_type: yojnatyp,
+                yojana_id: yojnaname,
+                taluka_id: dist,
+                gp_id: town,
+                village_id: mahasulgaav,
+                surname: surname,
+                firstname: firstname,
+                middlename: parentsname,
+                fullname: surname + firstname + parentsname,
+                gat_name: organizationname,
+                gat_certificate: Registrationerti,
+                member: numberofmember,
+                caste_id: cast,
+                beneficiary_type: beneficiariestype,
+                rashion_no: rationcardnumber,
+                aadhar: aadharcardnumber,
+                mobile: mobilenumber,
+                bank_name: bankname,
+                ifsc: ifccode,
+                ac_no: accountno,
+                tot_finance: amount,
+                amount_paid: amount,
+                fourty: fourty,
+                sixty: sixty,
+                hundred: hundred,
+                organization: amount,
+                work_order_date: Commencementdate,
+                ...(updateClusterId && { beneficiary_id: updateClusterId }),
             };
 
             const response = await fetch(url, {
@@ -384,16 +411,16 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 if (updateClusterId) {
                     setClusterData((prevData) =>
                         prevData.map((cluster) =>
-                            cluster.sub_category_id === updateClusterId
-                                ? { ...cluster, sub_category_name: subcategoryName, category_id: parseInt(categoryName), bank_id: parseInt(bankname), amount: amount as any, yojana_year_id: parseInt(yojnayear) }
+                            cluster.beneficiary_id == updateClusterId
+                                ? { ...cluster, ...requestBody as any }
                                 : cluster
                         )
                     );
-                    toast.success("Cluster updated successfully!");
+                    toast.success("Beneficiary updated successfully!");
                 } else {
                     const createdData = await response.json();
                     setClusterData((prevData) => [...prevData, createdData]);
-                    toast.success("Cluster inserted successfully!");
+                    toast.success("Beneficiary inserted successfully!");
                 }
 
                 handleClosePrint();
@@ -409,29 +436,85 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             setIsLoading(false); // End loading
         }
     };
-
-    const handleEdit = (cluster: any) => {
-        setUpdateClusterId(cluster.sub_category_id); // Set ID for updating
-        setCategoryName(cluster.categoryid); // Set current name for editing
-        setSubCategoryName(cluster.sub_category_name)
-        setAmount(cluster.amount)
-        setYojnaYear(cluster.yojanayearid)
-        setBankname(cluster.bankid)
+    const handleEdit = (benefit: any) => {
+        setUpdateClusterId(benefit.beneficiary_id); // Set ID for updating
+        setCategoryName(benefit.categoryid);
+        setSubCategoryName(benefit.subcategoryid);
+        setYojnaYear(benefit.yojanayearid);
+        setYojnatype(benefit.yojanatype);
+        setYojnaName(benefit.yojanaid);
+        setDist(benefit.talukaid);
+        setTown(benefit.gpid);
+        setMahsulgaav(benefit.villageid);
+        setBankname(benefit.bank_name);
+        setIFCcode(benefit.ifsc);
+        setAccountno(benefit.ac_no);
+        setAmount(benefit.amount_paid);
+        setSurname(benefit.surname);
+        setFistname(benefit.firstname);
+        setParentsname(benefit.middlename);
+        setorganizationname(benefit.organization);
+        setCommencementdate(benefit.work_order_date);
+        setcast(benefit.caste_id);
+        setbeneficiariestype(benefit.beneficiary_type);
+        setrationcardnumber(benefit.rashion_no);
+        setaddharcardnumber(benefit.aadhar);
+        setmobilenumber(benefit.mobile);
+        setsavinggroupname(benefit.gat_name);
+        setRegistrationerti(benefit.gat_certificate);
+        setnumberofmember(benefit.member);
+        setfourty(benefit.fourty);
+        setsixty(benefit.sixty);
+        sethundred(benefit.hundred);
         handleShowPrint(); // Open modal for editing
+
     };
 
+
+    const reset = () => {
+        setUpdateClusterId(null); // Set ID for updating
+        setCategoryName("");
+        setSubCategoryName("");
+        setYojnaYear("");
+        setYojnatype("");
+        setYojnaName("");
+        setDist("");
+        setTown("");
+        setMahsulgaav("");
+        setBankname("");
+        setIFCcode("");
+        setAccountno("");
+        setAmount("");
+        setSurname("");
+        setFistname("");
+        setParentsname("");
+        setorganizationname("");
+        setCommencementdate("");
+        setcast("");
+        setbeneficiariestype("");
+        setrationcardnumber("");
+        setaddharcardnumber("");
+        setmobilenumber("");
+        setsavinggroupname("");
+        setRegistrationerti("");
+        setnumberofmember("");
+        setfourty("");
+        setsixty("");
+        sethundred("");
+    }
     const handleShowPrint = () => setShowPrintModal(true);
 
     const handleClosePrint = () => {
         setShowPrintModal(false);
         setCategoryName("");
         setError("");
+        reset();
         setUpdateClusterId(null); // Reset update ID when closing
     };
 
     const formFields = [
         {
-            label: `categoryName`,
+            label: `${t('categoryname')}`,
             value: categoryName,
             onChange: (e: any) => setCategoryName(e.target.value),
             type: "select",
@@ -439,25 +522,26 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 value: category.category_id,
                 label: category.category_name,
             })),
-            placeholder: `categoryName`, // Optional placeholder for select input
+            placeholder: `${t('categoryname')}`, // Optional placeholder for select input
         },
         {
-            label: `subcat`, // Label for the select input
+            label: `${t('subcategoryname')}`, // Label for the select input
             value: subcategoryName, // Use state for the selected subcategory
             onChange: (e: any) => setSubCategoryName(e.target.value), // Function to update selected subcategory
             type: "select", // Type of input
             options: initialcategoryData
-                .filter((category: SubCategory) => String(category.category_id) === categoryName) // Filter based on categoryName
+
+                .filter((category: SubCategory) => String(category.category_id) == categoryName) // Filter based on categoryName
                 .map((category: SubCategory) => ({
                     value: category.sub_category_id, // Assuming sub_category_id is the unique identifier for subcategories
                     label: category.sub_category_name, // Display name for the select option
                 })),
-            placeholder: `${t("selectyear")}`, // Optional placeholder for select input
+            placeholder: `${t('subcategoryname')}`, // Optional placeholder for select input
         },
 
 
         {
-            label: `year}`,
+            label: `${t('year')}`,
             value: yojnayear,
             onChange: (e: any) => setYojnaYear(e.target.value),
             type: "select",
@@ -465,42 +549,46 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 value: year.yojana_year_id,
                 label: year.yojana_year,
             })),
-            placeholder: `${t("selectyear")}`, // Optional placeholder for select input
+            placeholder: `${t("year")}`, // Optional placeholder for select input
         },
         {
-            label: `typeyojna`,
+            label: `${t('yojnatype')}`,
             value: yojnatyp,
             onChange: (e: any) => setYojnatype(e.target.value),
             type: "select",
+
             options: yojnatype
                 .filter((type) =>
-                    String(type.sub_category_id) === subcategoryName &&
-                    String(type.category_id) === categoryName
+                    String(type.sub_category_id) == subcategoryName &&
+                    String(type.category_id) == categoryName
                 )
                 .map((yojna) => ({
                     value: yojna.yojana_type_id,
                     label: yojna.yojana_type,
                 })),
-            placeholder: `${t("selectyear")}`, // Optional placeholder for select input
+            placeholder: `${t("yojnatype")}`, // Optional placeholder for select input
         },
         {
-            label: `yojnanname`,
+            label: `${t('yojnaname')}`,
             value: yojnaname,
             onChange: (e: any) => setYojnaName(e.target.value),
             type: "select",
-            options: yojnatype
+            className: 'col-12',
+            options: yojnamaster
                 .filter((type) =>
-                    String(type.sub_category_id) === subcategoryName &&
-                    String(type.category_id) === categoryName
+                    String(type.yojana_year_id) == yojnayear &&
+                    String(type.yojana_type) == yojnatyp &&
+                    String(type.category_id) == categoryName &&
+                    String(type.sub_category_id) == subcategoryName
                 )
                 .map((yojna) => ({
-                    value: yojna.yojana_type_id,
-                    label: yojna.yojana_type,
+                    value: yojna.yojana_year_id,
+                    label: yojna.yojana_name,
                 })),
-            placeholder: `${t("selectyear")}`, // Optional placeholder for select input
+            placeholder: `${t("yojnaname")}`, // Optional placeholder for select input
         },
         {
-            label: `dist`,
+            label: `${t('dist')}`,
             value: dist,
             onChange: (e: any) => setDist(e.target.value),
             type: "select",
@@ -508,155 +596,271 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 value: taluka.id,
                 label: taluka.name,
             })),
-            placeholder: `${t("selecttaluka")}`, // Optional placeholder for select input
+            placeholder: `${t("dist")}`, // Optional placeholder for select input
         },
         {
-            label: `gp`,
+            label: `${t('GramPanchayat')}`,
             value: town, // Ensure this uses townName
             type: "select",
-            placeholder: `${t('selectmahasul')}`,
+            placeholder: `${t('GramPanchayat')}`,
             onChange: (e: any) => setTown(e.target.value), // Keep this to set townName
-            options: grampanchayat.map((gp: any) => ({
-                value: gp.id,
-                label: gp.name,
-            })),
+
+            options: grampanchayat
+                .filter((type) =>
+                    String(type.taluka_id) == dist
+
+                )
+                .map((yojna) => ({
+                    value: yojna.id,
+                    label: yojna.name,
+                })),
         },
+
+
+        ...(yojnatyp !== "3" ? [
+            {
+                label: `${t('Village')}`,
+                value: mahasulgaav,
+                type: "select",
+                placeholder: `${t('Village')}`,
+                onChange: (e: any) => setMahsulgaav(e.target.value),
+                options: Villages
+                    .filter((type) =>
+                        String(type.taluka_id) == dist &&
+                        String(type.gp_id) == town
+
+                    )
+                    .map((yojna) => ({
+                        value: yojna.id,
+                        label: yojna.name,
+                    })),
+            },
+        ] : []),
+
+
+
         {
-            label: `mahasulgaav`,
-            value: mahasulgaav, // Ensure this uses townName
-            type: "select",
-            placeholder: `${t('selectmahasul')}`,
-            onChange: (e: any) => setMahsulgaav(e.target.value), // Keep this to set townName
-            options: Villages.map((gp: any) => ({
-                value: gp.id,
-                label: gp.name,
-            })),
-        },
-        {
-            label: `Bankname`,
+            label: `${t('BankName')}`,
             value: bankname || "",
             type: "text",
-            placeholder: `${t("enterpopulation")}`,
+            placeholder: `${t("BankName")}`,
             onChange: (e: any) => setBankname(e.target.value),
         },
         {
-            label: `ifsc code`,
+            label: `${t('IFSCCode')}`,
             value: ifccode || "",
             type: "text",
-            placeholder: `${t("enterpopulation")}`,
+            placeholder: `${t("IFSCCode")}`,
             onChange: (e: any) => setIFCcode(e.target.value),
         },
         {
-            label: `accno`,
+            label: `${t('AccountNo')}`,
             value: accountno || "",
             type: "text",
-            placeholder: `${t("enterpopulation")}`,
+            placeholder: `${t("AccountNo")}`,
             onChange: (e: any) => setAccountno(e.target.value),
         },
         {
-            label: `amount`,
+            label: `${t('AmountPaid')}`,
             value: amount || "",
             type: "text",
-            placeholder: `${t("enterpopulation")}`,
+            placeholder: `${t("AmountPaid")}`,
             onChange: (e: any) => setAmount(e.target.value),
         },
 
     ];
-    if (yojnatyp === "1") {
+    if (yojnatyp == "1") {
         formFields.push({
-            label: `आडनाव `,
-            value: amount || "",
+            label: `${t('surname')}`,
+            value: surname || "",
             type: "text",
-            placeholder: `आडनाव `,
-            onChange: (e: any) => setAmount(e.target.value),
+            placeholder: `${t('surname')}`,
+            onChange: (e: any) => setSurname(e.target.value),
         },);
         formFields.push({
-            label: `नाव`,
-            value: amount || "",
+            label: `${t('firstname')}`,
+            value: firstname || "",
             type: "text",
-            placeholder: `नाव`,
-            onChange: (e: any) => setAmount(e.target.value),
+            placeholder: `${t('firstname')}`,
+            onChange: (e: any) => setFistname(e.target.value),
         },);
         formFields.push({
-            label: `वडिलांचे नाव/पतीचे नाव  `,
-            value: amount || "",
+            label: `${t('parentsname')}`,
+            value: parentsname || "",
             type: "text",
-            placeholder: `वडिलांचे नाव/पतीचे नाव `,
-            onChange: (e: any) => setAmount(e.target.value),
+            placeholder: `${t('parentsname')}`,
+            onChange: (e: any) => setParentsname(e.target.value),
         },);
         formFields.push({
-            label: `जात  `,
-            value: amount || "",
+            label: `${t('Organization')}`,
+            value: organizationname || "",
             type: "text",
-            placeholder: `जात  `,
-            onChange: (e: any) => setAmount(e.target.value),
+            placeholder: `${t('Organization')}`,
+            onChange: (e: any) => setorganizationname(e.target.value),
         },);
         formFields.push({
-            label: `लाभार्थ्यांचा प्रकार `,
-            value: amount || "",
-            type: "text",
-            placeholder: `लाभार्थ्यांचा प्रकार `,
-            onChange: (e: any) => setAmount(e.target.value),
+            label: `${t('Commencementorderdate')}`,
+            value: Commencementdate || "",
+            type: "date",
+            placeholder: `${t('Commencementorderdate')}`,
+            onChange: (e: any) => setCommencementdate(e.target.value),
         },);
         formFields.push({
-            label: `रेशन कार्ड क्रमांक `,
-            value: amount || "",
+            label: `${t('Cast')}`,
+            value: cast || "",
             type: "text",
-            placeholder: `रेशन कार्ड क्रमांक `,
-            onChange: (e: any) => setAmount(e.target.value),
+            placeholder: `${t('Cast')}`,
+            onChange: (e: any) => setcast(e.target.value),
         },);
         formFields.push({
-            label: `आधार कार्ड क्रमांक`,
-            value: amount || "",
+            label: `${t('beneficiarytype')}`,
+            value: beneficiariestype || "",
             type: "text",
-            placeholder: `आधार कार्ड क्रमांक`,
-            onChange: (e: any) => setAmount(e.target.value),
+            placeholder: `${t('beneficiarytype')}`,
+            onChange: (e: any) => setbeneficiariestype(e.target.value),
         },);
         formFields.push({
-            label: `मोबाईल क्रमांक`,
-            value: amount || "",
+            label: `${t('Registrationcard')}`,
+            value: rationcardnumber || "",
             type: "text",
-            placeholder: `मोबाईल क्रमांक `,
-            onChange: (e: any) => setAmount(e.target.value),
+            placeholder: `${t('Registrationcard')}`,
+            onChange: (e: any) => setrationcardnumber(e.target.value),
         },);
-
-    } else if (yojnatyp === "2") {
         formFields.push({
-            label: `बचत गट नाव`,
-            value: amount || "",
+            label: `${t('aadharcard')}`,
+            value: aadharcardnumber || "",
             type: "text",
-            placeholder: `बचत गट नाव`,
-            onChange: (e: any) => setAmount(e.target.value),
+            placeholder: `${t('aadharcard')}`,
+            onChange: (e: any) => setaddharcardnumber(e.target.value),
+        },);
+        formFields.push({
+            label: `${t('Contact')}`,
+            value: mobilenumber || "",
+            type: "text",
+            placeholder: `${t('Contact')}`,
+            onChange: (e: any) => setmobilenumber(e.target.value),
+        }, {
+            label: `${t('Eligible40')}`,
+            value: fourty || "",
+            type: "checkbox",
+            placeholder: `${t('Eligible40')}`,
+            onChange: (e: any) => setfourty(e.target.value),
         },
             {
-                label: `नोंदणी प्रमाणपत्र`,
-                value: amount || "",
-                type: "text",
-                placeholder: `नोंदणी प्रमाणपत्र`,
-                onChange: (e: any) => setAmount(e.target.value),
+                label: `${t('Eligible60')}`,
+                value: sixty || "",
+                type: "checkbox",
+                placeholder: `${t('Eligible60')}`,
+                onChange: (e: any) => setsixty(e.target.value),
             },
             {
-                label: `सदस्य संख्या`,
-                value: amount || "",
+                label: `${t('Eligible100')}`,
+                value: hundred || "",
+                type: "checkbox",
+                placeholder: `${t('Eligible100')}`,
+                onChange: (e: any) => sethundred(e.target.value),
+            },);
+
+    } else if (yojnatyp == "2") {
+        formFields.push({
+            label: `${t('bachtgat')}`,
+            value: savinggroupname || "",
+            type: "text",
+            placeholder: `${t('bachtgat')}`,
+            onChange: (e: any) => setsavinggroupname(e.target.value),
+        },
+            {
+                label: `${t('registerdcert')}`,
+                value: Registrationerti || "",
                 type: "text",
-                placeholder: `सदस्य संख्या`,
-                onChange: (e: any) => setAmount(e.target.value),
+                placeholder: `${t('registerdcert')}`,
+                onChange: (e: any) => setRegistrationerti(e.target.value),
             },
             {
-                label: `संस्थेचे नाव`,
-                value: amount || "",
+                label: `${t('members')}`,
+                value: numberofmember || "",
                 type: "text",
-                placeholder: `संस्थेचे नाव`,
-                onChange: (e: any) => setAmount(e.target.value),
+                placeholder: `${t('members')}`,
+                onChange: (e: any) => setnumberofmember(e.target.value),
             },
             {
-                label: `कार्यारंभ आदेश दिनांक`,
-                value: amount || "",
+                label: `${t('sansthaname')}`,
+                value: organizationname || "",
+                type: "text",
+                placeholder: `${t('sansthaname')}`,
+                onChange: (e: any) => setorganizationname(e.target.value),
+            },
+            {
+                label: `${t('Commencementorderdate')}`,
+                value: Commencementdate || "",
                 type: "date",
-                placeholder: `कार्यारंभ आदेश दिनांक`,
-                onChange: (e: any) => setAmount(e.target.value),
+                placeholder: `${t('Commencementorderdate')}`,
+                onChange: (e: any) => setCommencementdate(e.target.value),
+            },
+            {
+                label: `${t('Eligible40')}`,
+                value: fourty || "",
+                type: "checkbox",
+                placeholder: `${t('Eligible40')}`,
+                onChange: (e: any) => setfourty(e.target.value),
+            },
+            {
+                label: `${t('Eligible60')}`,
+                value: sixty || "",
+                type: "checkbox",
+                placeholder: `${t('Eligible60')}`,
+                onChange: (e: any) => setsixty(e.target.value),
+            },
+            {
+                label: `${t('Eligible100')}`,
+                value: hundred || "",
+                type: "checkbox",
+                placeholder: `${t('Eligible100')}`,
+                onChange: (e: any) => sethundred(e.target.value),
+            },
+
+        );
+    }
+    else if (yojnatyp == "3") {
+        formFields.push({
+            label: `${t('sansthaname')}`,
+            value: organizationname || "",
+            type: "text",
+            placeholder: `${t('sansthaname')}`,
+            onChange: (e: any) => setorganizationname(e.target.value),
+        },);
+        formFields.push({
+            label: `${t('Commencementorderdate')}`,
+            value: Commencementdate || "",
+            type: "date",
+            placeholder: `${t('Commencementorderdate')}`,
+            onChange: (e: any) => setCommencementdate(e.target.value),
+        },);
+        formFields.push(
+            {
+                label: `${t('Eligible40')}`,
+                value: (fourty == "true" ? 1 : fourty || "").toString(),
+                type: "text",
+                placeholder: `%`,
+
+                onChange: (e: any) => setfourty(e.target.value),
+            },
+            {
+                label: `${t('Eligible60')}`,
+                value: (sixty == "true" ? 1 : sixty || "").toString(),
+                type: "text",
+                placeholder: `%`,
+                onChange: (e: any) => setsixty(e.target.value),
+            },
+            {
+                label: `${t('Eligible100')}`,
+                value: (hundred == "true" ? 1 : hundred || "").toString(),
+                type: "text",
+                placeholder: `%`,
+                onChange: (e: any) => sethundred(e.target.value),
             },
         );
+
     }
 
     return (
@@ -675,7 +879,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                             className="fs-3"
                             iconType="solid"
                         />
-                        {t("AddCluster")}
+                        {t("addbenef")}
                     </Button>
                 }
             />
@@ -685,7 +889,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 handleClose={handleClosePrint}
                 handleSubmit={handleSubmit}
                 size={"xl"}
-                title={updateClusterId ? yojnatyp : yojnatyp}
+                title={updateClusterId ? categoryName : fourty}
                 formData={{
                     fields: formFields as any,
                     error: "",

@@ -12,8 +12,6 @@ import { toast } from "react-toastify";
 import { useTranslations } from "next-intl";
 import { createConfirmation } from "react-confirm";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
-import { placements } from "@popperjs/core";
-import { yojnatype } from "@prisma/client";
 
 type Props = {
     initialcategoryData: SubCategory[];
@@ -24,13 +22,13 @@ type Props = {
     yojnamasterapp: YojanaMasterApp[];
 };
 
-const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, yojnamasterapp }: Props) => {
-    const t = useTranslations("IndexPage");
+const Appplans = ({ initialcategoryData, YojnaYear, category, yojnamasterapp }: Props) => {
+    const t = useTranslations("Plans");
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [categoryName, setCategoryName] = useState("");
     const [subcategoryName, setSubCategoryName] = useState("");
     const [yojnayear, setYojnaYear] = useState("");
-    const [yojnatyp, setYojnatype] = useState("");
+
     const [yojnname, setyojnaname] = useState("");
     const [amount, setAmount] = useState("");
 
@@ -38,7 +36,7 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
     const [isLoading, setIsLoading] = useState(false);
     const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
     const [yojnamasterdata, setYojnamaster] =
-        useState<YojanaMasterApp[]>(yojnamasterapp); // State for cluster data
+        useState<YojanaMasterApp[]>(yojnamasterapp); // State for Plan app data
     const confirm = createConfirmation(ConfirmationDialog);
     const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
         acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
@@ -51,10 +49,6 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
 
     const categorydata = category.reduce((acc, year: Categorys) => {
         acc[year.category_id] = year.category_name; // Assuming taluka has id and name properties
-        return acc;
-    }, {} as Record<number, string>);
-    const yojnatypes = yojnatype.reduce((acc, year: yojnatype) => {
-        acc[year.yojana_type_id] = year.yojana_type; // Assuming taluka has id and name properties
         return acc;
     }, {} as Record<number, string>);
 
@@ -73,7 +67,9 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
             gat: master.gat,
             yojana_year_id: yojna_year[master.yojana_year_id],
             yojna_img: master.yojna_img,
-
+            categoryid: master.category_id,
+            subcategoryid: master.sub_category_id,
+            yojanayearid: master.yojana_year_id,
 
 
         }))
@@ -82,7 +78,7 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
     const columns = [
         {
             accessorKey: "serial_number", // Use a new accessor for the serial number
-            header: `${t("Srno")}`, // Header for the serial number
+            header: `${t("SrNo")}`, // Header for the serial number
             cell: ({ row }: any) => (
                 <div>
                     {row.index + 1} {/* Display the index + 1 for serial number */}
@@ -92,30 +88,26 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
 
         {
             accessorKey: "category_id",
-            header: `cat`,
+            header: `${t("categoryname")}`,
         },
         {
             accessorKey: "sub_category_id",
-            header: `subcat`,
+            header: `${t("subcategoryname")}`,
         },
 
         {
             accessorKey: "yojana_year_id",
-            header: `${t("AddTime")}`,
+            header: `${t("year")}`,
         },
         {
             accessorKey: "yojana_name",
-            header: `${t("Status")}`,
+            header: `${t("yojnaname")}`,
         },
 
 
-        {
-            accessorKey: "is_delete",
-            header: `${t("AddTime")}`,
-        },
         {
             accessorKey: "status",
-            header: `${t("AddTime")}`,
+            header: `${t("Status")}`,
         },
 
 
@@ -134,14 +126,14 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
                         {t("edit")}
                     </button>
                     <button
-                        className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+                        className={`btn btn-sm ${row.original.status == "Active" ? "btn-danger" : "btn-warning"
                             } ms-5`}
                         onClick={() =>
                             handleDeactivate(row.original.yojana_id, row.original.status)
                         }
                     >
                         <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-                        {row.original.status === "Active"
+                        {row.original.status == "Active"
                             ? `${t("Deactive")}`
                             : `${t("Active")}`}
                     </button>
@@ -152,9 +144,9 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
 
     const handleDeactivate = async (category_id: any, currentStatus: any) => {
         const confirmMessage =
-            currentStatus === "Active"
-                ? "Are you sure you want to deactivate this cluster?"
-                : "Are you sure you want to activate this cluster?";
+            currentStatus == "Active"
+                ? "Are you sure you want to deactivate this Plan App?"
+                : "Are you sure you want to activate this Plan App?";
         const confirmed = await confirm({ confirmation: confirmMessage });
         if (confirmed) {
             try {
@@ -164,7 +156,7 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        status: currentStatus === "Active" ? "Deactive" : "Active",
+                        status: currentStatus == "Active" ? "Deactive" : "Active",
                     }),
                 });
 
@@ -172,23 +164,23 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
                     // Update local state without page reload
                     setYojnamaster((prevData) =>
                         prevData.map((cluster) =>
-                            cluster.sub_category_id === category_id
+                            cluster.yojana_id == category_id
                                 ? {
                                     ...cluster,
-                                    status: currentStatus === "Active" ? "Deactive" : "Active",
+                                    status: currentStatus == "Active" ? "Deactive" : "Active",
                                 }
                                 : cluster
                         )
                     );
                     toast.success(
-                        `Cluster ${currentStatus === "Active" ? "deactivated" : "activated"
+                        `Plan app ${currentStatus == "Active" ? "deactivated" : "activated"
                         } successfully!`
                     );
                 } else {
-                    toast.error("Failed to change the cluster status.");
+                    toast.error("Failed to change the Plan app status.");
                 }
             } catch (error) {
-                console.error("Error changing the cluster status:", error);
+                console.error("Error changing the Plan app status:", error);
                 toast.error("An unexpected error occurred.");
             }
         }
@@ -229,16 +221,16 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
                 if (updateClusterId) {
                     setYojnamaster((prevData) =>
                         prevData.map((cluster) =>
-                            cluster.sub_category_id === updateClusterId
-                                ? { ...cluster, sub_category_name: subcategoryName, category_id: parseInt(categoryName), bank_id: parseInt(yojnname), amount: amount as any, yojana_year_id: parseInt(yojnayear) }
+                            cluster.yojana_id === updateClusterId
+                                ? { ...cluster, sub_category_id: parseInt(subcategoryName), category_id: parseInt(categoryName), yojana_name: yojnname, amount: amount as any, yojana_year_id: parseInt(yojnayear) }
                                 : cluster
                         )
                     );
-                    toast.success("Cluster updated successfully!");
+                    toast.success("Plan app updated successfully!");
                 } else {
                     const createdData = await response.json();
                     setYojnamaster((prevData) => [...prevData, createdData]);
-                    toast.success("Cluster inserted successfully!");
+                    toast.success("Plan app inserted successfully!");
                 }
 
                 handleClosePrint();
@@ -254,14 +246,24 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
             setIsLoading(false); // End loading
         }
     };
+    const reset = () => {
+        setUpdateClusterId(null); // Set ID for updating
+        setCategoryName("")
+        setSubCategoryName("")
+        setYojnaYear("")
 
-    const handleEdit = (cluster: any) => {
-        setUpdateClusterId(cluster.yojana_id); // Set ID for updating
-        setCategoryName(cluster.categoryid); // Set current name for editing
-        setSubCategoryName(cluster.sub_category_name)
-        setAmount(cluster.amount)
-        setYojnaYear(cluster.yojanayearid)
-        setyojnaname(cluster.bankid)
+        setyojnaname("")
+        setAmount("")
+    }
+
+    const handleEdit = (yojna: any) => {
+        setUpdateClusterId(yojna.yojana_id); // Set ID for updating
+        setCategoryName(yojna.categoryid)
+        setSubCategoryName(yojna.subcategoryid)
+        setYojnaYear(yojna.yojanayearid)
+        // setYojnatype(yojna.yojanatype)
+        setyojnaname(yojna.yojana_name)
+        setAmount(yojna.amount)
         handleShowPrint(); // Open modal for editing
     };
 
@@ -271,6 +273,7 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
         setShowPrintModal(false);
         setCategoryName("");
         setError("");
+        reset();
         setUpdateClusterId(null); // Reset update ID when closing
     };
 
@@ -291,7 +294,7 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
                             className="fs-3"
                             iconType="solid"
                         />
-                        {t("AddCluster")}
+                        {t("addplan")}
                     </Button>
                 }
             />
@@ -300,11 +303,11 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
                 show={showPrintModal}
                 handleClose={handleClosePrint}
                 handleSubmit={handleSubmit}
-                title={updateClusterId ? `${t("updatepage")}` : `${t("insertpage")}`}
+                title={updateClusterId ? `${t("updatepageapp")}` : `${t("insertpageapp")}`}
                 formData={{
                     fields: [
                         {
-                            label: `${t("selectyear")}`,
+                            label: `${t("categoryname")}`,
                             value: categoryName,
                             onChange: (e) => setCategoryName(e.target.value),
                             type: "select",
@@ -312,24 +315,24 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
                                 value: category.category_id,
                                 label: category.category_name,
                             })),
-                            placeholder: `${t("selectyear")}`, // Optional placeholder for select input
+                            placeholder: `${t("categoryname")}`, // Optional placeholder for select input
                         },
                         {
-                            label: `${t("selectyear")}`, // Label for the select input
+                            label: `${t("subcategoryname")}`, // Label for the select input
                             value: subcategoryName, // Use state for the selected subcategory
                             onChange: (e) => setSubCategoryName(e.target.value), // Function to update selected subcategory
                             type: "select", // Type of input
                             options: initialcategoryData
-                                .filter((category: SubCategory) => String(category.category_id) === categoryName) // Filter based on categoryName
+                                .filter((category: SubCategory) => String(category.category_id) == categoryName) // Filter based on categoryName
                                 .map((category: SubCategory) => ({
                                     value: category.sub_category_id, // Assuming sub_category_id is the unique identifier for subcategories
                                     label: category.sub_category_name, // Display name for the select option
                                 })),
-                            placeholder: `${t("selectyear")}`, // Optional placeholder for select input
+                            placeholder: `${t("subcategoryname")}`, // Optional placeholder for select input
                         },
 
                         {
-                            label: `${t("selectyear")}`,
+                            label: `${t("year")}`,
                             value: yojnayear,
                             onChange: (e) => setYojnaYear(e.target.value),
                             type: "select",
@@ -337,13 +340,13 @@ const Appplans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatyp
                                 value: year.yojana_year_id,
                                 label: year.yojana_year,
                             })),
-                            placeholder: `${t("selectyear")}`, // Optional placeholder for select input
+                            placeholder: `${t("year")}`, // Optional placeholder for select input
                         },
                         {
-                            label: `${t("entercategoryName")}`,
+                            label: `${t("yojnaname")}`,
                             value: yojnname,
                             type: "text",
-                            placeholder: `${t("entercategoryName")}`,
+                            placeholder: `${t("yojnaname")}`,
 
                             onChange: (e) => setyojnaname(e.target.value),
                         },

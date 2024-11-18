@@ -1,6 +1,7 @@
 
- import SubCategorytitle from "@/app/[locale]/title/Subcategory";
+import SubCategorytitle from "@/app/[locale]/title/Subcategory";
 import Loader from "@/common/Loader ";
+import Parivahan from "@/components/Schemes/Parivahan";
 
 
 import SubCategorys from "@/components/Schemes/SubCategorys";
@@ -42,7 +43,7 @@ const Page = async () => {
                 <SubCategorytitle />
             </h1>
 
-            <SubCategorys initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} />
+            <Parivahan initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} />
         </div>
     );
 };

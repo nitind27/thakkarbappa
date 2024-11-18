@@ -290,7 +290,7 @@ export type TblYojanaType = {
   yojana_type: string; // Corresponds to String
   status: string; // Corresponds to String
   ins_date_time: Date; // Corresponds to DateTime
-  update_date_time: Date; // Corresponds to DateTime
+  update_date_time?: Date | null; // Corresponds to DateTime
 };
 
 export type YojanaMasterApp = {

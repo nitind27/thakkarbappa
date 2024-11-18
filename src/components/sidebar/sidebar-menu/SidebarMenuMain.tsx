@@ -169,10 +169,10 @@ const SidebarMenuMain = () => {
             onClick={() => handleItemClick(`/${localActive}/yojna/schemes/beneficiary`)} // Store path on click
           />
           <SidebarMenuItem
-            to={`/${localActive}/manage/suvidha`}
+            to={`/${localActive}/yojna/schemes/parivahan`}
             title={t("Sightseeing_Transport")}
             hasBullet={true}
-            onClick={() => handleItemClick(`/${localActive}/manage/suvidha`)} // Store path on click
+            onClick={() => handleItemClick(`/${localActive}/yojna/schemes/parivahan`)} // Store path on click
           />
           <SidebarMenuItem
             to={`/${localActive}/manage/representative`}

@@ -1,5 +1,6 @@
 // app/page.tsx
-import Cluster from "@/app/[locale]/title/cluster"; import Loader from "@/common/Loader ";
+import Cluster from "@/app/[locale]/title/cluster";import Planapptitle from "@/app/[locale]/title/Planapptitle";
+ import Loader from "@/common/Loader ";
 ;
 import Clusteradd from "@/components/manage/Clusteradd";
 import Appplans from "@/components/Schemes/Appplans";
@@ -45,7 +46,7 @@ const Page = async () => {
     return (
         <div>
             <h1 className="card card-body mt-5">
-                <Cluster />
+                <Planapptitle />
             </h1>
 
             <Appplans initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} yojnatype={yojnatype} yojnamasterapp={yojnamasterapp} />

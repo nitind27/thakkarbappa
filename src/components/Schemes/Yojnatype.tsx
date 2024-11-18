@@ -21,7 +21,7 @@ type Props = {
 };
 
 const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props) => {
-    const t = useTranslations("IndexPage");
+    const t = useTranslations("Yojnatype");
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [categoryName, setCategoryName] = useState("");
     const [subcategoryName, setSubCategoryName] = useState("");
@@ -30,7 +30,7 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
     const [isLoading, setIsLoading] = useState(false);
     const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
     const [clusterData, setClusterData] =
-        useState<TblYojanaType[]>(yojnatype); // State for cluster data
+        useState<TblYojanaType[]>(yojnatype); // State for Yojna Type data
     const confirm = createConfirmation(ConfirmationDialog);
 
     const categorydata = category.reduce((acc, year: Categorys) => {
@@ -45,9 +45,11 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
 
     const data = clusterData
         .map((subcategory) => ({
-            yojana_type_id:subcategory.yojana_type_id,
+            yojana_type_id: subcategory.yojana_type_id,
             category_id: categorydata[subcategory.category_id],
+            categoryid: subcategory.category_id,
             sub_category_id: subcategorydata[subcategory.sub_category_id],
+            subcategoryid: subcategory.sub_category_id,
             yojana_type: subcategory.yojana_type,
             status: subcategory.status,
         }))
@@ -56,7 +58,7 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
     const columns = [
         {
             accessorKey: "serial_number", // Use a new accessor for the serial number
-            header: `${t("Srno")}`, // Header for the serial number
+            header: `${t("SrNo")}`, // Header for the serial number
             cell: ({ row }: any) => (
                 <div>
                     {row.index + 1} {/* Display the index + 1 for serial number */}
@@ -66,23 +68,21 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
 
         {
             accessorKey: "category_id",
-            header: `cat`,
+            header: `${t("categoryname")}`,
         },
         {
             accessorKey: "sub_category_id",
-            header: `subcat`,
+            header: `${t("subcategoryname")}`,
         },
         {
             accessorKey: "yojana_type",
-            header: `yt`,
+            header: `${t("yojnatype")}`,
         },
 
         {
             accessorKey: "status",
             header: `${t("Status")}`,
         },
-
-
         {
             accessorKey: "actions",
             header: `${t("Action")}`,
@@ -116,8 +116,8 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
     const handleDeactivate = async (category_id: any, currentStatus: any) => {
         const confirmMessage =
             currentStatus === "Active"
-                ? "Are you sure you want to deactivate this cluster?"
-                : "Are you sure you want to activate this cluster?";
+                ? "Are you sure you want to deactivate this Yojnatype?"
+                : "Are you sure you want to activate this Yojnatype?";
         const confirmed = await confirm({ confirmation: confirmMessage });
         if (confirmed) {
             try {
@@ -144,14 +144,14 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
                         )
                     );
                     toast.success(
-                        `Cluster ${currentStatus === "Active" ? "deactivated" : "activated"
+                        `Yojna Type ${currentStatus === "Active" ? "deactivated" : "activated"
                         } successfully!`
                     );
                 } else {
-                    toast.error("Failed to change the cluster status.");
+                    toast.error("Failed to change the Yojna Type status.");
                 }
             } catch (error) {
-                console.error("Error changing the cluster status:", error);
+                console.error("Error changing the Yojna Type status:", error);
                 toast.error("An unexpected error occurred.");
             }
         }
@@ -179,8 +179,6 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
                 sub_category_id: subcategoryName,
                 yojana_type: yojnatypes,
 
-
-
                 ...(updateClusterId && { yojana_type_id: updateClusterId }),
             };
 
@@ -196,16 +194,16 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
                 if (updateClusterId) {
                     setClusterData((prevData) =>
                         prevData.map((cluster) =>
-                            cluster.sub_category_id === updateClusterId
-                                ? { ...cluster, sub_category_name: subcategoryName, category_id: parseInt(categoryName) }
+                            cluster.yojana_type_id === updateClusterId
+                                ? { ...cluster, sub_category_id: parseInt(subcategoryName), category_id: parseInt(categoryName), yojana_type: yojnatypes, }
                                 : cluster
                         )
                     );
-                    toast.success("Cluster updated successfully!");
+                    toast.success("Yojna Type updated successfully!");
                 } else {
                     const createdData = await response.json();
                     setClusterData((prevData) => [...prevData, createdData]);
-                    toast.success("Cluster inserted successfully!");
+                    toast.success("Yojna Type inserted successfully!");
                 }
 
                 handleClosePrint();
@@ -225,10 +223,8 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
     const handleEdit = (cluster: any) => {
         setUpdateClusterId(cluster.yojana_type_id); // Set ID for updating
         setCategoryName(cluster.categoryid); // Set current name for editing
-        setSubCategoryName(cluster.sub_category_name)
-
-        setYojnaType(cluster.yojanayearid)
-
+        setSubCategoryName(cluster.subcategoryid)
+        setYojnaType(cluster.yojana_type);
         handleShowPrint(); // Open modal for editing
     };
 
@@ -263,7 +259,7 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
                             className="fs-3"
                             iconType="solid"
                         />
-                        {t("AddCluster")}
+                        {t("addyojna")}
                     </Button>
                 }
             />
@@ -276,7 +272,7 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
                 formData={{
                     fields: [
                         {
-                            label: `${t("selectyear")}`,
+                            label: `${t("categoryname")}`,
                             value: categoryName,
                             onChange: (e) => setCategoryName(e.target.value),
                             type: "select",
@@ -284,26 +280,26 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
                                 value: category.category_id,
                                 label: category.category_name,
                             })),
-                            placeholder: `${t("selectyear")}`, // Optional placeholder for select input
+                            placeholder: `${t("categoryname")}`, // Optional placeholder for select input
                         },
                         {
-                            label: `${t("selectyear")}`, // Label for the select input
+                            label: `${t("subcategoryname")}`, // Label for the select input
                             value: subcategoryName, // Use state for the selected subcategory
                             onChange: (e) => setSubCategoryName(e.target.value), // Function to update selected subcategory
                             type: "select", // Type of input
                             options: initialcategoryData
-                                .filter((category: SubCategory) => String(category.category_id) === categoryName) // Filter based on categoryName
+                                .filter((category: SubCategory) => String(category.category_id) == categoryName) // Filter based on categoryName
                                 .map((category: SubCategory) => ({
                                     value: category.sub_category_id, // Assuming sub_category_id is the unique identifier for subcategories
                                     label: category.sub_category_name, // Display name for the select option
                                 })),
-                            placeholder: `${t("selectyear")}`, // Optional placeholder for select input
+                            placeholder: `${t("subcategoryname")}`, // Optional placeholder for select input
                         },
                         {
-                            label: `${t("entercategoryName")}`,
+                            label: `${t("yojnatype")}`,
                             value: yojnatypes,
                             type: "text",
-                            placeholder: `${t("entercategoryName")}`,
+                            placeholder: `${t("yojnatype")}`,
 
                             onChange: (e) => setYojnaType(e.target.value),
                         },

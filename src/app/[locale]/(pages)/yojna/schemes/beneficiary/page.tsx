@@ -1,4 +1,5 @@
 // app/page.tsx
+import Beneficiarytitile from "@/app/[locale]/title/Beneficiarytitile";
 import Cluster from "@/app/[locale]/title/cluster"; import Loader from "@/common/Loader ";
 ;
 import Clusteradd from "@/components/manage/Clusteradd";
@@ -51,7 +52,7 @@ const Page = async () => {
     return (
         <div>
             <h1 className="card card-body mt-5">
-                <Cluster />
+                <Beneficiarytitile />
             </h1>
 
             <Beneficiary initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} />

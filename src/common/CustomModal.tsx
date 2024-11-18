@@ -13,6 +13,7 @@ type FormField = {
   ) => void;
   type: "text" | "select" | "file" | "date";
   options?: { value: string | number; label: string }[];
+  className?: string; // Optional className property
 };
 
 type CustomModalProps = {
@@ -85,7 +86,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
   };
 
   // Determine grid classes based on size prop
-  const gridClass = size ? 'col-6 col-md-4' : 'col-12';
+  const gridClass = size ? 'col-6 col-md-3' : 'col-12';
 
   return (
     <Modal show={show} size={size}>
@@ -99,7 +100,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
         <Form onSubmit={onSubmit}>
           <div className="row">
             {formData.fields.map((field, index) => (
-              <div className={gridClass} key={index}>
+              <div className={field.className || gridClass} key={index}>
                 <Form.Group controlId={`formField${index}`}>
                   <Form.Label>{field.label}</Form.Label>
 
@@ -118,7 +119,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
                       onChange={field.onChange as any}
                       isInvalid={!!formErrors[field.label]}
                     >
-                      <option value="" >
+                      <option value="">
                         {field.placeholder || "Select an option"}
                       </option>
                       {field.options?.map((option) => (
@@ -159,7 +160,20 @@ const CustomModal: React.FC<CustomModalProps> = ({
                       }}
                       className="form-control"
                     />
+                  ) : field.type === "checkbox" ? (
+                    <Form.Check
+                      type="checkbox"
+                      label={field.placeholder || field.label}
+                      checked={field.value as any}
+                      onChange={(e) =>
+                        field.onChange({
+                          target: { value: e.target.checked },
+                        } as any)
+                      }
+                      isInvalid={!!formErrors[field.label]}
+                    />
                   ) : null}
+                
 
                   {formErrors[field.label] && (
                     <div style={{ color: "red", marginTop: "0.25rem" }}>

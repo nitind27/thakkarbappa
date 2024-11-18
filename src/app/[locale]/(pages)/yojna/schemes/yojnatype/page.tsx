@@ -1,5 +1,6 @@
 
-import Cluster from "@/app/[locale]/title/cluster"; import Loader from "@/common/Loader ";
+import Cluster from "@/app/[locale]/title/cluster"; import Yojnatypetitle from "@/app/[locale]/title/Yojnatypetitle";
+import Loader from "@/common/Loader ";
 
 import Yojnatype from "@/components/Schemes/Yojnatype";
 import { Bank, Categorys, SubCategory, TblYojanaType, YojanaYear } from "@/components/type";
@@ -37,7 +38,7 @@ const Page = async () => {
     return (
         <div>
             <h1 className="card card-body mt-5">
-                <Cluster />
+                <Yojnatypetitle />
             </h1>
 
             <Yojnatype initialcategoryData={subCategory} yojnatype={yojnatype} Bankdata={Bankdata} category={category} />

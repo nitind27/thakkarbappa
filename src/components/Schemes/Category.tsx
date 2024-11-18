@@ -2,8 +2,8 @@
 "use client";
 import React, { useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
-import { Categorys, clusterdata } from "../type";
-import { formatDate } from "@/lib/utils";
+import { Categorys } from "../type";
+
 import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
@@ -18,7 +18,7 @@ type Props = {
 };
 
 const Category = ({ initialcategoryData }: Props) => {
-  const t = useTranslations("IndexPage");
+  const t = useTranslations("Category");
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [appyojna, setAppyojna] = useState("No");
@@ -26,7 +26,7 @@ const Category = ({ initialcategoryData }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
   const [clusterData, setClusterData] =
-    useState<Categorys[]>(initialcategoryData); // State for cluster data
+    useState<Categorys[]>(initialcategoryData); // State for Category data
   const confirm = createConfirmation(ConfirmationDialog);
 
   const data = clusterData
@@ -42,7 +42,7 @@ const Category = ({ initialcategoryData }: Props) => {
   const columns = [
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
-      header: `${t("Srno")}`, // Header for the serial number
+      header: `${t("SrNo")}`, // Header for the serial number
       cell: ({ row }: any) => (
         <div>
           {row.index + 1} {/* Display the index + 1 for serial number */}
@@ -52,19 +52,16 @@ const Category = ({ initialcategoryData }: Props) => {
 
     {
       accessorKey: "category_name",
-      header: `${t("categoryName")}`,
+      header: `${t("categoryname")}`,
     },
     {
       accessorKey: "status",
-      header: `${t("Status")}`,
+      header: `${t("status")}`,
     },
-    {
-      accessorKey: "ins_date_time",
-      header: `${t("AddTime")}`,
-    },
+
     {
       accessorKey: "for_app",
-      header: `${t("AddTime")}`,
+      header: `${t("appyojna")}`,
     },
     {
       accessorKey: "actions",
@@ -80,14 +77,14 @@ const Category = ({ initialcategoryData }: Props) => {
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+            className={`btn btn-sm ${row.original.status == "Active" ? "btn-danger" : "btn-warning"
               } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.category_id, row.original.status)
             }
           >
             <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-            {row.original.status === "Active"
+            {row.original.status == "Active"
               ? `${t("Deactive")}`
               : `${t("Active")}`}
           </button>
@@ -98,9 +95,9 @@ const Category = ({ initialcategoryData }: Props) => {
 
   const handleDeactivate = async (category_id: any, currentStatus: any) => {
     const confirmMessage =
-      currentStatus === "Active"
-        ? "Are you sure you want to deactivate this cluster?"
-        : "Are you sure you want to activate this cluster?";
+      currentStatus == "Active"
+        ? "Are you sure you want to deactivate this category?"
+        : "Are you sure you want to activate this category?";
     const confirmed = await confirm({ confirmation: confirmMessage });
     if (confirmed) {
       try {
@@ -110,7 +107,7 @@ const Category = ({ initialcategoryData }: Props) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            status: currentStatus === "Active" ? "Deactive" : "Active",
+            status: currentStatus == "Active" ? "Deactive" : "Active",
           }),
         });
 
@@ -118,23 +115,23 @@ const Category = ({ initialcategoryData }: Props) => {
           // Update local state without page reload
           setClusterData((prevData) =>
             prevData.map((cluster) =>
-              cluster.category_id === category_id
+              cluster.category_id == category_id
                 ? {
                   ...cluster,
-                  status: currentStatus === "Active" ? "Deactive" : "Active",
+                  status: currentStatus == "Active" ? "Deactive" : "Active",
                 }
                 : cluster
             )
           );
           toast.success(
-            `Cluster ${currentStatus === "Active" ? "deactivated" : "activated"
+            `Category ${currentStatus == "Active" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
-          toast.error("Failed to change the cluster status.");
+          toast.error("Failed to change the Category status.");
         }
       } catch (error) {
-        console.error("Error changing the cluster status:", error);
+        console.error("Error changing the Category status:", error);
         toast.error("An unexpected error occurred.");
       }
     }
@@ -176,16 +173,18 @@ const Category = ({ initialcategoryData }: Props) => {
         if (updateClusterId) {
           setClusterData((prevData) =>
             prevData.map((cluster) =>
-              cluster.category_id === updateClusterId
+              cluster.category_id == updateClusterId
                 ? { ...cluster, category_name: categoryName, for_app: appyojna }
                 : cluster
             )
           );
-          toast.success("Cluster updated successfully!");
+          toast.success("Category updated successfully!");
+          resetform();
         } else {
           const createdData = await response.json();
           setClusterData((prevData) => [...prevData, createdData]);
-          toast.success("Cluster inserted successfully!");
+          toast.success("Category inserted successfully!");
+          resetform();
         }
 
         handleClosePrint();
@@ -204,13 +203,18 @@ const Category = ({ initialcategoryData }: Props) => {
 
   const handleEdit = (cluster: any) => {
     setUpdateClusterId(cluster.category_id); // Set ID for updating
-    setCategoryName(cluster.cluster_name); // Set current name for editing
+    setCategoryName(cluster.category_name); // Set current name for editing
+    setAppyojna(cluster.for_app); // Set current name for editing
     handleShowPrint(); // Open modal for editing
   };
 
   const handleShowPrint = () => setShowPrintModal(true);
-
+  const resetform = () => {
+    setCategoryName("");
+    setAppyojna("");
+  }
   const handleClosePrint = () => {
+    resetform();
     setShowPrintModal(false);
     setCategoryName("");
     setError("");
@@ -233,7 +237,7 @@ const Category = ({ initialcategoryData }: Props) => {
               className="fs-3"
               iconType="solid"
             />
-            {t("AddCluster")}
+            {t("addcategory")}
           </Button>
         }
       />
@@ -246,18 +250,18 @@ const Category = ({ initialcategoryData }: Props) => {
         formData={{
           fields: [
             {
-              label: `${t("entercategoryName")}`,
+              label: `${t("categoryname")}`,
               value: categoryName,
               type: "text",
-              placeholder: `${t("entercategoryName")}`,
+              placeholder: `${t("categoryname")}`,
 
               onChange: (e) => setCategoryName(e.target.value),
             },
             {
-              label: `Sickle Cell Checkup`,
+              label: `${t("appyojna")}`,
               value: appyojna,
               type: "select",
-              placeholder: `Sickle Cell Checkup`,
+              placeholder: `${t("appyojna")}`,
 
               options: [
                 { label: "Yes", value: "Yes" },

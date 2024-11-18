@@ -1,14 +1,14 @@
-
+// components/manage/Clusteradd.tsx
 "use client";
 import React, { useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
-import { Bank, Categorys, SubCategory, TblYojanaType, YojanaMaster, YojanaYear } from "../type";
+import { Bank, Categorys, SubCategory, YojanaYear } from "../type";
 
 import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
 import { toast } from "react-toastify";
-
+// import { validatecategoryName } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
 import { createConfirmation } from "react-confirm";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
@@ -18,65 +18,51 @@ type Props = {
     YojnaYear: YojanaYear[];
     Bankdata: Bank[];
     category: Categorys[];
-    yojnatype: TblYojanaType[];
-    yojnamaster: YojanaMaster[];
 };
 
-const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, yojnamaster }: Props) => {
-    const t = useTranslations("Plans");
+const Parivahan = ({ initialcategoryData, YojnaYear, Bankdata, category }: Props) => {
+    const t = useTranslations("Subcategory");
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [categoryName, setCategoryName] = useState("");
     const [subcategoryName, setSubCategoryName] = useState("");
     const [yojnayear, setYojnaYear] = useState("");
-    const [yojnatyp, setYojnatype] = useState("");
-    const [yojnname, setyojnaname] = useState("");
+    const [bankname, setBankname] = useState("");
     const [amount, setAmount] = useState("");
-
+    const [appyojna, setAppyojna] = useState("No");
     const [error, setError] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
-    const [yojnamasterdata, setYojnamaster] =
-        useState<YojanaMaster[]>(yojnamaster); // State for cluster data
+    const [clusterData, setClusterData] =
+        useState<SubCategory[]>(initialcategoryData); // State for Sub Category data
     const confirm = createConfirmation(ConfirmationDialog);
     const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
         acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
         return acc;
     }, {} as Record<number, string>);
-    const subcat = initialcategoryData.reduce((acc, subcat: SubCategory) => {
-        acc[subcat.sub_category_id] = subcat.sub_category_name; // Assuming taluka has id and name properties
+    const bankdata = Bankdata.reduce((acc, year: Bank) => {
+        acc[year.id] = year.name; // Assuming taluka has id and name properties
         return acc;
     }, {} as Record<number, string>);
-
     const categorydata = category.reduce((acc, year: Categorys) => {
         acc[year.category_id] = year.category_name; // Assuming taluka has id and name properties
         return acc;
     }, {} as Record<number, string>);
-    const yojnatypes = yojnatype.reduce((acc, year: any) => {
-        acc[year.yojana_type_id] = year.yojana_type; // Assuming taluka has id and name properties
-        return acc;
-    }, {} as Record<number, string>);
 
-    const data = yojnamasterdata
-        .map((master) => ({
-            yojana_id: master.yojana_id,
-            category_id: categorydata[master.category_id],
-            categoryid: master.category_id,
-            sub_category_id: subcat[master.sub_category_id],
-            subcategoryid: master.sub_category_id,
-            yojana_name: master.yojana_name,
-            date_ins: master.date_ins,
-            uddesh_swarup: master.uddesh_swarup,
-            patrata: master.patrata,
-            sampark: master.sampark,
-            is_delete: master.is_delete,
-            status: master.status,
-            gat: master.gat,
-            yojana_year_id: yojna_year[master.yojana_year_id],
-            yojanayearid: master.yojana_year_id,
-            yojana_type: yojnatypes[master.yojana_type as any],
-            yojanatype: master.yojana_type,
-            amount: master.amount,
-
+    const data = clusterData
+        .map((subcategory) => ({
+            sub_category_id: subcategory.sub_category_id,
+            category_id: categorydata[subcategory.category_id],
+            categoryid: subcategory.category_id,
+            sub_category_name: subcategory.sub_category_name,
+            bank_id: bankdata[subcategory.bank_id],
+            bankid: subcategory.bank_id,
+            yojana_year_id: yojna_year[subcategory.yojana_year_id],
+            yojanayearid: subcategory.yojana_year_id,
+            amount: subcategory.amount,
+            status: subcategory.status,
+            created_at: subcategory.created_at,
+            updated_at: subcategory.updated_at,
+            for_app: subcategory.for_app,
 
         }))
         .reverse(); // Reverse the order to show the last added items first
@@ -97,17 +83,20 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
             header: `${t("categoryname")}`,
         },
         {
-            accessorKey: "sub_category_id",
+            accessorKey: "sub_category_name",
             header: `${t("subcategoryname")}`,
         },
-
         {
             accessorKey: "yojana_year_id",
             header: `${t("year")}`,
         },
         {
-            accessorKey: "yojana_name",
-            header: `${t("yojnaname")}`,
+            accessorKey: "bank_id",
+            header: `Bankname`,
+        },
+        {
+            accessorKey: "amount",
+            header: `${t("amount")}`,
         },
         {
             accessorKey: "status",
@@ -115,14 +104,9 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
         },
 
         {
-            accessorKey: "yojana_type",
-            header: `${t("yojnatype")}`,
+            accessorKey: "for_app",
+            header: `${t("appyojna")}`,
         },
-        {
-            accessorKey: "amount",
-            header: `${t("amount")}`,
-        },
-
         {
             accessorKey: "actions",
             header: `${t("Action")}`,
@@ -140,7 +124,7 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
                         className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
                             } ms-5`}
                         onClick={() =>
-                            handleDeactivate(row.original.yojana_id, row.original.status)
+                            handleDeactivate(row.original.sub_category_id, row.original.status)
                         }
                     >
                         <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
@@ -156,12 +140,12 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
     const handleDeactivate = async (category_id: any, currentStatus: any) => {
         const confirmMessage =
             currentStatus === "Active"
-                ? "Are you sure you want to deactivate this cluster?"
-                : "Are you sure you want to activate this cluster?";
+                ? "Are you sure you want to deactivate this subCategory ?"
+                : "Are you sure you want to activate this subCategory?";
         const confirmed = await confirm({ confirmation: confirmMessage });
         if (confirmed) {
             try {
-                const response = await fetch(`/api/yojnamaster/delete/${category_id}`, {
+                const response = await fetch(`/api/subcategory/delete/${category_id}`, {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
@@ -173,7 +157,7 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
 
                 if (response.ok) {
                     // Update local state without page reload
-                    setYojnamaster((prevData) =>
+                    setClusterData((prevData) =>
                         prevData.map((cluster) =>
                             cluster.sub_category_id === category_id
                                 ? {
@@ -184,14 +168,14 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
                         )
                     );
                     toast.success(
-                        `Cluster ${currentStatus === "Active" ? "deactivated" : "activated"
+                        `Sub Category ${currentStatus === "Active" ? "deactivated" : "activated"
                         } successfully!`
                     );
                 } else {
-                    toast.error("Failed to change the cluster status.");
+                    toast.error("Failed to change the Sub Category status.");
                 }
             } catch (error) {
-                console.error("Error changing the cluster status:", error);
+                console.error("Error changing the Sub Category status:", error);
                 toast.error("An unexpected error occurred.");
             }
         }
@@ -199,25 +183,30 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        // const errorMsg = validatecategoryName(categoryName);
+        // if (errorMsg) {
+        //   setError(errorMsg);
+        //   return;
+        // }
+
         setIsLoading(true); // Start loading
 
         try {
             const method = updateClusterId ? "PUT" : "POST";
             const url = updateClusterId
-                ? `/api/yojnamaster/update`
-                : `/api/yojnamaster/insert`;
+                ? `/api/subcategory/update`
+                : `/api/subcategory/insert`;
 
             // Prepare the request body
             const requestBody = {
                 category_id: categoryName,
-                sub_category_id: subcategoryName,
-                yojana_type: yojnatyp,
+                sub_category_name: subcategoryName,
                 yojana_year_id: yojnayear,
-                yojana_name: yojnname,
+                bank_id: bankname,
                 amount: amount,
 
 
-                ...(updateClusterId && { yojana_id: updateClusterId }),
+                ...(updateClusterId && { sub_category_id: updateClusterId }),
             };
 
             const response = await fetch(url, {
@@ -230,18 +219,18 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
 
             if (response.ok) {
                 if (updateClusterId) {
-                    setYojnamaster((prevData) =>
+                    setClusterData((prevData) =>
                         prevData.map((cluster) =>
-                            cluster.yojana_id === updateClusterId
-                                ? { ...cluster, sub_category_id: parseInt(subcategoryName), category_id: parseInt(categoryName), yojana_type: yojnatyp, amount: amount as any, yojana_year_id: parseInt(yojnayear), yojana_name: yojnname, }
+                            cluster.sub_category_id === updateClusterId
+                                ? { ...cluster, sub_category_name: subcategoryName, category_id: parseInt(categoryName), bank_id: parseInt(bankname), amount: amount as any, yojana_year_id: parseInt(yojnayear) }
                                 : cluster
                         )
                     );
-                    toast.success("Cluster updated successfully!");
+                    toast.success("Sub Category updated successfully!");
                 } else {
                     const createdData = await response.json();
-                    setYojnamaster((prevData) => [...prevData, createdData]);
-                    toast.success("Cluster inserted successfully!");
+                    setClusterData((prevData) => [...prevData, createdData]);
+                    toast.success("Sub Category inserted successfully!");
                 }
 
                 handleClosePrint();
@@ -258,43 +247,36 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
         }
     };
 
-
-    const reset = () => {
-        setUpdateClusterId(null); // Set ID for updating
-        setCategoryName("")
-        setSubCategoryName("")
-        setYojnaYear("")
-        setYojnatype("")
-        setyojnaname("")
-        setAmount("")
-    }
-    const handleEdit = (yojna: any) => {
-        setUpdateClusterId(yojna.yojana_id); // Set ID for updating
-        setCategoryName(yojna.categoryid)
-        setSubCategoryName(yojna.subcategoryid)
-        setYojnaYear(yojna.yojanayearid)
-        setYojnatype(yojna.yojanatype)
-        setyojnaname(yojna.yojana_name)
-        setAmount(yojna.amount)
+    const handleEdit = (cluster: any) => {
+        setUpdateClusterId(cluster.sub_category_id); // Set ID for updating
+        setCategoryName(cluster.categoryid); // Set current name for editing
+        setSubCategoryName(cluster.sub_category_name)
+        setAmount(cluster.amount)
+        setYojnaYear(cluster.yojanayearid)
+        setBankname(cluster.bankid)
         handleShowPrint(); // Open modal for editing
     };
 
-
-
-
     const handleShowPrint = () => setShowPrintModal(true);
-
+    const reset = () => {
+        setCategoryName("");
+        setSubCategoryName("");
+        setYojnaYear("");
+        setBankname("");
+        setError("");
+        setAmount("");
+        
+    }
     const handleClosePrint = () => {
+        reset();
         setShowPrintModal(false);
         setCategoryName("");
         setError("");
         setUpdateClusterId(null); // Reset update ID when closing
-        reset();
     };
 
     return (
         <div>
-
             <Table
                 data={data}
                 columns={columns}
@@ -309,7 +291,7 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
                             className="fs-3"
                             iconType="solid"
                         />
-                        {t("addplan")}
+                        {t("addsubcategory")}
                     </Button>
                 }
             />
@@ -333,33 +315,12 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
                             placeholder: `${t("categoryname")}`, // Optional placeholder for select input
                         },
                         {
-                            label: `${t("subcategoryname")}`, // Label for the select input
-                            value: subcategoryName, // Use state for the selected subcategory
-                            onChange: (e) => setSubCategoryName(e.target.value), // Function to update selected subcategory
-                            type: "select", // Type of input
-                            options: initialcategoryData
-                                .filter((category: SubCategory) => String(category.category_id) == categoryName) // Filter based on categoryName
-                                .map((category: SubCategory) => ({
-                                    value: category.sub_category_id, // Assuming sub_category_id is the unique identifier for subcategories
-                                    label: category.sub_category_name, // Display name for the select option
-                                })),
-                            placeholder: `${t("subcategoryname")}`, // Optional placeholder for select input
-                        },
-                        {
-                            label: `${t("yojnatype")}`,
-                            value: yojnatyp,
-                            onChange: (e) => setYojnatype(e.target.value),
-                            type: "select",
-                            options: yojnatype
-                                .filter((type) =>
-                                    String(type.sub_category_id) == subcategoryName &&
-                                    String(type.category_id) == categoryName
-                                )
-                                .map((yojna) => ({
-                                    value: yojna.yojana_type_id,
-                                    label: yojna.yojana_type,
-                                })),
-                            placeholder: `${t("yojnatype")}`, // Optional placeholder for select input
+                            label: `${t("subcategoryname")}`,
+                            value: subcategoryName,
+                            type: "text",
+                            placeholder: `${t("subcategoryname")}`,
+
+                            onChange: (e) => setSubCategoryName(e.target.value),
                         },
                         {
                             label: `${t("year")}`,
@@ -372,15 +333,19 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
                             })),
                             placeholder: `${t("year")}`, // Optional placeholder for select input
                         },
+
+
                         {
-                            label: `${t("yojnaname")}`,
-                            value: yojnname,
-                            type: "text",
-                            placeholder: `${t("yojnaname")}`,
-
-                            onChange: (e) => setyojnaname(e.target.value),
+                            label: `${t("Bankname")}`,
+                            value: bankname,
+                            onChange: (e) => setBankname(e.target.value),
+                            type: "select",
+                            options: Bankdata.map((Bank: Bank) => ({
+                                value: Bank.id,
+                                label: Bank.name,
+                            })),
+                            placeholder: `${t("Bankname")}`, // Optional placeholder for select input
                         },
-
                         {
                             label: `${t("amount")}`,
                             value: amount,
@@ -389,8 +354,6 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
 
                             onChange: (e) => setAmount(e.target.value),
                         },
-
-
                     ],
                     error,
                 }}
@@ -410,4 +373,4 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
     );
 };
 
-export default Plans;
+export default Parivahan;

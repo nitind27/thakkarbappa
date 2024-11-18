@@ -374,7 +374,7 @@ model yojnatype {
   yojana_type       String   @db.VarChar(100)
   status            String   @default("Active") @db.VarChar(10)
   ins_date_time     DateTime
-  update_date_time  DateTime
+  update_date_time  DateTime?
 
   @@map("tbl_yojana_type")
 }
