@@ -65,9 +65,8 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
@@ -111,15 +110,13 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
             )
           );
           toast.success(
-            `Suvidha ${
-              newStatus === "Active" ? "activated" : "deactivated"
+            `Suvidha ${newStatus === "Active" ? "activated" : "deactivated"
             } successfully!`
           );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the Suvidha status: ${
-              errorData.error || "Unknown error"
+            `Failed to change the Suvidha status: ${errorData.error || "Unknown error"
             }`
           );
         }
@@ -141,11 +138,11 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const errorMsg = validateSuvidhaname(suvidhaName);
-    if (errorMsg) {
-      setError(errorMsg);
-      return;
-    }
+    // const errorMsg = validateSuvidhaname(suvidhaName);
+    // if (errorMsg) {
+    //   setError(errorMsg);
+    //   return;
+    // }
     setIsLoading(true); // Start loading
 
     try {
@@ -185,8 +182,7 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
       } else {
         const errorData = await response.json();
         toast.error(
-          `Failed to ${suvidhaid ? "update" : "insert"} Suvidha: ${
-            errorData.message || "Unknown error"
+          `Failed to ${suvidhaid ? "update" : "insert"} Suvidha: ${errorData.message || "Unknown error"
           }`
         );
       }
@@ -234,9 +230,10 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
             {
               label: `${t("entersuvidhaname")}`, // Updated label for clarity
               value: suvidhaName,
+              required: true,
               type: "text",
               placeholder: `${t("entersuvidhaname")}`, // Updated placeholder for clarity
-              onChange: (e) => setSuvidhaName(e.target.value),
+              onChange: (e: any) => setSuvidhaName(e.target.value),
             },
           ],
           error,
@@ -247,8 +244,8 @@ const Suvidha = ({ initialfacilitydata }: Props) => {
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />

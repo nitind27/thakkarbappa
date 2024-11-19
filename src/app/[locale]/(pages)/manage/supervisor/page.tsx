@@ -1,5 +1,6 @@
 // app/page.tsx
 
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import Supervisortitle from "@/app/[locale]/title/supervisortitle";
 import School from "@/components/manage/School";
 import Supervisor from "@/components/manage/Supervisor";
@@ -25,10 +26,17 @@ const Page = async () => {
       </div>
     );
   }
+  const breadcrumbs = [
 
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Vaparkarta', href: '/manage/supervisor' },
+  ];
   return (
     <div>
-      <h1 className="card card-body mt-5"><Supervisortitle /></h1>
+      <div className="mt-5">
+        <TitleCard breadcrumbs={breadcrumbs} />
+      </div>
+      <h1 className="card card-body"><Supervisortitle /></h1>
       <Supervisor initialSupervisorlData={Supervisordata} UserCategory={UserCategory} Padname={Padname} />
     </div>
   );

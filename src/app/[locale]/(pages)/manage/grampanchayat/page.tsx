@@ -1,3 +1,4 @@
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import Grampanchayatitle from "@/app/[locale]/title/grampanchayat";
 
 import Grampanchayat from "@/components/manage/Grampanchayat";
@@ -25,11 +26,19 @@ const page = async () => {
     );
   }
 
+
+  const breadcrumbs = [
+
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Taluka', href: '/manage/town' },
+  ];
   // Pass both grampanchayat and talukas to the Grampanchayat component
   return (
     <div>
-      
-      <h1 className="card card-body mt-5"><Grampanchayatitle /></h1>
+      <div className="mt-5">
+        <TitleCard breadcrumbs={breadcrumbs} />
+      </div>
+      <h1 className="card card-body"><Grampanchayatitle /></h1>
       <Grampanchayat grampanchayat={grampanchayat} talukas={talukas} />
     </div>
   );

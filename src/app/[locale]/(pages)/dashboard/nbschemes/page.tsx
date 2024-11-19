@@ -1,3 +1,4 @@
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import NbSchemes from "@/components/Dashboard/Nbscheme/NbSchemes";
 import { YojanaYear } from "@/components/type";
 import prisma from "@/lib/db";
@@ -21,9 +22,16 @@ const page = async () => {
     const yearB = parseInt(b.yojana_year.split("-")[0]); // Extract the starting year
     return yearB - yearA; // Sort in descending order
   });
+  const breadcrumbs = [
+
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'nbschemes', href: '/dashboard/nbschemes' },
+
+  ];
 
   return (
     <div>
+      <TitleCard breadcrumbs={breadcrumbs} />
       <div className="container mt-5">
         <div className="row col-lg-12">
           {yojnayear.map((school, index) => {

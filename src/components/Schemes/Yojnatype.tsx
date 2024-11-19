@@ -274,7 +274,7 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
                         {
                             label: `${t("categoryname")}`,
                             value: categoryName,
-                            onChange: (e) => setCategoryName(e.target.value),
+                            onChange: (e : any) => setCategoryName(e.target.value),
                             type: "select",
                             options: category.map((category: Categorys) => ({
                                 value: category.category_id,
@@ -285,7 +285,7 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
                         {
                             label: `${t("subcategoryname")}`, // Label for the select input
                             value: subcategoryName, // Use state for the selected subcategory
-                            onChange: (e) => setSubCategoryName(e.target.value), // Function to update selected subcategory
+                            onChange: (e : any) => setSubCategoryName(e.target.value), // Function to update selected subcategory
                             type: "select", // Type of input
                             options: initialcategoryData
                                 .filter((category: SubCategory) => String(category.category_id) == categoryName) // Filter based on categoryName
@@ -299,9 +299,10 @@ const Yojnatype = ({ initialcategoryData, yojnatype, Bankdata, category }: Props
                             label: `${t("yojnatype")}`,
                             value: yojnatypes,
                             type: "text",
+                            required: true,
                             placeholder: `${t("yojnatype")}`,
 
-                            onChange: (e) => setYojnaType(e.target.value),
+                            onChange: (e : any) => setYojnaType(e.target.value),
                         },
 
 

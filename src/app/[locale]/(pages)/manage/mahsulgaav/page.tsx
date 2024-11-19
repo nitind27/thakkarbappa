@@ -1,3 +1,4 @@
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import Mahasulgaavtitle from "@/app/[locale]/title/mahasulgaav";
 
 import Mahsulgaav from "@/components/manage/Mahsulgaav";
@@ -9,10 +10,10 @@ import React from "react";
 
 const page = async () => {
   let Villages: Villages[] = [];
-  
+
   let talukas: talukasdata[] = []; // To store the fetched talukasData
   let grampanchayat: grampanchayat[] = [];
-  
+
   let loading = true; // Initialize loading state
 
   try {
@@ -30,9 +31,17 @@ const page = async () => {
     );
   }
 
+  const breadcrumbs = [
+
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Mahsulgaav', href: '/manage/mahsulgaav' },
+  ];
   return (
     <div>
-      <h1 className="card card-body mt-5"><Mahasulgaavtitle /></h1>
+      <div className="mt-5">
+        <TitleCard breadcrumbs={breadcrumbs} />
+      </div>
+      <h1 className="card card-body "><Mahasulgaavtitle /></h1>
       <Mahsulgaav
         Villages={Villages}
         talukas={talukas}

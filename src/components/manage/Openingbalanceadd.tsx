@@ -91,9 +91,8 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.open_bal_id, row.original.status)
             }
@@ -136,15 +135,14 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
             prevData.map((cluster) =>
               cluster.open_bal_id === balanceid
                 ? {
-                    ...cluster,
-                    status: currentStatus === "Active" ? "Deactive" : "Active",
-                  }
+                  ...cluster,
+                  status: currentStatus === "Active" ? "Deactive" : "Active",
+                }
                 : cluster
             )
           );
           toast.success(
-            `Cluster ${
-              currentStatus === "Active" ? "deactivated" : "activated"
+            `Cluster ${currentStatus === "Active" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
@@ -160,12 +158,12 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const errorMsg = validationOpenBalance(bankyear, openbalance);
+    // const errorMsg = validationOpenBalance(bankyear, openbalance);
 
-    if (errorMsg.length > 0) {
-      setError(errorMsg.join("<br />"));
-      return;
-    }
+    // if (errorMsg.length > 0) {
+    //   setError(errorMsg.join("<br />"));
+    //   return;
+    // }
     setIsLoading(true); // Start loading
 
     // Ensure the id is included for updates
@@ -212,8 +210,7 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
       } else {
         const data = await response.json();
         alert(
-          `Failed to ${updateClusterId ? "update" : "insert"} Village: ${
-            data.error
+          `Failed to ${updateClusterId ? "update" : "insert"} Village: ${data.error
           }`
         );
       }
@@ -273,7 +270,7 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
             {
               label: `${t("selectyear")}`,
               value: bankyear,
-              onChange: (e) => setbankYear(e.target.value),
+              onChange: (e: any) => setbankYear(e.target.value),
               type: "select",
               options: YojnaYear.map((year: YojanaYear) => ({
                 value: year.yojana_year_id,
@@ -284,10 +281,11 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
             {
               label: `${t("enteramount")}`,
               value: openbalance,
+              required: true,
               type: "text",
               placeholder: `${t("enteramount")}`,
 
-              onChange: (e) => setOpenBalanceAdd(e.target.value),
+              onChange: (e: any) => setOpenBalanceAdd(e.target.value),
             },
           ],
           error,
@@ -298,8 +296,8 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />

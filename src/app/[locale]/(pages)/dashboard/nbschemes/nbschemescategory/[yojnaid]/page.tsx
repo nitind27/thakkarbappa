@@ -1,3 +1,4 @@
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import Cluster from "@/app/[locale]/title/cluster";
 import Nbschemescard from "@/components/Dashboard/Nbscheme/Nbschemescard";
 import CardSchool from "@/components/Dashboard/SchoolManage/CardSchool";
@@ -23,15 +24,25 @@ const Page = async ({ params }: any) => {
       </div>
     );
   }
+  const breadcrumbs = [
 
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Nbschemes', href: '/dashboard/nbschemes' },
+    { label: 'NbSchmescategory', href: `/dashboard/nbschemes/nbschemescategory/${yojnaid}` },
+
+  ];
   // Filter yojnamaster with additional conditions
   const filteryojnayear = yojnayear
     .filter((y) => y.yojana_year_id == yojnaid)
     .map((y) => y.yojana_year);
   return (
     <div>
+      <div className="mt-5">
+
+        <TitleCard breadcrumbs={breadcrumbs} />
+      </div>
       <div className="container">
-        <h3 className="card card-body mt-5 col-lg-12">
+        <h3 className="card card-body  col-lg-12">
           {" "}
           वर्ष {filteryojnayear}
         </h3>

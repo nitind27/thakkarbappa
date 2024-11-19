@@ -98,11 +98,10 @@ const Supervisor = ({
               {t("edit")}
             </button>
             <button
-              className={`btn btn-sm ${
-                row.original.sup_status === "Active"
-                  ? "btn-danger"
-                  : "btn-warning"
-              } ms-5`}
+              className={`btn btn-sm ${row.original.sup_status === "Active"
+                ? "btn-danger"
+                : "btn-warning"
+                } ms-5`}
               onClick={() =>
                 handleDeactivate(row.original.sup_id, row.original.sup_status)
               }
@@ -144,16 +143,15 @@ const Supervisor = ({
             prevData.map((cluster) =>
               cluster.sup_id === supervisorid
                 ? {
-                    ...cluster,
-                    sup_status:
-                      currentStatus === "Active" ? "Inactive" : "Active",
-                  } // Consistent key
+                  ...cluster,
+                  sup_status:
+                    currentStatus === "Active" ? "Inactive" : "Active",
+                } // Consistent key
                 : cluster
             )
           );
           toast.success(
-            `Cluster ${
-              currentStatus === "Active" ? "deactivated" : "activated"
+            `Cluster ${currentStatus === "Active" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
@@ -188,21 +186,21 @@ const Supervisor = ({
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const errorMsg = validateFormsupervisor(
-      username,
-      PadName,
-      Category,
-      contactNo,
-      Password,
-      address
-    );
+    // const errorMsg = validateFormsupervisor(
+    //   username,
+    //   PadName,
+    //   Category,
+    //   contactNo,
+    //   Password,
+    //   address
+    // );
 
-    if (errorMsg.length > 0) {
-      // Set error by joining messages with <br /> for multiline display
-      setError(errorMsg.join("<br />"));
-      return;
-    }
-    setIsLoading(true); // Start loading
+    // if (errorMsg.length > 0) {
+    //   // Set error by joining messages with <br /> for multiline display
+    //   setError(errorMsg.join("<br />"));
+    //   return;
+    // }
+    // setIsLoading(true); // Start loading
 
     try {
       const method = updateTownId ? "PUT" : "POST";
@@ -250,8 +248,7 @@ const Supervisor = ({
       } else {
         const data = await response.json();
         toast.error(
-          `Failed to ${updateTownId ? "update" : "insert"} supervisor: ${
-            data.error
+          `Failed to ${updateTownId ? "update" : "insert"} supervisor: ${data.error
           }`
         );
       }
@@ -310,13 +307,15 @@ const Supervisor = ({
             {
               label: `${t("enterusername")}`,
               value: username,
+              required: true,
               type: "text",
-              onChange: (e) => setUserName(e.target.value),
+              onChange: (e: any) => setUserName(e.target.value),
             },
             {
               label: `${t("enterpadname")}`,
               value: PadName,
-              onChange: (e) => setPadName(e.target.value),
+              required: true,
+              onChange: (e: any) => setPadName(e.target.value),
               type: "select",
               options: Padname.map((pn) => ({
                 value: pn.padnam_id,
@@ -326,7 +325,8 @@ const Supervisor = ({
             {
               label: `${t("entercategory")}`,
               value: Category,
-              onChange: (e) => setCategory(e.target.value),
+              required: true,
+              onChange: (e: any) => setCategory(e.target.value),
               type: "select",
               options: UserCategory.map((category) => ({
                 value: category.user_cat_id,
@@ -336,10 +336,11 @@ const Supervisor = ({
             {
               label: `${t("entercontactno")}`,
               value: contactNo,
+              required: true,
               type: "text",
-              // onChange: (e) => setContactNo(e.target.value),
+              // onChange: (e : any) => setContactNo(e.target.value),
 
-              onChange: (e) => {
+              onChange: (e: any) => {
                 // Ensure that only digits are allowed and limit to 11 digits
                 const inputValue = e.target.value;
                 if (/^\d*$/.test(inputValue) && inputValue.length <= 10) {
@@ -350,14 +351,16 @@ const Supervisor = ({
             {
               label: `${t("enterpassword")}`,
               value: Password,
+              required: true,
               type: "text",
-              onChange: (e) => setPassword(e.target.value),
+              onChange: (e: any) => setPassword(e.target.value),
             },
             {
               label: `${t("enteraddress")}`,
               value: address,
+              required: true,
               type: "text",
-              onChange: (e) => setAddress(e.target.value),
+              onChange: (e: any) => setAddress(e.target.value),
             },
           ],
           error,
@@ -368,8 +371,8 @@ const Supervisor = ({
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />

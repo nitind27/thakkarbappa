@@ -1,5 +1,6 @@
 // app/page.tsx
 
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import Representativetitle from "@/app/[locale]/title/representativetitle";
 import Representative from "@/components/manage/Representative";
 import { Representative as RepresentativeType } from "@/components/type"; // Type import
@@ -21,8 +22,16 @@ const Page = async () => {
     );
   }
 
+  const breadcrumbs = [
+
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Pratinidhi', href: '/manage/representative' },
+  ];
   return (
     <div>
+      <div className="mt-5">
+        <TitleCard breadcrumbs={breadcrumbs} />
+      </div>
       <h1 className="card card-body mt-5"><Representativetitle /></h1>
       <Representative initialRepresentative={representatives} />
     </div>

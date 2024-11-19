@@ -1,3 +1,4 @@
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import Cluster from "@/app/[locale]/title/cluster";
 import CardSchool from "@/components/Dashboard/SchoolManage/CardSchool";
 import { Patsankhya, Schooldata, StudentData } from "@/components/type";
@@ -32,9 +33,16 @@ const Page = async ({ params }: any) => {
   const filteredStudents = studentdata.filter(
     (student) => student.school_id == indexId // Use the current school's ID
   );
+  const breadcrumbs = [
 
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'School', href: '/dashboard/school' },
+    { label: 'Standard wise', href: `/dashboard/schoolwisestudents/${members}/${indexId}` },
+
+  ];
   return (
     <div>
+      <TitleCard breadcrumbs={breadcrumbs} />
       <div className="container">
         <h3 className="card card-body mt-5 col-lg-12">
           {schoolname}-{filteredStudents.length}/{totalstudent}

@@ -10,6 +10,7 @@ import { validateTalukaName } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
 import { createConfirmation } from "react-confirm";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
+import Loader from "@/common/Loader ";
 
 type Props = {
   talukasdata: talukasdata[];
@@ -62,9 +63,8 @@ const TalukaData = ({ talukasdata }: Props) => {
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
@@ -105,15 +105,13 @@ const TalukaData = ({ talukasdata }: Props) => {
             )
           );
           toast.success(
-            `Cluster ${
-              newStatus === "Active" ? "activated" : "deactivated"
+            `Cluster ${newStatus === "Active" ? "activated" : "deactivated"
             } successfully!`
           );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the cluster status: ${
-              errorData.error || "Unknown error"
+            `Failed to change the cluster status: ${errorData.error || "Unknown error"
             }`
           );
         }
@@ -135,11 +133,11 @@ const TalukaData = ({ talukasdata }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const errorMsg = validateTalukaName(townName);
-    if (errorMsg) {
-      setError(errorMsg);
-      return;
-    }
+    // const errorMsg = validateTalukaName(townName);
+    // if (errorMsg) {
+    //   setError(errorMsg);
+    //   return;
+    // }
     setIsLoading(true); // Start loading
     try {
       const method = updateTownId ? "PUT" : "POST";
@@ -181,8 +179,7 @@ const TalukaData = ({ talukasdata }: Props) => {
       } else {
         const data = await response.json();
         toast.error(
-          `Failed to ${updateTownId ? "update" : "insert"} Taluka: ${
-            data.error
+          `Failed to ${updateTownId ? "update" : "insert"} Taluka: ${data.error
           }`
         );
       }
@@ -232,9 +229,10 @@ const TalukaData = ({ talukasdata }: Props) => {
               label: `${t("entertalukaname")}`,
               value: townName,
               type: "text",
+              required: true,
               placeholder: `${t("entertalukaname")}`,
               error,
-              onChange: (e) => setTownName(e.target.value),
+              onChange: (e: any) => setTownName(e.target.value),
             },
           ],
         }}
@@ -244,8 +242,8 @@ const TalukaData = ({ talukasdata }: Props) => {
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />

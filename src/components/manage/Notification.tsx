@@ -128,9 +128,8 @@ const Notification = ({ initialnotificationdata }: Props) => {
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Start" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Start" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.notifi_id, row.original.status)
             }
@@ -169,15 +168,14 @@ const Notification = ({ initialnotificationdata }: Props) => {
             prevData.map((cluster: any) =>
               cluster.notifi_id === id
                 ? {
-                    ...cluster,
-                    status: currentStatus === "Start" ? "Stop" : "Start",
-                  }
+                  ...cluster,
+                  status: currentStatus === "Start" ? "Stop" : "Start",
+                }
                 : cluster
             )
           );
           toast.success(
-            `Notification ${
-              currentStatus === "Start" ? "deactivated" : "activated"
+            `Notification ${currentStatus === "Start" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
@@ -337,7 +335,7 @@ const Notification = ({ initialnotificationdata }: Props) => {
               style={{
                 width: "150px", // Set a fixed width for the circular effect
                 height: "150px", // Set a fixed height equal to width
-                borderRadius: "50%", // Make the image circular
+                borderRadius: "5%", // Make the image circular
                 objectFit: "cover", // Ensure the image covers the circular area
                 overflow: "hidden", // Hide overflow to keep the circle shape
               }}
@@ -357,30 +355,33 @@ const Notification = ({ initialnotificationdata }: Props) => {
                 { label: "News", value: "News" },
                 // Add other options here if needed
               ],
-              onChange: (e) => setNotificationType(e.target.value),
+              onChange: (e: any) => setNotificationType(e.target.value),
             },
             {
               label: `${t("Detail")}`,
               value: details,
               type: "text",
+              required: true,
               placeholder: `${t("Detail")}`,
 
-              onChange: (e) => setDetails(e.target.value),
+              onChange: (e: any) => setDetails(e.target.value),
             },
             {
               label: `${t("link")}`,
               value: links,
+              required: true,
               type: "text",
               placeholder: `${t("link")}`,
 
-              onChange: (e) => setLinks(e.target.value),
+              onChange: (e: any) => setLinks(e.target.value),
             },
             {
               label: `${t("new_icon")}`,
               value: newicon,
               type: "select",
+
               placeholder: `Select Icon`,
-              onChange: (e) => setNewicon(e.target.value), // Keep this to set townName
+              onChange: (e: any) => setNewicon(e.target.value), // Keep this to set townName
               options: [
                 { label: "Yes", value: "Yes" },
                 { label: "No", value: "No" },
@@ -391,7 +392,7 @@ const Notification = ({ initialnotificationdata }: Props) => {
               value: header,
               type: "select",
               placeholder: `Select Header`,
-              onChange: (e) => setHeader(e.target.value), // Keep this to set townName
+              onChange: (e: any) => setHeader(e.target.value), // Keep this to set townName
               options: [
                 { label: "Yes", value: "Yes" },
                 { label: "No", value: "No" },
@@ -414,8 +415,8 @@ const Notification = ({ initialnotificationdata }: Props) => {
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />

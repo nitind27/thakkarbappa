@@ -324,7 +324,7 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
                         {
                             label: `${t("categoryname")}`,
                             value: categoryName,
-                            onChange: (e) => setCategoryName(e.target.value),
+                            onChange: (e : any) => setCategoryName(e.target.value),
                             type: "select",
                             options: category.map((category: Categorys) => ({
                                 value: category.category_id,
@@ -335,7 +335,7 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
                         {
                             label: `${t("subcategoryname")}`, // Label for the select input
                             value: subcategoryName, // Use state for the selected subcategory
-                            onChange: (e) => setSubCategoryName(e.target.value), // Function to update selected subcategory
+                            onChange: (e : any) => setSubCategoryName(e.target.value), // Function to update selected subcategory
                             type: "select", // Type of input
                             options: initialcategoryData
                                 .filter((category: SubCategory) => String(category.category_id) == categoryName) // Filter based on categoryName
@@ -348,7 +348,7 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
                         {
                             label: `${t("yojnatype")}`,
                             value: yojnatyp,
-                            onChange: (e) => setYojnatype(e.target.value),
+                            onChange: (e : any) => setYojnatype(e.target.value),
                             type: "select",
                             options: yojnatype
                                 .filter((type) =>
@@ -364,7 +364,7 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
                         {
                             label: `${t("year")}`,
                             value: yojnayear,
-                            onChange: (e) => setYojnaYear(e.target.value),
+                            onChange: (e : any) => setYojnaYear(e.target.value),
                             type: "select",
                             options: YojnaYear.map((year: YojanaYear) => ({
                                 value: year.yojana_year_id,
@@ -377,8 +377,8 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
                             value: yojnname,
                             type: "text",
                             placeholder: `${t("yojnaname")}`,
-
-                            onChange: (e) => setyojnaname(e.target.value),
+                            required: true,
+                            onChange: (e : any) => setyojnaname(e.target.value),
                         },
 
                         {
@@ -386,8 +386,8 @@ const Plans = ({ initialcategoryData, YojnaYear, Bankdata, category, yojnatype, 
                             value: amount,
                             type: "text",
                             placeholder: `${t("amount")}`,
-
-                            onChange: (e) => setAmount(e.target.value),
+                            required: true,
+                            onChange: (e : any) => setAmount(e.target.value),
                         },
 
 

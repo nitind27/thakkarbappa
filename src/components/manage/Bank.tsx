@@ -92,9 +92,8 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
@@ -140,15 +139,13 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
             )
           );
           toast.success(
-            `Cluster ${
-              newStatus === "Active" ? "activated" : "deactivated"
+            `Cluster ${newStatus === "Active" ? "activated" : "deactivated"
             } successfully!`
           );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the cluster status: ${
-              errorData.error || "Unknown error"
+            `Failed to change the cluster status: ${errorData.error || "Unknown error"
             }`
           );
         }
@@ -179,17 +176,17 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const errorMsg = validationBank(
-      bankName,
-      accountNo,
-      yojanayearid,
-      String(amount)
-    );
+    // const errorMsg = validationBank(
+    //   bankName,
+    //   accountNo,
+    //   yojanayearid,
+    //   String(amount)
+    // );
 
-    if (errorMsg.length > 0) {
-      setError(errorMsg.join("<br />"));
-      return;
-    }
+    // if (errorMsg.length > 0) {
+    //   setError(errorMsg.join("<br />"));
+    //   return;
+    // }
     setIsLoading(true); // Start loading
 
     // Ensure the id is included for updates
@@ -234,8 +231,7 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
       } else {
         const data = await response.json();
         alert(
-          `Failed to ${updateTownId ? "update" : "insert"} Village: ${
-            data.error
+          `Failed to ${updateTownId ? "update" : "insert"} Village: ${data.error
           }`
         );
       }
@@ -294,7 +290,7 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
             {
               label: `${t("selectyear")}`,
               value: yojanayearid,
-              onChange: (e) => setyojanayearid(e.target.value),
+              onChange: (e: any) => setyojanayearid(e.target.value),
               type: "select",
               options: YojnaYear.map((year: YojanaYear) => ({
                 value: year.yojana_year_id,
@@ -306,17 +302,19 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
               label: `${t("enterbankname")}`,
               value: bankName, // Ensure this uses bankName
               type: "text",
+              required: true,
               placeholder: `${t("enterbankname")}`,
-              onChange: (e) => setBankName(e.target.value), // Keep this to set bankName
+              onChange: (e: any) => setBankName(e.target.value), // Keep this to set bankName
             },
 
             {
               label: `${t("enteraccountno")}`,
               value: accountNo || "",
               type: "text",
+              required: true,
               placeholder: `${t("enteraccountno")}`,
 
-              onChange: (e) => {
+              onChange: (e: any) => {
                 // Ensure that only digits are allowed and limit to 11 digits
                 const inputValue = e.target.value;
                 if (/^\d*$/.test(inputValue) && inputValue.length <= 16) {
@@ -328,9 +326,10 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
             {
               label: `${t("enteramount")}`,
               value: amount || "",
+              required: true,
               type: "text",
               placeholder: `${t("enteramount")}`,
-              onChange: (e) => setamount(e.target.value),
+              onChange: (e: any) => setamount(e.target.value),
             },
           ],
           error,
@@ -341,8 +340,8 @@ const BankData = ({ initialBankData, YojnaYear }: Props) => {
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />

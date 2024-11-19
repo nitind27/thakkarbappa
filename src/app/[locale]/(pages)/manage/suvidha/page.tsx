@@ -1,9 +1,10 @@
 // app/page.tsx
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import Suvidhatitle from "@/app/[locale]/title/suvidhatitle";
 
 
 import Suvidha from "@/components/manage/Suvidha";
-import {  Facility } from "@/components/type";
+import { Facility } from "@/components/type";
 import prisma from "@/lib/db";
 import React from "react";
 
@@ -20,9 +21,16 @@ const Page = async () => {
       </div>
     );
   }
+  const breadcrumbs = [
 
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Suvidha', href: '/manage/suvidha' },
+  ];
   return (
     <div>
+      <div className="mt-5">
+        <TitleCard breadcrumbs={breadcrumbs} />
+      </div>
       <h1 className="card card-body mt-5"><Suvidhatitle /></h1>
       <Suvidha initialfacilitydata={Facilitydata} />
     </div>

@@ -89,7 +89,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
       accessorKey: "actions",
       header: `${t('Action')}`,
       cell: ({ row }: any) => (
-        <div style={{ display: "flex",whiteSpace:"nowrap" }}>
+        <div style={{ display: "flex", whiteSpace: "nowrap" }}>
           <button
             className="btn btn-sm btn-primary"
             onClick={() => handleEdit(row.original)}
@@ -194,22 +194,22 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Validate fields and get error messages
-    const errorMsg = validateMasulGaav(
-      townName,
-      nameMarathi,
-      String(talukaId),
-      String(population),
-      String(triblePopulation),
-      String(arthikMaryada),
-      villageType
-    );
+    // // Validate fields and get error messages
+    // const errorMsg = validateMasulGaav(
+    //   townName,
+    //   nameMarathi,
+    //   String(talukaId),
+    //   String(population),
+    //   String(triblePopulation),
+    //   String(arthikMaryada),
+    //   villageType
+    // );
 
-    // If there are error messages, set them and prevent submission
-    if (errorMsg.length > 0) {
-      setError(errorMsg.join("<br />"));
-      return;
-    }
+    // // If there are error messages, set them and prevent submission
+    // if (errorMsg.length > 0) {
+    //   setError(errorMsg.join("<br />"));
+    //   return;
+    // }
     setIsLoading(true); // Start loading
 
     try {
@@ -265,10 +265,10 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
     } catch (error) {
       console.error("Error during operation:", error);
       toast.error("An unexpected error occurred.");
-    }  finally {
+    } finally {
       setIsLoading(false); // End loading
     }
-  
+
   };
 
 
@@ -292,14 +292,14 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
         data={data}
         columns={columns}
         Button={
-            <Button
+          <Button
             variant="primary"
             onClick={() => {
               resetForm(); // Reset for new entry
               handleShowPrint();
             }}
             className="btn btn-sm"
-           
+
           >
             <KTIcon iconName={"plus-circle"} className="fs-3" iconType="solid" />
             {t('addmahasulgaav')}
@@ -321,7 +321,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
             {
               label: `${t('selecttaluka')}`,
               value: talukaId || "", // Default value when updating
-              onChange: (e) => setTalukaId(e.target.value),
+              onChange: (e: any) => setTalukaId(e.target.value),
               type: "select",
               options: talukas.map((taluka: any) => ({
                 value: taluka.id,
@@ -336,7 +336,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
               value: townName, // Ensure this uses townName
               type: "select",
               placeholder: `${t('selectmahasul')}`,
-              onChange: (e) => setTownName(e.target.value), // Keep this to set townName
+              onChange: (e: any) => setTownName(e.target.value), // Keep this to set townName
               options: filteredGrampanchayat.map((gp: any) => ({
                 value: gp.id,
                 label: gp.name,
@@ -347,15 +347,16 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
               label: `${t('entermahasulgaav')}`,
               value: nameMarathi || "",
               type: "text",
+              required: true,
               placeholder: `${t('entermahasulgaav')}`,
-              onChange: (e) => setNameMarathi(e.target.value),
+              onChange: (e: any) => setNameMarathi(e.target.value),
             },
             {
               label: `${t('entervillagetype')}`,
               value: villageType,
               type: "select",
               placeholder: `${t('entervillagetype')}`,
-              onChange: (e) => setVillageType(e.target.value), // Keep this to set townName
+              onChange: (e: any) => setVillageType(e.target.value), // Keep this to set townName
               options: [
                 { label: "TCP", value: "TCP" },
                 { label: "OTSP", value: "OTSP" },
@@ -367,22 +368,25 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
               label: `${t('entertotalpopulation')}`,
               value: population || "",
               type: "text",
+              required: true,
               placeholder: `${t('entertotalpopulation')}`,
-              onChange: (e) => setPopulation(e.target.value),
+              onChange: (e: any) => setPopulation(e.target.value),
             },
             {
               label: `${t('entertribalepopulation')}`,
               value: triblePopulation || "",
               type: "text",
+              required: true,
               placeholder: `${t('entertribalepopulation')}`,
-              onChange: (e) => setTriblePopulation(e.target.value),
+              onChange: (e: any) => setTriblePopulation(e.target.value),
             },
             {
               label: `${t('enterincome')}`,
               value: arthikMaryada || "",
               type: "text",
+              required: true,
               placeholder: `${t('enterincome')}`,
-              onChange: (e) => setArthikMaryada(e.target.value),
+              onChange: (e: any) => setArthikMaryada(e.target.value),
             },
           ],
           error,
@@ -393,8 +397,8 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />

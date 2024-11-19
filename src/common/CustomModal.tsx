@@ -11,24 +11,10 @@ type FormField = {
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
-  type: "text" | "select" | "file" | "date";
+  type: "text" | "select" | "file" | "date" | "checkbox" | "email"; // Added email type
   options?: { value: string | number; label: string }[];
   className?: string; // Optional className property
-};
-
-type CustomModalProps = {
-  show: boolean;
-  handleClose: () => void;
-  handleSubmit: (event: React.FormEvent) => void;
-  title: string;
-  imagepriview?: any;
-  formData: {
-    fields: FormField[];
-    error?: string;
-  };
-  submitButtonLabel?: string;
-  disabledButton?: boolean;
-  size?: any; // Size prop to determine grid layout
+  required?: boolean; // New property to indicate if field is required
 };
 
 // Enhanced validation function with conditional logic
@@ -36,12 +22,29 @@ const validateForm = (fields: FormField[]) => {
   const errors: { [key: string]: string } = {};
 
   fields.forEach((field) => {
-    // Required field validation
-    if (!field.value) {
+    // Check if field is required and validate accordingly
+    if (field.required && !field.value) {
       errors[field.label] = `${field.label} is required`;
     }
+    // Validate text fields for alphanumeric characters including Marathi and other languages
+    if (field.type === "text" && typeof field.value === 'string') {
+      // Regex for alphanumeric characters including Devanagari script
+      const regex = /^[\p{L}\p{N}\u0900-\u097F]*$/u; // \u0900-\u097F covers the Devanagari Unicode range
+      if (!regex.test(field.value)) {
+        errors[field.label] = `${field.label} can only contain alphanumeric characters including Marathi.`;
+      }
+    }
 
-    // Example of conditional validation
+
+    // Validate email format
+    if (field.type === "email" && typeof field.value === 'string') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(field.value)) {
+        errors[field.label] = `Please enter a valid email address`;
+      }
+    }
+
+    // Example of conditional validation for population input
     if (field.label === "Enter Population" && typeof field.value === 'string') {
       const populationValue = parseInt(field.value, 10);
       if (isNaN(populationValue) || populationValue <= 0) {
@@ -49,15 +52,26 @@ const validateForm = (fields: FormField[]) => {
       }
     }
 
-    if (field.label === "Select Taluka" && field.value === "") {
-      errors[field.label] = "Please select a taluka";
+    // Validate select box
+    if (field.type === "select" && field.value === "") {
+      errors[field.label] = "Please select an option";
+    }
+
+    // Validate file input (if required)
+    if (field.type === "file" && field.required && !field.value) {
+      errors[field.label] = `${field.label} is required`;
+    }
+
+    // Validate checkbox input (if required)
+    if (field.type === "checkbox" && field.required && !(field.value as unknown as boolean)) {
+      errors[field.label] = `${field.label} must be checked`;
     }
   });
 
   return errors;
 };
 
-const CustomModal: React.FC<CustomModalProps> = ({
+const CustomModal: React.FC<any> = ({
   show,
   handleClose,
   handleSubmit,
@@ -99,7 +113,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
         </span>
         <Form onSubmit={onSubmit}>
           <div className="row">
-            {formData.fields.map((field, index) => (
+            {formData.fields.map((field: any, index: any) => (
               <div className={field.className || gridClass} key={index}>
                 <Form.Group controlId={`formField${index}`}>
                   <Form.Label>{field.label}</Form.Label>
@@ -107,6 +121,14 @@ const CustomModal: React.FC<CustomModalProps> = ({
                   {field.type === "text" ? (
                     <Form.Control
                       type="text"
+                      value={field.value as string}
+                      onChange={field.onChange as any}
+                      placeholder={field.placeholder}
+                      isInvalid={!!formErrors[field.label]}
+                    />
+                  ) : field.type === "email" ? (
+                    <Form.Control
+                      type="email"
                       value={field.value as string}
                       onChange={field.onChange as any}
                       placeholder={field.placeholder}
@@ -122,31 +144,22 @@ const CustomModal: React.FC<CustomModalProps> = ({
                       <option value="">
                         {field.placeholder || "Select an option"}
                       </option>
-                      {field.options?.map((option) => (
+                      {field.options?.map((option: any) => (
                         <option key={option.value} value={option.value}>
                           {option.label}
                         </option>
                       ))}
                     </Form.Control>
                   ) : field.type === "file" ? (
-                    <>
-                      <Form.Control
-                        type="file"
-                        onChange={(e: any) => {
-                          if (e.target.files) {
-                            field.onChange(e);
-                          }
-                        }}
-                        isInvalid={!!formErrors[field.label]}
-                      />
-                      {typeof field.value === "string" && (
-                        <img
-                          src={field.value}
-                          alt="Image Preview"
-                          style={{ maxWidth: "100px", marginTop: "10px" }}
-                        />
-                      )}
-                    </>
+                    <Form.Control
+                      type="file"
+                      onChange={(e: any) => {
+                        if (e.target.files) {
+                          field.onChange(e);
+                        }
+                      }}
+                      isInvalid={!!formErrors[field.label]}
+                    />
                   ) : field.type === "date" ? (
                     <Flatpickr
                       value={field.value ? new Date(field.value as any) : ""}
@@ -164,7 +177,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
                     <Form.Check
                       type="checkbox"
                       label={field.placeholder || field.label}
-                      checked={field.value as any}
+                      checked={!!(field.value as any)}
                       onChange={(e) =>
                         field.onChange({
                           target: { value: e.target.checked },
@@ -173,8 +186,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
                       isInvalid={!!formErrors[field.label]}
                     />
                   ) : null}
-                
 
+                  {/* Show error message only for required fields */}
                   {formErrors[field.label] && (
                     <div style={{ color: "red", marginTop: "0.25rem" }}>
                       {formErrors[field.label]}
@@ -188,7 +201,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           {formData.error && (
             <div style={{ color: "red", marginTop: "0.25rem" }}>
               <ul style={{ paddingLeft: "1rem" }}>
-                {formData.error.split("<br />").map((err, index) => (
+                {formData.error.split("<br />").map((err: any, index: any) => (
                   <li key={index}>{err}</li>
                 ))}
               </ul>

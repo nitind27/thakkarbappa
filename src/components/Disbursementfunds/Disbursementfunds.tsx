@@ -52,8 +52,8 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
         NidhiVitaran.date && typeof NidhiVitaran.date === "string"
           ? formatDate(NidhiVitaran.date)
           : NidhiVitaran.date instanceof Date
-          ? formatDate(NidhiVitaran.date.toISOString())
-          : "Invalid date",
+            ? formatDate(NidhiVitaran.date.toISOString())
+            : "Invalid date",
       installment: NidhiVitaran.installment,
       amount: NidhiVitaran.amount,
       photo: NidhiVitaran.photo,
@@ -142,9 +142,8 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
@@ -183,15 +182,14 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
             prevData.map((cluster) =>
               cluster.id === id
                 ? {
-                    ...cluster,
-                    status: currentStatus === "Active" ? "Deactive" : "Active",
-                  }
+                  ...cluster,
+                  status: currentStatus === "Active" ? "Deactive" : "Active",
+                }
                 : cluster
             )
           );
           toast.success(
-            `Disbursementfundes ${
-              currentStatus === "Active" ? "deactivated" : "activated"
+            `Disbursementfundes ${currentStatus === "Active" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
@@ -369,27 +367,29 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
             {
               label: `${t("enterwork")}`,
               value: selectwork,
+              required: true,
               type: "select",
               placeholder: `${t("enterwork")}`,
               options: workmaster.map((work: any) => ({
                 value: work.id,
                 label: work.name,
               })),
-              onChange: (e) => setSelectwork(e.target.value),
+              onChange: (e: any) => setSelectwork(e.target.value),
             },
             {
               label: `${t("vitrandate")}`,
               value: vitrandate,
+              required: true,
               type: "date",
               placeholder: `${t("vitrandate")}`,
-              onChange: (e) => setVitrandate(e.target.value),
+              onChange: (e : any) => setVitrandate(e.target.value),
             },
             {
               label: `${t("selectInstallment")}`,
               value: Installment,
               type: "select",
               placeholder: `${t("selectInstallment")}`,
-              onChange: (e) => setInstallment(e.target.value),
+              onChange: (e : any) => setInstallment(e.target.value),
               options: [
                 { label: "1", value: "1" },
                 { label: "2", value: "2" },
@@ -400,9 +400,10 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
             {
               label: `${t("enteramount")}`,
               value: Amount,
+              required: true,
               type: "text",
               placeholder: `${t("enteramount")}`,
-              onChange: (e) => setAmount(e.target.value),
+              onChange: (e : any) => setAmount(e.target.value),
             },
             {
               label: `${t("enterimage")}`,
@@ -415,22 +416,24 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
               label: `${t("Latitude")}`,
               value: latitude,
               type: "text",
+              
               placeholder: `${t("Latitude")}`,
-              onChange: (e) => setLatitude(latitude),
+              onChange: (e : any) => setLatitude(latitude),
             },
             {
               label: `${t("Longitude")}`,
               value: longitude,
               type: "text",
               placeholder: `${t("Longitude")}`,
-              onChange: (e) => setLongitude(longitude),
+              onChange: (e : any) => setLongitude(longitude),
             },
             {
               label: `${t("enteraddress")}`,
               value: Adress,
               type: "text",
+              required: true,
               placeholder: `${t("enteraddress")}`,
-              onChange: (e) => setAdress(e.target.value),
+              onChange: (e : any) => setAdress(e.target.value),
             },
           ],
           error,
@@ -441,8 +444,8 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />

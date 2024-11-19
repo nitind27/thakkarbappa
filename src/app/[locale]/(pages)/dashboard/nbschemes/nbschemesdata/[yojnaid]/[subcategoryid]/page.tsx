@@ -1,3 +1,4 @@
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import { SubCategory, YojanaMaster } from "@/components/type";
 import prisma from "@/lib/db";
 import React from "react";
@@ -36,8 +37,17 @@ const page = async ({ params }: any) => {
     return subCategory.find((cat) => cat.sub_category_id === id); // Use 'id' to find the correct subcategory
   });
 
+  const breadcrumbs = [
+
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Nbschemes', href: '/dashboard/nbschemes' },
+    { label: 'NbSchmescategory', href: `/dashboard/nbschemes/nbschemescategory/${yojnaid}` },
+    { label: 'Yojna', href: `/dashboard/nbschemes/nbschemesdata/${yojnaid}/${subcategoryid}` },
+
+  ];
   return (
     <div className="container mx-auto p-4">
+      <TitleCard breadcrumbs={breadcrumbs} />
       {uniqueSubCategories.length > 0 ? (
         uniqueSubCategories.map((category, index) => {
           // Filter YojnaMaster by current category

@@ -81,11 +81,10 @@ const Representative = ({ initialRepresentative }: Props) => {
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === STATUS_MESSAGES.ACTIVE
+            className={`btn btn-sm ${row.original.status === STATUS_MESSAGES.ACTIVE
                 ? "btn-danger"
                 : "btn-warning"
-            } ms-5`}
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
@@ -135,8 +134,7 @@ const Representative = ({ initialRepresentative }: Props) => {
         } else {
           const errorData = await response.json();
           toast.error(
-            `${STATUS_MESSAGES.ERROR_STATUS_CHANGE} ${
-              errorData.error || "Unknown error"
+            `${STATUS_MESSAGES.ERROR_STATUS_CHANGE} ${errorData.error || "Unknown error"
             }`
           );
         }
@@ -158,11 +156,11 @@ const Representative = ({ initialRepresentative }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const errorMsg = validaterepresentative(representativeName);
-    if (errorMsg) {
-      setError(errorMsg);
-      return;
-    }
+    // const errorMsg = validaterepresentative(representativeName);
+    // if (errorMsg) {
+    //   setError(errorMsg);
+    //   return;
+    // }
 
     setIsLoading(true); // Start loading
 
@@ -257,8 +255,9 @@ const Representative = ({ initialRepresentative }: Props) => {
               label: `${t("enterrepresentativename")}`,
               value: representativeName,
               type: "text",
+              required: true,
               placeholder: `${t("enterrepresentativename")}`,
-              onChange: (e) => setrepresentativeName(e.target.value),
+              onChange: (e: any) => setrepresentativeName(e.target.value),
               // errorMessage: error,
             },
           ],
@@ -270,8 +269,8 @@ const Representative = ({ initialRepresentative }: Props) => {
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />

@@ -3,10 +3,11 @@ import Cluster from "@/app/[locale]/title/cluster"; import Loader from "@/common
 ;
 import Clusteradd from "@/components/manage/Clusteradd";
 import Notification from "@/components/manage/Notification";
-import {  Notificationdata } from "@/components/type";
+import { Notificationdata } from "@/components/type";
 import prisma from "@/lib/db";
 import React from "react";
 import Notoficationtitle from "../../title/Notoficationtitle";
+import TitleCard from "../../title/breadcums/Titilecard";
 
 const Page = async () => {
   let notificationdata: Notificationdata[] = [];
@@ -29,9 +30,16 @@ const Page = async () => {
       </>
     )
   }
+  const breadcrumbs = [
 
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Notification', href: '/notification' },
+  ];
   return (
     <div>
+      <div className="mt-5">
+        <TitleCard breadcrumbs={breadcrumbs} />
+      </div>
       <h1 className="card card-body mt-5">
         <Notoficationtitle />
       </h1>

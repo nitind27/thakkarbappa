@@ -2,6 +2,8 @@ import Disbursementfunds from '@/components/Disbursementfunds/Disbursementfunds'
 import { NidhiVitaran, WorkMaster } from '@/components/type';
 import prisma from '@/lib/db';
 import React from 'react'
+import TitleCard from '../../title/breadcums/Titilecard';
+import Disbursementfundstitle from '../../title/disbursementfundstitle';
 
 const page = async () => {
 
@@ -19,9 +21,21 @@ const page = async () => {
       </div>
     );
   }
+  const breadcrumbs = [
 
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Disbursementfunds', href: '/disbursementfunds' },
+  ];
   return (
-    <div><Disbursementfunds initialdisbursementfunds={disbursementfunds} workmaster={workmaster}/></div>
+    <div>
+      <div className="mt-5">
+        <TitleCard breadcrumbs={breadcrumbs} />
+      </div>
+      <h1 className="card card-body ">
+        <Disbursementfundstitle />
+      </h1>
+      <div><Disbursementfunds initialdisbursementfunds={disbursementfunds} workmaster={workmaster} /></div>
+    </div>
   )
 }
 

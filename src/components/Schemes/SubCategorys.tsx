@@ -306,7 +306,7 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
                         {
                             label: `${t("categoryname")}`,
                             value: categoryName,
-                            onChange: (e) => setCategoryName(e.target.value),
+                            onChange: (e : any) => setCategoryName(e.target.value),
                             type: "select",
                             options: category.map((category: Categorys) => ({
                                 value: category.category_id,
@@ -320,12 +320,12 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
                             type: "text",
                             placeholder: `${t("subcategoryname")}`,
 
-                            onChange: (e) => setSubCategoryName(e.target.value),
+                            onChange: (e : any) => setSubCategoryName(e.target.value),
                         },
                         {
                             label: `${t("year")}`,
                             value: yojnayear,
-                            onChange: (e) => setYojnaYear(e.target.value),
+                            onChange: (e : any) => setYojnaYear(e.target.value),
                             type: "select",
                             options: YojnaYear.map((year: YojanaYear) => ({
                                 value: year.yojana_year_id,
@@ -338,7 +338,7 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
                         {
                             label: `${t("Bankname")}`,
                             value: bankname,
-                            onChange: (e) => setBankname(e.target.value),
+                            onChange: (e : any) => setBankname(e.target.value),
                             type: "select",
                             options: Bankdata.map((Bank: Bank) => ({
                                 value: Bank.id,
@@ -349,10 +349,11 @@ const SubCategorys = ({ initialcategoryData, YojnaYear, Bankdata, category }: Pr
                         {
                             label: `${t("amount")}`,
                             value: amount,
+                            required: true,
                             type: "text",
                             placeholder: `${t("amount")}`,
 
-                            onChange: (e) => setAmount(e.target.value),
+                            onChange: (e : any) => setAmount(e.target.value),
                         },
                     ],
                     error,

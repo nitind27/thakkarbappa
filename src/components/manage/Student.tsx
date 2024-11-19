@@ -11,6 +11,7 @@ import { useTranslations } from "next-intl";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
 import { createConfirmation } from "react-confirm";
 import TableOption from "../table/TableOption";
+import { formatDate } from "@/lib/utils";
 type Props = {
   initialstudentData: StudentData[];
   schooldata: Schooldata[];
@@ -41,7 +42,7 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
   const [updateTownId, setUpdateTownId] = useState<number | null>(null);
   const [studentdata, setstudentdata] =
     useState<StudentData[]>(initialstudentData);
-  const t = useTranslations("School");
+  const t = useTranslations("student");
   const confirm = createConfirmation(ConfirmationDialog);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const schoolmap = schooldata.reduce((acc, school: Schooldata) => {
@@ -70,7 +71,10 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
       first_name: student.first_name + " " + student.last_name,
       middle_name: student.middle_name,
       last_name: student.last_name,
-      date_of_birth: student.date_of_birth,
+      date_of_birth: typeof student.date_of_birth === "string"
+        ? formatDate(student.date_of_birth)
+        : formatDate(student.date_of_birth as any),
+
       place_of_birth: student.place_of_birth,
       gender: student.gender,
       mother_name: student.mother_name,
@@ -109,61 +113,61 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
     },
     {
       accessorKey: "gr_no",
-      header: "G.R.No",
+      header: `${t("grno")}`,
     },
     {
       accessorKey: "full_name",
-      header: `Student Name`,
+      header: `${t("studentName")}`,
     },
     {
       accessorKey: "school_id",
-      header: `School`,
+      header: `${t("Schoolname")}`,
     },
     {
       accessorKey: "current_std",
-      header: `Standard`,
+      header: `${t("std")}`,
     },
 
     {
       accessorKey: "uid",
-      header: `Saral Id`,
+      header: `${t("saralid")}`,
     },
     {
       accessorKey: "mother_name",
-      header: `Mother`,
+      header: `${t("Monthername")}`,
     },
     {
       accessorKey: "date_of_birth",
-      header: `DOB`,
+      header: `${t("dob")}`,
     },
 
     {
       accessorKey: "gender",
-      header: `Gender`,
+      header: `${t("gender")}`,
     },
     {
       accessorKey: "cast",
-      header: `Cast`,
+      header: `${t("cast")}`,
     },
     {
       accessorKey: "aadhaar",
-      header: `Aadhaar`,
+      header: `${t("aadharcard")}`,
     },
     {
       accessorKey: "contact_no",
-      header: `Contact No`,
+      header: `${t("Contact")}`,
     },
     {
       accessorKey: "address",
-      header: `Address`,
+      header: `${t("address")}`,
     },
     {
       accessorKey: "sickle_cell",
-      header: `Sickle Cell`,
+      header: `${t("sicklecell")}`,
     },
     {
       accessorKey: "sickle_report",
-      header: `Sickle Cell Report`,
+      header: `${t("status")}`,
     },
 
     // {
@@ -447,35 +451,40 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
 
   const formFields = [
     {
-      label: "Serial No.",
+      label: `${t("serialnumber")}`,
       value: serialnumber,
       type: "text",
-      placeholder: "Serial No",
+      required: true,
+      placeholder: `${t("serialnumber")}`,
       onChange: (e: any) => setSerialnumber(e.target.value),
     },
     {
-      label: `Student's Name`,
+      label: `${t("studentName")}`,
       value: studentName,
       type: "text",
-      placeholder: `Student Name`,
+      required: true,
+      placeholder: `${t("studentName")}`,
       onChange: (e: any) => setStudentName(e.target.value),
     },
     {
-      label: "G.R.No.",
+      label: `${t("grno")}`,
       value: grno,
       type: "text",
-      placeholder: "Serial No",
+      required: true,
+      placeholder: `${t("grno")}`,
       onChange: (e: any) => setGrno(e.target.value),
     },
     {
-      label: "Saral ID",
+      label: `${t("saralid")}`,
       value: saralid,
+      required: true,
       type: "text",
-      placeholder: "Saral ID",
+      placeholder: `${t("saralid")}`,
       onChange: (e: any) => setSaralId(e.target.value),
     },
     {
-      label: `Schools`,
+      label: `${t("Schoolname")}`,
+      required: true,
       value: schoolname || "", // Default value when updating
       onChange: (e: any) => setSchoolname(e.target.value),
       type: "select",
@@ -483,10 +492,11 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
         value: student.school_id,
         label: student.school_name,
       })),
-      placeholder: `School`, // Optional placeholder for select input
+      placeholder: `${t("Schoolname")}`, // Optional placeholder for select input
     },
     {
-      label: `Standard`,
+      label: `${t("std")}`,
+      required: true,
       value: standard || "", // Default value when updating
       onChange: (e: any) => setStandard(e.target.value),
       type: "select",
@@ -494,28 +504,30 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
         value: std.standard_id,
         label: std.standard_name,
       })),
-      placeholder: `Standard`, // Optional placeholder for select input
+      placeholder: `${t("std")}`, // Optional placeholder for select input
     },
     {
-      label: "Mother Name",
+      label: `${t("Monthername")}`,
       value: mothername,
+      required: true,
       type: "text",
-      placeholder: "Mother Name",
+      placeholder: `${t("Monthername")}`,
       onChange: (e: any) => setMontherName(e.target.value),
     },
     {
-      label: `D.O.B`,
+      label: `${t("dob")}`,
       value: dob,
+      required: true,
       type: "date",
-      placeholder: `D.O.B`,
+      placeholder: `${t("dob")}`,
       onChange: (e: any) => setDob(e.target.value),
     },
 
     {
-      label: `Gender`,
+      label: `${t("gender")}`,
       value: gender,
       type: "select",
-      placeholder: `Gender`,
+      placeholder: `${t("gender")}`,
       options: [
         { label: "Male", value: "M" },
         { label: "Female", value: "F" },
@@ -526,10 +538,10 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
     },
 
     {
-      label: `Cast`,
+      label: `${t("cast")}`,
       value: cast,
       type: "select",
-      placeholder: `Choose One`,
+      placeholder: `${t("cast")}`,
       options: [
         { label: "SC", value: "SC" },
         { label: "ST", value: "ST" },
@@ -543,33 +555,36 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
     },
 
     {
-      label: `Aadhaar No`,
+      label: `${t("aadharcard")}`,
       value: aadhaar,
+      required: true,
       type: "text",
       placeholder: `eg. 121212121212`,
       onChange: (e: any) => setAadhaar(e.target.value),
     },
 
     {
-      label: `Contact No`,
+      label: `${t("Contact")}`,
       value: contactNo,
+      required: true,
       type: "text",
       placeholder: `eg.7359595959`,
       onChange: (e: any) => setContactNo(e.target.value),
     },
     {
-      label: `Address`,
+      label: `${t("address")}`,
       value: address,
+      required: true,
       type: "text",
-      placeholder: `Address`,
+      placeholder: `${t("address")}`,
       onChange: (e: any) => setAddress(e.target.value),
     },
 
     {
-      label: `Sickle Cell Checkup`,
+      label: `${t("sicklecell")}`,
       value: sicklecell,
       type: "select",
-      placeholder: `Sickle Cell Checkup`,
+      placeholder: `${t("sicklecell")}`,
       options: [
         { label: "Yes", value: "Yes" },
         { label: "No", value: "No" },
@@ -685,7 +700,7 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
         show={showPrintModal}
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
-        title={updateTownId ? `Student` : "Student"}
+        title={updateTownId ? `${t("updatepage")}` : `${t("insertpage")}`}
         formData={{
           fields: formFields as any,
           error: "",

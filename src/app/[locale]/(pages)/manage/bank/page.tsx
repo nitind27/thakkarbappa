@@ -2,6 +2,7 @@
 // import { Bank as BankType } from "@/components/type";
 
 import Banktitle from "@/app/[locale]/title/Bank";
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import BankData from "@/components/manage/Bank";
 import { Bank, YojanaYear } from "@/components/type";
 
@@ -10,7 +11,7 @@ import React from "react";
 
 const Page = async () => {
   let Bankdata: Bank[] = [];
-  let YojnaYear :YojanaYear[] =[];
+  let YojnaYear: YojanaYear[] = [];
 
   try {
     Bankdata = await prisma.bank.findMany(); // Fetch all clusters
@@ -24,10 +25,17 @@ const Page = async () => {
     );
   }
 
+  const breadcrumbs = [
 
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Bank', href: '/manage/bank' },
+  ];
   return (
     <div>
-      <h1 className="card card-body mt-5"><Banktitle /></h1>
+      <div className="mt-5">
+        <TitleCard breadcrumbs={breadcrumbs} />
+      </div>
+      <h1 className="card card-body"><Banktitle /></h1>
       <BankData
         initialBankData={Bankdata}
         YojnaYear={YojnaYear}

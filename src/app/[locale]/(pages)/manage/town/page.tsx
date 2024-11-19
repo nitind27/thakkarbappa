@@ -1,3 +1,4 @@
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import Towntitle from "@/app/[locale]/title/towntitle";
 
 import TalukaData from "@/components/manage/TalukaData";
@@ -24,10 +25,17 @@ const page = async () => {
         );
     }
 
+    const breadcrumbs = [
 
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Taluka', href: '/manage/town' },
+    ];
     return (
         <div>
-            <h1 className="card card-body mt-5"><Towntitle /></h1>
+            <div className="mt-5">
+                <TitleCard breadcrumbs={breadcrumbs} />
+            </div>
+            <h1 className="card card-body "><Towntitle /></h1>
             <TalukaData talukasdata={talukasdata} />
 
         </div>

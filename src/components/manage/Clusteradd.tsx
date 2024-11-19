@@ -12,6 +12,7 @@ import { validateClusterName } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
 import { createConfirmation } from "react-confirm";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
+import Loader from "@/common/Loader ";
 
 type Props = {
   initialClusterData: clusterdata[];
@@ -77,9 +78,8 @@ const Clusteradd = ({ initialClusterData }: Props) => {
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.cluster_id, row.original.status)
             }
@@ -118,15 +118,14 @@ const Clusteradd = ({ initialClusterData }: Props) => {
             prevData.map((cluster) =>
               cluster.cluster_id === clusterId
                 ? {
-                    ...cluster,
-                    status: currentStatus === "Active" ? "Deactive" : "Active",
-                  }
+                  ...cluster,
+                  status: currentStatus === "Active" ? "Deactive" : "Active",
+                }
                 : cluster
             )
           );
           toast.success(
-            `Cluster ${
-              currentStatus === "Active" ? "deactivated" : "activated"
+            `Cluster ${currentStatus === "Active" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
@@ -141,11 +140,6 @@ const Clusteradd = ({ initialClusterData }: Props) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const errorMsg = validateClusterName(clusterName);
-    if (errorMsg) {
-      setError(errorMsg);
-      return;
-    }
 
     setIsLoading(true); // Start loading
 
@@ -214,6 +208,7 @@ const Clusteradd = ({ initialClusterData }: Props) => {
     setUpdateClusterId(null); // Reset update ID when closing
   };
 
+
   return (
     <div>
       <Table
@@ -247,8 +242,8 @@ const Clusteradd = ({ initialClusterData }: Props) => {
               value: clusterName,
               type: "text",
               placeholder: `${t("enterclustername")}`,
-
-              onChange: (e) => setClusterName(e.target.value),
+              required: true,
+              onChange: (e: any) => setClusterName(e.target.value),
             },
           ],
           error,
@@ -259,8 +254,8 @@ const Clusteradd = ({ initialClusterData }: Props) => {
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />

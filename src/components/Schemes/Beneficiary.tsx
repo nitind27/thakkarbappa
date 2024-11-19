@@ -516,6 +516,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         {
             label: `${t('categoryname')}`,
             value: categoryName,
+            required: true,
             onChange: (e: any) => setCategoryName(e.target.value),
             type: "select",
             options: category.map((category: Categorys) => ({
@@ -643,6 +644,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('BankName')}`,
             value: bankname || "",
             type: "text",
+            required: true,
             placeholder: `${t("BankName")}`,
             onChange: (e: any) => setBankname(e.target.value),
         },
@@ -826,6 +828,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('sansthaname')}`,
             value: organizationname || "",
             type: "text",
+            
             placeholder: `${t('sansthaname')}`,
             onChange: (e: any) => setorganizationname(e.target.value),
         },);

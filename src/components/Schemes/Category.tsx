@@ -253,9 +253,10 @@ const Category = ({ initialcategoryData }: Props) => {
               label: `${t("categoryname")}`,
               value: categoryName,
               type: "text",
+              required: true,
               placeholder: `${t("categoryname")}`,
 
-              onChange: (e) => setCategoryName(e.target.value),
+              onChange: (e : any) => setCategoryName(e.target.value),
             },
             {
               label: `${t("appyojna")}`,
@@ -268,7 +269,7 @@ const Category = ({ initialcategoryData }: Props) => {
                 { label: "No", value: "No" },
 
               ],
-              onChange: (e) => setAppyojna(e.target.value),
+              onChange: (e : any) => setAppyojna(e.target.value),
             },
           ],
           error,

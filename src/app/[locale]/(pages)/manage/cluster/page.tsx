@@ -1,4 +1,6 @@
 // app/page.tsx
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
+
 import Cluster from "@/app/[locale]/title/cluster"; import Loader from "@/common/Loader ";
 ;
 import Clusteradd from "@/components/manage/Clusteradd";
@@ -27,10 +29,18 @@ const Page = async () => {
       </>
     )
   }
+  const breadcrumbs = [
 
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Cluster', href: '/manage/cluster' },
+  ];
   return (
     <div>
-      <h1 className="card card-body mt-5">
+      <div className="mt-5">
+
+        <TitleCard breadcrumbs={breadcrumbs} />
+      </div>
+      <h1 className="card card-body ">
         <Cluster />
       </h1>
 

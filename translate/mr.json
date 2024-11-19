@@ -429,9 +429,35 @@
     "updatepageapp": "योजना अॅप",
     "submit": "जोडा",
     "editsubmit": "संपादित करा",
- 
     "firstname": "पहिले नाव",
     "surname": "आडनाव",
     "parentsname": "मध्य नाव"
+  },
+  "student": {
+    "title": "विद्यार्थ्यांची माहिती",
+    "addschool": "जोडा",
+    "SrNo": "क्रमांक",
+    "grno": "जीआर नंबर",
+    "studentName": "विद्यार्थ्याचे नाव",
+    "Schoolname": "शाळेचे नाव",
+    "std": "इयत्ता",
+    "saralid": "सारल आयडी",
+    "Monthername": "आईचे नाव",
+    "dob": "जन्मतारीख",
+    "gender": "लिंग",
+    "cast": "जाति",
+    "aadharcard": "आधार नंबर",
+    "Contact": "संपर्क क्रमांक",
+    "address": "पत्ता",
+    "sicklecell": "सिकल सेल रिपोर्ट",
+    "status": "स्थिती",
+    "Action": "कृती",
+    "edit": "संपादित करा",
+    "Active": "सक्रिय",
+    "Deactive": "निष्क्रिय",
+    "insertpage": "विद्यार्थ्यांची माहिती",
+    "updatepage": "विद्यार्थ्यांची माहिती",
+    "submit": "जोडा",
+    "editsubmit": "संपादित करा"
   }
 }

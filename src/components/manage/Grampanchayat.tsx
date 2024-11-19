@@ -78,9 +78,8 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
@@ -129,15 +128,13 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
             )
           );
           toast.success(
-            `Cluster ${
-              newStatus === "Active" ? "activated" : "deactivated"
+            `Cluster ${newStatus === "Active" ? "activated" : "deactivated"
             } successfully!`
           );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the cluster status: ${
-              errorData.error || "Unknown error"
+            `Failed to change the cluster status: ${errorData.error || "Unknown error"
             }`
           );
         }
@@ -167,16 +164,16 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const errorMsg = validateFormgrampanchayat(
-      townName,
-      nameMarathi,
-      String(talukaId),
-      String(population)
-    );
-    if (errorMsg) {
-      setError(errorMsg.join("<br />"));
-      return;
-    }
+    // const errorMsg = validateFormgrampanchayat(
+    //   townName,
+    //   nameMarathi,
+    //   String(talukaId),
+    //   String(population)
+    // );
+    // if (errorMsg) {
+    //   setError(errorMsg.join("<br />"));
+    //   return;
+    // }
 
     setIsLoading(true); // Start loading
 
@@ -224,8 +221,7 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
         const data = await response.json();
 
         toast.error(
-          `Failed to ${updateTownId ? "update" : "insert"} Grampanchayat: ${
-            data.error
+          `Failed to ${updateTownId ? "update" : "insert"} Grampanchayat: ${data.error
           }`
         );
       }
@@ -246,7 +242,7 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
     handleShowPrint(); // Show the modal for editing
   };
 
-  
+
 
   return (
     <div>
@@ -282,22 +278,24 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
             {
               label: `${t("enterGrampanchayatname")}`,
               value: townName,
-              onChange: (e) => setTownName(e.target.value),
+              required: true,
+              onChange: (e: any) => setTownName(e.target.value),
               type: "text",
               placeholder: `${t("enterGrampanchayatname")}`,
-       
+
             },
             {
               label: `${t("enternamemarathi")}`,
               value: nameMarathi,
+              required: true,
               type: "text",
               placeholder: `${t("enternamemarathi")}`,
-              onChange: (e) => setNameMarathi(e.target.value),
+              onChange: (e: any) => setNameMarathi(e.target.value),
             },
             {
               label: `${t("selecttaluka")}`,
               value: talukaId,
-              onChange: (e) => setTalukaId(e.target.value),
+              onChange: (e: any) => setTalukaId(e.target.value),
               type: "select",
               options: talukas.map((taluka: any) => ({
                 value: taluka.id,
@@ -309,9 +307,10 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
             {
               label: `${t("enterpopulation")}`,
               value: population || "",
+              required: true,
               type: "text",
               placeholder: `${t("enterpopulation")}`,
-              onChange: (e) => setPopulation(e.target.value),
+              onChange: (e: any) => setPopulation(e.target.value),
             },
           ],
           error,
@@ -322,8 +321,8 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />

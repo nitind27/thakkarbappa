@@ -4,11 +4,18 @@ import Thakkarcard from "@/components/Dashboard/Thakkarbappa/Thakkarcard";
 import { useLocale } from "next-intl";
 import Link from "next/link";
 
+import TitleCard from "../../title/breadcums/Titilecard";
+
 const Page = () => {
-  // Renamed 'page' to 'Page'
+  const breadcrumbs = [
+
+    { label: 'Dashboard', href: '/dashboard' },
+
+  ];
   const localActive = useLocale();
   return (
     <div>
+      <TitleCard breadcrumbs={breadcrumbs} />
       <div className="container mt-5">
         <div className="row col-lg-12">
           <div className="col-md-3">

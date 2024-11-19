@@ -1,3 +1,4 @@
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import SchoolDashboard from "@/components/Dashboard/SchoolManage/SchoolDashboard";
 import { Schooldata, StudentData } from "@/components/type";
 import prisma from "@/lib/db";
@@ -16,9 +17,15 @@ const page = async () => {
       </div>
     );
   }
+  const breadcrumbs = [
 
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'School', href: '/dashboard/school' },
+
+  ];
   return (
     <div>
+      <TitleCard breadcrumbs={breadcrumbs} />
       <div className="container mt-5">
         <div className="row col-lg-12">
           {schooldata.map((school, index) => {

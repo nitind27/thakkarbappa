@@ -1,5 +1,7 @@
 // app/page.tsx
 
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
+import Schooltitle from "@/app/[locale]/title/Studenttitle";
 import Student from "@/components/manage/Student";
 import { Schooldata, Standarddata, StudentData } from "@/components/type";
 import prisma from "@/lib/db";
@@ -21,10 +23,17 @@ const Page = async () => {
       </div>
     );
   }
+  const breadcrumbs = [
 
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Student', href: '/manage/student' },
+  ];
   return (
     <div>
-      <h1 className="card card-body mt-5">student Detail</h1>
+      <div className="mt-5">
+        <TitleCard breadcrumbs={breadcrumbs} />
+      </div>
+      <h1 className="card card-body"><Schooltitle /></h1>
       <Student
         initialstudentData={studentdata}
         schooldata={schooldata}

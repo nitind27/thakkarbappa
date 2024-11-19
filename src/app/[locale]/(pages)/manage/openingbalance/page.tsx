@@ -1,5 +1,6 @@
 // app/page.tsx
 
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import OpenBalancetitle from "@/app/[locale]/title/OpenBalancetitle";
 import Openingbalanceadd from "@/components/manage/Openingbalanceadd";
 import { clusterdata, OpeningBalance, YojanaYear } from "@/components/type";
@@ -21,9 +22,16 @@ const Page = async () => {
       </div>
     );
   }
+  const breadcrumbs = [
 
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Praranbhik Sillak', href: '/manage/openingbalance' },
+  ];
   return (
     <div>
+      <div className="mt-5">
+        <TitleCard breadcrumbs={breadcrumbs} />
+      </div>
       <h1 className="card card-body mt-5">
         <OpenBalancetitle />
       </h1>

@@ -438,5 +438,31 @@
     "firstname": "पहला नाम",
     "surname": "उपनाम",
     "parentsname": "मध्य नाम"
-  }
+  },"student": {
+    "title": "छात्रों का विवरण",
+    "addschool": "जोड़ें",
+    "SrNo": "क्रम संख्या",
+    "grno": "जीआर नंबर",
+    "studentName": "छात्र का नाम",
+    "Schoolname": "स्कूल का नाम",
+    "std": "कक्षा",
+    "saralid": "सारल आईडी",
+    "Monthername": "माँ का नाम",
+    "dob": "जन्म तिथि",
+    "gender": "लिंग",
+    "cast": "जाति",
+    "aadharcard": "आधार नंबर",
+    "Contact": "संपर्क नंबर",
+    "address": "पता",
+    "sicklecell": "सिकल सेल रिपोर्ट",
+    "status": "स्थिति",
+    "Action": "कार्यवाही",
+    "edit": "संपादित करें",
+    "Active": "सक्रिय",
+    "Deactive": "निष्क्रिय",
+    "insertpage": "छात्रों का विवरण",
+    "updatepage": "छात्रों का विवरण",
+    "submit": "जोड़ें",
+    "editsubmit": "संपादित करें"
+}
 }

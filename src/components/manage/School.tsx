@@ -216,9 +216,8 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.school_id, row.original.status)
             }
@@ -315,15 +314,13 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             )
           );
           toast.success(
-            `School ${
-              newStatus === "Active" ? "activated" : "deactivated"
+            `School ${newStatus === "Active" ? "activated" : "deactivated"
             } successfully!`
           );
         } else {
           const errorData = await response.json();
           toast.error(
-            `Failed to change the cluster status: ${
-              errorData.error || "Unknown error"
+            `Failed to change the cluster status: ${errorData.error || "Unknown error"
             }`
           );
         }
@@ -368,31 +365,31 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const errors = validateSchoolForm({
-      schoolName,
-      address,
-      clusterId: String(clusterId), // Convert to string
-      talukaId: String(talukaId),
-      udias,
-      stds,
-      medium,
-      emailId,
-      mukhyaName,
-      mukhyaContact,
-      mukhyaEmail,
-      purushName,
-      purushContact,
-      purushEmail,
-      striName,
-      striContact,
-      striEmail,
-      schoolNameMr,
-    });
-    // If there are error messages, set them and prevent submission
-    if (errors.length > 0) {
-      setError(errors.join("<br />"));
-      return;
-    }
+    // const errors = validateSchoolForm({
+    //   schoolName,
+    //   address,
+    //   clusterId: String(clusterId), // Convert to string
+    //   talukaId: String(talukaId),
+    //   udias,
+    //   stds,
+    //   medium,
+    //   emailId,
+    //   mukhyaName,
+    //   mukhyaContact,
+    //   mukhyaEmail,
+    //   purushName,
+    //   purushContact,
+    //   purushEmail,
+    //   striName,
+    //   striContact,
+    //   striEmail,
+    //   schoolNameMr,
+    // });
+    // // If there are error messages, set them and prevent submission
+    // if (errors.length > 0) {
+    //   setError(errors.join("<br />"));
+    //   return;
+    // }
     setIsLoading(true); // Start loading
 
     try {
@@ -454,8 +451,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
         const data = await response.json();
 
         toast.error(
-          `Failed to ${updateTownId ? "update" : "insert"} School: ${
-            data.error
+          `Failed to ${updateTownId ? "update" : "insert"} School: ${data.error
           }`
         );
       }
@@ -526,23 +522,25 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
           fields: [
             {
               label: `${t("enterschoolname")}`,
+              required: true,
               value: schoolName,
               type: "text",
               placeholder: `${t("enterschoolname")}`,
-              onChange: (e) => setSchoolName(e.target.value),
+              onChange: (e: any) => setSchoolName(e.target.value),
             },
             {
               label: `${t("enterschooladdress")}`,
               value: address,
               type: "text",
+              required: true,
               placeholder: `${t("enterschooladdress")}`,
-              onChange: (e) => setAddress(e.target.value),
+              onChange: (e: any) => setAddress(e.target.value),
             },
 
             {
               label: `${t("clustername")}`,
               value: clusterId || "", // Default value when updating
-              onChange: (e) => setClusterId(e.target.value),
+              onChange: (e: any) => setClusterId(e.target.value),
               type: "select",
               options: clusterdata.map((cluster: clusterdata) => ({
                 value: cluster.cluster_id,
@@ -553,7 +551,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             {
               label: `${t("selecttaluka")}`,
               value: talukaId || "", // Default value when updating
-              onChange: (e) => setTalukaId(e.target.value),
+              onChange: (e: any) => setTalukaId(e.target.value),
               type: "select",
               options: talukas.map((taluka: any) => ({
                 value: taluka.id,
@@ -564,9 +562,10 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             {
               label: `${t("enterudiasno")}`,
               value: udias,
+              required: true,
               type: "text",
               placeholder: `${t("enterudiasno")}`,
-              onChange: (e) => {
+              onChange: (e: any) => {
                 // Ensure that only digits are allowed and limit to 11 digits
                 const inputValue = e.target.value;
                 if (/^\d*$/.test(inputValue) && inputValue.length <= 11) {
@@ -578,15 +577,16 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             {
               label: `${t("enterdivision")}`,
               value: stds,
+              required: true,
               type: "text",
               placeholder: `${t("enterdivision")}`,
-              onChange: (e) => setStds(e.target.value),
+              onChange: (e: any) => setStds(e.target.value),
             },
 
             {
               label: `${t("entermedium")}`,
               value: medium || "", // Default value when updating
-              onChange: (e) => setMedium(e.target.value),
+              onChange: (e: any) => setMedium(e.target.value),
               type: "select",
 
               options: [
@@ -603,24 +603,27 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             {
               label: `${t("schoolemail")}`,
               value: emailId,
-              type: "text",
+              type: "email",
+              required: true,
               placeholder: `${t("schoolemail")}`,
-              onChange: (e) => setEmailId(e.target.value),
+              onChange: (e: any) => setEmailId(e.target.value),
             },
             {
               label: `${t("entermukhyaname")}`,
               value: mukhyaName,
+              required: true,
               type: "text",
               placeholder: `${t("entermukhyaname")}`,
-              onChange: (e) => setMukhyaName(e.target.value),
+              onChange: (e: any) => setMukhyaName(e.target.value),
             },
             {
               label: `${t("entermukhyacontact")}`,
               value: mukhyaContact,
               type: "text",
+              required: true,
               placeholder: `${t("entermukhyacontact")}`,
 
-              onChange: (e) => {
+              onChange: (e: any) => {
                 // Ensure that only digits are allowed and limit to 11 digits
                 const inputValue = e.target.value;
                 if (/^\d*$/.test(inputValue) && inputValue.length <= 10) {
@@ -631,16 +634,18 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             {
               label: `${t("entermukhyaemail")}`,
               value: mukhyaEmail,
-              type: "text",
+              type: "email",
+              required: true,
               placeholder: `${t("entermukhyaemail")}`,
-              onChange: (e) => setMukhyaEmail(e.target.value),
+              onChange: (e: any) => setMukhyaEmail(e.target.value),
             },
             {
               label: `${t("enterpurushname")}`,
               value: purushName,
               type: "text",
+              required: true,
               placeholder: `${t("enterpurushname")}`,
-              onChange: (e) => setPurushName(e.target.value),
+              onChange: (e: any) => setPurushName(e.target.value),
             },
             {
               label: `${t("enterpurushcontact")}`,
@@ -648,7 +653,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
               type: "text",
               placeholder: `${t("enterpurushcontact")}`,
 
-              onChange: (e) => {
+              onChange: (e: any) => {
                 // Ensure that only digits are allowed and limit to 11 digits
                 const inputValue = e.target.value;
                 if (/^\d*$/.test(inputValue) && inputValue.length <= 10) {
@@ -659,24 +664,27 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             {
               label: `${t("enterpurushemail")}`,
               value: purushEmail,
-              type: "text",
+              type: "email",
+              required: true,
               placeholder: `${t("enterpurushemail")}`,
-              onChange: (e) => setPurushEmail(e.target.value),
+              onChange: (e: any) => setPurushEmail(e.target.value),
             },
             {
               label: `${t("enterstriname")}`,
               value: striName,
               type: "text",
+              required: true,
               placeholder: `${t("enterstriname")}`,
-              onChange: (e) => setStriName(e.target.value),
+              onChange: (e: any) => setStriName(e.target.value),
             },
             {
               label: `${t("enterstricontact")}`,
               value: striContact,
+              required: true,
               type: "text",
               placeholder: `${t("enterstricontact")}`,
 
-              onChange: (e) => {
+              onChange: (e: any) => {
                 // Ensure that only digits are allowed and limit to 11 digits
                 const inputValue = e.target.value;
                 if (/^\d*$/.test(inputValue) && inputValue.length <= 10) {
@@ -687,9 +695,10 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
             {
               label: `${t("enterstreeemail")}`,
               value: striEmail,
-              type: "text",
+              type: "email",
+              required: true,
               placeholder: `${t("enterstreeemail")}`,
-              onChange: (e) => setStriEmail(e.target.value),
+              onChange: (e: any) => setStriEmail(e.target.value),
             },
           ],
           error,
@@ -700,8 +709,8 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />
