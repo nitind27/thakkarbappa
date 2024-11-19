@@ -644,6 +644,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('BankName')}`,
             value: bankname || "",
             type: "text",
+
             required: true,
             placeholder: `${t("BankName")}`,
             onChange: (e: any) => setBankname(e.target.value),
@@ -652,6 +653,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('IFSCCode')}`,
             value: ifccode || "",
             type: "text",
+            required: true,
             placeholder: `${t("IFSCCode")}`,
             onChange: (e: any) => setIFCcode(e.target.value),
         },
@@ -659,13 +661,16 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('AccountNo')}`,
             value: accountno || "",
             type: "text",
+            required: true,
             placeholder: `${t("AccountNo")}`,
             onChange: (e: any) => setAccountno(e.target.value),
         },
         {
             label: `${t('AmountPaid')}`,
             value: amount || "",
+            required: true,
             type: "text",
+
             placeholder: `${t("AmountPaid")}`,
             onChange: (e: any) => setAmount(e.target.value),
         },
@@ -675,6 +680,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         formFields.push({
             label: `${t('surname')}`,
             value: surname || "",
+            required: true,
             type: "text",
             placeholder: `${t('surname')}`,
             onChange: (e: any) => setSurname(e.target.value),
@@ -683,6 +689,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('firstname')}`,
             value: firstname || "",
             type: "text",
+            required: true,
             placeholder: `${t('firstname')}`,
             onChange: (e: any) => setFistname(e.target.value),
         },);
@@ -690,6 +697,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('parentsname')}`,
             value: parentsname || "",
             type: "text",
+            required: true,
             placeholder: `${t('parentsname')}`,
             onChange: (e: any) => setParentsname(e.target.value),
         },);
@@ -697,6 +705,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('Organization')}`,
             value: organizationname || "",
             type: "text",
+            required: true,
             placeholder: `${t('Organization')}`,
             onChange: (e: any) => setorganizationname(e.target.value),
         },);
@@ -704,6 +713,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('Commencementorderdate')}`,
             value: Commencementdate || "",
             type: "date",
+            required: true,
             placeholder: `${t('Commencementorderdate')}`,
             onChange: (e: any) => setCommencementdate(e.target.value),
         },);
@@ -711,6 +721,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('Cast')}`,
             value: cast || "",
             type: "text",
+            required: true,
             placeholder: `${t('Cast')}`,
             onChange: (e: any) => setcast(e.target.value),
         },);
@@ -718,6 +729,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('beneficiarytype')}`,
             value: beneficiariestype || "",
             type: "text",
+            required: true,
             placeholder: `${t('beneficiarytype')}`,
             onChange: (e: any) => setbeneficiariestype(e.target.value),
         },);
@@ -725,6 +737,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('Registrationcard')}`,
             value: rationcardnumber || "",
             type: "text",
+            required: true,
             placeholder: `${t('Registrationcard')}`,
             onChange: (e: any) => setrationcardnumber(e.target.value),
         },);
@@ -732,18 +745,21 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('aadharcard')}`,
             value: aadharcardnumber || "",
             type: "text",
+            required: true,
             placeholder: `${t('aadharcard')}`,
             onChange: (e: any) => setaddharcardnumber(e.target.value),
         },);
         formFields.push({
             label: `${t('Contact')}`,
             value: mobilenumber || "",
+            required: true,
             type: "text",
             placeholder: `${t('Contact')}`,
             onChange: (e: any) => setmobilenumber(e.target.value),
         }, {
             label: `${t('Eligible40')}`,
             value: fourty || "",
+            required: false,
             type: "checkbox",
             placeholder: `${t('Eligible40')}`,
             onChange: (e: any) => setfourty(e.target.value),
@@ -752,6 +768,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 label: `${t('Eligible60')}`,
                 value: sixty || "",
                 type: "checkbox",
+                required: false,
                 placeholder: `${t('Eligible60')}`,
                 onChange: (e: any) => setsixty(e.target.value),
             },
@@ -759,6 +776,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 label: `${t('Eligible100')}`,
                 value: hundred || "",
                 type: "checkbox",
+                required: false,
                 placeholder: `${t('Eligible100')}`,
                 onChange: (e: any) => sethundred(e.target.value),
             },);
@@ -768,6 +786,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('bachtgat')}`,
             value: savinggroupname || "",
             type: "text",
+            required: true,
             placeholder: `${t('bachtgat')}`,
             onChange: (e: any) => setsavinggroupname(e.target.value),
         },
@@ -775,6 +794,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 label: `${t('registerdcert')}`,
                 value: Registrationerti || "",
                 type: "text",
+                required: true,
                 placeholder: `${t('registerdcert')}`,
                 onChange: (e: any) => setRegistrationerti(e.target.value),
             },
@@ -782,6 +802,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 label: `${t('members')}`,
                 value: numberofmember || "",
                 type: "text",
+                required: true,
                 placeholder: `${t('members')}`,
                 onChange: (e: any) => setnumberofmember(e.target.value),
             },
@@ -789,6 +810,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 label: `${t('sansthaname')}`,
                 value: organizationname || "",
                 type: "text",
+                required: true,
                 placeholder: `${t('sansthaname')}`,
                 onChange: (e: any) => setorganizationname(e.target.value),
             },
@@ -796,6 +818,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 label: `${t('Commencementorderdate')}`,
                 value: Commencementdate || "",
                 type: "date",
+                required: true,
                 placeholder: `${t('Commencementorderdate')}`,
                 onChange: (e: any) => setCommencementdate(e.target.value),
             },
@@ -803,6 +826,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 label: `${t('Eligible40')}`,
                 value: fourty || "",
                 type: "checkbox",
+                required: false,
                 placeholder: `${t('Eligible40')}`,
                 onChange: (e: any) => setfourty(e.target.value),
             },
@@ -810,13 +834,14 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 label: `${t('Eligible60')}`,
                 value: sixty || "",
                 type: "checkbox",
+                required: false,
                 placeholder: `${t('Eligible60')}`,
                 onChange: (e: any) => setsixty(e.target.value),
             },
             {
                 label: `${t('Eligible100')}`,
                 value: hundred || "",
-                type: "checkbox",
+                type: "checkbox", required: false,
                 placeholder: `${t('Eligible100')}`,
                 onChange: (e: any) => sethundred(e.target.value),
             },
@@ -828,7 +853,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('sansthaname')}`,
             value: organizationname || "",
             type: "text",
-            
+            required: true,
             placeholder: `${t('sansthaname')}`,
             onChange: (e: any) => setorganizationname(e.target.value),
         },);
@@ -836,6 +861,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('Commencementorderdate')}`,
             value: Commencementdate || "",
             type: "date",
+            required: true,
             placeholder: `${t('Commencementorderdate')}`,
             onChange: (e: any) => setCommencementdate(e.target.value),
         },);
@@ -845,7 +871,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 value: (fourty == "true" ? 1 : fourty || "").toString(),
                 type: "text",
                 placeholder: `%`,
-
+                required: false,
                 onChange: (e: any) => setfourty(e.target.value),
             },
             {
@@ -853,12 +879,14 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 value: (sixty == "true" ? 1 : sixty || "").toString(),
                 type: "text",
                 placeholder: `%`,
+                required: false,
                 onChange: (e: any) => setsixty(e.target.value),
             },
             {
                 label: `${t('Eligible100')}`,
                 value: (hundred == "true" ? 1 : hundred || "").toString(),
                 type: "text",
+                required: false,
                 placeholder: `%`,
                 onChange: (e: any) => sethundred(e.target.value),
             },
@@ -892,7 +920,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 handleClose={handleClosePrint}
                 handleSubmit={handleSubmit}
                 size={"xl"}
-                title={updateClusterId ? categoryName : fourty}
+                title={updateClusterId ? `${t("updatepage")}` : `${t("insertpage")}`}
                 formData={{
                     fields: formFields as any,
                     error: "",
