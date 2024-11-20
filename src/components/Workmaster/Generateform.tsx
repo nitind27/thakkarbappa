@@ -162,12 +162,12 @@ const Generateform = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive 
 
                     <Link href={`/en/workmaster/work/${row.original.generatednumber}`}>
                         <button
-                            className={`btn btn-sm btn-danger ms-5
+                            className={`btn btn-sm btn-success ms-5
                             `}
 
                         >
-                            <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-                            View + add
+                            <KTIcon iconName={"calendar-edit"} className="fs-6" iconType="solid" />
+                            View + Add
                         </button>
                     </Link>
                 </div>
