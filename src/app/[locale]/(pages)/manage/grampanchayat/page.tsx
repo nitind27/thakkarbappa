@@ -30,13 +30,13 @@ const page = async () => {
   const breadcrumbs = [
 
     { label: 'dashboard', href: '/dashboard' },
-    { label: 'townmenu', href: '/manage/town' },
+    { label: 'GramPanchayat', href: '/manage/grampanchayat' },
   ];
   // Pass both grampanchayat and talukas to the Grampanchayat component
   return (
     <div>
       <div className="mt-5">
-      
+
       </div>
       <h1 className="card card-body">  <TitleCard breadcrumbs={breadcrumbs} /></h1>
       <Grampanchayat grampanchayat={grampanchayat} talukas={talukas} />

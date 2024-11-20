@@ -57,7 +57,22 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
     const [Noadministrativerecognition, sestNoadministrativerecognition] = useState("");
     const [Giveadministrativerecognition, setGiveadministrativerecognition] = useState("");
     const [Administrativerecognitionamount, setAdministrativerecognitionamount] = useState("");
+    const [AdministrativerecognitionDate, setAdministrativerecognitionDate] = useState("");
     const [error, setError] = useState<string>("");
+    const [isResponsive, setIsResponsive] = useState<boolean>(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsResponsive(window.innerWidth < 768); // Adjust threshold as needed
+        };
+
+        window.addEventListener("resize", handleResize);
+        handleResize(); // Check on mount
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
     const [isLoading, setIsLoading] = useState(false);
     const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
     const [workmasterdata, setWorkmaster] =
@@ -265,10 +280,10 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
                         } successfully!`
                     );
                 } else {
-                    toast.error("Failed to change the Sub Category status.");
+                    toast.error("Failed to change the Work Master status.");
                 }
             } catch (error) {
-                console.error("Error changing the Sub Category status:", error);
+                console.error("Error changing the Work Master status:", error);
                 toast.error("An unexpected error occurred.");
             }
         }
@@ -345,11 +360,11 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
                                 : cluster
                         )
                     );
-                    toast.success("Sub Category updated successfully!");
+                    toast.success("Work Master updated successfully!");
                 } else {
                     const createdData = await response.json();
                     setWorkmaster((prevData) => [...prevData, createdData]);
-                    toast.success("Sub Category inserted successfully!");
+                    toast.success("Work Master inserted successfully!");
                 }
 
                 handleClosePrint();
@@ -379,6 +394,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
         sestNoadministrativerecognition(cluster.prashashakiya_manyata_no)
         setGiveadministrativerecognition(cluster.tantrik_manyata_amount)
         setAdministrativerecognitionamount(cluster.prashashakiya_manyata_amount)
+        setAdministrativerecognitionDate(cluster.prashashakiya_manyata_date)
         handleShowPrint(); // Open modal for editing
     };
 
@@ -394,6 +410,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
         setTantricrecognitionamount("");
         setAdministrativerecognition("");
         sestNoadministrativerecognition("");
+        setAdministrativerecognitionDate("");
         setGiveadministrativerecognition("");
         setAdministrativerecognitionamount("");
     }
@@ -426,7 +443,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
                 label: category.name,
             })),
             disabled: true,
-            className: "col-4",
+            className: isResponsive ? 'col-12' : 'col-4',
             placeholder: `${t("Representative")}`, // Optional placeholder for select input
         },
         {
@@ -434,7 +451,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             value: subRepresentativeName,
             type: "text",
             disabled: true,
-            className: "col-4",
+            className: isResponsive ? 'col-12' : 'col-4',
             placeholder: `${t("RepresentativeName")}`,
 
             onChange: (e: any) => setSubRepresentativeName(e.target.value),
@@ -443,7 +460,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             label: `${t("numberofworktotal")}`,
             value: numberofwork,
             type: "text",
-            className: "col-4",
+            className: isResponsive ? 'col-12' : 'col-4',
             disabled: true,
             placeholder: `${t("numberofworktotal")}`,
 
@@ -451,9 +468,9 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
         },
         {
             label: `${t("numberofwork")}`,
-            value: workmasterdata.length + 1,
+            value: updateClusterId ? workmasterdata.length : workmasterdata.length + 1,
             type: "text",
-            className: "col-4",
+            className: isResponsive ? 'col-12' : 'col-4',
             disabled: true,
             placeholder: `${t("numberofwork")}`,
 
@@ -464,7 +481,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             value: workofdate,
             type: "date",
             disabled: true,
-            className: "col-4",
+            className: isResponsive ? 'col-12' : 'col-4',
             placeholder: `${t("AdministrativerecognitionDate")}`,
 
             onChange: (e: any) => setworkofdate(e.target.value),
@@ -478,7 +495,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             required: true,
             type: "text",
             disabled: true,
-            className: "col-4",
+            className: isResponsive ? 'col-12' : 'col-4',
             placeholder: `${t("estimateamounttotal")}`,
 
             onChange: (e: any) => setestimatetotalamount(e.target.value),
@@ -489,7 +506,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             required: true,
             type: "text",
 
-            className: "col-4",
+            className: isResponsive ? 'col-12' : 'col-4',
             placeholder: `${t("workname")}`,
 
             onChange: (e: any) => setWorkname(e.target.value),
@@ -501,7 +518,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             value: dist,
             onChange: (e: any) => setDist(e.target.value),
             type: "select",
-            className: "col-4",
+            className: isResponsive ? 'col-12' : 'col-4',
             options: talukas.map((taluka: any) => ({
                 value: taluka.id,
                 label: taluka.name,
@@ -513,7 +530,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             label: `${t("grampanchayatname")}`,
             value: town, // Ensure this uses townName
             type: "select",
-            className: "col-4",
+            className: isResponsive ? 'col-12' : 'col-4',
             placeholder: `${t('grampanchayatname')}`,
             onChange: (e: any) => setTown(e.target.value), // Keep this to set townName
 
@@ -533,7 +550,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             label: `${t("MahasulGaav")}`,
             value: mahasulgaav,
             type: "select",
-            className: "col-4",
+            className: isResponsive ? 'col-12' : 'col-4',
             placeholder: `${t('MahasulGaav')}`,
             onChange: (e: any) => setMahsulgaav(e.target.value),
             options: Villages
@@ -553,7 +570,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
 
             onChange: (e: any) => setFacility(e.target.value),
             type: "select",
-            className: "col-4",
+            className: isResponsive ? 'col-12' : 'col-4',
             options: facilities.map((taluka: Facility) => ({
                 value: taluka.id,
                 label: taluka.name,
@@ -566,7 +583,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             value: EstimatedAmount,
             required: true,
             type: "text",
-            className: "col-4",
+            className: isResponsive ? 'col-12' : 'col-4',
             placeholder: `${t("estimateamount")}`,
 
             onChange: (e: any) => setEstimatedAmount(e.target.value),
@@ -576,7 +593,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             value: Tantricrecognitionamount,
             required: true,
             type: "text",
-            className: "col-4",
+            className: isResponsive ? 'col-12' : 'col-4',
             placeholder: `${t("Tantricrecognitionamount")}`,
 
             onChange: (e: any) => setTantricrecognitionamount(e.target.value),
@@ -587,7 +604,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             label: `${t("Administrativerecognition")}`,
             value: Administrativerecognition,
             type: "select",
-            className: "col-4",
+            className: isResponsive ? 'col-12' : 'col-4',
             placeholder: `${t("Administrativerecognition")}`,
             options: [
                 { label: "Yes", value: "Yes" },
@@ -605,27 +622,27 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
                 value: Noadministrativerecognition,
                 required: true,
                 type: "text",
-                className: "col-4",
+                className: isResponsive ? 'col-12' : 'col-4',
                 placeholder: `${t("noadministrativerecognition")}`,
 
                 onChange: (e: any) => sestNoadministrativerecognition(e.target.value),
             },
             {
                 label: `${t("AdministrativerecognitionDate")}`,
-                value: Giveadministrativerecognition,
+                value: AdministrativerecognitionDate,
                 required: true,
                 type: "date",
-                className: "col-4",
+                className: isResponsive ? 'col-12' : 'col-4',
                 placeholder: `${t("AdministrativerecognitionDate")}`,
 
-                onChange: (e: any) => setGiveadministrativerecognition(e.target.value),
+                onChange: (e: any) => setAdministrativerecognitionDate(e.target.value),
             },
             {
                 label: `${t("Administrativerecognitionamount")}`,
                 value: Administrativerecognitionamount,
                 required: true,
                 type: "text",
-                className: "col-4",
+                className: isResponsive ? 'col-12' : 'col-4',
                 placeholder: `${t("Administrativerecognitionamount")}`,
 
                 onChange: (e: any) => setAdministrativerecognitionamount(e.target.value),
@@ -654,7 +671,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             />
 
             <CustomModal
-                size="lg"
+                size={`${isResponsive ? "" : "lg"}`}
                 show={showPrintModal}
                 handleClose={handleClosePrint}
                 handleSubmit={handleSubmit}

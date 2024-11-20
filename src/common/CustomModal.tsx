@@ -86,7 +86,7 @@ const CustomModal: React.FC<any> = ({
 }) => {
 
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
-
+ 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -166,20 +166,20 @@ const CustomModal: React.FC<any> = ({
                       isInvalid={!!formErrors[field.label]}
                     />
                   ) : field.type === "date" ? (
-                      <Flatpickr
-                        value={field.value ? new Date(field.value as any) : ""}
-                        
-                        onChange={(date) =>
-                          field.onChange({
-                            target: { value: date[0] },
-                          } as any)
-                        }
-                        options={{
-                          dateFormat: "Y-m-d",
-                        }}
-                        disabled={field.disabled}
-                        className="form-control"
-                      />
+                    <Flatpickr
+                      value={field.value ? new Date(field.value as any) : ""}
+
+                      onChange={(date) =>
+                        field.onChange({
+                          target: { value: date[0] },
+                        } as any)
+                      }
+                      options={{
+                        dateFormat: "Y-m-d",
+                      }}
+                      disabled={field.disabled}
+                      className="form-control"
+                    />
                   ) : field.type === "checkbox" ? (
                     <Form.Check
                       type="checkbox"
