@@ -86,7 +86,7 @@ const CustomModal: React.FC<any> = ({
 }) => {
 
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
- 
+
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -116,7 +116,7 @@ const CustomModal: React.FC<any> = ({
         <Form onSubmit={onSubmit}>
           <div className="row">
             {formData.fields.map((field: any, index: any) => (
-              <div className={field.className || gridClass} key={index}>
+              <div className={field.className || gridClass} key={index} style={{ marginBottom: "15px" }}>
                 <Form.Group controlId={`formField${index}`}>
                   <Form.Label>{field.label}</Form.Label>
 
@@ -127,6 +127,7 @@ const CustomModal: React.FC<any> = ({
                       onChange={field.onChange as any}
                       placeholder={field.placeholder}
                       disabled={field.disabled}
+                      className=""
                       isInvalid={!!formErrors[field.label]}
                     />
                   ) : field.type === "email" ? (
@@ -166,20 +167,18 @@ const CustomModal: React.FC<any> = ({
                       isInvalid={!!formErrors[field.label]}
                     />
                   ) : field.type === "date" ? (
-                    <Flatpickr
-                      value={field.value ? new Date(field.value as any) : ""}
-
-                      onChange={(date) =>
+                    <Form.Control
+                      type="date"
+                      value={field.value ? new Date(field.value).toISOString().split("T")[0] : ""}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         field.onChange({
-                          target: { value: date[0] },
-                        } as any)
-                      }
-                      options={{
-                        dateFormat: "Y-m-d",
+                          target: { value: e.target.value },
+                        } as any);
                       }}
                       disabled={field.disabled}
                       className="form-control"
                     />
+
                   ) : field.type === "checkbox" ? (
                     <Form.Check
                       type="checkbox"
@@ -225,7 +224,7 @@ const CustomModal: React.FC<any> = ({
           </Button>
         </Form>
       </Modal.Body>
-    </Modal>
+    </Modal >
   );
 };
 

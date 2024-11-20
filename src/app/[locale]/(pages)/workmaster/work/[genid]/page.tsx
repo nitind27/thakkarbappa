@@ -55,6 +55,7 @@ const Page = async ({ params }: any) => {
     const breadcrumbs = [
 
         { label: 'dashboard', href: '/dashboard' },
+        { label: 'workmaster', href: `/workmaster` },
         { label: 'workmaster', href: `/workmaster/work/${genid}` },
     ];
     const workgen = Workmasters.filter((gen) => gen.type !== "workgen" && gen.generatednumber == genid)
