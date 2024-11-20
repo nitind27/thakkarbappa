@@ -438,7 +438,8 @@
     "firstname": "पहला नाम",
     "surname": "उपनाम",
     "parentsname": "मध्य नाम"
-  },"student": {
+  },
+  "student": {
     "title": "छात्रों का विवरण",
     "addschool": "जोड़ें",
     "SrNo": "क्रम संख्या",
@@ -464,5 +465,43 @@
     "updatepage": "छात्रों का विवरण",
     "submit": "जोड़ें",
     "editsubmit": "संपादित करें"
-}
+  },
+  "workmaster": {
+    "title": "कार्य मास्टर",
+    "addbenef": "जोड़ें",
+    "SrNo": "क्रम संख्या",
+    "Dist": "जिला",
+    "grampanchayatname": "ग्राम पंचायत",
+    "MahasulGaav": "महासुल गाँव",
+    "suvidha": "सुविधा",
+    "Representativepost": "प्रतिनिधि पद",
+    "Representative": "प्रतिनिधि/BDO/ग्राम पंचायत",
+    "RepresentativeName": "प्रतिनिधि का नाम",
+    "pratinidhi": "प्रतिनिधि",
+    "numberofworktotal": "कुल कार्यों की संख्या",
+    "numberofwork": "कार्य की संख्या",
+    "workname": "कार्य का नाम",
+    "gendate": "तारीख",
+    "estimateamounttotal": "कुल अनुमानित राशि",
+    "estimateamount": "अनुमानित राशि",
+    "Tantricrecognitionamount": "तांत्रिक मान्यता राशि",
+    "photo": "फोटो",
+    "Code": "कोड",
+    "Administrativerecognition": "प्रशासनिक मान्यता",
+    "noadministrativerecognition": "कोई प्रशासनिक मान्यता नहीं",
+    "AdministrativerecognitionDate": "प्रशासनिक मान्यता की तारीख",
+    "Administrativerecognitionamount": "प्रशासनिक मान्यता राशि",
+    "Longitude": "अवधि",
+    "Latitude": "अक्षांश",
+    "address": "पता",
+    "Status": "स्थिति",
+    "Action": "कार्यवाही",
+    "edit": "संपादित करें",
+    "Active": "सक्रिय",
+    "Deactive": "निष्क्रिय",
+    "insertpage": "कार्य मास्टर",
+    "updatepage": "कार्य मास्टर",
+    "submit": "जोड़ें",
+    "editsubmit": "संपादित करें"
+  }
 }
