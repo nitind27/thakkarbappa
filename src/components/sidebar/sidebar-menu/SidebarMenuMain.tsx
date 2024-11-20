@@ -205,6 +205,13 @@ const SidebarMenuMain = () => {
           fontIcon="bi-app-notification"
           onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)} // Store path on click
         />
+        <SidebarMenuItem
+          to={`/${localActive}/workmaster`}
+          icon="abstract-2"
+          title={"Workmaster"}
+          fontIcon="bi-app-notification"
+          onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)} // Store path on click
+        />
       </div>
     </>
   );

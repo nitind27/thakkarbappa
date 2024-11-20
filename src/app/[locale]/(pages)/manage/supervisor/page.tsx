@@ -28,15 +28,13 @@ const Page = async () => {
   }
   const breadcrumbs = [
 
-    { label: 'Dashboard', href: '/dashboard' },
-    { label: 'Vaparkarta', href: '/manage/supervisor' },
+    { label: 'dashboard', href: '/dashboard' },
+    { label: 'vaparkarta', href: '/manage/supervisor' },
   ];
   return (
     <div>
-      <div className="mt-5">
-        <TitleCard breadcrumbs={breadcrumbs} />
-      </div>
-      <h1 className="card card-body"><Supervisortitle /></h1>
+
+      <h1 className="card card-body mt-5"> <TitleCard breadcrumbs={breadcrumbs} /></h1>
       <Supervisor initialSupervisorlData={Supervisordata} UserCategory={UserCategory} Padname={Padname} />
     </div>
   );

@@ -345,3 +345,33 @@ export type TblBeneficiary = {
   organization: string;
   work_order_date?: Date | null; // Date type for work order date
 };
+
+
+export interface WorkMasterDemo {
+  id: number;
+  taluka_id?: number | null;
+  gp_id?: number | null;
+  village_id?: number | null;
+  facility_id?: number | null;
+  representative_id?: number | null;
+  representative_name?: string | null;
+  name?: string | null;
+  estimated_amount?: number | null;
+  tantrik_manyata_amount?: number | null;
+  photo?: string | null;
+  prashashakiya_manyata?: string | null;
+  prashashakiya_manyata_no?: string | null;
+  prashashakiya_manyata_date?: Date | null;
+  prashashakiya_manyata_amount?: number | null;
+  latitude?: string | null;
+  longitude?: string | null;
+  address?: string | null;
+  status?: string | null;
+  created_at?: Date | null;
+  updated_at?: Date | null;
+  estimatedtotalamount?: string | null;
+  number_work?: number | null;
+  genratedworkdate?: Date | null;
+  generatednumber?: string | null;
+  type?: string | null;
+}

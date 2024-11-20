@@ -1,7 +1,8 @@
 // app/page.tsx
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import Categorytitle from "@/app/[locale]/title/category";
 import Cluster from "@/app/[locale]/title/cluster"; import Loader from "@/common/Loader ";
-;
+
 import Clusteradd from "@/components/manage/Clusteradd";
 import Category from "@/components/Schemes/Category";
 import { Categorys } from "@/components/type";
@@ -29,11 +30,16 @@ const Page = async () => {
             </>
         )
     }
+    const breadcrumbs = [
 
+        { label: 'dashboard', href: '/dashboard' },
+        { label: 'category', href: '/yojna/schemes/category' },
+    ];
     return (
         <div>
+
             <h1 className="card card-body mt-5">
-                <Categorytitle />
+                <TitleCard breadcrumbs={breadcrumbs} />
             </h1>
 
             <Category initialcategoryData={category} />

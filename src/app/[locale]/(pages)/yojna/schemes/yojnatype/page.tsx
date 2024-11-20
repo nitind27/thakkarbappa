@@ -1,4 +1,5 @@
 
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import Cluster from "@/app/[locale]/title/cluster"; import Yojnatypetitle from "@/app/[locale]/title/Yojnatypetitle";
 import Loader from "@/common/Loader ";
 
@@ -35,10 +36,16 @@ const Page = async () => {
             </>
         )
     }
+    const breadcrumbs = [
+
+        { label: 'dashboard', href: '/dashboard' },
+        { label: 'Yojna', href: '/yojna/schemes/yojnatype' },
+    ];
     return (
         <div>
+
             <h1 className="card card-body mt-5">
-                <Yojnatypetitle />
+                <TitleCard breadcrumbs={breadcrumbs} />
             </h1>
 
             <Yojnatype initialcategoryData={subCategory} yojnatype={yojnatype} Bankdata={Bankdata} category={category} />

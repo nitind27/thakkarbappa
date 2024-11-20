@@ -6,6 +6,7 @@ import Cluster from "@/app/[locale]/title/cluster"; import Loader from "@/common
 import Clusteradd from "@/components/manage/Clusteradd";
 import { clusterdata } from "@/components/type";
 import prisma from "@/lib/db";
+import { useTranslations } from "next-intl";
 import React from "react";
 
 const Page = async () => {
@@ -31,18 +32,22 @@ const Page = async () => {
   }
   const breadcrumbs = [
 
-    { label: 'Dashboard', href: '/dashboard' },
-    { label: 'Cluster', href: '/manage/cluster' },
+    { label: 'dashboard', href: '/dashboard' },
+    { label: 'clustermenu', href: '/manage/cluster' },
   ];
   return (
     <div>
-      <div className="mt-5">
 
-        <TitleCard breadcrumbs={breadcrumbs} />
+      <div className="card p-3 mt-5">
+
+
+        <div className="d-flex justify-between">
+
+          <div>
+            <TitleCard breadcrumbs={breadcrumbs} />
+          </div>
+        </div>
       </div>
-      <h1 className="card card-body ">
-        <Cluster />
-      </h1>
 
       <Clusteradd initialClusterData={clusterdata} />
     </div>

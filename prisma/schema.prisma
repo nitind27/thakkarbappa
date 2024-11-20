@@ -436,3 +436,38 @@ model beneficiary {
 
     @@map("tbl_beneficiary")
 }
+
+
+
+model WorkMasterDemo {
+  id                        Int      @id @default(autoincrement())
+  taluka_id                  Int?  @map("taluka_id")
+  gp_id                      Int?  @map("gp_id")
+  village_id                 Int?  @map("village_id")
+  facility_id                Int?  @map("facility_id")
+  representative_id          Int?  @map("representative_id")
+  representative_name        String?  @map("representative_name")
+  name                       String?  @map("name")
+  estimated_amount           Float?   @map("estimated_amount")
+  tantrik_manyata_amount     Float?   @map("tantrik_manyata_amount")
+  photo                      String?  @map("photo")
+  prashashakiya_manyata      String?  @map("prashashakiya_manyata")
+  prashashakiya_manyata_no   String?  @map("prashashakiya_manyata_no")
+  prashashakiya_manyata_date DateTime? @map("prashashakiya_manyata_date")
+  prashashakiya_manyata_amount Float?   @map("prashashakiya_manyata_amount")
+  latitude                   String?  @map("latitude")
+  longitude                  String?  @map("longitude")
+  address                    String?  @map("address")
+  status                     String?  @map("status")
+  created_at                 DateTime? @map("created_at") @default(now())
+  updated_at                 DateTime? @map("updated_at") @default(now()) @updatedAt
+  estimatedtotalamount       String?  @db.VarChar(10)
+  number_work                Int?     @map("number_work")
+  genratedworkdate           DateTime? @map("genratedworkdate")
+  generatednumber            String?   @map("generatednumber")
+  type                       String?   @map("type")
+  @@index([taluka_id])
+
+    @@map("work_master_demo")
+}
+

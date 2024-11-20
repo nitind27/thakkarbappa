@@ -7,6 +7,7 @@ type FormField = {
   label: string;
   value: string | number | File | null;
   placeholder?: string;
+
   error?: string;
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -15,6 +16,7 @@ type FormField = {
   options?: { value: string | number; label: string }[];
   className?: string; // Optional className property
   required?: boolean; // New property to indicate if field is required
+  disabled?: boolean;
 };
 
 // Enhanced validation function with conditional logic
@@ -124,6 +126,7 @@ const CustomModal: React.FC<any> = ({
                       value={field.value as string}
                       onChange={field.onChange as any}
                       placeholder={field.placeholder}
+                      disabled={field.disabled}
                       isInvalid={!!formErrors[field.label]}
                     />
                   ) : field.type === "email" ? (
@@ -132,12 +135,14 @@ const CustomModal: React.FC<any> = ({
                       value={field.value as string}
                       onChange={field.onChange as any}
                       placeholder={field.placeholder}
+                      disabled={field.disabled}
                       isInvalid={!!formErrors[field.label]}
                     />
                   ) : field.type === "select" ? (
                     <Form.Control
                       as="select"
                       value={field.value as string}
+                      disabled={field.disabled}
                       onChange={field.onChange as any}
                       isInvalid={!!formErrors[field.label]}
                     >
@@ -161,18 +166,20 @@ const CustomModal: React.FC<any> = ({
                       isInvalid={!!formErrors[field.label]}
                     />
                   ) : field.type === "date" ? (
-                    <Flatpickr
-                      value={field.value ? new Date(field.value as any) : ""}
-                      onChange={(date) =>
-                        field.onChange({
-                          target: { value: date[0] },
-                        } as any)
-                      }
-                      options={{
-                        dateFormat: "Y-m-d",
-                      }}
-                      className="form-control"
-                    />
+                      <Flatpickr
+                        value={field.value ? new Date(field.value as any) : ""}
+                        
+                        onChange={(date) =>
+                          field.onChange({
+                            target: { value: date[0] },
+                          } as any)
+                        }
+                        options={{
+                          dateFormat: "Y-m-d",
+                        }}
+                        disabled={field.disabled}
+                        className="form-control"
+                      />
                   ) : field.type === "checkbox" ? (
                     <Form.Check
                       type="checkbox"

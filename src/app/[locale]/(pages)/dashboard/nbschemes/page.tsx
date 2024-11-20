@@ -24,7 +24,7 @@ const page = async () => {
   });
   const breadcrumbs = [
 
-    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'dashboard', href: '/dashboard' },
     { label: 'nbschemes', href: '/dashboard/nbschemes' },
 
   ];

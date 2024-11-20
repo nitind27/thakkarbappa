@@ -24,16 +24,14 @@ const Page = async () => {
   }
   const breadcrumbs = [
 
-    { label: 'Dashboard', href: '/dashboard' },
-    { label: 'Praranbhik Sillak', href: '/manage/openingbalance' },
+    { label: 'dashboard', href: '/dashboard' },
+    { label: 'PraranbhikSillak', href: '/manage/openingbalance' },
   ];
   return (
     <div>
-      <div className="mt-5">
-        <TitleCard breadcrumbs={breadcrumbs} />
-      </div>
+
       <h1 className="card card-body mt-5">
-        <OpenBalancetitle />
+      <TitleCard breadcrumbs={breadcrumbs} />
       </h1>
       <Openingbalanceadd
         initialOpenBalanceData={OpeningBalance}

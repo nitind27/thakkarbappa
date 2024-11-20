@@ -35,19 +35,30 @@ const Page = async ({ params }: any) => {
   );
   const breadcrumbs = [
 
-    { label: 'Dashboard', href: '/dashboard' },
-    { label: 'School', href: '/dashboard/school' },
-    { label: 'Standard wise', href: `/dashboard/schoolwisestudents/${members}/${indexId}` },
+    { label: 'dashboard', href: '/dashboard' },
+    { label: 'school', href: '/dashboard/school' },
+    { label: 'schoolwisestudents', href: `/dashboard/schoolwisestudents/${members}/${indexId}` },
 
   ];
   return (
     <div>
-      <TitleCard breadcrumbs={breadcrumbs} />
-      <div className="container">
-        <h3 className="card card-body mt-5 col-lg-12">
-          {schoolname}-{filteredStudents.length}/{totalstudent}
-        </h3>
+      <div className="container mt-5 card card-body col-lg-12 mb-5">
+        <div className=" d-flex justify-content-between ">
+
+          <div>
+
+            <TitleCard breadcrumbs={breadcrumbs} />
+          </div>
+
+          <h3>
+
+
+            {schoolname}-{filteredStudents.length}/{totalstudent}
+          </h3>
+
+        </div>
       </div>
+
 
       <div className="container mt-5">
         <div className="row col-lg-12">

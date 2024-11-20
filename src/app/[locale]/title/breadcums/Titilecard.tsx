@@ -1,5 +1,5 @@
 "use client"
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import React from 'react';
 
@@ -15,6 +15,7 @@ interface BreadcrumbItem {
 const Breadcrumbs: React.FC<{ items: BreadcrumbItem[] }> = ({ items }) => {
     const localActive = useLocale();
     const router = usePathname();
+    const t = useTranslations('Sidebar');
 
     return (
         <nav aria-label="breadcrumb">
@@ -25,14 +26,14 @@ const Breadcrumbs: React.FC<{ items: BreadcrumbItem[] }> = ({ items }) => {
 
                     return (
                         <li key={index} className={`breadcrumb-item ${isActive ? 'active' : ''}`}>
-                            <Link href={`/${localActive}${item.href}`} className={isActive ? 'text-dark' : ''}>
-                                {item.label}
+                            <Link href={`/${localActive}${item.href}`} className={isActive ? 'text-dark' : ''} style={{ fontSize: isActive ? "18px" : "16px" }}>
+                                {t(`${item.label}`)}
                             </Link>
                         </li>
                     );
                 })}
             </ol>
-        </nav>
+        </nav >
     );
 };
 
@@ -44,6 +45,7 @@ interface TitleCardProps {
 const TitleCard: React.FC<TitleCardProps> = ({ breadcrumbs }) => {
     return (
         <div className="container">
+
             <Breadcrumbs items={breadcrumbs} />
         </div>
     );

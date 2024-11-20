@@ -1,40 +1,42 @@
-// app/page.tsx
-import Beneficiarytitile from "@/app/[locale]/title/Beneficiarytitile";
-import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
-import Cluster from "@/app/[locale]/title/cluster"; import Loader from "@/common/Loader ";
-;
-import Clusteradd from "@/components/manage/Clusteradd";
-import Beneficiary from "@/components/Schemes/Beneficiary";
-import Category from "@/components/Schemes/Category";
-import SubCategorys from "@/components/Schemes/SubCategorys";
-import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, TblBeneficiary, TblYojanaType, Villages, YojanaYear } from "@/components/type";
+
+
+import Loader from "@/common/Loader ";
+
+import { Bank, Categorys, Facility, grampanchayat, Representative, SubCategory, talukasdata, TblBeneficiary, Villages, WorkMaster, WorkMasterDemo, YojanaYear } from "@/components/type";
+import Workmaster from "@/components/Workmaster/Workmaster";
+
 import prisma from "@/lib/db";
-import { YojanaMaster } from "@prisma/client";
 import React from "react";
 
-const Page = async () => {
+import Generateform from "@/components/Workmaster/Generateform";
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
+
+const Page = async ({ params }: any) => {
     let subCategory: SubCategory[] = [];
     let YojnaYear: YojanaYear[] = [];
     let Bankdata: Bank[] = [];
     let category: Categorys[] = [];
-    let beneficiary: TblBeneficiary[] = [];
-    let yojnatype: TblYojanaType[] = [];
-    let yojnamaster: YojanaMaster[] = [];
+    let Workmasters: WorkMasterDemo[] = [];
+    let reprenstive: Representative[] = [];
     let talukas: talukasdata[] = [];
     let grampanchayat: grampanchayat[] = [];
     let Villages: Villages[] = [];
+    let facilities: Facility[] = [];
+
+    const { genid } = params;
+
     try {
         category = await prisma.category.findMany(); // Fetch all clusters
         subCategory = await prisma.subCategory.findMany(); // Fetch all clusters
         YojnaYear = await prisma.yojanaYear.findMany(); // Fetch all clusters
-        beneficiary = await prisma.beneficiary.findMany(); // Fetch all clusters
         Bankdata = await prisma.bank.findMany();
-        yojnatype = await prisma.yojnatype.findMany();
-        yojnamaster = await prisma.yojanaMaster.findMany();
+        Workmasters = await prisma.workMasterDemo.findMany();
+        reprenstive = await prisma.representative.findMany();
         talukas = await prisma.talukasData.findMany();
-
+        facilities = await prisma.facility.findMany();
         Villages = await prisma.villages.findMany(); // Fetch all QR codes
         grampanchayat = await prisma.grampanchayat.findMany();
+
     } catch (error) {
         console.error("Error fetching cluster data:", error);
         return (
@@ -53,15 +55,19 @@ const Page = async () => {
     const breadcrumbs = [
 
         { label: 'dashboard', href: '/dashboard' },
-        { label: 'Beneficiary', href: '/yojna/schemes/beneficiary' },
+        { label: 'workmaster', href: `/workmaster/work/${genid}` },
     ];
+    const workgen = Workmasters.filter((gen) => gen.type !== "workgen" && gen.generatednumber == genid)
+    const workdata = Workmasters.filter((gen) => gen.generatednumber == genid)
     return (
         <div>
 
             <h1 className="card card-body mt-5">
                 <TitleCard breadcrumbs={breadcrumbs} />
             </h1>
-            <Beneficiary initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} />
+
+
+            <Workmaster initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} Workmasters={workgen} reprenstive={reprenstive} talukas={talukas} Villages={Villages} grampanchayat={grampanchayat} facilities={facilities} Workmastersdata={workdata} genid={genid} />
         </div>
     );
 };

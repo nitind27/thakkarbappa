@@ -19,13 +19,16 @@ const page = async () => {
   }
   const breadcrumbs = [
 
-    { label: 'Dashboard', href: '/dashboard' },
-    { label: 'School', href: '/dashboard/school' },
+    { label: 'dashboard', href: '/dashboard' },
+    { label: 'school', href: '/dashboard/school' },
 
   ];
   return (
     <div>
-      <TitleCard breadcrumbs={breadcrumbs} />
+      <div className="card mt-5 p-3">
+        <TitleCard breadcrumbs={breadcrumbs} />
+
+      </div>
       <div className="container mt-5">
         <div className="row col-lg-12">
           {schooldata.map((school, index) => {

@@ -1,5 +1,6 @@
 
- import SubCategorytitle from "@/app/[locale]/title/Subcategory";
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
+import SubCategorytitle from "@/app/[locale]/title/Subcategory";
 import Loader from "@/common/Loader ";
 
 
@@ -36,10 +37,16 @@ const Page = async () => {
             </>
         )
     }
+    const breadcrumbs = [
+
+        { label: 'dashboard', href: '/dashboard' },
+        { label: 'subcategory', href: '/yojna/schemes/subcategory' },
+    ];
     return (
         <div>
+
             <h1 className="card card-body mt-5">
-                <SubCategorytitle />
+                <TitleCard breadcrumbs={breadcrumbs} />
             </h1>
 
             <SubCategorys initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} />

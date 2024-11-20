@@ -9,13 +9,16 @@ import TitleCard from "../../title/breadcums/Titilecard";
 const Page = () => {
   const breadcrumbs = [
 
-    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'dashboard', href: '/dashboard' },
 
   ];
   const localActive = useLocale();
   return (
     <div>
-      <TitleCard breadcrumbs={breadcrumbs} />
+      <div className="card mt-5 p-3">
+        <TitleCard breadcrumbs={breadcrumbs} />
+
+      </div>
       <div className="container mt-5">
         <div className="row col-lg-12">
           <div className="col-md-3">

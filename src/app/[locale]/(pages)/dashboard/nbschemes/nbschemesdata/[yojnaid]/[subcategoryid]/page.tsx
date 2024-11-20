@@ -39,15 +39,15 @@ const page = async ({ params }: any) => {
 
   const breadcrumbs = [
 
-    { label: 'Dashboard', href: '/dashboard' },
-    { label: 'Nbschemes', href: '/dashboard/nbschemes' },
+    { label: 'dashboard', href: '/dashboard' },
+    { label: 'nbschemes', href: '/dashboard/nbschemes' },
     { label: 'NbSchmescategory', href: `/dashboard/nbschemes/nbschemescategory/${yojnaid}` },
     { label: 'Yojna', href: `/dashboard/nbschemes/nbschemesdata/${yojnaid}/${subcategoryid}` },
 
   ];
   return (
     <div className="container mx-auto p-4">
-      <TitleCard breadcrumbs={breadcrumbs} />
+
       {uniqueSubCategories.length > 0 ? (
         uniqueSubCategories.map((category, index) => {
           // Filter YojnaMaster by current category
@@ -57,9 +57,24 @@ const page = async ({ params }: any) => {
 
           return (
             <div key={index} className="mb-6">
-              <h2 className=" font-bold card p-5 mb-5">
-                {category?.sub_category_name} ({categoryYojnas.length})
-              </h2>
+
+
+              <div className="container mt-5 card card-body col-lg-12 mb-5">
+                <div className=" d-flex justify-content-between ">
+
+                  <div>
+
+                    <TitleCard breadcrumbs={breadcrumbs} />
+                  </div>
+
+                  <h3>
+
+
+                    {category?.sub_category_name} ({categoryYojnas.length})
+                  </h3>
+
+                </div>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {categoryYojnas.map((yojna, idx) => (
                   <div

@@ -26,8 +26,8 @@ const Page = async ({ params }: any) => {
   }
   const breadcrumbs = [
 
-    { label: 'Dashboard', href: '/dashboard' },
-    { label: 'Nbschemes', href: '/dashboard/nbschemes' },
+    { label: 'dashboard', href: '/dashboard' },
+    { label: 'nbschemes', href: '/dashboard/nbschemes' },
     { label: 'NbSchmescategory', href: `/dashboard/nbschemes/nbschemescategory/${yojnaid}` },
 
   ];
@@ -37,15 +37,22 @@ const Page = async ({ params }: any) => {
     .map((y) => y.yojana_year);
   return (
     <div>
-      <div className="mt-5">
 
-        <TitleCard breadcrumbs={breadcrumbs} />
-      </div>
-      <div className="container">
-        <h3 className="card card-body  col-lg-12">
-          {" "}
-          वर्ष {filteryojnayear}
-        </h3>
+      <div className="container mt-5 card card-body col-lg-12">
+        <div className=" d-flex justify-content-between ">
+
+          <div>
+
+            <TitleCard breadcrumbs={breadcrumbs} />
+          </div>
+
+          <h3>
+
+
+            वर्ष {filteryojnayear}
+          </h3>
+
+        </div>
       </div>
       <div className="container mt-5">
         <div className="row col-lg-12">

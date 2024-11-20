@@ -27,15 +27,15 @@ const page = async () => {
 
     const breadcrumbs = [
 
-        { label: 'Dashboard', href: '/dashboard' },
-        { label: 'Taluka', href: '/manage/town' },
+        { label: 'dashboard', href: '/dashboard' },
+        { label: 'townmenu', href: '/manage/town' },
     ];
     return (
         <div>
             <div className="mt-5">
-                <TitleCard breadcrumbs={breadcrumbs} />
+                
             </div>
-            <h1 className="card card-body "><Towntitle /></h1>
+            <h1 className="card card-body "><TitleCard breadcrumbs={breadcrumbs} /> </h1>
             <TalukaData talukasdata={talukasdata} />
 
         </div>

@@ -17,7 +17,7 @@ const Footer = () => {
           target="_blank"
           className="text-gray-800 text-hover-primary"
         >
-          Developed by WeClocks Technology Pvt. Ltd. @ 2022
+          Developed by WeClocks Technology Pvt. Ltd. @ 2024
         </a>
       </div>
     </>

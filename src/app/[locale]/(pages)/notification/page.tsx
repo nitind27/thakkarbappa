@@ -32,16 +32,14 @@ const Page = async () => {
   }
   const breadcrumbs = [
 
-    { label: 'Dashboard', href: '/dashboard' },
-    { label: 'Notification', href: '/notification' },
+    { label: 'dashboard', href: '/dashboard' },
+    { label: 'notificaiton', href: '/notification' },
   ];
   return (
     <div>
-      <div className="mt-5">
-        <TitleCard breadcrumbs={breadcrumbs} />
-      </div>
+
       <h1 className="card card-body mt-5">
-        <Notoficationtitle />
+      <TitleCard breadcrumbs={breadcrumbs} />
       </h1>
       <Notification initialnotificationdata={notificationdata} />
     </div>

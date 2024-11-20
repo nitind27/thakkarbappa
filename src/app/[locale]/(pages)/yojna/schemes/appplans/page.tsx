@@ -1,4 +1,5 @@
 // app/page.tsx
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import Cluster from "@/app/[locale]/title/cluster";import Planapptitle from "@/app/[locale]/title/Planapptitle";
  import Loader from "@/common/Loader ";
 ;
@@ -43,12 +44,17 @@ const Page = async () => {
             </>
         )
     }
+    const breadcrumbs = [
+
+        { label: 'dashboard', href: '/dashboard' },
+        { label: 'App_plan', href: '/yojna/schemes/appplans' },
+    ];
     return (
         <div>
-            <h1 className="card card-body mt-5">
-                <Planapptitle />
-            </h1>
 
+            <h1 className="card card-body mt-5">
+                <TitleCard breadcrumbs={breadcrumbs} />
+            </h1>
             <Appplans initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} yojnatype={yojnatype} yojnamasterapp={yojnamasterapp} />
         </div>
     );
