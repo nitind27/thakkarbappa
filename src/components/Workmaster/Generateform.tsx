@@ -93,11 +93,15 @@ const Generateform = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive 
 
     const columns = [
         {
-            accessorKey: "serial_number", // Use a new accessor for the serial number
-            header: `${t("SrNo")}`, // Header for the serial number
+            accessorKey: "serial_number",
+            header: () => (
+                <div style={{ fontWeight: 'bold',padding: '5px' }}>
+                    {t("SrNo")}
+                </div>
+            ),
             cell: ({ row }: any) => (
                 <div>
-                    {row.index + 1} {/* Display the index + 1 for serial number */}
+                    {row.index + 1}
                 </div>
             ),
         },
