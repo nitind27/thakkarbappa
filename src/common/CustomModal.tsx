@@ -30,12 +30,16 @@ const validateForm = (fields: FormField[]) => {
     }
     // Validate text fields for alphanumeric characters including Marathi and other languages
     if (field.type === "text" && typeof field.value === 'string') {
-      // Regex for alphanumeric characters including Devanagari script
-      const regex = /^[\p{L}\p{N}\u0900-\u097F]*$/u; // \u0900-\u097F covers the Devanagari Unicode range
+      // Regex for alphanumeric characters, spaces, and support for all languages
+      const regex = /^[\p{L}\p{N}\p{M} ]*$/u;
+      // \p{L} = Letters, \p{N} = Numbers, \p{M} = Marks (e.g., diacritics), space included
+
       if (!regex.test(field.value)) {
-        errors[field.label] = `${field.label} can only contain alphanumeric characters including Marathi.`;
+        errors[field.label] = `${field.label} should only contain letters, numbers, and spaces. Special characters are not allowed.`;
       }
     }
+
+
 
 
     // Validate email format
