@@ -95,7 +95,7 @@ const Generateform = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive 
         {
             accessorKey: "serial_number",
             header: () => (
-                <div style={{ fontWeight: 'bold',padding: '5px' }}>
+                <div style={{ fontWeight: 'bold', padding: '5px' }}>
                     {t("SrNo")}
                 </div>
             ),
@@ -146,7 +146,7 @@ const Generateform = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive 
                 <div style={{ display: "flex", whiteSpace: "nowrap" }}>
                     <button
                         className="btn btn-sm btn-primary"
-                        onClick={() => handleEdit(row.original)}
+                        onClick={() => handleEdit(row.original)} disabled={row.original.status !== "Active" && true}
                     >
                         {" "}
                         <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
@@ -164,17 +164,28 @@ const Generateform = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive 
                             ? `${t("Deactive")}`
                             : `${t("Active")}`}
                     </button>
-
-                    <Link href={`/en/workmaster/work/${row.original.generatednumber}`}>
+                    {row.original.status !== "Active" ?
                         <button
                             className={`btn btn-sm btn-success ms-5
-                            `}
-
+                          `}
+                            disabled={row.original.status !== "Active" && true}
                         >
                             <KTIcon iconName={"calendar-edit"} className="fs-6" iconType="solid" />
                             View + Add
                         </button>
-                    </Link>
+                        :
+
+                        <Link href={`/en/workmaster/work/${row.original.generatednumber}`}>
+                            <button
+                                className={`btn btn-sm btn-success ms-5
+  `}
+                                disabled={row.original.status !== "Active" && true}
+                            >
+                                <KTIcon iconName={"calendar-edit"} className="fs-6" iconType="solid" />
+                                View + Add
+                            </button>
+                        </Link>
+                    }
                 </div>
             ),
         },

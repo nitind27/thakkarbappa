@@ -317,6 +317,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
   const handleClosePrint = () => {
     setShowPrintModal(false);
     // setClusterName("");
+    resetForm();
     setError("");
     setUpdateClusterId(null); // Reset update ID when closing
   };

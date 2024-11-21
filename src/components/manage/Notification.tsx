@@ -297,6 +297,7 @@ const Notification = ({ initialnotificationdata }: Props) => {
   const handleClosePrint = () => {
     setShowPrintModal(false);
     // setClusterName("");
+    resetForm();
     setError("");
     setUpdateClusterId(null); // Reset update ID when closing
   };
