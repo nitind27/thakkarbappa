@@ -11,6 +11,8 @@ import ConfirmationDialog from "@/common/ConfirmationDialog";
 import { createConfirmation } from "react-confirm";
 import TableOption from "../table/TableOption";
 import { formatDate } from "@/lib/utils";
+import ComponentFile from "@/common/ComponentFile";
+import AddData from "./AddData";
 type Props = {
   initialstudentData: StudentData[];
   schooldata: Schooldata[];
@@ -317,6 +319,7 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
     setError("");
     setUpdateTownId(null);
   };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -385,6 +388,8 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
       setIsLoading(false); // End loading
     }
   };
+
+
   const handleEdit = (student: any) => {
     setUpdateTownId(student.student_id);
     setSerialnumber(student.serial_number);
@@ -447,164 +452,7 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
     }));
   }
 
-  const formFields = [
-    {
-      label: `${t("serialnumber")}`,
-      value: serialnumber,
-      type: "text",
-      required: true,
-      placeholder: `${t("serialnumber")}`,
-      onChange: (e: any) => setSerialnumber(e.target.value),
-    },
-    {
-      label: `${t("studentName")}`,
-      value: studentName,
-      type: "text",
-      required: true,
-      placeholder: `${t("studentName")}`,
-      onChange: (e: any) => setStudentName(e.target.value),
-    },
-    {
-      label: `${t("grno")}`,
-      value: grno,
-      type: "text",
-      required: true,
-      placeholder: `${t("grno")}`,
-      onChange: (e: any) => setGrno(e.target.value),
-    },
-    {
-      label: `${t("saralid")}`,
-      value: saralid,
-      required: true,
-      type: "text",
-      placeholder: `${t("saralid")}`,
-      onChange: (e: any) => setSaralId(e.target.value),
-    },
-    {
-      label: `${t("Schoolname")}`,
-      required: true,
-      value: schoolname || "", // Default value when updating
-      onChange: (e: any) => setSchoolname(e.target.value),
-      type: "select",
-      options: schooldata.map((student: Schooldata) => ({
-        value: student.school_id,
-        label: student.school_name,
-      })),
-      placeholder: `${t("Schoolname")}`, // Optional placeholder for select input
-    },
-    {
-      label: `${t("std")}`,
-      required: true,
-      value: standard || "",
-      onChange: (e: any) => setStandard(e.target.value),
-      type: "select",
-      options: standarddata.map((std: Standarddata) => ({
-        value: std.standard_id,
-        label: std.standard_name,
-      })),
-      placeholder: `${t("std")}`,
-    },
-    {
-      label: `${t("Monthername")}`,
-      value: mothername,
-      required: true,
-      type: "text",
-      placeholder: `${t("Monthername")}`,
-      onChange: (e: any) => setMontherName(e.target.value),
-    },
-    {
-      label: `${t("dob")}`,
-      value: dob,
-      required: true,
-      type: "date",
-      placeholder: `${t("dob")}`,
-      onChange: (e: any) => setDob(e.target.value),
-    },
 
-    {
-      label: `${t("gender")}`,
-      value: gender,
-      type: "select",
-      placeholder: `${t("gender")}`,
-      options: [
-        { label: "Male", value: "M" },
-        { label: "Female", value: "F" },
-        { label: "Other", value: "Oth" },
-        // Add other options here if needed
-      ],
-      onChange: (e: any) => setGender(e.target.value),
-    },
-
-    {
-      label: `${t("cast")}`,
-      value: cast,
-      type: "select",
-      placeholder: `${t("cast")}`,
-      options: [
-        { label: "SC", value: "SC" },
-        { label: "ST", value: "ST" },
-        { label: "OBC", value: "OBC" },
-        { label: "SBC", value: "SBC" },
-        { label: "NT B", value: "NT B" },
-        { label: "General", value: "General" },
-        // Add other options here if needed
-      ],
-      onChange: (e: any) => setCast(e.target.value),
-    },
-
-    {
-      label: `${t("aadharcard")}`,
-      value: aadhaar,
-      required: true,
-      type: "text",
-      placeholder: `eg. 121212121212`,
-      onChange: (e: any) => setAadhaar(e.target.value),
-    },
-
-    {
-      label: `${t("Contact")}`,
-      value: contactNo,
-      required: true,
-      type: "text",
-      placeholder: `eg.7359595959`,
-      onChange: (e: any) => setContactNo(e.target.value),
-    },
-    {
-      label: `${t("address")}`,
-      value: address,
-      required: true,
-      type: "text",
-      placeholder: `${t("address")}`,
-      onChange: (e: any) => setAddress(e.target.value),
-    },
-
-    {
-      label: `${t("sicklecell")}`,
-      value: sicklecell,
-      type: "select",
-      placeholder: `${t("sicklecell")}`,
-      options: [
-        { label: "Yes", value: "Yes" },
-        { label: "No", value: "No" },
-
-        // Add other options here if needed
-      ],
-      onChange: (e: any) => setSicklecell(e.target.value),
-    },
-  ];
-  if (sicklecell === "Yes") {
-    formFields.push({
-      label: `Sickle Cell Report`,
-      value: sicklereport,
-      type: "select",
-      placeholder: `Select Report Type`,
-      options: [
-        { label: "AS", value: "AS" },
-        { label: "SS", value: "SS" },
-      ],
-      onChange: (e: any) => setsickleReport(e.target.value),
-    });
-  }
   return (
     <div>
       <TableOption
@@ -613,44 +461,31 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
         filterOptions={options}
         additionalFilterOptions={schoolnameoption}
         Button={
-          <Button
-            variant="primary"
-            onClick={() => {
-
-              handleShowPrint();
-            }}
-            className="btn btn-sm"
-          >
-            <KTIcon
-              iconName={"plus-circle"}
-              className="fs-3"
-              iconType="solid"
-            />
-            {t("addschool")}
-          </Button>
+          <AddData values={{
+            serialnumber: "",
+            studentId: "",
+            studentName: "",
+            grno: "",
+            saralid: "",
+            isLoading: false,
+            schoolname: "",
+            standard: "",
+            mothername: "",
+            dob: "",
+            gender: "",
+            cast: "",
+            aadhaar: "",
+            contactNo: "",
+            address: "",
+            sicklecell: "",
+            sicklereport: "",
+            error: "", // Added error handling
+            updateTownId: null
+          }} schooldata={schooldata} standarddata={standarddata} />
         }
       />
 
-      <CustomModal
-        show={showPrintModal}
-        handleClose={handleClosePrint}
-        handleSubmit={handleSubmit}
-        title={updateTownId ? `${t("updatepage")}` : `${t("insertpage")}`}
-        formData={{
-          fields: formFields as any,
-          error: "",
-        }}
-        submitButtonLabel={
-          updateTownId
-            ? isLoading
-              ? "Submitting..."
-              : t("editsubmit")
-            : isLoading
-              ? "Submitting..."
-              : t("submit")
-        }
-        disabledButton={isLoading}
-      />
+
       <input
         type="file"
         id="fileInput"
