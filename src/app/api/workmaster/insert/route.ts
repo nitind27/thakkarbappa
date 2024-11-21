@@ -24,7 +24,8 @@ export async function POST(req: Request) {
                 genratedworkdate: genratedworkdate,
                 estimatedtotalamount: estimatedtotalamount,
                 generatednumber: generatednumbers,
-                type: "workgen"
+                type: "workgen",
+                status: "Active",
             },
         });
 

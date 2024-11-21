@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import Table from "../table/Table"; // Adjust path as necessary
 import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
@@ -26,7 +25,6 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
   const [grno, setGrno] = useState("");
   const [saralid, setSaralId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
   const [schoolname, setSchoolname] = useState("");
   const [standard, setStandard] = useState("");
   const [mothername, setMontherName] = useState("");
@@ -53,7 +51,6 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
     acc[standard.standard_id] = standard.standard_name; // Assuming taluka has id and name properties
     return acc;
   }, {} as Record<number, string>);
-
   const data = studentdata
     .map((student) => ({
       student_id: student.student_id,
@@ -170,29 +167,6 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
       header: `${t("status")}`,
     },
 
-    // {
-    //     accessorKey: "profile_photo",
-    //     header: `${t('attechments')}`,
-    //     cell: ({ row }: any) => {
-    //         const photoSrc = row.original.profile_photo.startsWith('/') ? row.original.profile_photo : `/${row.original.profile_photo}`;
-    //         const notfound = '/media/img/imgenotfound.jpg'
-    //         return (
-    //             <div style={{ textAlign: 'center' }}>
-    //                 <Image
-    //                     src={photoSrc}
-    //                     alt={t('image')}
-    //                     style={{ objectFit: 'cover' }}
-    //                     height={100} // Adjust size as needed
-    //                     width={100}
-    //                 />
-    //                 <br />
-    //                 {/* <Link href={photoSrc} target="_blank" rel="noopener noreferrer">
-    //       view
-    //     </Link> */}
-    //             </div>
-    //         );
-    //     },
-    // },
     {
       accessorKey: "actions",
       header: `${t("Action")}`,
@@ -227,7 +201,6 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
       ),
     },
   ];
-
   const handleImageClick = (studentId: any) => {
     // Open file input to select image
     setStudentId(studentId);
@@ -273,7 +246,6 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
       toast.error("Error uploading image.");
     }
   };
-
   const handleDeactivate = async (
     student_id: number | string,
     currentStatus: string
@@ -320,7 +292,6 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
       }
     }
   };
-
   const handleShowPrint = () => setShowPrintModal(true);
 
   const handleClosePrint = () => {
@@ -349,20 +320,12 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // const errors = validateSchoolForm({
 
-    // });
-    // // If there are error messages, set them and prevent submission
-    // if (errors.length > 0) {
-    //     setError(errors.join("<br />"));
-    //     return;
-    // }
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
 
     try {
       const method = updateTownId ? "PUT" : "POST";
       const url = updateTownId ? `/api/student/update` : `/api/student/insert`;
-
       const bodyData = {
         student_id: updateTownId ? updateTownId.toString() : undefined, // School ID if updating
         serial_number: serialnumber,
@@ -381,7 +344,6 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
         sickle_cell: sicklecell,
         sickle_report: sicklecell == "Yes" ? sicklereport : "",
       };
-
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
@@ -392,7 +354,6 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
         toast.success(
           `School ${updateTownId ? "updated" : "inserted"} successfully!`
         );
-
         // Update local state without page reload
         if (!updateTownId) {
           // If inserting a new entry
@@ -408,7 +369,6 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
             )
           );
         }
-
         handleClosePrint(); // Close the modal or reset form after submission
       } else {
         const data = await response.json();
@@ -425,7 +385,6 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
       setIsLoading(false); // End loading
     }
   };
-
   const handleEdit = (student: any) => {
     setUpdateTownId(student.student_id);
     setSerialnumber(student.serial_number);
@@ -448,6 +407,45 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
   const handleimage = (school: any) => {
     alert(school.student_id);
   };
+  const retrievedSchoolName = localStorage.getItem("schoolName");
+  const retrievedDisplayedNumber = localStorage.getItem("displayedNumber");
+
+  let options;
+
+  if (retrievedDisplayedNumber) {
+
+    options = [
+      {
+        value: retrievedDisplayedNumber,
+        label: retrievedDisplayedNumber,
+      },
+    ];
+  } else {
+
+    options = standarddata.map((std) => ({
+      value: std.standard_name,
+      label: std.standard_name,
+    }));
+  }
+
+
+  let schoolnameoption;
+
+  if (retrievedSchoolName) {
+
+    schoolnameoption = [
+      {
+        value: retrievedSchoolName,
+        label: retrievedSchoolName,
+      },
+    ];
+  } else {
+
+    schoolnameoption = schooldata.map((student) => ({
+      value: student.school_name,
+      label: student.school_name,
+    }));
+  }
 
   const formFields = [
     {
@@ -497,14 +495,14 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
     {
       label: `${t("std")}`,
       required: true,
-      value: standard || "", // Default value when updating
+      value: standard || "",
       onChange: (e: any) => setStandard(e.target.value),
       type: "select",
       options: standarddata.map((std: Standarddata) => ({
         value: std.standard_id,
         label: std.standard_name,
       })),
-      placeholder: `${t("std")}`, // Optional placeholder for select input
+      placeholder: `${t("std")}`,
     },
     {
       label: `${t("Monthername")}`,
@@ -546,7 +544,7 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
         { label: "SC", value: "SC" },
         { label: "ST", value: "ST" },
         { label: "OBC", value: "OBC" },
-        { label: "SBC", value: "OBC" },
+        { label: "SBC", value: "SBC" },
         { label: "NT B", value: "NT B" },
         { label: "General", value: "General" },
         // Add other options here if needed
@@ -607,69 +605,6 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
       onChange: (e: any) => setsickleReport(e.target.value),
     });
   }
-  // Define your filter options
-  const filterOptions = [
-    { value: "1st", label: "1st" },
-    { value: "2nd", label: "2nd" },
-    { value: "3rd", label: "3rd" },
-    { value: "4th", label: "4th" },
-    { value: "5th", label: "5th" },
-    { value: "6th", label: "6th" },
-    { value: "7th", label: "7th" },
-    { value: "8th", label: "8th" },
-    { value: "9th", label: "9th" },
-    { value: "10th", label: "10th" },
-    { value: "11th Arts", label: "11th Arts" },
-    { value: "12th Arts", label: "12th Arts" },
-    { value: "11th Science", label: "11th Science" },
-    { value: "12th Science", label: "12th Science" },
-
-    // Add more options as needed
-  ];
-
-  const retrievedSchoolName = localStorage.getItem("schoolName");
-  const retrievedDisplayedNumber = localStorage.getItem("displayedNumber");
-
-  // Check if retrievedDisplayedNumber has a value
-  let options;
-
-  if (retrievedDisplayedNumber) {
-    // If there is a value, create an options array with only one entry
-    options = [
-      {
-        value: retrievedDisplayedNumber,
-        label: retrievedDisplayedNumber,
-      },
-    ];
-  } else {
-    // If there is no value, map through standarddata to create the options
-    options = standarddata.map((std) => ({
-      value: std.standard_name,
-      label: std.standard_name,
-    }));
-  }
-
-  // Check if retrievedSchoolName has a value
-  let schoolnameoption;
-
-  if (retrievedSchoolName) {
-    // If there is a value, create a schoolnameoption array with only one entry
-    schoolnameoption = [
-      {
-        value: retrievedSchoolName,
-        label: retrievedSchoolName, // Assuming you want the same for label
-      },
-    ];
-  } else {
-    // If there is no value, map through schooldata to create the options
-    schoolnameoption = schooldata.map((student) => ({
-      value: student.school_name,
-      label: student.school_name,
-    }));
-  }
-
-  // Uncomment this line to log the third school name option for debugging
-  // console.log('fadfaf', schoolnameoption[2]);
   return (
     <div>
       <TableOption
@@ -681,7 +616,7 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
           <Button
             variant="primary"
             onClick={() => {
-              resetForm(); // Reset for new entry
+
               handleShowPrint();
             }}
             className="btn btn-sm"

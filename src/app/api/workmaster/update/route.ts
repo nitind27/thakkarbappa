@@ -47,6 +47,7 @@ export async function PUT(req: Request) {
         estimatedtotalamount: estimatedtotalamount,
         generatednumber: generatednumbers,
         type: "workgen", // Assuming type remains unchanged
+        status: "Active",
       },
     });
 

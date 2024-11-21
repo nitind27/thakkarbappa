@@ -1,15 +1,20 @@
-
-import type { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '@/lib/db'; // Ensure this path is correct
+import type { NextApiRequest, NextApiResponse } from "next";
+import prisma from "@/lib/db"; // Ensure this path is correct
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    try {
-        const response = await prisma.student.findMany(); // Fetch all members
-        res.status(200).json(response);
-    } catch (error) {
-        console.error("Error fetching members:", error);
-        res.status(500).json({ error: 'Failed to fetch members' });
-    }
+  try {
+    // Fetch students where school_id is 1 and current_std is 1
+    const response = await prisma.student.findMany({
+      where: {
+        AND: [{ school_id: 1 }, { current_std: 1 }],
+      },
+    });
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error fetching members:", error);
+    res.status(500).json({ error: "Failed to fetch members" });
+  }
 };
 
 export default handler;

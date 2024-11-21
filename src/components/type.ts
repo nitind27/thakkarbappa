@@ -1,4 +1,3 @@
-import { Decimal } from "@prisma/client/runtime/library";
 
 export type clusterdata = {
   cluster_id: number;
@@ -199,8 +198,8 @@ export interface StudentData {
   date_of_birth?: Date | null; // Optional field
   place_of_birth?: string | null; // Optional field
   gender?: string | null; // Optional field
-  height?: Decimal | null; // Optional field (Decimal)
-  weight?: Decimal | null; // Optional field (Decimal)
+  height?: string | null; // Optional field (Decimal)
+  weight?: string | null; // Optional field (Decimal)
   mother_name?: string | null; // Optional field
   religion?: string | null; // Optional field
   lang_id?: number | null; // Optional field
@@ -250,7 +249,7 @@ export type SubCategory = {
   sub_category_name: string;
   yojana_year_id: number;
   bank_id: number;
-  amount: Decimal; // Use 'number' for decimal values in TypeScript
+  amount: string; // Use 'number' for decimal values in TypeScript
   status: string;
   created_at: Date; // Use 'Date' for datetime values in TypeScript
   updated_at?: Date | null; // Optional field
@@ -271,7 +270,7 @@ export type YojanaMaster = {
   gat: string;
   yojana_year_id: number;
   yojana_type: string;
-  amount: Decimal; // This will be a decimal value
+  amount: string; // This will be a decimal value
 };
 
 export type Categorys = {
@@ -334,7 +333,7 @@ export type TblBeneficiary = {
   bank_name: string;
   ifsc: string;
   ac_no: string;
-  tot_finance: Decimal; // Decimal in Prisma corresponds to number in TypeScript
+  tot_finance: string; // Decimal in Prisma corresponds to number in TypeScript
   amount_paid: string;
   fourty: string; // 'Yes' or 'No'
   sixty: string; // 'Yes' or 'No'
@@ -345,7 +344,6 @@ export type TblBeneficiary = {
   organization: string;
   work_order_date?: Date | null; // Date type for work order date
 };
-
 
 export interface WorkMasterDemo {
   id: number;

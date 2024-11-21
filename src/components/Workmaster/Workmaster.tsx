@@ -133,10 +133,10 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
         .reverse(); // Reverse the order to show the last added items first
 
     const columns = [
-       {
+        {
             accessorKey: "serial_number",
             header: () => (
-                <div style={{ fontWeight: 'bold',padding: '5px' }}>
+                <div style={{ fontWeight: 'bold', padding: '5px' }}>
                     {t("SrNo")}
                 </div>
             ),
@@ -453,6 +453,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             label: `${t("RepresentativeName")}`,
             value: subRepresentativeName,
             type: "text",
+
             disabled: true,
             className: isResponsive ? 'col-12' : 'col-4',
             placeholder: `${t("RepresentativeName")}`,
@@ -495,7 +496,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
         {
             label: `${t("estimateamounttotal")}`,
             value: estimatetotalamount,
-            required: true,
+
             type: "text",
             disabled: true,
             className: isResponsive ? 'col-12' : 'col-4',
@@ -586,6 +587,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             value: EstimatedAmount,
             required: true,
             type: "text",
+
             className: isResponsive ? 'col-12' : 'col-4',
             placeholder: `${t("estimateamount")}`,
 
@@ -596,6 +598,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
             value: Tantricrecognitionamount,
             required: true,
             type: "text",
+
             className: isResponsive ? 'col-12' : 'col-4',
             placeholder: `${t("Tantricrecognitionamount")}`,
 
@@ -625,6 +628,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
                 value: Noadministrativerecognition,
                 required: true,
                 type: "text",
+                
                 className: isResponsive ? 'col-12' : 'col-4',
                 placeholder: `${t("noadministrativerecognition")}`,
 
@@ -635,6 +639,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
                 value: AdministrativerecognitionDate,
                 required: true,
                 type: "date",
+       
                 className: isResponsive ? 'col-12' : 'col-4',
                 placeholder: `${t("AdministrativerecognitionDate")}`,
 
@@ -645,6 +650,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
                 value: Administrativerecognitionamount,
                 required: true,
                 type: "text",
+
                 className: isResponsive ? 'col-12' : 'col-4',
                 placeholder: `${t("Administrativerecognitionamount")}`,
 

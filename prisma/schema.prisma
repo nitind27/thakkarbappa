@@ -265,8 +265,8 @@ model Student {
   date_of_birth          DateTime? @db.Date
   place_of_birth         String?  @db.VarChar(100)
   gender                 String?  @db.VarChar(10)
-  height                 Decimal? @db.Decimal(10, 2)
-  weight                 Decimal? @db.Decimal(10, 2)
+  height                 String? @db.VarChar(20)
+  weight                String? @db.VarChar(20)
   mother_name            String?  @db.VarChar(100)
   religion               String?  @db.VarChar(20)
   lang_id                Int?     
@@ -324,7 +324,7 @@ model SubCategory {
   sub_category_name String
   yojana_year_id  Int
   bank_id         Int
-  amount          Decimal   @db.Decimal(10, 2)
+  amount          String   @db.VarChar(20)
   status          String    @default("Active")
   created_at      DateTime  @default(now())
   updated_at      DateTime? @updatedAt
@@ -348,7 +348,7 @@ model YojanaMaster {
   gat             String   @db.VarChar(255)
   yojana_year_id    Int
   yojana_type      String   @db.VarChar(20)
-  amount          Decimal  @db.Decimal(10, 2)
+  amount          String  @db.VarChar(20)
 
   @@map("tbl_yojana_master")
 }
@@ -423,7 +423,7 @@ model beneficiary {
   bank_name           String   @db.VarChar(50)
   ifsc                String   @db.VarChar(50)
   ac_no               String   @db.VarChar(50)
-  tot_finance         Decimal   @db.Decimal(10,2)
+  tot_finance         String   @db.VarChar(20)
   amount_paid         String   @db.VarChar(100)
   fourty              String   @default("No") @db.VarChar(10)
   sixty               String   @default("No") @db.VarChar(10)

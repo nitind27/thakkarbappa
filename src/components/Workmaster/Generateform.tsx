@@ -386,7 +386,9 @@ const Generateform = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive 
                         {
                             label: `${t("RepresentativeName")}`,
                             value: subcategoryName,
+                            required: true,
                             type: "text",
+
                             placeholder: `${t("RepresentativeName")}`,
 
                             onChange: (e: any) => setSubCategoryName(e.target.value),
@@ -394,6 +396,7 @@ const Generateform = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive 
                         {
                             label: `${t("numberofwork")}`,
                             value: yojnayear,
+                            required: true,
                             type: "text",
                             placeholder: `${t("numberofwork")}`,
 
@@ -403,6 +406,7 @@ const Generateform = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive 
                             label: `${t("gendate")}`,
                             value: bankname,
                             type: "date",
+                            required: true,
                             placeholder: `${t("gendate")}`,
 
                             onChange: (e: any) => setBankname(e.target.value),
@@ -415,6 +419,7 @@ const Generateform = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive 
                             value: amount,
                             required: true,
                             type: "text",
+                           
                             placeholder: `${t("estimateamount")}`,
 
                             onChange: (e: any) => setAmount(e.target.value),
