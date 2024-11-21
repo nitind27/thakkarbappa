@@ -101,6 +101,14 @@ const Generateform = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive 
                 </div>
             ),
         },
+        {
+            accessorKey: "generatednumber",
+            header: `${t("Code")}`,
+        },
+        {
+            accessorKey: "genratedworkdate",
+            header: `${t("gendate")}`,
+        },
 
         {
             accessorKey: "representativeid",
@@ -120,14 +128,7 @@ const Generateform = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive 
             accessorKey: "number_work",
             header: `${t("numberofwork")}`,
         },
-        {
-            accessorKey: "genratedworkdate",
-            header: `${t("gendate")}`,
-        },
-        {
-            accessorKey: "generatednumber",
-            header: `${t("Code")}`,
-        },
+
 
         {
             accessorKey: "status",
@@ -189,7 +190,7 @@ const Generateform = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive 
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        status: currentStatus === "Active" ? "Deactive" : "Active",
+                        status: currentStatus == "Active" ? "Deactive" : "Active",
                     }),
                 });
 
@@ -200,7 +201,7 @@ const Generateform = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive 
                             cluster.id === category_id
                                 ? {
                                     ...cluster,
-                                    status: currentStatus === "Active" ? "Deactive" : "Active",
+                                    status: currentStatus == "Active" ? "Deactive" : "Active",
                                 }
                                 : cluster
                         )
@@ -231,11 +232,12 @@ const Generateform = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive 
                 : `/api/workmaster/insert`;
 
             // Prepare the request body
+            const workofdate = new Date();
             const requestBody = {
                 representative_id: categoryName,
                 representative_name: subcategoryName,
                 number_work: yojnayear,
-                genratedworkdate: bankname,
+                genratedworkdate: workofdate.toISOString(),
                 estimatedtotalamount: amount,
                 generatednumber: randomNumber,
 

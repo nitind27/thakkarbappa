@@ -122,7 +122,10 @@ const CustomModal: React.FC<any> = ({
             {formData.fields.map((field: any, index: any) => (
               <div className={field.className || gridClass} key={index} style={{ marginBottom: "15px" }}>
                 <Form.Group controlId={`formField${index}`}>
-                  <Form.Label>{field.label}</Form.Label>
+                  <span className="fw-bold">
+
+                    {field.label}
+                  </span>
 
                   {field.type === "text" ? (
                     <Form.Control

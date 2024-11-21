@@ -56,7 +56,7 @@ const Page = async ({ params }: any) => {
 
         { label: 'dashboard', href: '/dashboard' },
         { label: 'workmaster', href: `/workmaster` },
-        { label: 'workmaster', href: `/workmaster/work/${genid}` },
+        { label: 'work', href: `/workmaster/work/${genid}` },
     ];
     const workgen = Workmasters.filter((gen) => gen.type !== "workgen" && gen.generatednumber == genid)
     const workdata = Workmasters.filter((gen) => gen.generatednumber == genid)

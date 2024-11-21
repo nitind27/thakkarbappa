@@ -370,7 +370,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
                 handleClosePrint();
             } else {
                 toast.error(
-                    `Failed to ${updateClusterId ? "update" : "insert"} cluster.`
+                    `Failed to ${updateClusterId ? "update" : "insert"} Work Master.`
                 );
             }
         } catch (error) {
