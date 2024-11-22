@@ -4,11 +4,88 @@ import { useTranslations } from 'next-intl';
 import React, { useState } from 'react'
 import { Button } from 'react-bootstrap';
 import { Schooldata, Standarddata } from '../type';
+import { toast } from "react-toastify";
 
 
-const AddData = ({ values, standarddata, schooldata }: { values: any, schooldata: any, standarddata: any }) => {
+const StudentAddData = ({ values,
+    schooldata,
+    standarddata,
+    setStudentData, // Add setStudentData here
+}: { values: any, schooldata: any, standarddata: any, setStudentData: React.Dispatch<React.SetStateAction<any[]>> }) => {
     const [showmodel, setShowModel] = useState(false)
     const t = useTranslations("student");
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSubmit = async (formData: any) => {
+        setIsLoading(true);
+        const dob = new Date(formData.dob);
+
+        const bodyData = {
+            student_id: values.studentId || undefined, // Include if updating
+            serial_number: formData.serialnumber,
+            full_name: formData.studentName,
+            gr_no: formData.grno,
+            uid: formData.saralid,
+            school_id: formData.schoolname,
+            current_std: formData.standard,
+            mother_name: formData.mothername,
+            date_of_birth: dob,
+            gender: formData.gender,
+            cast: formData.cast,
+            aadhaar: formData.aadhaar,
+            contact_no: formData.contactNo,
+            address: formData.address,
+            sickle_cell: formData.sicklecell,
+            sickle_report: formData.sicklecell === "Yes" ? formData.sicklereport : "",
+        };
+
+        try {
+            const method = values.updateTownId ? "PUT" : "POST";
+            const url = values.updateTownId
+                ? `/api/student/update`
+                : `/api/student/insert`;
+
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(bodyData),
+            });
+
+            if (response.ok) {
+                const message = values.updateTownId ? "updated" : "added";
+                toast.success(`Student ${message} successfully!`);
+
+                const updatedStudent = await response.json();
+                if (values.student_id) {
+                    // Update existing student in local state
+                    setStudentData((prevData: any) =>
+                        prevData.map((student: any) =>
+                            student.student_id === values.student_id
+                                ? { ...student, ...updatedStudent }
+                                : student
+                        )
+                    );
+                } else {
+                    // Add new student to local state
+                    setStudentData((prevData) => [...prevData, updatedStudent]);
+                }
+
+                setShowModel(false); // Close modal
+            } else {
+                const error = await response.json();
+                // toast.error(`Failed to save student: ${error.message}`);
+            }
+        } catch (error) {
+            console.error("Submission error:", error);
+            toast.error("An unexpected error occurred.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
 
 
     const formFields = [
@@ -127,7 +204,7 @@ const AddData = ({ values, standarddata, schooldata }: { values: any, schooldata
         {
             label: `${t("Contact")}`,
             value: values.contactNo,
-            name: "Contact",
+            name: "contactNo",
             required: true,
             type: "text",
             placeholder: `eg.7359595959`,
@@ -146,16 +223,15 @@ const AddData = ({ values, standarddata, schooldata }: { values: any, schooldata
             value: values.sicklecell,
             name: "sicklecell",
             type: "select",
+            onchange: ((e: any) => console.log('fsadf', e)),
             placeholder: `${t("sicklecell")}`,
             options: [
                 { label: "Yes", value: "Yes" },
                 { label: "No", value: "No" },
-
-                // Add other options here if needed
             ],
-        },
+        }
     ];
-    if (values.sicklecell === "Yes") {
+    if (values.sicklecell == "Yes") {
         formFields.push({
             label: `Sickle Cell Report`,
             value: values.sicklereport,
@@ -180,27 +256,38 @@ const AddData = ({ values, standarddata, schooldata }: { values: any, schooldata
                 }}
                 className="btn btn-sm"
             >
-                <KTIcon
-                    iconName={"plus-circle"}
-                    className="fs-3"
-                    iconType="solid"
-                />
-                add
+                {values.updateTownId ?
+                    <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
+                    : <KTIcon
+                        iconName={"plus-circle"}
+                        className="fs-3"
+                        iconType="solid"
+                    />
+
+                }
+
+                {values.updateTownId ? t("edit") : t("submit")}
             </Button>
+
             <ComponentFile
                 show={showmodel}
                 handleClose={() => setShowModel(false)}
-                handleSubmit={(e: any) => console.log(e)}
-                title={"File"}
+                handleSubmit={handleSubmit}
+                title={values.updateTownId ? t("updatepage") : t("insertpage")}
                 formData={{
-                    fields: formFields as any,
+                    fields: formFields,
                     error: "",
                 }}
                 submitButtonLabel={
-
-                    "add"
+                    values.updateTownId
+                        ? isLoading
+                            ? "Submitting..."
+                            : t("editsubmit")
+                        : isLoading
+                            ? "Submitting..."
+                            : t("submit")
                 }
-            // disabledButton={isLoading}
+                disabledButton={isLoading}
             />
         </>
 
@@ -209,4 +296,4 @@ const AddData = ({ values, standarddata, schooldata }: { values: any, schooldata
     )
 }
 
-export default AddData
+export default StudentAddData

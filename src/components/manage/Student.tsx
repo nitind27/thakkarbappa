@@ -12,7 +12,8 @@ import { createConfirmation } from "react-confirm";
 import TableOption from "../table/TableOption";
 import { formatDate } from "@/lib/utils";
 import ComponentFile from "@/common/ComponentFile";
-import AddData from "./AddData";
+import AddData from "./StudentAddData";
+import StudentAddData from "./StudentAddData";
 type Props = {
   initialstudentData: StudentData[];
   schooldata: Schooldata[];
@@ -174,13 +175,31 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
       header: `${t("Action")}`,
       cell: ({ row }: any) => (
         <div style={{ display: "flex", whiteSpace: "nowrap" }}>
-          <button
-            className="btn btn-sm btn-primary"
-            onClick={() => handleEdit(row.original)}
-          >
-            <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
-            {t("edit")}
-          </button>
+     
+
+          
+            <StudentAddData values={{
+              serialnumber: row.original.serial_number,
+              studentId: row.original.student_id,
+              studentName: row.original.full_name,
+              grno: row.original.gr_no,
+              saralid: row.original.uid,
+              isLoading: false,
+              schoolname: row.original.schoolid,
+              standard: row.original.currentstd,
+              mothername: row.original.mother_name,
+              dob: row.original.date_of_birth,
+              gender: row.original.gender,
+              cast: row.original.cast,
+              aadhaar: row.original.aadhaar,
+              contactNo: row.original.contact_no,
+              address: row.original.address,
+              sicklecell: row.original.sickle_cell,
+              sicklereport: row.original.sickle_report,
+              error: "", // Added error handling
+              updateTownId: row.original.student_id
+            }} schooldata={schooldata} standarddata={standarddata} setStudentData={setstudentdata} />
+          
           <button
             className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
               } ms-5`}
@@ -320,95 +339,7 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
     setUpdateTownId(null);
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
 
-
-    setIsLoading(true);
-
-    try {
-      const method = updateTownId ? "PUT" : "POST";
-      const url = updateTownId ? `/api/student/update` : `/api/student/insert`;
-      const bodyData = {
-        student_id: updateTownId ? updateTownId.toString() : undefined, // School ID if updating
-        serial_number: serialnumber,
-        full_name: studentName,
-        gr_no: grno,
-        uid: saralid,
-        school_id: schoolname,
-        current_std: standard,
-        mother_name: mothername,
-        date_of_birth: dob,
-        gender: gender,
-        cast: cast,
-        aadhaar: aadhaar,
-        contact_no: contactNo,
-        address: address,
-        sickle_cell: sicklecell,
-        sickle_report: sicklecell == "Yes" ? sicklereport : "",
-      };
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyData),
-      });
-
-      if (response.ok) {
-        toast.success(
-          `School ${updateTownId ? "updated" : "inserted"} successfully!`
-        );
-        // Update local state without page reload
-        if (!updateTownId) {
-          // If inserting a new entry
-          const newSchool = await response.json();
-          setstudentdata((prevData) => [...prevData, newSchool]);
-        } else {
-          // If updating an existing entry
-          setstudentdata((prevData: any) =>
-            prevData.map((student: any) =>
-              student.student_id === updateTownId
-                ? { ...student, ...bodyData }
-                : student
-            )
-          );
-        }
-        handleClosePrint(); // Close the modal or reset form after submission
-      } else {
-        const data = await response.json();
-
-        toast.error(
-          `Failed to ${updateTownId ? "update" : "insert"} School: ${data.error
-          }`
-        );
-      }
-    } catch (error) {
-      console.error("Error during operation:", error);
-      toast.error("An unexpected error occurred.");
-    } finally {
-      setIsLoading(false); // End loading
-    }
-  };
-
-
-  const handleEdit = (student: any) => {
-    setUpdateTownId(student.student_id);
-    setSerialnumber(student.serial_number);
-    setStudentName(student.full_name);
-    setGrno(student.gr_no);
-    setSaralId(student.uid);
-    setSchoolname(student.schoolid);
-    setStandard(student.currentstd);
-    setMontherName(student.mother_name);
-    setDob(student.date_of_birth);
-    setGender(student.gender);
-    setCast(student.cast);
-    setAadhaar(student.aadhaar);
-    setContactNo(student.contact_no);
-    setAddress(student.address);
-    setSicklecell(student.sickle_cell);
-    setsickleReport(student.sickle_report);
-    handleShowPrint(); // Show the modal for editing
-  };
   const handleimage = (school: any) => {
     alert(school.student_id);
   };
@@ -461,7 +392,7 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
         filterOptions={options}
         additionalFilterOptions={schoolnameoption}
         Button={
-          <AddData values={{
+          <StudentAddData values={{
             serialnumber: "",
             studentId: "",
             studentName: "",
@@ -477,11 +408,11 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
             aadhaar: "",
             contactNo: "",
             address: "",
-            sicklecell: "",
+            sicklecell: "No",
             sicklereport: "",
             error: "", // Added error handling
             updateTownId: null
-          }} schooldata={schooldata} standarddata={standarddata} />
+          }} schooldata={schooldata} standarddata={standarddata} setStudentData={setstudentdata} />
         }
       />
 

@@ -24,28 +24,28 @@ export async function PUT(req: Request) {
         } = body;
 
         // Validate input
-        if (
-            !student_id ||
-            !serial_number ||
-            !full_name ||
-            !gr_no ||
-            !uid ||
-            !school_id ||
-            !current_std ||
-            !mother_name ||
-            !date_of_birth ||
-            !gender ||
-            !cast ||
-            !address ||
-            !aadhaar ||
-            !contact_no ||
-            !sickle_cell
-        ) {
-            return NextResponse.json(
-                { error: "All required fields must be filled" },
-                { status: 400 }
-            );
-        }
+        // if (
+        //     !student_id ||
+        //     !serial_number ||
+        //     !full_name ||
+        //     !gr_no ||
+        //     !uid ||
+        //     !school_id ||
+        //     !current_std ||
+        //     !mother_name ||
+        //     !date_of_birth ||
+        //     !gender ||
+        //     !cast ||
+        //     !address ||
+        //     !aadhaar ||
+        //     !contact_no ||
+        //     !sickle_cell
+        // ) {
+        //     return NextResponse.json(
+        //         { error: "All required fields must be filled" },
+        //         { status: 400 }
+        //     );
+        // }
 
         // Convert school_id and current_std to integers
         const schoolid = parseInt(school_id, 10);

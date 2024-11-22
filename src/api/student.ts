@@ -4,12 +4,7 @@ import prisma from "@/lib/db"; // Ensure this path is correct
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     // Fetch students where school_id is 1 and current_std is 1
-    const response = await prisma.student.findMany({
-      where: {
-        AND: [{ school_id: 1 }, { current_std: 1 }],
-      },
-    });
-
+    const response = await prisma.student.findMany();
     res.status(200).json(response);
   } catch (error) {
     console.error("Error fetching members:", error);
