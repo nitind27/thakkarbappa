@@ -182,49 +182,49 @@ export type Notificationdata = {
 };
 
 export interface StudentData {
-  student_id: number; // Primary Key
-  serial_number?: string | null; // Optional field
-  uid?: string | null; // Optional field
-  gr_no?: string | null; // Optional field
-  date_of_admision?: Date | null; // Optional field
-  year_add?: string | null; // Optional field
-  school_id: number; // Optional field
-  admited_in_std?: number | null; // Optional field
-  current_std: number; // Optional field
-  division?: string | null; // Optional field
-  first_name?: string | null; // Optional field
-  middle_name?: string | null; // Optional field
-  last_name?: string | null; // Optional field
-  date_of_birth?: Date | null; // Optional field
-  place_of_birth?: string | null; // Optional field
-  gender?: string | null; // Optional field
-  height?: string | null; // Optional field (Decimal)
-  weight?: string | null; // Optional field (Decimal)
-  mother_name?: string | null; // Optional field
-  religion?: string | null; // Optional field
-  lang_id?: number | null; // Optional field
-  cast?: string | null; // Optional field
-  address?: string | null; // Optional field
-  contact_no?: string | null; // Optional field
-  full_name?: string | null; // Optional field
-  user_id?: number | null; // Optional field
-  cluster_id?: number | null; // Optional field
-  dropout?: string | null; // Optional field (default "No")
-  dropout_date_time?: Date | null; // Optional field
-  status: string; // Required field (default "Active")
-  ins_date_time?: Date | null; // Optional field
-  update_date_time?: Date | null; // Automatically updated timestamp
-  students_id_saral?: string | null; // Optional field
-  type_of_students?: string | null; // Optional field
-  saral_id?: string | null; // Optional field
-  date_leave?: Date | null; // Optional field
-  remarks?: string | null; // Optional field
-  stream?: string | null; // Optional field
-  profile_photo?: string | null; // Optional field
-  photo_update_date_time?: Date | null; // Optional field
-  sickle_cell?: string | null; // Optional field
-  aadhaar?: string | null; // Optional field
-  sickle_report?: string | null; // Optional field
+  student_id: number;
+  serial_number?: string | null;
+  uid?: string | null;
+  gr_no?: string | null;
+  date_of_admision?: Date | null;
+  year_add?: string | null;
+  school_id?: number | null;
+  admitted_in_std?: number | null;
+  current_std?: number | null;
+  division?: string | null;
+  first_name?: string | null;
+  middle_name?: string | null;
+  last_name?: string | null;
+  date_of_birth?: Date | null;
+  place_of_birth: string; // Required field
+  gender?: string | null;
+  height?: string | null;
+  weight?: string | null;
+  mother_name?: string | null;
+  religion?: string | null;
+  lang_id?: number | null;
+  cast: string; // Required field
+  address?: string | null;
+  contact_no?: string | null;
+  full_name?: string | null;
+  user_id?: number | null;
+  cluster_id?: number | null;
+  dropout?: string | null;
+  dropout_date_time?: Date | null;
+  status: "Active" | string; // Assuming 'Active' is a default value but other values are possible.
+  ins_date_time?: Date | null;
+  update_date_time?: Date | null;
+  students_id_saral?: string | null;
+  type_of_students?: string | null;
+  saral_id?: string | null;
+  date_leave?: Date | null;
+  remarks?: string | null;
+  stream?: string | null;
+  profile_photo?: string | null;
+  photo_update_date_time?: Date | null;
+  sickle_cell?: string | null;
+  aadhaar?: string | null;
+  sickle_report?: string | null;
 }
 
 export type Standarddata = {

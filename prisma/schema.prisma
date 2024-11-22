@@ -248,55 +248,53 @@ model Notification {
   @@map("tbl_notifications") // Maps to the actual table name in the database
 }
 
-model Student {
-   student_id              Int      @id @default(autoincrement())
-  serial_number           String?  @db.VarChar(220)
-  uid                     String?  @db.VarChar(50)
-  gr_no                   String?  @db.VarChar(20)
-  date_of_admision       DateTime? @db.Date
-  year_add                String?  @db.VarChar(20)
-  school_id               Int   
-  admited_in_std         Int?     
-  current_std            Int   
-  division                String?  @db.VarChar(100)
-  first_name             String?  @db.VarChar(100)
-  middle_name            String?  @db.VarChar(100)
-  last_name              String?  @db.VarChar(100)
-  date_of_birth          DateTime? @db.Date
-  place_of_birth         String?  @db.VarChar(100)
-  gender                 String?  @db.VarChar(10)
-  height                 String? @db.VarChar(20)
-  weight                String? @db.VarChar(20)
-  mother_name            String?  @db.VarChar(100)
-  religion               String?  @db.VarChar(20)
-  lang_id                Int?     
-  cast                   String?  @db.VarChar(20)
-  address                String?  @db.VarChar(255)
-  contact_no             String?  @db.VarChar(15)
-  full_name              String?  @db.VarChar(100)
-  user_id                Int?     
-  cluster_id             Int?     
-  dropout                String?   @default("No") @db.VarChar(10) // Assuming 'No' as default value
-  dropout_date_time      DateTime?
-  status                 String     @default("Active") @db.VarChar(10)
-  ins_date_time          DateTime?
-  update_date_time       DateTime? @updatedAt
-  students_id_saral      String?   @db.VarChar(50)
-  type_of_students       String?   @db.VarChar(30)
-  saral_id               String?   @db.VarChar(50)
-  date_leave             DateTime? @db.Date
-  remarks                String?   @db.VarChar(255)
-  stream                 String?   @db.VarChar(100)
-  profile_photo          String?   @db.VarChar(255)
+model student {
+  student_id            Int      @id @default(autoincrement())
+  serial_number         String?  @db.VarChar(220)
+  uid                   String?  @db.VarChar(50)
+  gr_no                 String?  @db.VarChar(20)
+  date_of_admision     DateTime? @db.Date
+  year_add              String?  @db.VarChar(20)
+  school_id             Int?
+  admited_in_std       Int?
+  current_std           Int?
+  division              String?  @db.VarChar(100)
+  first_name            String?  @db.VarChar(100)
+  middle_name           String?  @db.VarChar(100)
+  last_name             String?  @db.VarChar(100)
+  date_of_birth         DateTime? @db.Date
+  place_of_birth        String    @db.VarChar(100)
+  gender                String?  @db.VarChar(10)
+  height                String?  @db.VarChar(20)
+  weight                String?  @db.VarChar(20)
+  mother_name           String?  @db.VarChar(100)
+  religion              String?  @db.VarChar(20)
+  lang_id               Int?
+  cast                  String    @db.VarChar(20)
+  address               String?  @db.VarChar(255)
+  contact_no            String?  @db.VarChar(15)
+  full_name             String?  @db.VarChar(100)
+  user_id               Int?
+  cluster_id            Int?
+  dropout               String?   @db.VarChar(10)
+  dropout_date_time     DateTime?
+  status                String    @default("Active") @db.VarChar(10)
+  ins_date_time         DateTime?
+  update_date_time      DateTime?
+  students_id_saral     String?   @db.VarChar(50)
+  type_of_students      String?   @db.VarChar(30)
+  saral_id              String?   @db.VarChar(50)
+  date_leave            DateTime? @db.Date
+  remarks               String?   @db.VarChar(255)
+  stream                String?   @db.VarChar(100)
+  profile_photo         String?   @db.VarChar(255)
   photo_update_date_time DateTime?
-  sickle_cell            String?   @db.VarChar(150)
-  aadhaar                String?   @db.VarChar(20)
-  sickle_report          String?   @db.VarChar(20)
+  sickle_cell           String?   @db.VarChar(150)
+  aadhaar               String?   @db.VarChar(20)
+  sickle_report         String?   @db.VarChar(20)
 
-  
- @@map("tbl_students")
+@@map("tbl_students")
 }
-
 
 model Standard {
   standard_id       Int      @id @default(autoincrement())

@@ -6,7 +6,7 @@ import { MutableRefObject, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ToggleComponent } from "@/_metronic/assets/ts/components/_ToggleComponent";
-import { KTIcon, toAbsoluteUrl } from "@/_metronic/helpers";
+import { KTIcon } from "@/_metronic/helpers";
 import { useLayout } from "@/layout/core";
 
 type PropsType = {

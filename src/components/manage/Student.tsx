@@ -11,8 +11,7 @@ import ConfirmationDialog from "@/common/ConfirmationDialog";
 import { createConfirmation } from "react-confirm";
 import TableOption from "../table/TableOption";
 import { formatDate } from "@/lib/utils";
-import ComponentFile from "@/common/ComponentFile";
-import AddData from "./StudentAddData";
+
 import StudentAddData from "./StudentAddData";
 type Props = {
   initialstudentData: StudentData[];
@@ -62,10 +61,10 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
       gr_no: student.gr_no,
       date_of_admision: student.date_of_admision,
       year_add: student.year_add,
-      school_id: schoolmap[student.school_id],
+      school_id: schoolmap[student.school_id as any],
       schoolid: student.school_id,
-      admited_in_std: student.admited_in_std,
-      current_std: standardmap[student.current_std],
+      admited_in_std: student.admitted_in_std,
+      current_std: standardmap[student.current_std as any],
       currentstd: student.current_std,
       division: student.division,
       first_name: student.first_name + " " + student.last_name,
@@ -175,31 +174,31 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
       header: `${t("Action")}`,
       cell: ({ row }: any) => (
         <div style={{ display: "flex", whiteSpace: "nowrap" }}>
-     
 
-          
-            <StudentAddData values={{
-              serialnumber: row.original.serial_number,
-              studentId: row.original.student_id,
-              studentName: row.original.full_name,
-              grno: row.original.gr_no,
-              saralid: row.original.uid,
-              isLoading: false,
-              schoolname: row.original.schoolid,
-              standard: row.original.currentstd,
-              mothername: row.original.mother_name,
-              dob: row.original.date_of_birth,
-              gender: row.original.gender,
-              cast: row.original.cast,
-              aadhaar: row.original.aadhaar,
-              contactNo: row.original.contact_no,
-              address: row.original.address,
-              sicklecell: row.original.sickle_cell,
-              sicklereport: row.original.sickle_report,
-              error: "", // Added error handling
-              updateTownId: row.original.student_id
-            }} schooldata={schooldata} standarddata={standarddata} setStudentData={setstudentdata} />
-          
+
+
+          <StudentAddData values={{
+            serialnumber: row.original.serial_number,
+            studentId: row.original.student_id,
+            studentName: row.original.full_name,
+            grno: row.original.gr_no,
+            saralid: row.original.uid,
+            isLoading: false,
+            schoolname: row.original.schoolid,
+            standard: row.original.currentstd,
+            mothername: row.original.mother_name,
+            dob: row.original.date_of_birth,
+            gender: row.original.gender,
+            cast: row.original.cast,
+            aadhaar: row.original.aadhaar,
+            contactNo: row.original.contact_no,
+            address: row.original.address,
+            sicklecell: row.original.sickle_cell,
+            sicklereport: row.original.sickle_report,
+            error: "", // Added error handling
+            updateTownId: row.original.student_id
+          }} schooldata={schooldata} standarddata={standarddata} setStudentData={setstudentdata} />
+
           <button
             className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
               } ms-5`}
