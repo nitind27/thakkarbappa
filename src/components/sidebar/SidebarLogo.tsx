@@ -67,7 +67,7 @@ const SidebarLogo = (props: PropsType) => {
           //   className="app-sidebar-logo-default"
           // />
           <Image
-            width={220}
+            width={185}
             height={10}
             alt="Logo5"
             src="/media/logos/clocks horizntal.png"
