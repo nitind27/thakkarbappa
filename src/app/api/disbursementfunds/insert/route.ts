@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   try {
     // First, check if the content type is multipart/form-data (file upload)
     const contentType = req.headers.get('content-type') || '';
-    
+
     if (!contentType.includes('multipart/form-data')) {
       return NextResponse.json({ error: 'Invalid content type' }, { status: 400 });
     }
@@ -17,6 +17,7 @@ export async function POST(req: Request) {
     const formData = await req.formData();
 
     // Extract all fields
+    const requirement_id = formData.get('requirement_id');
     const work_master_id = formData.get('work_master_id');
     const date = formData.get('date');
     const installment = formData.get('installment');
@@ -26,13 +27,26 @@ export async function POST(req: Request) {
     const address = formData.get('address');
     const photoFile = formData.get('photo') as File;
 
+
+    console.log('fsdaffsadf', requirement_id,
+      "fsaf",
+
+      work_master_id,
+      date,
+      installment,
+      amount,
+      latitude,
+      longitude,
+      address,
+      photoFile,)
     // Validate the fields (ensure all required fields are present)
-    if (!work_master_id || !date || !installment || !amount || !latitude || !longitude || !address || !photoFile) {
+    if (!requirement_id || !work_master_id || !date || !installment || !amount || !latitude || !longitude || !address || !photoFile) {
       return NextResponse.json({ error: 'All required fields must be filled' }, { status: 400 });
     }
 
     // Convert work_master_id to BigInt
     const workmasterid = BigInt(work_master_id as any);
+    const requirementid = parseInt(requirement_id as any);
 
     // Ensure 'public/uploads' directory exists
     const uploadDir = path.join(process.cwd(), 'public/uploads');
@@ -50,6 +64,7 @@ export async function POST(req: Request) {
     // Insert into the database using Prisma
     const newDisbursement = await prisma.nidhiVitaran.create({
       data: {
+        requirement_id: requirementid,
         work_master_id: workmasterid,
         date: new Date(date as any).toISOString(),
         installment: installment.toString(),

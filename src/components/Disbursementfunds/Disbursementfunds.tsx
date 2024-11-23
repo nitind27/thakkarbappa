@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
-import { clusterdata, NidhiVitaran, WorkMaster } from "../type";
+import { clusterdata, grampanchayat, NidhiVitaran, Representative, talukasdata, Villages, WorkMaster, WorkMasterDemo } from "../type";
 import { formatDate } from "@/lib/utils";
 import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
@@ -16,18 +16,25 @@ import Link from "next/link";
 type Props = {
   initialdisbursementfunds: NidhiVitaran[];
   workmaster: WorkMaster[];
+  reprenstive: Representative[];
+  Workmasters: WorkMasterDemo[];
+  talukas: talukasdata[];
+  grampanchayat: grampanchayat[];
+  Villages: Villages[];
 };
 
-const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
+const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, Workmasters, talukas, grampanchayat, Villages }: Props) => {
   const t = useTranslations("Disbursementfunds");
   const { latitude, longitude } = useLocation();
   const [showPrintModal, setShowPrintModal] = useState(false);
+  const [requirementid, setrequirementid] = useState("");
   const [selectwork, setSelectwork] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [vitrandate, setVitrandate] = useState("");
   const [Installment, setInstallment] = useState("");
-  const [Amount, setAmount] = useState("");
+  const [percentage, setpercentage] = useState("");
+  const [Amount, setAmount] = useState(percentage);
   const [Latitude, setLatitude] = useState(latitude);
   const [Longitude, setLongitude] = useState(longitude);
   const [Adress, setAdress] = useState("");
@@ -39,14 +46,34 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
   const [insertImage, setInsertImage] = React.useState<File | null>(null); // File object for the selected image
 
   const [imagePreview, setImagePreview] = React.useState<string>(""); // URL for image preview
-  const clusterMap = workmaster.reduce((acc, work: WorkMaster) => {
-    acc[work.id.toString()] = work.name; // Convert bigint to string
+
+  const workid = Workmasters.reduce((acc, work: any) => {
+    acc[work.id.toString] = work.name; // Convert bigint to string
     return acc;
   }, {} as Record<string, string>); // Change Record<number, string> to Record<string, string>
+  const gpmap = grampanchayat.reduce((acc, gp: any) => {
+    acc[gp.id] = gp.name; // Assuming taluka has id and name properties
+    return acc;
+  }, {} as Record<number, string>);
+  const village = Villages.reduce((acc, gp: Villages) => {
+    acc[gp.id] = gp.name; // Assuming taluka has id and name properties
+    return acc;
+  }, {} as Record<number, string>);
+
+
+  const talukaMap = talukas.reduce((acc, taluka: any) => {
+    acc[taluka.id] = taluka.name; // Assuming taluka has id and name properties
+    return acc;
+  }, {} as Record<number, string>);
+
+  const reprenstives = reprenstive.reduce((acc, year: Representative) => {
+    acc[year.id as any] = year.name; // Assuming taluka has id and name properties
+    return acc;
+  }, {} as Record<number, string>);
   const data = clusterData
     .map((NidhiVitaran) => ({
       id: NidhiVitaran.id,
-      work_master_id: clusterMap[NidhiVitaran.work_master_id.toString()],
+      work_master_id: workid[NidhiVitaran.work_master_id.toString()],
       work_id: NidhiVitaran.work_master_id,
       date:
         NidhiVitaran.date && typeof NidhiVitaran.date === "string"
@@ -56,6 +83,8 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
             : "Invalid date",
       installment: NidhiVitaran.installment,
       amount: NidhiVitaran.amount,
+      requirement_id: reprenstives[NidhiVitaran.requirement_id],
+      requirementid: NidhiVitaran.requirement_id,
       photo: NidhiVitaran.photo,
       latitude: NidhiVitaran.latitude + " " + NidhiVitaran.longitude,
       address: NidhiVitaran.address,
@@ -124,6 +153,11 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
     {
       accessorKey: "address",
       header: `${t("address")}`,
+    },
+
+    {
+      accessorKey: "requirement_id",
+      header: `${t("representativeid")}`,
     },
     {
       accessorKey: "status",
@@ -208,7 +242,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
     setInstallment("");
     setAmount("");
     setAdress("");
-
+    setpercentage("");
     setImagePreview("");
     setAdress("");
     setAdress("");
@@ -219,10 +253,11 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
 
     // Create FormData to handle both file and form data
     const formData = new FormData();
+    formData.append("requirement_id", requirementid);
     formData.append("work_master_id", selectwork);
     formData.append("date", vitrandate);
     formData.append("installment", Installment);
-    formData.append("amount", Amount);
+    formData.append("amount", percentage);
     formData.append("latitude", latitude !== null ? latitude.toString() : "");
     formData.append(
       "longitude",
@@ -303,10 +338,11 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
     setUpdateClusterId(NidhiVitaran.id);
     setSelectwork(NidhiVitaran.work_id.toString());
     setVitrandate(NidhiVitaran.date);
+    setrequirementid(NidhiVitaran.requirementid);
     setInstallment(NidhiVitaran.installment);
     setAdress(NidhiVitaran.address);
     setAmount(NidhiVitaran.amount);
-
+    setpercentage(NidhiVitaran.amount)
     setImagePreview(NidhiVitaran.photo);
 
     handleShowPrint(); // Show the modal for editing
@@ -324,6 +360,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
 
   return (
     <div>
+
       <Table
         data={data}
         columns={columns}
@@ -345,6 +382,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
 
       <CustomModal
         show={showPrintModal}
+        size="lg"
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
         title={updateClusterId ? `${t("updatepage")}` : `${t("insertpage")}`}
@@ -366,16 +404,122 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
         formData={{
           fields: [
             {
-              label: `${t("enterwork")}`,
-              value: selectwork,
-              required: true,
+              label: `${t("representativeid")}`,
+              value: requirementid,
+              onChange: (e: any) => setrequirementid(e.target.value),
               type: "select",
-              placeholder: `${t("enterwork")}`,
-              options: workmaster.map((work: any) => ({
-                value: work.id,
-                label: work.name,
+              options: reprenstive.map((category: Representative) => ({
+                value: category.id,
+                label: category.name,
               })),
+              placeholder: `${t("representativeid")}`, // Optional placeholder for select input
+            },
+
+            {
+              label: `${t('enterwork')}`,
+              value: selectwork,
               onChange: (e: any) => setSelectwork(e.target.value),
+              type: "select",
+
+              options: Workmasters
+                .filter((type) =>
+                  String(type.representative_id) as any == requirementid
+                )
+                .map((yojna) => ({
+                  value: yojna.id,
+                  label: yojna.name,
+                })),
+              placeholder: `${t("enterwork")}`, // Optional placeholder for select input
+            },
+            {
+              label: `${t("dist")}`,
+              value: selectwork,
+              disabled: true,
+              onChange: (e: any) => setSelectwork(e.target.value),
+              type: "select",
+
+              options: Workmasters
+                .filter((type) =>
+                  String(type.representative_id) as any == requirementid && String(type.id) == selectwork
+                )
+                .map((yojna) => ({
+                  value: yojna.id,
+                  label: talukaMap[yojna.taluka_id as any],
+                })),
+              placeholder: `${t("dist")}`, // Optional placeholder for select input
+            },
+            {
+              label: `${t("grampanchayatname")}`,
+              value: selectwork,
+              disabled: true,
+              onChange: (e: any) => setSelectwork(e.target.value),
+              type: "select",
+
+              options: Workmasters
+                .filter((type) =>
+                  String(type.representative_id) as any == requirementid && String(type.id) == selectwork
+                )
+                .map((yojna) => ({
+                  value: yojna.id,
+                  label: gpmap[yojna.gp_id as any],
+                })),
+              placeholder: `${t("grampanchayatname")}`, // Optional placeholder for select input
+            },
+            {
+              label: `${t("Village")}`,
+              value: selectwork,
+              disabled: true,
+              onChange: (e: any) => setSelectwork(e.target.value),
+              type: "select",
+
+              options: Workmasters
+                .filter((type) =>
+                  String(type.representative_id) as any == requirementid && String(type.id) == selectwork
+                )
+                .map((yojna) => ({
+                  value: yojna.id,
+                  label: village[yojna.village_id as any],
+                })),
+              placeholder: `${t("Village")}`, // Optional placeholder for select input
+            },
+            {
+              label: `${t("estimateamounttotal")}`,
+              value: Workmasters
+                .filter((type) =>
+                  String(type.representative_id) as any == requirementid && String(type.id) == selectwork
+                )
+                .map((yojna) => (
+                  yojna.estimated_amount
+
+                )),
+              disabled: true,
+              required: true,
+              type: "text",
+              placeholder: `${t("estimateamounttotal")}`,
+              onChange: (e: any) => setAmount(e.target.value),
+            },
+            //         ins_date_time:
+            // //     typeof cluster.ins_date_time === "string"
+            // //       ? formatDate(cluster.ins_date_time)
+            // //       : formatDate(cluster.ins_date_time.toISOString()),
+            // // }))
+            {
+              label: `${t("date")}`,
+              disabled: true,
+              value: Workmasters
+                .filter((type) =>
+                  String(type.representative_id) as any == requirementid && String(type.id) == selectwork
+                )
+                .map((yojna: any) => {
+                  const generatedWorkDate = yojna.genratedworkdate;
+                  return generatedWorkDate
+                    && formatDate(generatedWorkDate as any)
+
+                }),
+              required: true,
+              type: 'text',
+              placeholder: `${t('date')}`,
+              onChange: (e: any) => setVitrandate(e.target.value),
             },
             {
               label: `${t("vitrandate")}`,
@@ -383,28 +527,37 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
               required: true,
               type: "date",
               placeholder: `${t("vitrandate")}`,
-              onChange: (e : any) => setVitrandate(e.target.value),
+              onChange: (e: any) => setVitrandate(e.target.value),
             },
+
             {
               label: `${t("selectInstallment")}`,
               value: Installment,
-              type: "select",
+              required: true,
+              type: "text",
               placeholder: `${t("selectInstallment")}`,
-              onChange: (e : any) => setInstallment(e.target.value),
-              options: [
-                { label: "1", value: "1" },
-                { label: "2", value: "2" },
-                { label: "3", value: "3" },
-                // Add other options here if needed
-              ],
+              onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                const selectedInstallment = e.target.value;
+
+                const estimatedAmount = Workmasters
+                  .filter((type) =>
+                    String(type.representative_id) as any == requirementid &&
+                    String(type.id) == selectwork
+                  )
+                  .map((yojna: any) => yojna.estimated_amount)
+                  .reduce((acc, amount) => acc + amount, 0); // Sum up estimated amounts
+
+                setInstallment(selectedInstallment);
+                setpercentage((selectedInstallment as any / 100) * estimatedAmount as any);
+              },
             },
             {
               label: `${t("enteramount")}`,
-              value: Amount,
+              value: percentage,
               required: true,
               type: "text",
               placeholder: `${t("enteramount")}`,
-              onChange: (e : any) => setAmount(e.target.value),
+              onChange: (e: any) => setAmount(percentage),
             },
             {
               label: `${t("enterimage")}`,
@@ -417,16 +570,16 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
               label: `${t("Latitude")}`,
               value: latitude,
               type: "text",
-              
+
               placeholder: `${t("Latitude")}`,
-              onChange: (e : any) => setLatitude(latitude),
+              onChange: (e: any) => setLatitude(latitude),
             },
             {
               label: `${t("Longitude")}`,
               value: longitude,
               type: "text",
               placeholder: `${t("Longitude")}`,
-              onChange: (e : any) => setLongitude(longitude),
+              onChange: (e: any) => setLongitude(longitude),
             },
             {
               label: `${t("enteraddress")}`,
@@ -434,7 +587,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster }: Props) => {
               type: "text",
               required: true,
               placeholder: `${t("enteraddress")}`,
-              onChange: (e : any) => setAdress(e.target.value),
+              onChange: (e: any) => setAdress(e.target.value),
             },
           ],
           error,
