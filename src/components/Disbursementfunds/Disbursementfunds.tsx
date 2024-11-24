@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
 import { clusterdata, grampanchayat, NidhiVitaran, Representative, talukasdata, Villages, WorkMaster, WorkMasterDemo } from "../type";
 import { formatDate } from "@/lib/utils";
@@ -46,7 +46,20 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
   const [insertImage, setInsertImage] = React.useState<File | null>(null); // File object for the selected image
 
   const [imagePreview, setImagePreview] = React.useState<string>(""); // URL for image preview
+  const [isResponsive, setIsResponsive] = useState<boolean>(false);
 
+  useEffect(() => {
+      const handleResize = () => {
+          setIsResponsive(window.innerWidth < 768); // Adjust threshold as needed
+      };
+
+      window.addEventListener("resize", handleResize);
+      handleResize(); // Check on mount
+
+      return () => {
+          window.removeEventListener("resize", handleResize);
+      };
+  }, []);
   const workid = Workmasters.reduce((acc, work: any) => {
     acc[work.id.toString] = work.name; // Convert bigint to string
     return acc;
@@ -408,6 +421,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
               value: requirementid,
               onChange: (e: any) => setrequirementid(e.target.value),
               type: "select",
+              className: isResponsive ? 'col-12' : 'col-4',
               options: reprenstive.map((category: Representative) => ({
                 value: category.id,
                 label: category.name,
@@ -420,7 +434,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
               value: selectwork,
               onChange: (e: any) => setSelectwork(e.target.value),
               type: "select",
-
+              className: isResponsive ? 'col-12' : 'col-4',
               options: Workmasters
                 .filter((type) =>
                   String(type.representative_id) as any == requirementid
@@ -435,6 +449,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
               label: `${t("dist")}`,
               value: selectwork,
               disabled: true,
+              className: isResponsive ? 'col-12' : 'col-4',
               onChange: (e: any) => setSelectwork(e.target.value),
               type: "select",
 
@@ -452,6 +467,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
               label: `${t("grampanchayatname")}`,
               value: selectwork,
               disabled: true,
+              className: isResponsive ? 'col-12' : 'col-4',
               onChange: (e: any) => setSelectwork(e.target.value),
               type: "select",
 
@@ -469,6 +485,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
               label: `${t("Village")}`,
               value: selectwork,
               disabled: true,
+              className: isResponsive ? 'col-12' : 'col-4',
               onChange: (e: any) => setSelectwork(e.target.value),
               type: "select",
 
@@ -492,6 +509,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
                   yojna.estimated_amount
 
                 )),
+                className: isResponsive ? 'col-12' : 'col-4',
               disabled: true,
               required: true,
               type: "text",
@@ -517,6 +535,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
 
                 }),
               required: true,
+              className: isResponsive ? 'col-12' : 'col-4',
               type: 'text',
               placeholder: `${t('date')}`,
               onChange: (e: any) => setVitrandate(e.target.value),
@@ -525,6 +544,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
               label: `${t("vitrandate")}`,
               value: vitrandate,
               required: true,
+              className: isResponsive ? 'col-12' : 'col-4',
               type: "date",
               placeholder: `${t("vitrandate")}`,
               onChange: (e: any) => setVitrandate(e.target.value),
@@ -534,6 +554,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
               label: `${t("selectInstallment")}`,
               value: Installment,
               required: true,
+              className: isResponsive ? 'col-12' : 'col-4',
               type: "text",
               placeholder: `${t("selectInstallment")}`,
               onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -556,6 +577,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
               value: percentage,
               required: true,
               type: "text",
+              className: isResponsive ? 'col-12' : 'col-4',
               placeholder: `${t("enteramount")}`,
               onChange: (e: any) => setAmount(percentage),
             },
@@ -563,6 +585,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
               label: `${t("enterimage")}`,
               value: "", // The value for file input is always empty (HTML behavior)
               type: "file",
+              className: isResponsive ? 'col-12' : 'col-4',
               placeholder: `${t("enterimage")}`,
               onChange: handleImageChange, // Handle image change here
             },
@@ -570,6 +593,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
               label: `${t("Latitude")}`,
               value: latitude,
               type: "text",
+              className: isResponsive ? 'col-12' : 'col-4',
 
               placeholder: `${t("Latitude")}`,
               onChange: (e: any) => setLatitude(latitude),
@@ -577,6 +601,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
             {
               label: `${t("Longitude")}`,
               value: longitude,
+              className: isResponsive ? 'col-12' : 'col-4',
               type: "text",
               placeholder: `${t("Longitude")}`,
               onChange: (e: any) => setLongitude(longitude),
@@ -584,6 +609,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
             {
               label: `${t("enteraddress")}`,
               value: Adress,
+              className: isResponsive ? 'col-12' : 'col-4',
               type: "text",
               required: true,
               placeholder: `${t("enteraddress")}`,
