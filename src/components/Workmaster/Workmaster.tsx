@@ -28,7 +28,7 @@ type Props = {
     genid: any;
 };
 
-const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, talukas, grampanchayat, Villages, facilities, Workmastersdata, genid }: Props) => {
+const Workmaster = ({Workmasters, reprenstive, talukas, grampanchayat, Villages, facilities, Workmastersdata, genid }: Props) => {
     const t = useTranslations("workmaster");
     const workdata = Workmastersdata.filter((data) => data.type !== "work").map((data) => data)
 
@@ -628,7 +628,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
                 value: Noadministrativerecognition,
                 required: true,
                 type: "text",
-                
+
                 className: isResponsive ? 'col-12' : 'col-4',
                 placeholder: `${t("noadministrativerecognition")}`,
 
@@ -639,7 +639,7 @@ const Workmaster = ({ YojnaYear, Bankdata, category, Workmasters, reprenstive, t
                 value: AdministrativerecognitionDate,
                 required: true,
                 type: "date",
-       
+
                 className: isResponsive ? 'col-12' : 'col-4',
                 placeholder: `${t("AdministrativerecognitionDate")}`,
 

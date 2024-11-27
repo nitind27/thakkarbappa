@@ -321,14 +321,20 @@
     "enterwork": "Select work",
     "ImagePreview": "Image Preview",
     "vitrandate": "Vitran Date",
-    "selectInstallment": "Select Installment",
+    "selectInstallment": "Select Installment (%)",
     "enteramount": "Amount",
     "enterimage": "Image",
     "Latitude": "Latitude",
     "Longitude": "Longitude",
     "enteraddress": "Adress",
     "submit": "Add",
-    "editsubmit": "Edit"
+    "editsubmit": "Edit",
+    "representativeid": "Representative",
+    "dist":"District",
+    "grampanchayatname":"GramPanchayat",
+    "Village":"Village",
+    "estimateamounttotal":"Est. total amt",
+    "date":"Work Of date"
   },
   "Notification": {
     "title": "Notification",

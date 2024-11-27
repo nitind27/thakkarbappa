@@ -91,7 +91,7 @@ export async function POST(req: Request) {
     // Convert BigInt fields to string before sending the response (if applicable)
     const responseData = {
       ...newSchool,
-      school_id: newSchool.school_id.toString(), // Assuming school_id is a BigInt
+      school_id: newSchool.school_id, // Assuming school_id is a BigInt
     };
 
     return NextResponse.json(responseData, { status: 201 });

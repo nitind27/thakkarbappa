@@ -132,6 +132,7 @@ export type OpeningBalance = {
 };
 export type NidhiVitaran = {
   id: bigint;
+  requirement_id: number;
   work_master_id: bigint;
   date?: Date | null; // Optional date
   installment: string;

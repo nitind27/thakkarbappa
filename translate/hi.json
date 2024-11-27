@@ -51,7 +51,13 @@
     "schoolwisestudents": "कक्षा अनुसार छात्र",
     "notificaiton": "सूचना",
     "workmaster": "कार्य मास्टर",
-    "work": "कार्य"
+    "work": "कार्य",
+    "representativeid": "प्रतिनिधि",
+    "dist": "जिला",
+    "grampanchayatname": "ग्राम पंचायत",
+    "Village": "गाँव",
+    "estimateamounttotal": "अनुमानित कुल राशि",
+    "date": "कार्य की तिथि"
   },
   "Townpage": {
     "title": "नगर प्रबंधन",
@@ -293,7 +299,7 @@
     "enterwork": "कार्य चुनें",
     "ImagePreview": "छवि पूर्वावलोकन",
     "vitrandate": "वितरण तिथि",
-    "selectInstallment": "किस्त चुनें",
+    "selectInstallment": "किस्त चुनें (%)",
     "enteramount": "राशि दर्ज करें",
     "enterimage": "छवि दर्ज करें",
     "Latitude": "अक्षांश",

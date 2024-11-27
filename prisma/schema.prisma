@@ -192,6 +192,7 @@ model OpeningBalance {
 
 model NidhiVitaran {
   id             BigInt   @id @default(autoincrement())
+  requirement_id   Int      @db.Int
   work_master_id   BigInt
   date           DateTime? @db.Date
   installment    String
