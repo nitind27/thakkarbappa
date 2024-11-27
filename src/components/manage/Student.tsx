@@ -386,6 +386,7 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
   return (
     <div>
       <TableOption
+        
         data={data}
         columns={columns}
         filterOptions={options}

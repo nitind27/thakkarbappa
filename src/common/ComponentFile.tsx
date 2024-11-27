@@ -12,7 +12,7 @@ type FormField = {
     className?: string;
     required?: boolean;
     disabled?: boolean;
-    
+
 };
 
 const validateForm = (fields: { [key: string]: any }, schema: FormField[]) => {
