@@ -28,7 +28,7 @@ type Props = {
     genid: any;
 };
 
-const Workmaster = ({Workmasters, reprenstive, talukas, grampanchayat, Villages, facilities, Workmastersdata, genid }: Props) => {
+const Workmaster = ({ Workmasters, reprenstive, talukas, grampanchayat, Villages, facilities, Workmastersdata, genid }: Props) => {
     const t = useTranslations("workmaster");
     const workdata = Workmastersdata.filter((data) => data.type !== "work").map((data) => data)
 
@@ -579,7 +579,7 @@ const Workmaster = ({Workmasters, reprenstive, talukas, grampanchayat, Villages,
                 value: taluka.id,
                 label: taluka.name,
             })),
-            placeholder: `${t("dist")}`, // Optional placeholder for select input
+            placeholder: `${t("suvidha")}`, // Optional placeholder for select input
         },
 
         {

@@ -63,7 +63,7 @@ const Openingbalanceadd = ({ initialOpenBalanceData, YojnaYear }: Props) => {
     },
     {
       accessorKey: "open_bal",
-      header: `${t("clustername")}`,
+      header: `${t("enteramount")}`,
     },
     {
       accessorKey: "year_id",

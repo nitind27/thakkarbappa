@@ -407,7 +407,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
               style={{
                 width: "150px", // Set a fixed width for the circular effect
                 height: "150px", // Set a fixed height equal to width
-                borderRadius: "50%", // Make the image circular
+                borderRadius: "5%", // Make the image circular
                 objectFit: "cover", // Ensure the image covers the circular area
                 overflow: "hidden", // Hide overflow to keep the circle shape
               }}

@@ -175,12 +175,12 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
     // },
     {
       accessorKey: "image_urls",
-      header: "Image Url",
+      header: `${t("image_urls")}`,
     },
 
     {
-      accessorKey: "photo",
-      header: `${t("attechments")}`,
+      accessorKey: "image_urls",
+      header: `${t("image_urls")}`,
       cell: ({ row }: any) => {
         const photoSrc = row.original.image_urls.startsWith("/")
           ? row.original.image_urls
@@ -190,7 +190,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
           <div style={{ textAlign: "center" }}>
             <Image
               src={photoSrc}
-              alt={t("image")}
+              alt={t("image_urls")}
               style={{ objectFit: "cover" }}
               height={100} // Adjust size as needed
               width={100}

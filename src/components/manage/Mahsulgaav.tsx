@@ -331,16 +331,23 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
 
             },
 
+
             {
               label: `${t('selectmahasul')}`,
-              value: townName, // Ensure this uses townName
+              value: townName, /// Ensure this uses townName
               type: "select",
               placeholder: `${t('selectmahasul')}`,
               onChange: (e: any) => setTownName(e.target.value), // Keep this to set townName
-              options: filteredGrampanchayat.map((gp: any) => ({
-                value: gp.id,
-                label: gp.name,
-              })),
+
+              options: grampanchayat
+                .filter((type) =>
+                  String(type.taluka_id) == talukaId
+
+                )
+                .map((yojna) => ({
+                  value: yojna.id,
+                  label: yojna.name,
+                })),
             },
 
             {
