@@ -16,7 +16,7 @@ const StudentAddData = ({ values,
     const t = useTranslations("student");
 
     const [isLoading, setIsLoading] = useState(false);
-
+    const [sicklecell, setSicklecell] = useState("");
     const handleSubmit = async (formData: any) => {
         setIsLoading(true);
         const dob = new Date(formData.dob);
@@ -223,12 +223,16 @@ const StudentAddData = ({ values,
             value: values.sicklecell,
             name: "sicklecell",
             type: "select",
-            onchange: ((e: any) => console.log('fsadf', e)),
             placeholder: `${t("sicklecell")}`,
             options: [
                 { label: "Yes", value: "Yes" },
                 { label: "No", value: "No" },
             ],
+            onChange: (e: React.ChangeEvent<HTMLSelectElement>) => {
+                const selectedValue = e.target.value;
+                console.log("Selected sickle cell value:", selectedValue);
+                setSicklecell(selectedValue);
+            },
         }
     ];
     if (values.sicklecell == "Yes") {
@@ -247,7 +251,7 @@ const StudentAddData = ({ values,
 
     return (
         <>
-
+            {sicklecell}
             <Button
                 variant="primary"
                 onClick={() => {
@@ -270,6 +274,7 @@ const StudentAddData = ({ values,
             </Button>
 
             <ComponentFile
+                size="lg"
                 show={showmodel}
                 handleClose={() => setShowModel(false)}
                 handleSubmit={handleSubmit}
