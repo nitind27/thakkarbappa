@@ -105,12 +105,16 @@ const CustomModal: React.FC<any> = ({
     setFormErrors({});
   };
 
+  const closeModal = () => {
+    setFormErrors({}); // Reset form errors
+    handleClose();     // Call original handleClose function
+  };
   // Determine grid classes based on size prop
   const gridClass = size ? 'col-6 col-md-3' : 'col-12';
 
   return (
     <Modal show={show} size={size}>
-      <Modal.Header closeButton onClick={handleClose}>
+      <Modal.Header closeButton onClick={closeModal}>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>

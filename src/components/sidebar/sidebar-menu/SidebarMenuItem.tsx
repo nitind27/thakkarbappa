@@ -58,10 +58,13 @@ const SidebarMenuItem: FC<Props & WithChildren> = ({
         )}
         <div
           className={clsx("menu-title text-light fs-6", {
-            "text-light": isActive,
+            "text-light ": isActive,
           })}
         >
+
+
           {title}
+
         </div>
       </Link>
       {/* {children} */}

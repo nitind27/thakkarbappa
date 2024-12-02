@@ -3,26 +3,40 @@ import { SidebarMenuItem } from "./SidebarMenuItem";
 import { SidebarMenuItemWithSub } from "./SidebarMenuItemWithSub";
 import { useLocale, useTranslations } from "next-intl";
 import Loader from "@/common/Loader ";
+import { usePathname } from "next/navigation";
 
 const SidebarMenuMain = () => {
   const t = useTranslations("Sidebar");
   const localActive = useLocale();
-
+  const router = usePathname();
   // State to manage loading status
   const [loading, setLoading] = useState(false);
 
   // Function to handle click and store path in localStorage
   const handleItemClick = (path: string) => {
     if (typeof window !== "undefined") {
-      // Ensure this runs only on the client-side
-
-      // Set loading to true and start a timer to reset it after 3 seconds
+      // Set loading to true when an item is clicked
       setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
+      // Save path for navigation
+      localStorage.setItem("currentPath", path);
     }
   };
+
+  // Effect to monitor the router/pathname and stop loading once the page is active
+  useEffect(() => {
+    const handleRouteChange = () => {
+      // Stop loading once the route change is detected (i.e., page is active)
+      setLoading(false);
+    };
+
+    // Listen for changes in the route (this ensures that the loader shows while the page is changing)
+    router && handleRouteChange(); // Check if router/pathname is available to start checking
+
+    return () => {
+      // Cleanup if necessary
+    };
+  }, [router]); // This effect runs when the pathname changes
+
   useEffect(() => {
     localStorage.removeItem("schoolName");
     localStorage.removeItem("displayedNumber");
