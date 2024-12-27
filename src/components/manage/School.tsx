@@ -173,10 +173,7 @@ const School = ({ initialschoolData, clusterdata, talukas }: Props) => {
     //   accessorKey: "status",
     //   header: `${t('SrNo')}`,
     // },
-    {
-      accessorKey: "image_urls",
-      header: `${t("image_urls")}`,
-    },
+
 
     {
       accessorKey: "image_urls",

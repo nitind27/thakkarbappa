@@ -13,6 +13,7 @@ import TableOption from "../table/TableOption";
 import { formatDate } from "@/lib/utils";
 
 import StudentAddData from "./StudentAddData";
+import Image from "next/image";
 type Props = {
   initialstudentData: StudentData[];
   schooldata: Schooldata[];
@@ -117,6 +118,32 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
     {
       accessorKey: "full_name",
       header: `${t("studentName")}`,
+    },
+      {
+        accessorKey: "profile_photo",
+        header: `${t("image_urls")}`,
+        cell: ({ row }: any) => {
+          const photoSrc = row.original.profile_photo && row.original.profile_photo.startsWith("/")
+          ? row.original.profile_photo
+          : `/${row.original.profile_photo}`;
+          
+          const notfound = "/media/img/imgenotfound.jpg";
+          return (
+            <div style={{ textAlign: "center" }}>
+              <Image
+                src={photoSrc}
+                alt={t("image_urls")}
+                style={{ objectFit: "cover" }}
+                height={100} // Adjust size as needed
+                width={100}
+              />
+              <br />
+              {/* <Link href={photoSrc} target="_blank" rel="noopener noreferrer">
+                view
+              </Link> */}
+            </div>
+          );
+        },
     },
     {
       accessorKey: "school_id",
@@ -237,12 +264,13 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
     }
   };
 
-  const uploadImage = async (schoolId: number, file: File) => {
+  const uploadImage = async (studentId: number, file: File) => {
+  
     const formData = new FormData();
     formData.append("photo", file);
 
     try {
-      const res = await fetch(`/api/student/upload/${schoolId}`, {
+      const res = await fetch(`/api/student/upload/${studentId}`, {
         method: "POST",
         body: formData,
       });
@@ -253,10 +281,11 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
 
         // Update the school data with the new image URL
         const updatedData = studentdata.map((school) =>
-          school.school_id === schoolId
-            ? { ...school, image_urls: data.image_urls }
+          school.student_id == studentId
+            ? { ...school, profile_photo: data.profile_photo }
             : school
         );
+        console.log('fsdafee',updatedData)
         setstudentdata(updatedData);
       } else {
         toast.error(data.error || "Failed to upload image.");

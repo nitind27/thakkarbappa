@@ -28,9 +28,9 @@ export async function PUT(req: Request) {
         } = body;
 
         // Validate input
-        if (!school_id || !school_name || !school_name_mr || !address || !cluster_id || !taluka_id || !udias || !email_id) {
-            return NextResponse.json({ error: 'All required fields must be filled' }, { status: 400 });
-        }
+        // if (!school_id || !school_name || !school_name_mr || !address || !cluster_id || !taluka_id || !udias || !email_id) {
+        //     return NextResponse.json({ error: 'All required fields must be filled' }, { status: 400 });
+        // }
 
         // Convert taluka_id, cluster_id, and other numeric fields to integers
         const talukaIdInt = parseInt(taluka_id, 10);
