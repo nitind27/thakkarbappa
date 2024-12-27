@@ -31,9 +31,12 @@ const page = async () => {
 
   return (
     <div>
-      <TitleCard breadcrumbs={breadcrumbs} />
-      <div className="container mt-5">
-        <div className="row col-lg-12">
+      <div className="card mt-5 p-3 ">
+
+        <TitleCard breadcrumbs={breadcrumbs} />
+      </div>
+      <div className=" mt-5">
+        <div className="row ">
           {yojnayear.map((school, index) => {
             return (
               <div className="col-md-3 mb-2" key={index}>

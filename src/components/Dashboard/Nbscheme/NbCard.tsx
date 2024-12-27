@@ -8,8 +8,8 @@ const NbCard = () => {
         title={`Nb Schemes`} // Display the calculated number
         backgroundColor="#27222e"
         content={<></>}
-        
-        
+
+
       />
     </div>
   );
