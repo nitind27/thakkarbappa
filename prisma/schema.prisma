@@ -470,3 +470,21 @@ model WorkMasterDemo {
     @@map("work_master_demo")
 }
 
+
+model parivahanbeneficiary {
+  parivahan_id      Int      @id @default(autoincrement())
+  parivahan_no      Int
+  parivahan_date    DateTime
+  outward_no        String   @db.VarChar(50)
+  sup_id            Int
+  yojana_year_id    Int
+  yojana_type       String   @db.VarChar(20)
+  yojana_id         Int
+  beneficiary_id    String   @db.VarChar(100)
+  installment       String   @db.VarChar(10)
+  work_status       String   @default("Pending") @db.VarChar(10)
+  status            String   @default("Active") @db.VarChar(10)
+  ins_date          DateTime
+
+  @@map("tbl_parivahan_beneficiary")
+}

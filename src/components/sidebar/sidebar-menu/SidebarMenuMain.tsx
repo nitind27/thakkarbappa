@@ -182,7 +182,7 @@ const SidebarMenuMain = () => {
             hasBullet={true}
             onClick={() => handleItemClick(`/${localActive}/yojna/schemes/beneficiary`)} // Store path on click
           />
-          {/* <SidebarMenuItem
+           <SidebarMenuItem
             to={`/${localActive}/yojna/schemes/parivahan`}
             title={t("Sightseeing_Transport")}
             hasBullet={true}
@@ -201,7 +201,7 @@ const SidebarMenuMain = () => {
             title={t("Costmatters")}
             hasBullet={true}
             onClick={() => handleItemClick(`/${localActive}/manage/supervisor`)} // Store path on click
-          /> */}
+          /> 
 
         </SidebarMenuItemWithSub>
         {/* Disbursement Funds Menu Item */}

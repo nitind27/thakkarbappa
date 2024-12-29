@@ -374,3 +374,19 @@ export interface WorkMasterDemo {
   generatednumber?: string | null;
   type?: string | null;
 }
+
+export type TblParivahanBeneficiary = {
+  parivahan_id: number;
+  parivahan_no: number;
+  parivahan_date: Date; // or string if you're handling dates as strings
+  outward_no: string;
+  sup_id: number;
+  yojana_year_id: number;
+  yojana_type: string;
+  yojana_id: number;
+  beneficiary_id: string;
+  installment: string;
+  work_status: string; // Default is 'Pending'
+  status: string; // Default is 'Active'
+  ins_date: Date; // or string if you're handling dates as strings
+};

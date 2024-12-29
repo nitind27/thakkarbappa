@@ -1,51 +1,67 @@
-
 import SubCategorytitle from "@/app/[locale]/title/Subcategory";
 import Loader from "@/common/Loader ";
 import Parivahan from "@/components/Schemes/Parivahan";
-
-
-import SubCategorys from "@/components/Schemes/SubCategorys";
-import { Bank, Categorys, SubCategory, YojanaYear } from "@/components/type";
+import {
+  Bank,
+  Categorys,
+  SubCategory,
+  TblParivahanBeneficiary,
+  TblYojanaType,
+  YojanaMaster,
+  YojanaYear,
+} from "@/components/type";
 import prisma from "@/lib/db";
 import React from "react";
 
 const Page = async () => {
-    let subCategory: SubCategory[] = [];
-    let YojnaYear: YojanaYear[] = [];
-    let Bankdata: Bank[] = [];
-    let category: Categorys[] = [];
+  let subCategory: SubCategory[] = [];
+  let YojnaYear: YojanaYear[] = [];
+  let Bankdata: Bank[] = [];
+  let yojnatype: TblYojanaType[] = [];
+  let yojanaMaster: YojanaMaster[] = [];
+  let category: Categorys[] = [];
+  let Parivahanbeneficiarys: TblParivahanBeneficiary[] = [];
 
-
-    try {
-        category = await prisma.category.findMany(); // Fetch all clusters
-        subCategory = await prisma.subCategory.findMany(); // Fetch all clusters
-        YojnaYear = await prisma.yojanaYear.findMany(); // Fetch all clusters
-        Bankdata = await prisma.bank.findMany();
-
-    } catch (error) {
-        console.error("Error fetching cluster data:", error);
-        return (
-            <div>
-                <h1>Error fetching Data</h1>
-            </div>
-        );
-    }
-    if (!subCategory) {
-        return (
-            <>
-                <Loader />
-            </>
-        )
-    }
+  try {
+    category = await prisma.category.findMany(); // Fetch all clusters
+    subCategory = await prisma.subCategory.findMany(); // Fetch all clusters
+    yojnatype = await prisma.yojnatype.findMany(); // Fetch all clusters
+    YojnaYear = await prisma.yojanaYear.findMany(); // Fetch all clusters
+    yojanaMaster = await prisma.yojanaMaster.findMany(); // Fetch all clusters
+    Bankdata = await prisma.bank.findMany();
+    Parivahanbeneficiarys = await prisma.parivahanbeneficiary.findMany();
+  } catch (error) {
+    console.error("Error fetching cluster data:", error);
     return (
-        <div>
-            <h1 className="card card-body mt-5">
-                <SubCategorytitle />
-            </h1>
-
-            <Parivahan initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} />
-        </div>
+      <div>
+        <h1>Error fetching Data</h1>
+      </div>
     );
+  }
+  if (!subCategory) {
+    return (
+      <>
+        <Loader />
+      </>
+    );
+  }
+  return (
+    <div>
+      <h1 className="card card-body mt-5">
+        <SubCategorytitle />
+      </h1>
+
+      <Parivahan
+        initialcategoryData={subCategory}
+        YojnaYear={YojnaYear}
+        Bankdata={Bankdata}
+        yojnatype={yojnatype}
+        yojanaMaster={yojanaMaster}
+        category={category}
+        Parivahanbeneficiarys={Parivahanbeneficiarys}
+      />
+    </div>
+  );
 };
 
 export default Page;
