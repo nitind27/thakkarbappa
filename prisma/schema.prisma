@@ -488,3 +488,21 @@ model parivahanbeneficiary {
 
   @@map("tbl_parivahan_beneficiary")
 }
+
+
+model tblparivahan {
+  parivahan_id      Int      @id
+  parivahan_no      BigInt
+  parivahan_date    DateTime @db.Date
+  outward_no        String   @db.VarChar(50)
+  sup_id            Int
+  yojana_year_id    Int
+  yojana_type       String   @db.VarChar(20)
+  yojana_id         Int
+  beneficiary_id    String   @db.VarChar(100)
+  status            String   @default("Active") @db.VarChar(10)
+  ins_date          DateTime @db.Date
+
+   @@map("tbl_parivahan")
+}
+

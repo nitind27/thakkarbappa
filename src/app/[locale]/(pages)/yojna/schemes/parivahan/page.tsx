@@ -5,12 +5,15 @@ import {
   Bank,
   Categorys,
   SubCategory,
+  TblBeneficiary,
+  tblparivahan,
   TblParivahanBeneficiary,
   TblYojanaType,
   YojanaMaster,
   YojanaYear,
 } from "@/components/type";
 import prisma from "@/lib/db";
+
 import React from "react";
 
 const Page = async () => {
@@ -21,6 +24,8 @@ const Page = async () => {
   let yojanaMaster: YojanaMaster[] = [];
   let category: Categorys[] = [];
   let Parivahanbeneficiarys: TblParivahanBeneficiary[] = [];
+  let Parivahantbl: tblparivahan[] = [];
+  let Beneficiary: TblBeneficiary[] = [];
 
   try {
     category = await prisma.category.findMany(); // Fetch all clusters
@@ -29,7 +34,9 @@ const Page = async () => {
     YojnaYear = await prisma.yojanaYear.findMany(); // Fetch all clusters
     yojanaMaster = await prisma.yojanaMaster.findMany(); // Fetch all clusters
     Bankdata = await prisma.bank.findMany();
+    Beneficiary = await prisma.beneficiary.findMany();
     Parivahanbeneficiarys = await prisma.parivahanbeneficiary.findMany();
+    Parivahantbl = await prisma.tblparivahan.findMany();
   } catch (error) {
     console.error("Error fetching cluster data:", error);
     return (
@@ -59,6 +66,8 @@ const Page = async () => {
         yojanaMaster={yojanaMaster}
         category={category}
         Parivahanbeneficiarys={Parivahanbeneficiarys}
+        Parivahantbl={Parivahantbl}
+        Beneficiary={Beneficiary}
       />
     </div>
   );
