@@ -6,6 +6,8 @@ import {
   Bank,
   Categorys,
   SubCategory,
+  TblBeneficiary,
+  tblparivahan,
   TblParivahanBeneficiary,
   TblYojanaType,
   YojanaMaster,
@@ -28,8 +30,10 @@ type Props = {
   Bankdata: Bank[];
   yojanaMaster: YojanaMaster[];
   category: Categorys[];
-  yojnatype:TblYojanaType[];
+  yojnatype: TblYojanaType[];
   Parivahanbeneficiarys: TblParivahanBeneficiary[];
+  Parivahantbl: tblparivahan[];
+  Beneficiary: TblBeneficiary[];
 };
 
 const Parivahan = ({
@@ -38,8 +42,10 @@ const Parivahan = ({
   Bankdata,
   yojanaMaster,
   category,
+  Parivahantbl,
   yojnatype,
   Parivahanbeneficiarys,
+  Beneficiary,
 }: Props) => {
   const t = useTranslations("Subcategory");
   const [showPrintModal, setShowPrintModal] = useState(false);
@@ -52,8 +58,8 @@ const Parivahan = ({
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
-  const [parivahandata, setparivahandata] = useState<TblParivahanBeneficiary[]>(
-    Parivahanbeneficiarys
+  const [parivahandata, setparivahandata] = useState<tblparivahan[]>(
+    Parivahantbl
   ); // State for Sub Category data
   const confirm = createConfirmation(ConfirmationDialog);
   const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
@@ -72,28 +78,47 @@ const Parivahan = ({
     acc[year.id] = year.name; // Assuming taluka has id and name properties
     return acc;
   }, {} as Record<number, string>);
-  const categorydata = category.reduce((acc, year: Categorys) => {
-    acc[year.category_id] = year.category_name; // Assuming taluka has id and name properties
+  const beneficiaryname = Beneficiary.reduce((acc, year: TblBeneficiary) => {
+    acc[year.beneficiary_id] = year.fullname; // Assuming taluka has id and name properties
     return acc;
   }, {} as Record<number, string>);
 
   const data = parivahandata
-  .map((parivhan) => ({
-    parivahan_id: parivhan.parivahan_id,
-    parivahan_no: parivhan.parivahan_no,
-    parivahan_date: typeof parivhan.parivahan_date === "string"
-      ? formatDate(parivhan.parivahan_date)
-      : formatDate(parivhan.parivahan_date.toISOString()),
-    outward_no: parivhan.outward_no,
-    sup_id: parivhan.sup_id,
-    yojana_year_id: yojna_year[parivhan.yojana_year_id],
-    yojana_type: yojna_type[parivhan.yojana_type as any],
-    yojana_id: yojnamster[parivhan.yojana_id],
-    beneficiary_id: parivhan.beneficiary_id,
-    status: parivhan.status,
-    ins_date: parivhan.ins_date,
-  }))
-  .reverse(); // Reverse the order to show the last added items first
+    .map((parivhan) => ({
+      parivahan_id: parivhan.parivahan_id,
+      parivahan_no: parivhan.parivahan_no,
+      parivahan_date: typeof parivhan.parivahan_date === "string"
+        ? parivhan.parivahan_no + " " + formatDate(parivhan.parivahan_date)
+        : parivhan.parivahan_no + " " + formatDate(parivhan.parivahan_date.toISOString()),
+      outward_no: parivhan.outward_no,
+      sup_id: parivhan.sup_id,
+      yojana_year_id: yojna_year[parivhan.yojana_year_id],
+      yojana_type: yojna_type[parivhan.yojana_type as any],
+      yojana_id: yojnamster[parivhan.yojana_id],
+      beneficiary_id: parivhan.beneficiary_id,
+      beneficiaryid: beneficiaryname[parivhan.beneficiary_id as any],
+      status: parivhan.status,
+      ins_date: parivhan.ins_date,
+    }))
+    .reverse(); // Reverse the order to show the last added items first
+  const data1 = Parivahanbeneficiarys
+    .map((parivhan) => ({
+      parivahan_id: parivhan.parivahan_id,
+      parivahan_no: parivhan.parivahan_no,
+      parivahan_date: typeof parivhan.parivahan_date === "string"
+        ? parivhan.parivahan_no + " " + formatDate(parivhan.parivahan_date)
+        : parivhan.parivahan_no + " " + formatDate(parivhan.parivahan_date.toISOString()),
+      outward_no: parivhan.outward_no,
+      sup_id: parivhan.sup_id,
+      yojana_year_id: yojna_year[parivhan.yojana_year_id],
+      yojana_type: yojna_type[parivhan.yojana_type as any],
+      yojana_id: yojnamster[parivhan.yojana_id],
+      beneficiary_id: parivhan.beneficiary_id,
+      status: parivhan.status,
+      ins_date: parivhan.ins_date,
+    }))
+    .reverse(); // Reverse the order to show the last added items first
+
 
   const columns = [
     {
@@ -104,10 +129,7 @@ const Parivahan = ({
       cell: ({ row }: any) => <div>{row.index + 1}</div>,
     },
 
-    {
-      accessorKey: "parivahan_no",
-      header: `${t("subcategoryname")}`,
-    },
+
     {
       accessorKey: "parivahan_date",
       header: `${t("year")}`,
@@ -119,6 +141,42 @@ const Parivahan = ({
     {
       accessorKey: "sup_id",
       header: `${t("amount")}`,
+    },
+    {
+      accessorKey: "actions",
+      header: `${t("Action")}`,
+      cell: ({ row }: any) => (
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse border border-gray-300">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="border border-gray-300 px-4 py-2 text-left">Name</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data1
+                .filter((item) => item.beneficiary_id == row.original.beneficiary_id)
+                .map((item, index) => (
+                  <tr key={index} className="hover:bg-gray-100">
+                    <td className="border border-gray-300 px-4 py-2">
+                      {row.original.beneficiaryid}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {Beneficiary.filter(
+                        (beneficiary) =>
+                          beneficiary.beneficiary_id == row.original.beneficiary_id
+                      ).map((filteredItem) => filteredItem.tot_finance)}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+
+
+          </table>
+        </div>
+
+      ),
     },
     {
       accessorKey: "yojana_year_id",
@@ -135,7 +193,7 @@ const Parivahan = ({
     },
     {
       accessorKey: "beneficiary_id",
-      header: `${t("amount")}`,
+      header: `idbe`,
     },
     {
       accessorKey: "status",
@@ -159,9 +217,8 @@ const Parivahan = ({
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(
                 row.original.sub_category_id,
@@ -203,15 +260,14 @@ const Parivahan = ({
             prevData.map((cluster) =>
               cluster.parivahan_id === category_id
                 ? {
-                    ...cluster,
-                    status: currentStatus === "Active" ? "Deactive" : "Active",
-                  }
+                  ...cluster,
+                  status: currentStatus === "Active" ? "Deactive" : "Active",
+                }
                 : cluster
             )
           );
           toast.success(
-            `Sub Category ${
-              currentStatus === "Active" ? "deactivated" : "activated"
+            `Sub Category ${currentStatus === "Active" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
@@ -265,13 +321,13 @@ const Parivahan = ({
             prevData.map((cluster) =>
               cluster.parivahan_id === updateClusterId
                 ? {
-                    ...cluster,
-                    sub_category_name: subcategoryName,
-                    category_id: parseInt(categoryName),
-                    bank_id: parseInt(bankname),
-                    amount: amount as any,
-                    yojana_year_id: parseInt(yojnayear),
-                  }
+                  ...cluster,
+                  sub_category_name: subcategoryName,
+                  category_id: parseInt(categoryName),
+                  bank_id: parseInt(bankname),
+                  amount: amount as any,
+                  yojana_year_id: parseInt(yojnayear),
+                }
                 : cluster
             )
           );
@@ -411,8 +467,8 @@ const Parivahan = ({
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />

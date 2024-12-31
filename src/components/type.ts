@@ -390,3 +390,18 @@ export type TblParivahanBeneficiary = {
   status: string; // Default is 'Active'
   ins_date: Date; // or string if you're handling dates as strings
 };
+
+
+export type tblparivahan = {
+  parivahan_id: number;
+  parivahan_no: bigint;
+  parivahan_date: Date; // or string if you prefer to handle dates as strings
+  outward_no: string;
+  sup_id: number;
+  yojana_year_id: number;
+  yojana_type: string;
+  yojana_id: number;
+  beneficiary_id: string;
+  status: string; // Default is 'Active'
+  ins_date: Date; // or string if you prefer to handle dates as strings
+};
