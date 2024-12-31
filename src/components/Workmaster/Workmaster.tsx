@@ -65,6 +65,7 @@ const Workmaster = ({
     0
   );
 
+  const [totalestamountsstate, seTtotalestamountsstate] = useState(0);
   const [RepresentativeName, setRepresentativeName] = useState(
     workdata.map((p) => String(p.representative_id))
   );
@@ -85,7 +86,6 @@ const Workmaster = ({
         : String(p.estimatedtotalamount)
     )
   );
-
   const [showPrintModal, setShowPrintModal] = useState(false);
 
   const [randomNumber, setRandomNumber] = useState(null);
@@ -176,9 +176,13 @@ const Workmaster = ({
       created_at: workmaster.created_at,
       updated_at: workmaster.updated_at,
     }))
-    .reverse(); // Reverse the order to show the last added items first
-  const totalamountminus = (estimatetotalamount as any) - totalAmountest;
+    .reverse();
+  // const totalamountminusdata = (estimatetotalamount as any) - totalAmountest;
+  const totalamountminusdata = Number(totalestamountsstate) + Number(totalAmountest);
 
+  const totalamountminus = (estimatetotalamount as any) - totalamountminusdata;
+
+  console.log("fasdfe0", totalamountminus);
   const columns = [
     {
       accessorKey: "serial_number",
@@ -514,9 +518,7 @@ const Workmaster = ({
     },
     {
       label: `${t("numberofwork")}`,
-      value: updateClusterId
-        ? workmasterdata.length
-        : workmasterdata.length + 1,
+      value: updateClusterId ? workmasterdata.length : workmasterdata.length,
       type: "text",
       className: isResponsive ? "col-12" : "col-2",
       disabled: true,
@@ -549,7 +551,6 @@ const Workmaster = ({
     {
       label: `${t("estimateamountminus")}`,
       value: totalamountminus,
-
       type: "text",
       disabled: true,
       className: isResponsive ? "col-12" : "col-4",
@@ -637,7 +638,7 @@ const Workmaster = ({
 
       onChange: (e: any) => {
         const inputValue = e.target.value;
-
+        seTtotalestamountsstate(inputValue);
         // Ensure inputValue is converted to a number for comparison
         const numericInputValue = Number(inputValue);
 
@@ -726,20 +727,20 @@ const Workmaster = ({
         data={data}
         columns={columns}
         Button={
-          numberofwork as any !== workmasterdata.length + 1 &&
-         
-          <Button
-            variant="primary"
-            onClick={handleShowPrint}
-            className="btn btn-sm"
-          >
-            <KTIcon
-              iconName={"plus-circle"}
-              className="fs-3"
-              iconType="solid"
-            />
-            {t("addbenef")}
-          </Button>
+          (numberofwork as any) !== workmasterdata.length + 1 && (
+            <Button
+              variant="primary"
+              onClick={handleShowPrint}
+              className="btn btn-sm"
+            >
+              <KTIcon
+                iconName={"plus-circle"}
+                className="fs-3"
+                iconType="solid"
+              />
+              {t("addbenef")}
+            </Button>
+          )
         }
       />
 
