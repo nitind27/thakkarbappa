@@ -39,7 +39,7 @@ const StudentAddData = ({
     sicklecell: "",
     sicklereport: "",
   });
-console.log('fasdfaeee',schooldata)
+  console.log("fasdfaeee", schooldata);
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -233,8 +233,13 @@ console.log('fasdfaeee',schooldata)
       type: "text",
       placeholder: "eg. 121212121212",
       value: formState.aadhaar,
-      onChange: (e: any) =>
-        setFormState({ ...formState, aadhaar: e.target.value }),
+      onChange: (e: any) => {
+        const value = e.target.value;
+        // Allow only numeric input and limit to 10 digits
+        if (/^\d{0,12}$/.test(value)) {
+          setFormState({ ...formState, aadhaar: value });
+        }
+      },
     },
     {
       label: t("Contact"),
@@ -242,8 +247,13 @@ console.log('fasdfaeee',schooldata)
       type: "text",
       placeholder: "eg.7359595959",
       value: formState.contactNo,
-      onChange: (e: any) =>
-        setFormState({ ...formState, contactNo: e.target.value }),
+      onChange: (e: any) => {
+        const value = e.target.value;
+        // Allow only numeric input and limit to 10 digits
+        if (/^\d{0,10}$/.test(value)) {
+          setFormState({ ...formState, contactNo: value });
+        }
+      },
     },
     {
       label: t("address"),
@@ -253,7 +263,14 @@ console.log('fasdfaeee',schooldata)
       value: formState.address,
       onChange: (e: any) =>
         setFormState({ ...formState, address: e.target.value }),
+
+      
     },
+
+
+  
+    
+
     {
       label: t("sicklecell"),
       name: "sicklecell",
@@ -286,9 +303,8 @@ console.log('fasdfaeee',schooldata)
   }
 
   const handleEdit = (school: any) => {
-    console.log('fsafsadf',school)
+    console.log("fsafsadf", school);
     setFormState({
-        
       serialnumber: school.serialnumber || formState.serialnumber,
       studentName: school.studentName || formState.studentName,
       grno: school.grno || formState.grno,
