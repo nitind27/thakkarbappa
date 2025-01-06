@@ -405,3 +405,28 @@ export type tblparivahan = {
   status: string; // Default is 'Active'
   ins_date: Date; // or string if you prefer to handle dates as strings
 };
+
+export type TblUsers = {
+  user_id: number;
+  category_id: number;
+  name: string;
+  contact_no: string;
+  email: string;
+  address: string;
+  username: string;
+  password: string;
+  status: string; // Default is 'Active'
+  ins_date_time: Date; // Use Date for JavaScript date handling
+  update_date_time: Date; // Use Date for JavaScript date handling
+  school_id: number;
+  standard_id: number;
+  hostel_id: number;
+  central_kitchan_id: number;
+  civil_id: number;
+  dept_id: number;
+  lipik_id: number;
+  officer_id: number;
+  apo_id: number;
+  cluster_id: number;
+  padnam_id: number;
+};

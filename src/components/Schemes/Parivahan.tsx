@@ -1,6 +1,6 @@
 // components/manage/Clusteradd.tsx
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
 import {
   Bank,
@@ -9,6 +9,7 @@ import {
   TblBeneficiary,
   tblparivahan,
   TblParivahanBeneficiary,
+  TblUsers,
   TblYojanaType,
   YojanaMaster,
   YojanaYear,
@@ -34,6 +35,7 @@ type Props = {
   Parivahanbeneficiarys: TblParivahanBeneficiary[];
   Parivahantbl: tblparivahan[];
   Beneficiary: TblBeneficiary[];
+  Userdata: TblUsers[];
 };
 
 const Parivahan = ({
@@ -46,6 +48,7 @@ const Parivahan = ({
   yojnatype,
   Parivahanbeneficiarys,
   Beneficiary,
+  Userdata,
 }: Props) => {
   const t = useTranslations("Subcategory");
   const [showPrintModal, setShowPrintModal] = useState(false);
@@ -58,9 +61,8 @@ const Parivahan = ({
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
-  const [parivahandata, setparivahandata] = useState<tblparivahan[]>(
-    Parivahantbl
-  ); // State for Sub Category data
+  const [parivahandata, setparivahandata] =
+    useState<tblparivahan[]>(Parivahantbl); // State for Sub Category data
   const confirm = createConfirmation(ConfirmationDialog);
   const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
     acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
@@ -74,24 +76,33 @@ const Parivahan = ({
     acc[year.yojana_id] = year.yojana_name; // Assuming taluka has id and name properties
     return acc;
   }, {} as Record<number, string>);
-  const bankdata = Bankdata.reduce((acc, year: Bank) => {
-    acc[year.id] = year.name; // Assuming taluka has id and name properties
+  const usersdata = Userdata.reduce((acc, year: TblUsers) => {
+    acc[year.user_id] = year.name; // Assuming taluka has id and name properties
     return acc;
   }, {} as Record<number, string>);
   const beneficiaryname = Beneficiary.reduce((acc, year: TblBeneficiary) => {
     acc[year.beneficiary_id] = year.fullname; // Assuming taluka has id and name properties
     return acc;
   }, {} as Record<number, string>);
+  const [currentDate, setCurrentDate] = useState("");
 
   const data = parivahandata
     .map((parivhan) => ({
       parivahan_id: parivhan.parivahan_id,
       parivahan_no: parivhan.parivahan_no,
-      parivahan_date: typeof parivhan.parivahan_date === "string"
-        ? parivhan.parivahan_no + " " + formatDate(parivhan.parivahan_date)
-        : parivhan.parivahan_no + " " + formatDate(parivhan.parivahan_date.toISOString()),
+      parivahan_date:
+        typeof parivhan.parivahan_date === "string"
+          ? parivhan.parivahan_no + " " + formatDate(parivhan.parivahan_date)
+          : parivhan.parivahan_no +
+            " " +
+            formatDate(parivhan.parivahan_date.toISOString()),
       outward_no: parivhan.outward_no,
-      sup_id: parivhan.sup_id,
+      sup_id:
+        usersdata[parivhan.sup_id] +
+        " " +
+        "(" +
+        Userdata.filter((user)=>user.user_id == parivhan.sup_id).map((users) => users.address) +
+        ")" + Userdata.filter((user)=>user.user_id == parivhan.sup_id).map((users) => users.contact_no),
       yojana_year_id: yojna_year[parivhan.yojana_year_id],
       yojana_type: yojna_type[parivhan.yojana_type as any],
       yojana_id: yojnamster[parivhan.yojana_id],
@@ -101,24 +112,24 @@ const Parivahan = ({
       ins_date: parivhan.ins_date,
     }))
     .reverse(); // Reverse the order to show the last added items first
-  const data1 = Parivahanbeneficiarys
-    .map((parivhan) => ({
-      parivahan_id: parivhan.parivahan_id,
-      parivahan_no: parivhan.parivahan_no,
-      parivahan_date: typeof parivhan.parivahan_date === "string"
+  const data1 = Parivahanbeneficiarys.map((parivhan) => ({
+    parivahan_id: parivhan.parivahan_id,
+    parivahan_no: parivhan.parivahan_no,
+    parivahan_date:
+      typeof parivhan.parivahan_date === "string"
         ? parivhan.parivahan_no + " " + formatDate(parivhan.parivahan_date)
-        : parivhan.parivahan_no + " " + formatDate(parivhan.parivahan_date.toISOString()),
-      outward_no: parivhan.outward_no,
-      sup_id: parivhan.sup_id,
-      yojana_year_id: yojna_year[parivhan.yojana_year_id],
-      yojana_type: yojna_type[parivhan.yojana_type as any],
-      yojana_id: yojnamster[parivhan.yojana_id],
-      beneficiary_id: parivhan.beneficiary_id,
-      status: parivhan.status,
-      ins_date: parivhan.ins_date,
-    }))
-    .reverse(); // Reverse the order to show the last added items first
-
+        : parivhan.parivahan_no +
+          " " +
+          formatDate(parivhan.parivahan_date.toISOString()),
+    outward_no: parivhan.outward_no,
+    sup_id: parivhan.sup_id,
+    yojana_year_id: yojna_year[parivhan.yojana_year_id],
+    yojana_type: yojna_type[parivhan.yojana_type as any],
+    yojana_id: yojnamster[parivhan.yojana_id],
+    beneficiary_id: parivhan.beneficiary_id,
+    status: parivhan.status,
+    ins_date: parivhan.ins_date,
+  })).reverse(); // Reverse the order to show the last added items first
 
   const columns = [
     {
@@ -128,7 +139,6 @@ const Parivahan = ({
       ),
       cell: ({ row }: any) => <div>{row.index + 1}</div>,
     },
-
 
     {
       accessorKey: "parivahan_date",
@@ -141,42 +151,6 @@ const Parivahan = ({
     {
       accessorKey: "sup_id",
       header: `${t("amount")}`,
-    },
-    {
-      accessorKey: "actions",
-      header: `${t("Action")}`,
-      cell: ({ row }: any) => (
-        <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse border border-gray-300">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="border border-gray-300 px-4 py-2 text-left">Name</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data1
-                .filter((item) => item.beneficiary_id == row.original.beneficiary_id)
-                .map((item, index) => (
-                  <tr key={index} className="hover:bg-gray-100">
-                    <td className="border border-gray-300 px-4 py-2">
-                      {row.original.beneficiaryid}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {Beneficiary.filter(
-                        (beneficiary) =>
-                          beneficiary.beneficiary_id == row.original.beneficiary_id
-                      ).map((filteredItem) => filteredItem.tot_finance)}
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-
-
-          </table>
-        </div>
-
-      ),
     },
     {
       accessorKey: "yojana_year_id",
@@ -203,6 +177,47 @@ const Parivahan = ({
       accessorKey: "ins_date",
       header: `${t("amount")}`,
     },
+   
+    {
+      accessorKey: "actions",
+      header: `${t("Action")}`,
+      cell: ({ row }: any) => (
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse border border-gray-300">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="border border-gray-300 px-4 py-2 text-left">
+                  Name
+                </th>
+                <th className="border border-gray-300 px-4 py-2 text-left">
+                  Total
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {data1
+                .filter(
+                  (item) => item.beneficiary_id == row.original.beneficiary_id
+                )
+                .map((item, index) => (
+                  <tr key={index} className="hover:bg-gray-100">
+                    <td className="border border-gray-300 px-4 py-2">
+                      {row.original.beneficiaryid}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {Beneficiary.filter(
+                        (beneficiary) =>
+                          beneficiary.beneficiary_id ==
+                          row.original.beneficiary_id
+                      ).map((filteredItem) => filteredItem.tot_finance)}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      ),
+    },
     {
       accessorKey: "actions",
       header: `${t("Action")}`,
@@ -217,8 +232,9 @@ const Parivahan = ({
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
-              } ms-5`}
+            className={`btn btn-sm ${
+              row.original.status === "Active" ? "btn-danger" : "btn-warning"
+            } ms-5`}
             onClick={() =>
               handleDeactivate(
                 row.original.sub_category_id,
@@ -235,6 +251,10 @@ const Parivahan = ({
       ),
     },
   ];
+  useEffect(() => {
+    const now = new Date();
+    setCurrentDate(now.toLocaleDateString()); // Formats date only
+  }, []);
 
   const handleDeactivate = async (category_id: any, currentStatus: any) => {
     const confirmMessage =
@@ -260,14 +280,15 @@ const Parivahan = ({
             prevData.map((cluster) =>
               cluster.parivahan_id === category_id
                 ? {
-                  ...cluster,
-                  status: currentStatus === "Active" ? "Deactive" : "Active",
-                }
+                    ...cluster,
+                    status: currentStatus === "Active" ? "Deactive" : "Active",
+                  }
                 : cluster
             )
           );
           toast.success(
-            `Sub Category ${currentStatus === "Active" ? "deactivated" : "activated"
+            `Sub Category ${
+              currentStatus === "Active" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
@@ -321,13 +342,13 @@ const Parivahan = ({
             prevData.map((cluster) =>
               cluster.parivahan_id === updateClusterId
                 ? {
-                  ...cluster,
-                  sub_category_name: subcategoryName,
-                  category_id: parseInt(categoryName),
-                  bank_id: parseInt(bankname),
-                  amount: amount as any,
-                  yojana_year_id: parseInt(yojnayear),
-                }
+                    ...cluster,
+                    sub_category_name: subcategoryName,
+                    category_id: parseInt(categoryName),
+                    bank_id: parseInt(bankname),
+                    amount: amount as any,
+                    yojana_year_id: parseInt(yojnayear),
+                  }
                 : cluster
             )
           );
@@ -401,6 +422,7 @@ const Parivahan = ({
       />
 
       <CustomModal
+        size="lg"
         show={showPrintModal}
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
@@ -416,15 +438,17 @@ const Parivahan = ({
                 value: category.category_id,
                 label: category.category_name,
               })),
+
               placeholder: `${t("categoryname")}`, // Optional placeholder for select input
+              className: "col-3",
             },
             {
               label: `${t("subcategoryname")}`,
               value: subcategoryName,
-              type: "text",
+              type: "date",
               required: true,
               placeholder: `${t("subcategoryname")}`,
-
+              className: "col-3",
               onChange: (e: any) => setSubCategoryName(e.target.value),
             },
             {
@@ -436,6 +460,7 @@ const Parivahan = ({
                 value: year.yojana_year_id,
                 label: year.yojana_year,
               })),
+              className: "col-6",
               placeholder: `${t("year")}`, // Optional placeholder for select input
             },
 
@@ -448,6 +473,7 @@ const Parivahan = ({
                 value: Bank.id,
                 label: Bank.name,
               })),
+              className: "col-3",
               placeholder: `${t("Bankname")}`, // Optional placeholder for select input
             },
             {
@@ -456,6 +482,16 @@ const Parivahan = ({
               type: "text",
               placeholder: `${t("amount")}`,
               required: true,
+              className: "col-3",
+              onChange: (e: any) => setAmount(e.target.value),
+            },
+            {
+              label: `${t("amount")}`,
+              value: amount,
+              type: "text",
+              placeholder: `${t("amount")}`,
+              required: true,
+              className: "col-6",
               onChange: (e: any) => setAmount(e.target.value),
             },
           ],
@@ -467,8 +503,8 @@ const Parivahan = ({
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-              ? "Submitting..."
-              : t("submit")
+            ? "Submitting..."
+            : t("submit")
         }
         disabledButton={isLoading}
       />

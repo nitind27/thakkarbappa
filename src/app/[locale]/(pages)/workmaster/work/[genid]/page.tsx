@@ -82,8 +82,21 @@ const Page = async ({ params }: any) => {
       <h1 className="card card-body mt-5">
         <TitleCard breadcrumbs={breadcrumbs} />
       </h1>
-
-      {hasInactiveWorkmasters ? (
+      <Workmaster
+          initialcategoryData={subCategory}
+          YojnaYear={YojnaYear}
+          Bankdata={Bankdata}
+          category={category}
+          Workmasters={workgen}
+          reprenstive={reprenstive}
+          talukas={talukas}
+          Villages={Villages}
+          grampanchayat={grampanchayat}
+          facilities={facilities}
+          Workmastersdata={workdata}
+          genid={genid}
+        />
+      {/* {hasInactiveWorkmasters ? (
         <Workmaster
           initialcategoryData={subCategory}
           YojnaYear={YojnaYear}
@@ -102,7 +115,7 @@ const Page = async ({ params }: any) => {
         <div className="alert alert-warning mt-3" role="alert">
           Not data available .
         </div>
-      )}
+      )} */}
     </div>
   );
 };

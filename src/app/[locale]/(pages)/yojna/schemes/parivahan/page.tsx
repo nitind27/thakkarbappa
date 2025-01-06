@@ -8,6 +8,7 @@ import {
   TblBeneficiary,
   tblparivahan,
   TblParivahanBeneficiary,
+  TblUsers,
   TblYojanaType,
   YojanaMaster,
   YojanaYear,
@@ -26,6 +27,7 @@ const Page = async () => {
   let Parivahanbeneficiarys: TblParivahanBeneficiary[] = [];
   let Parivahantbl: tblparivahan[] = [];
   let Beneficiary: TblBeneficiary[] = [];
+  let Userdata: TblUsers[] = [];
 
   try {
     category = await prisma.category.findMany(); // Fetch all clusters
@@ -37,6 +39,8 @@ const Page = async () => {
     Beneficiary = await prisma.beneficiary.findMany();
     Parivahanbeneficiarys = await prisma.parivahanbeneficiary.findMany();
     Parivahantbl = await prisma.tblparivahan.findMany();
+    Userdata = await prisma.tblusers.findMany();
+    
   } catch (error) {
     console.error("Error fetching cluster data:", error);
     return (
@@ -52,6 +56,8 @@ const Page = async () => {
       </>
     );
   }
+
+  const usersdata = Userdata.filter((user) => user.category_id === 35);
   return (
     <div>
       <h1 className="card card-body mt-5">
@@ -68,6 +74,7 @@ const Page = async () => {
         Parivahanbeneficiarys={Parivahanbeneficiarys}
         Parivahantbl={Parivahantbl}
         Beneficiary={Beneficiary}
+        Userdata={usersdata}
       />
     </div>
   );

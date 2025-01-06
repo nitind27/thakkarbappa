@@ -506,3 +506,30 @@ model tblparivahan {
    @@map("tbl_parivahan")
 }
 
+
+model tblusers {
+  user_id              Int      @id @default(autoincrement())
+  category_id          Int
+  name                 String   @db.VarChar(255)
+  contact_no           String   @db.VarChar(13)
+  email                String   @db.VarChar(100)
+  address              String   @db.VarChar(255)
+  username             String   @db.VarChar(50)
+  password             String   @db.VarChar(50)
+  status               String   @default("Active") @db.VarChar(10)
+  ins_date_time        DateTime
+  update_date_time     DateTime
+  school_id            Int
+  standard_id          Int
+  hostel_id            Int
+  central_kitchan_id   Int
+  civil_id             Int
+  dept_id              Int
+  lipik_id             Int
+  officer_id           Int
+  apo_id               Int
+  cluster_id           Int
+  padnam_id            Int
+
+  @@map("tbl_users") // Maps the model to the original table name
+}
