@@ -29,7 +29,7 @@ export async function PUT(req: Request) {
             data: {
                 taluka_id: talukaIdInt,
                 gp_id: gpIdInt,
-                name :"",
+                name,
                 name_marathi,
                 total_population: totalPopulationInt,
                 trible_population: triblePopulationInt,

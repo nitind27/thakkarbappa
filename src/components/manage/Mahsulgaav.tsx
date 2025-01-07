@@ -25,6 +25,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [townName, setTownName] = useState("");
   const [nameMarathi, setNameMarathi] = useState("");
+  const [nameEnglish, setNamenglish] = useState("");
   const [talukaId, setTalukaId] = useState<number | string>("");
   const [population, setPopulation] = useState<number | string>("");
   const [triblePopulation, setTriblePopulation] = useState<number | string>("");
@@ -79,7 +80,8 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
     { accessorKey: "taluka_id", header: `${t('talukaName')}` },
     { accessorKey: "gp_id", header: `${t('gpid')}` },
 
-    { accessorKey: "name_marathi", header: `${t('MahasulGaavname')}` },
+    { accessorKey: "name", header: `${t('entermahasulgaaven')}` },
+    { accessorKey: "name_marathi", header: `${t('entermahasulgaavmr')}` },
     { accessorKey: "total_population", header: `${t('population')}` },
     { accessorKey: "trible_population", header: `${t('triblepopulation')}` },
     { accessorKey: "arthik_maryada", header: `${t('Income')}` },
@@ -223,6 +225,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
         id: updateTownId !== null ? updateTownId : undefined,
         taluka_id: talukaId,
         gp_id: townName,
+        name: nameEnglish,
         name_marathi: nameMarathi,
         total_population: population,
         trible_population: triblePopulation,
@@ -275,6 +278,7 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
   const handleEdit = (gp: any) => {
     setUpdateTownId(gp.id);
     setTownName(gp.g_id); // Use gp.gp_id to set the townName
+    setNamenglish(gp.name);
     setNameMarathi(gp.name_marathi);
     setTalukaId(gp.t_id);
     setPopulation(gp.total_population);
@@ -351,11 +355,19 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
             },
 
             {
-              label: `${t('entermahasulgaav')}`,
+              label: `${t('entermahasulgaaven')}`,
+              value: nameEnglish || "",
+              type: "text",
+              required: true,
+              placeholder: `${t('entermahasulgaaven')}`,
+              onChange: (e: any) => setNamenglish(e.target.value),
+            },
+            {
+              label: `${t('entermahasulgaavmr')}`,
               value: nameMarathi || "",
               type: "text",
               required: true,
-              placeholder: `${t('entermahasulgaav')}`,
+              placeholder: `${t('entermahasulgaavmr')}`,
               onChange: (e: any) => setNameMarathi(e.target.value),
             },
             {
