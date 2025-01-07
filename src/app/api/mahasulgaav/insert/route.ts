@@ -6,10 +6,10 @@ export async function POST(req: Request) {
         const body = await req.json();
         const { taluka_id, gp_id, name, name_marathi, total_population, trible_population, arthik_maryada, village_type } = body;
 
-        // Validate input
-        if (!taluka_id || !gp_id || !name || !name_marathi || !total_population || !trible_population || !arthik_maryada || !village_type) {
-            return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
-        }
+        // // Validate input
+        // if (!taluka_id || !gp_id || !name || !name_marathi || !total_population || !trible_population || !arthik_maryada || !village_type) {
+        //     return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
+        // }
 
         // Convert fields to appropriate types
         const talukaIdInt = parseInt(taluka_id, 10);
