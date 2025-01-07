@@ -518,7 +518,7 @@ const Workmaster = ({
     },
     {
       label: `${t("numberofwork")}`,
-      value: updateClusterId ? workmasterdata.length : workmasterdata.length,
+      value: updateClusterId ? workmasterdata.length : workmasterdata.length +1,
       type: "text",
       className: isResponsive ? "col-12" : "col-2",
       disabled: true,
