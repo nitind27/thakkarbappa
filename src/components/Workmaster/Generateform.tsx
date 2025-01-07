@@ -47,6 +47,11 @@ const Generateform = ({
   const [yojnayear, setYojnaYear] = useState("");
 
   const workofdates = new Date();
+
+  // Format the date to "07 Jan 2025"
+  const options = { day: "2-digit", month: "short", year: "numeric" };
+  const formattedDate = workofdates.toLocaleDateString("en-GB", options as any);
+
   const [gendate, setGendate] = useState(workofdates);
   const [amount, setAmount] = useState("");
   const [randomNumber, setRandomNumber] = useState(null);
@@ -346,7 +351,7 @@ const Generateform = ({
     setCategoryName("");
     setSubCategoryName("");
     setYojnaYear("");
-
+    setGendate(workofdates);
     setError("");
     setAmount("");
   };
@@ -426,7 +431,7 @@ const Generateform = ({
             },
             {
               label: `${t("gendate")}`,
-              value: gendate,
+              value: updateClusterId ? gendate : formattedDate,
               type: "text",
               required: true,
               disabled: true,
