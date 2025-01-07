@@ -45,7 +45,9 @@ const Generateform = ({
   const [categoryName, setCategoryName] = useState("");
   const [subcategoryName, setSubCategoryName] = useState("");
   const [yojnayear, setYojnaYear] = useState("");
-  const [bankname, setBankname] = useState("");
+
+  const workofdates = new Date();
+  const [gendate, setGendate] = useState(workofdates);
   const [amount, setAmount] = useState("");
   const [randomNumber, setRandomNumber] = useState(null);
 
@@ -301,7 +303,7 @@ const Generateform = ({
                     representative_id: categoryName,
                     representative_name: subcategoryName,
                     number_work: yojnayear,
-                    genratedworkdate: bankname,
+                    genratedworkdate: gendate,
                     estimatedtotalamount: amount,
                     generatednumber: randomNumber,
                   }
@@ -335,7 +337,7 @@ const Generateform = ({
     setSubCategoryName(cluster.representative_name);
     setAmount(cluster.estimatedtotalamount);
     setYojnaYear(cluster.number_work);
-    setBankname(cluster.genratedworkdate);
+    setGendate(cluster.genratedworkdate);
     handleShowPrint(); // Open modal for editing
   };
 
@@ -344,7 +346,7 @@ const Generateform = ({
     setCategoryName("");
     setSubCategoryName("");
     setYojnaYear("");
-    setBankname("");
+
     setError("");
     setAmount("");
   };
@@ -424,12 +426,13 @@ const Generateform = ({
             },
             {
               label: `${t("gendate")}`,
-              value: bankname,
-              type: "date",
+              value: gendate,
+              type: "text",
               required: true,
+              disabled: true,
               placeholder: `${t("gendate")}`,
 
-              onChange: (e: any) => setBankname(e.target.value),
+              onChange: (e: any) => setGendate(e.target.value),
             },
 
             {

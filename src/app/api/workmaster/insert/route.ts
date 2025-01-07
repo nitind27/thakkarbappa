@@ -15,6 +15,7 @@ export async function POST(req: Request) {
         const representativeId = parseInt(representative_id);
         const numberwork = parseInt(number_work);
         const generatednumbers = String(generatednumber);
+       
         // Insert the new category into the database
         const newCategory = await prisma.workMasterDemo.create({
             data: {

@@ -25,6 +25,7 @@ import { toast } from "react-toastify";
 import { useTranslations } from "next-intl";
 import { createConfirmation } from "react-confirm";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
+import { formatDate } from "@/lib/utils";
 
 type Props = {
   initialcategoryData: SubCategory[];
@@ -167,7 +168,11 @@ const Workmaster = ({
       photo: workmaster.photo,
       prashashakiya_manyata: workmaster.prashashakiya_manyata,
       prashashakiya_manyata_no: workmaster.prashashakiya_manyata_no,
-      prashashakiya_manyata_date: workmaster.prashashakiya_manyata_date,
+      // prashashakiya_manyata_date: workmaster.prashashakiya_manyata_date,
+      prashashakiya_manyata_date: typeof workmaster.prashashakiya_manyata_date === "string"
+                ? formatDate(workmaster.prashashakiya_manyata_date)
+                : formatDate(workmaster.prashashakiya_manyata_date as any),
+         
       prashashakiya_manyata_amount: workmaster.prashashakiya_manyata_amount,
       latitude: workmaster.latitude,
       longitude: workmaster.longitude,
