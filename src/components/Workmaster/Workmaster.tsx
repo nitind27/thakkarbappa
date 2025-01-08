@@ -169,10 +169,11 @@ const Workmaster = ({
       prashashakiya_manyata: workmaster.prashashakiya_manyata,
       prashashakiya_manyata_no: workmaster.prashashakiya_manyata_no,
       // prashashakiya_manyata_date: workmaster.prashashakiya_manyata_date,
-      prashashakiya_manyata_date: typeof workmaster.prashashakiya_manyata_date === "string"
-                ? formatDate(workmaster.prashashakiya_manyata_date)
-                : formatDate(workmaster.prashashakiya_manyata_date as any),
-         
+      prashashakiya_manyata_date:
+        typeof workmaster.prashashakiya_manyata_date === "string"
+          ? formatDate(workmaster.prashashakiya_manyata_date)
+          : formatDate(workmaster.prashashakiya_manyata_date as any),
+
       prashashakiya_manyata_amount: workmaster.prashashakiya_manyata_amount,
       latitude: workmaster.latitude,
       longitude: workmaster.longitude,
@@ -183,7 +184,8 @@ const Workmaster = ({
     }))
     .reverse();
   // const totalamountminusdata = (estimatetotalamount as any) - totalAmountest;
-  const totalamountminusdata = Number(totalestamountsstate) + Number(totalAmountest);
+  const totalamountminusdata =
+    Number(totalestamountsstate) + Number(totalAmountest);
 
   const totalamountminus = (estimatetotalamount as any) - totalamountminusdata;
 
@@ -243,11 +245,15 @@ const Workmaster = ({
       header: `${t("noadministrativerecognition")}`,
     },
     {
+      accessorKey: "prashashakiya_manyata_no",
+      header: `${t("noadministrativerecognition")}`,
+    },
+    {
       accessorKey: "prashashakiya_manyata_date",
       header: `${t("AdministrativerecognitionDate")}`,
     },
     {
-      accessorKey: "prashashakiya_manyata_no",
+      accessorKey: "prashashakiya_manyata_amount",
       header: `${t("Administrativerecognitionamount")}`,
     },
     {
@@ -356,7 +362,7 @@ const Workmaster = ({
 
       // Prepare the request body
       const workofdate = new Date();
-      const Giveadministrativerecognition = new Date();
+
       const requestBody = {
         representative_id: String(RepresentativeName),
         representative_name: String(subRepresentativeName),
@@ -373,7 +379,7 @@ const Workmaster = ({
         tantrik_manyata_amount: Tantricrecognitionamount,
         prashashakiya_manyata: Administrativerecognition,
         prashashakiya_manyata_no: Noadministrativerecognition,
-        prashashakiya_manyata_date: Giveadministrativerecognition.toISOString(),
+        prashashakiya_manyata_date: AdministrativerecognitionDate,
         prashashakiya_manyata_amount: Administrativerecognitionamount,
         ...(updateClusterId && { id: updateClusterId }),
       };
@@ -408,8 +414,7 @@ const Workmaster = ({
                     tantrik_manyata_amount: Tantricrecognitionamount,
                     prashashakiya_manyata: Administrativerecognition,
                     prashashakiya_manyata_no: Noadministrativerecognition,
-                    prashashakiya_manyata_date:
-                      Giveadministrativerecognition.toISOString(),
+                    prashashakiya_manyata_date: AdministrativerecognitionDate,
                     prashashakiya_manyata_amount:
                       Administrativerecognitionamount,
                   }
@@ -523,7 +528,9 @@ const Workmaster = ({
     },
     {
       label: `${t("numberofwork")}`,
-      value: updateClusterId ? workmasterdata.length : workmasterdata.length +1,
+      value: updateClusterId
+        ? workmasterdata.length
+        : workmasterdata.length + 1,
       type: "text",
       className: isResponsive ? "col-12" : "col-2",
       disabled: true,
