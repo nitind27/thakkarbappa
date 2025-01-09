@@ -107,6 +107,7 @@ const Workmaster = ({
     useState("");
   const [AdministrativerecognitionDate, setAdministrativerecognitionDate] =
     useState("");
+    console.log('ddddddd',AdministrativerecognitionDate)
   const [error, setError] = useState<string>("");
   const [isResponsive, setIsResponsive] = useState<boolean>(false);
 
@@ -169,10 +170,10 @@ const Workmaster = ({
       prashashakiya_manyata: workmaster.prashashakiya_manyata,
       prashashakiya_manyata_no: workmaster.prashashakiya_manyata_no,
       // prashashakiya_manyata_date: workmaster.prashashakiya_manyata_date,
-      prashashakiya_manyata_date:
+      prashashakiya_manyata_date:workmaster.prashashakiya_manyata == "Yes" ?
         typeof workmaster.prashashakiya_manyata_date === "string"
           ? formatDate(workmaster.prashashakiya_manyata_date)
-          : formatDate(workmaster.prashashakiya_manyata_date as any),
+          : formatDate(workmaster.prashashakiya_manyata_date as any) : "",
 
       prashashakiya_manyata_amount: workmaster.prashashakiya_manyata_amount,
       latitude: workmaster.latitude,
@@ -242,7 +243,7 @@ const Workmaster = ({
     },
     {
       accessorKey: "prashashakiya_manyata",
-      header: `${t("noadministrativerecognition")}`,
+      header: `${t("Administrativerecognition")}`,
     },
     {
       accessorKey: "prashashakiya_manyata_no",
@@ -379,7 +380,7 @@ const Workmaster = ({
         tantrik_manyata_amount: Tantricrecognitionamount,
         prashashakiya_manyata: Administrativerecognition,
         prashashakiya_manyata_no: Noadministrativerecognition,
-        prashashakiya_manyata_date: AdministrativerecognitionDate,
+        prashashakiya_manyata_date: AdministrativerecognitionDate || "2025-01-09T11:35:13.035Z",
         prashashakiya_manyata_amount: Administrativerecognitionamount,
         ...(updateClusterId && { id: updateClusterId }),
       };

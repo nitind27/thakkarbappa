@@ -34,6 +34,9 @@ export async function POST(req: Request) {
         const estimatedamount = parseFloat(estimated_amount);
         const tantrikmanyataamount = parseFloat(tantrik_manyata_amount);
         const prashashakiyamanyataamount = parseFloat(prashashakiya_manyata_amount);
+
+        const parsedDate = new Date(prashashakiya_manyata_date);
+        const formattedDate = parsedDate.toISOString();
         // Insert the new category into the database
         const newCategory = await prisma.workMasterDemo.create({
             data: {
@@ -53,7 +56,7 @@ export async function POST(req: Request) {
                 tantrik_manyata_amount: tantrikmanyataamount,
                 prashashakiya_manyata: prashashakiya_manyata,
                 prashashakiya_manyata_no: prashashakiya_manyata_no,
-                prashashakiya_manyata_date: prashashakiya_manyata_date,
+                prashashakiya_manyata_date: formattedDate,
                 prashashakiya_manyata_amount: prashashakiyamanyataamount,
                 status: "Active",
                 latitude: "0.0",
