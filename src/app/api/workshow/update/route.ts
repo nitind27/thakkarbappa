@@ -35,7 +35,8 @@ export async function PUT(req: Request) {
         const estimatedamount = parseFloat(estimated_amount);
         const tantrikmanyataamount = parseFloat(tantrik_manyata_amount);
         const prashashakiyamanyataamount = parseFloat(prashashakiya_manyata_amount);
-
+        const parsedDate = new Date(prashashakiya_manyata_date);
+        const formattedDate = parsedDate.toISOString();
         // Update the existing record in the database
         const updatedCategory = await prisma.workMasterDemo.update({
             where: { id: id }, // Assuming 'id' is the unique identifier
@@ -56,7 +57,7 @@ export async function PUT(req: Request) {
                 tantrik_manyata_amount: tantrikmanyataamount,
                 prashashakiya_manyata: prashashakiya_manyata,
                 prashashakiya_manyata_no,
-                prashashakiya_manyata_date,
+                prashashakiya_manyata_date:formattedDate,
                 prashashakiya_manyata_amount:prashashakiyamanyataamount,
                 status: "Active",
                 latitude: "0.0", // Update if necessary

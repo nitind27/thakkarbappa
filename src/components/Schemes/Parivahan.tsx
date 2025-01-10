@@ -133,10 +133,10 @@ const Parivahan = ({
   })).reverse(); // Reverse the order to show the last added items first
   const beneficiaryIdsToMatch = data.map((f) => f.beneficiary_id); // This should be an array
   const beneficiaryIdsToMatch1 = data1.map((f) => f.beneficiary_id); // This should be an array
-  
 
-// Displaying the result
-console.log("MatchingBeneficiaryIDs:", beneficiaryIdsToMatch1);
+
+  // Displaying the result
+  console.log("MatchingBeneficiaryIDs:", beneficiaryIdsToMatch1);
   const columns = [
     {
       accessorKey: "serial_number",
@@ -179,10 +179,7 @@ console.log("MatchingBeneficiaryIDs:", beneficiaryIdsToMatch1);
       accessorKey: "status",
       header: `${t("Status")}`,
     },
-    {
-      accessorKey: "ins_date",
-      header: `${t("amount")}`,
-    },
+
 
     {
       accessorKey: "actions",
@@ -203,24 +200,31 @@ console.log("MatchingBeneficiaryIDs:", beneficiaryIdsToMatch1);
             <tbody>
 
               {data1
-                .filter(
-                  (item) => item.beneficiary_id == row.original.beneficiary_id
-                )
-
+                .filter((item) => {
+                  // Split the original beneficiary_id by comma and trim whitespace
+                  const beneficiaryIds = row.original.beneficiary_id.split(',').map((id: string) => id.trim());
+                  // Check if the item's beneficiary_id is in the array of IDs
+                  return beneficiaryIds.includes(item.beneficiary_id);
+                })
                 .map((item, index) => (
                   <tr key={index} className="hover:bg-gray-100">
                     <td className="border border-gray-300 px-4 py-2">
-                      {row.original.beneficiaryid}
+                      {Beneficiary.filter(
+                        (beneficiary) =>
+                          beneficiary.beneficiary_id as any == item.beneficiary_id
+                      ).map((filteredItem) => filteredItem.fullname == "" ? filteredItem.gat_name : filteredItem.fullname).join(', ')}{/* Assuming you want to display the current item's beneficiary_id */}
                     </td>
+                    
                     <td className="border border-gray-300 px-4 py-2">
                       {Beneficiary.filter(
                         (beneficiary) =>
-                          beneficiary.beneficiary_id ==
-                          row.original.beneficiary_id
-                      ).map((filteredItem) => filteredItem.tot_finance)}
+                          beneficiary.beneficiary_id as any == item.beneficiary_id
+                      ).map((filteredItem) => filteredItem.tot_finance).join(', ')} {/* Joining multiple finance values with a comma */}
                     </td>
+                    
                   </tr>
                 ))}
+
             </tbody>
           </table>
         </div>

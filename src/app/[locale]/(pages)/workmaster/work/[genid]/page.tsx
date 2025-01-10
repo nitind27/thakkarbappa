@@ -70,7 +70,7 @@ const Page = async ({ params }: any) => {
   const workgen = Workmasters.filter(
     (gen) => gen.type !== "workgen" && gen.generatednumber === genid
   );
-  const workdata = Workmasters.filter((gen) => gen.generatednumber === genid);
+  const workdata = Workmasters.filter((gen) => gen.generatednumber === genid && gen.status =="Active");
   const statuscheck = Workmasters.filter(
     (gen) => gen.generatednumber === genid && gen.status !== "Active"
   );

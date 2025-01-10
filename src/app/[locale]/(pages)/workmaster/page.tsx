@@ -47,7 +47,7 @@ const Page = async () => {
         { label: 'dashboard', href: '/dashboard' },
         { label: 'workmaster', href: '/workmaster' },
     ];
-        const workgen = Workmasters.filter((gen) => gen.type == "workgen")
+        const workgen = Workmasters.filter((gen) => gen.type == "workgen" && gen.status =="Active")
     return (
         <div>
 
