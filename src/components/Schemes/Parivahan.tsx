@@ -86,6 +86,7 @@ const Parivahan = ({
   }, {} as Record<number, string>);
   const [currentDate, setCurrentDate] = useState("");
 
+
   const data = parivahandata
     .map((parivhan) => ({
       parivahan_id: parivhan.parivahan_id,
@@ -94,15 +95,15 @@ const Parivahan = ({
         typeof parivhan.parivahan_date === "string"
           ? parivhan.parivahan_no + " " + formatDate(parivhan.parivahan_date)
           : parivhan.parivahan_no +
-            " " +
-            formatDate(parivhan.parivahan_date.toISOString()),
+          " " +
+          formatDate(parivhan.parivahan_date.toISOString()),
       outward_no: parivhan.outward_no,
       sup_id:
         usersdata[parivhan.sup_id] +
         " " +
         "(" +
-        Userdata.filter((user)=>user.user_id == parivhan.sup_id).map((users) => users.address) +
-        ")" + Userdata.filter((user)=>user.user_id == parivhan.sup_id).map((users) => users.contact_no),
+        Userdata.filter((user) => user.user_id == parivhan.sup_id).map((users) => users.address) +
+        ")" + Userdata.filter((user) => user.user_id == parivhan.sup_id).map((users) => users.contact_no),
       yojana_year_id: yojna_year[parivhan.yojana_year_id],
       yojana_type: yojna_type[parivhan.yojana_type as any],
       yojana_id: yojnamster[parivhan.yojana_id],
@@ -119,8 +120,8 @@ const Parivahan = ({
       typeof parivhan.parivahan_date === "string"
         ? parivhan.parivahan_no + " " + formatDate(parivhan.parivahan_date)
         : parivhan.parivahan_no +
-          " " +
-          formatDate(parivhan.parivahan_date.toISOString()),
+        " " +
+        formatDate(parivhan.parivahan_date.toISOString()),
     outward_no: parivhan.outward_no,
     sup_id: parivhan.sup_id,
     yojana_year_id: yojna_year[parivhan.yojana_year_id],
@@ -130,7 +131,12 @@ const Parivahan = ({
     status: parivhan.status,
     ins_date: parivhan.ins_date,
   })).reverse(); // Reverse the order to show the last added items first
+  const beneficiaryIdsToMatch = data.map((f) => f.beneficiary_id); // This should be an array
+  const beneficiaryIdsToMatch1 = data1.map((f) => f.beneficiary_id); // This should be an array
+  
 
+// Displaying the result
+console.log("MatchingBeneficiaryIDs:", beneficiaryIdsToMatch1);
   const columns = [
     {
       accessorKey: "serial_number",
@@ -177,7 +183,7 @@ const Parivahan = ({
       accessorKey: "ins_date",
       header: `${t("amount")}`,
     },
-   
+
     {
       accessorKey: "actions",
       header: `${t("Action")}`,
@@ -195,10 +201,12 @@ const Parivahan = ({
               </tr>
             </thead>
             <tbody>
+
               {data1
                 .filter(
                   (item) => item.beneficiary_id == row.original.beneficiary_id
                 )
+
                 .map((item, index) => (
                   <tr key={index} className="hover:bg-gray-100">
                     <td className="border border-gray-300 px-4 py-2">
@@ -232,9 +240,8 @@ const Parivahan = ({
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(
                 row.original.sub_category_id,
@@ -280,15 +287,14 @@ const Parivahan = ({
             prevData.map((cluster) =>
               cluster.parivahan_id === category_id
                 ? {
-                    ...cluster,
-                    status: currentStatus === "Active" ? "Deactive" : "Active",
-                  }
+                  ...cluster,
+                  status: currentStatus === "Active" ? "Deactive" : "Active",
+                }
                 : cluster
             )
           );
           toast.success(
-            `Sub Category ${
-              currentStatus === "Active" ? "deactivated" : "activated"
+            `Sub Category ${currentStatus === "Active" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
@@ -342,13 +348,13 @@ const Parivahan = ({
             prevData.map((cluster) =>
               cluster.parivahan_id === updateClusterId
                 ? {
-                    ...cluster,
-                    sub_category_name: subcategoryName,
-                    category_id: parseInt(categoryName),
-                    bank_id: parseInt(bankname),
-                    amount: amount as any,
-                    yojana_year_id: parseInt(yojnayear),
-                  }
+                  ...cluster,
+                  sub_category_name: subcategoryName,
+                  category_id: parseInt(categoryName),
+                  bank_id: parseInt(bankname),
+                  amount: amount as any,
+                  yojana_year_id: parseInt(yojnayear),
+                }
                 : cluster
             )
           );
@@ -503,8 +509,8 @@ const Parivahan = ({
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />

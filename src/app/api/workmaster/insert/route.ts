@@ -16,13 +16,15 @@ export async function POST(req: Request) {
         const numberwork = parseInt(number_work);
         const generatednumbers = String(generatednumber);
        
+        const parsedDate = new Date(genratedworkdate);
+        const formattedDate = parsedDate.toISOString();
         // Insert the new category into the database
         const newCategory = await prisma.workMasterDemo.create({
             data: {
                 representative_id: representativeId,
                 representative_name: representative_name,
                 number_work: numberwork,
-                genratedworkdate: genratedworkdate,
+                genratedworkdate: formattedDate,
                 estimatedtotalamount: estimatedtotalamount,
                 generatednumber: generatednumbers,
                 type: "workgen",

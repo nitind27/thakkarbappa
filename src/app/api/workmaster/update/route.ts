@@ -35,7 +35,8 @@ export async function PUT(req: Request) {
     const representativeId = parseInt(representative_id);
     const numberwork = parseInt(number_work);
     const generatednumbers = String(generatednumber);
-
+    const parsedDate = new Date(genratedworkdate);
+    const formattedDate = parsedDate.toISOString();
     // Update the existing record in the database
     const updatedCategory = await prisma.workMasterDemo.update({
       where: { id: parseInt(id) }, // Use the id to find the record
@@ -43,7 +44,7 @@ export async function PUT(req: Request) {
         representative_id: representativeId,
         representative_name: representative_name,
         number_work: numberwork,
-        genratedworkdate: genratedworkdate,
+        genratedworkdate: formattedDate,
         estimatedtotalamount: estimatedtotalamount,
         generatednumber: generatednumbers,
         type: "workgen", // Assuming type remains unchanged

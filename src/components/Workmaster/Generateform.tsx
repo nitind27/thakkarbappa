@@ -108,8 +108,8 @@ const Generateform = ({
         typeof workmaster.genratedworkdate === "string"
           ? formatDate(workmaster.genratedworkdate)
           : formatDate(workmaster.genratedworkdate as any),
-
-      generatednumber: workmaster.generatednumber,
+      genratedworkdateISO:
+        workmaster.genratedworkdate
     }))
     .reverse(); // Reverse the order to show the last added items first
 
@@ -169,9 +169,8 @@ const Generateform = ({
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
@@ -245,15 +244,14 @@ const Generateform = ({
             prevData.map((cluster) =>
               cluster.id === category_id
                 ? {
-                    ...cluster,
-                    status: currentStatus == "Active" ? "Deactive" : "Active",
-                  }
+                  ...cluster,
+                  status: currentStatus == "Active" ? "Deactive" : "Active",
+                }
                 : cluster
             )
           );
           toast.success(
-            `Work Master ${
-              currentStatus === "Active" ? "deactivated" : "activated"
+            `Work Master ${currentStatus === "Active" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
@@ -283,7 +281,7 @@ const Generateform = ({
         representative_id: categoryName,
         representative_name: subcategoryName,
         number_work: yojnayear,
-        genratedworkdate: workofdate.toISOString(),
+        genratedworkdate: gendate,
         estimatedtotalamount: amount,
         generatednumber: randomNumber,
 
@@ -304,14 +302,14 @@ const Generateform = ({
             prevData.map((cluster: any) =>
               cluster.id == updateClusterId
                 ? {
-                    ...cluster,
-                    representative_id: categoryName,
-                    representative_name: subcategoryName,
-                    number_work: yojnayear,
-                    genratedworkdate: gendate,
-                    estimatedtotalamount: amount,
-                    generatednumber: randomNumber,
-                  }
+                  ...cluster,
+                  representative_id: categoryName,
+                  representative_name: subcategoryName,
+                  number_work: yojnayear,
+                  genratedworkdate: gendate,
+                  estimatedtotalamount: amount,
+                  generatednumber: randomNumber,
+                }
                 : cluster
             )
           );
@@ -337,12 +335,13 @@ const Generateform = ({
   };
 
   const handleEdit = (cluster: any) => {
+
     setUpdateClusterId(cluster.id); // Set ID for updating
     setCategoryName(cluster.representative_id); // Set current name for editing
     setSubCategoryName(cluster.representative_name);
     setAmount(cluster.estimatedtotalamount);
     setYojnaYear(cluster.number_work);
-    setGendate(cluster.genratedworkdate);
+    setGendate(cluster.genratedworkdateISO);
     handleShowPrint(); // Open modal for editing
   };
 
@@ -431,10 +430,10 @@ const Generateform = ({
             },
             {
               label: `${t("gendate")}`,
-              value: updateClusterId ? gendate : formattedDate,
-              type: "text",
+              value: gendate,
+              type: "date",
               required: true,
-              disabled: true,
+
               placeholder: `${t("gendate")}`,
 
               onChange: (e: any) => setGendate(e.target.value),
@@ -459,8 +458,8 @@ const Generateform = ({
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />
