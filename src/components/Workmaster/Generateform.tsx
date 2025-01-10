@@ -101,6 +101,7 @@ const Generateform = ({
       updated_at: workmaster.updated_at,
       estimatedtotalamount: workmaster.estimatedtotalamount,
       number_work: workmaster.number_work,
+      generatednumber: workmaster.generatednumber,
       type: workmaster.type,
       // genratedworkdate: workmaster.genratedworkdate,
 
