@@ -10,10 +10,10 @@ const PathHandler = ({ children }: any) => {
     const [loading, setLoading] = useState(false);
 
     const handleItemClick = (path: any) => {
-        if (typeof window !== "undefined") {
+     
             setLoading(true);
             localStorage.setItem("currentPath", path);
-        }
+        
     };
 
     useEffect(() => {

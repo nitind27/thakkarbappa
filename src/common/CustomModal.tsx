@@ -7,6 +7,7 @@ type FormField = {
   label: string;
   value: string | number | File | null;
   placeholder?: string;
+  
 
   error?: string;
   onChange: (
@@ -17,6 +18,7 @@ type FormField = {
   className?: string; // Optional className property
   required?: boolean; // New property to indicate if field is required
   disabled?: boolean;
+  filterdata?:any;
 };
 
 // Enhanced validation function with conditional logic
@@ -83,6 +85,7 @@ const CustomModal: React.FC<any> = ({
   handleSubmit,
   title,
   formData,
+  filterdata,
   imagepriview,
   submitButtonLabel = "Submit",
   disabledButton = false,
@@ -234,6 +237,7 @@ const CustomModal: React.FC<any> = ({
             {submitButtonLabel}
           </Button>
         </Form>
+        {filterdata}
       </Modal.Body>
     </Modal >
   );

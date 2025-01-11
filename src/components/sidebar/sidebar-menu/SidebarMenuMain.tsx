@@ -14,14 +14,9 @@ const SidebarMenuMain = () => {
 
   // Function to handle click and store path in localStorage
   const handleItemClick = (path: string) => {
-    if (typeof window !== "undefined") {
-      // Set loading to true when an item is clicked
-      setLoading(true);
-      // Save path for navigation
-      localStorage.setItem("currentPath", path);
-    }
+    setLoading(true);
+    localStorage.setItem("currentPath", path);
   };
-
   // Effect to monitor the router/pathname and stop loading once the page is active
   useEffect(() => {
     const handleRouteChange = () => {
@@ -42,11 +37,12 @@ const SidebarMenuMain = () => {
     localStorage.removeItem("displayedNumber");
   }, [loading]);
 
+
   return (
+    
     <>
       <div>
-
-        {loading && <Loader />}
+      {loading && <Loader />}
 
         <SidebarMenuItem
           to={`/${localActive}/dashboard`}

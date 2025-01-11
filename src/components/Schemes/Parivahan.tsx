@@ -19,11 +19,12 @@ import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
 import { toast } from "react-toastify";
-// import { validatecategoryName } from "@/utils/Validation";
+// import { validateadhikanchaname } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
 import { createConfirmation } from "react-confirm";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
 import { formatDate } from "@/lib/utils";
+import Tablefilter from "../table/Tablefilter";
 
 type Props = {
   initialcategoryData: SubCategory[];
@@ -52,12 +53,16 @@ const Parivahan = ({
 }: Props) => {
   const t = useTranslations("Subcategory");
   const [showPrintModal, setShowPrintModal] = useState(false);
-  const [categoryName, setCategoryName] = useState("");
-  const [subcategoryName, setSubCategoryName] = useState("");
+  const [adhikanchaname, setAdhikanchaname] = useState("");
+  const workofdates = new Date();
+
+  const [ParivahanDate, setParivahanDate] = useState(workofdates);
   const [yojnayear, setYojnaYear] = useState("");
   const [bankname, setBankname] = useState("");
-  const [amount, setAmount] = useState("");
-  const [appyojna, setAppyojna] = useState("No");
+  const [javaksr, setJavakSr] = useState("");
+  const [yojanatype, setYojnatype] = useState("");
+  const [yojnaname, setYojnaname] = useState("");
+
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
@@ -136,7 +141,6 @@ const Parivahan = ({
 
 
   // Displaying the result
-  console.log("MatchingBeneficiaryIDs:", beneficiaryIdsToMatch1);
   const columns = [
     {
       accessorKey: "serial_number",
@@ -156,7 +160,7 @@ const Parivahan = ({
     },
     {
       accessorKey: "sup_id",
-      header: `${t("amount")}`,
+      header: `${t("javaksr")}`,
     },
     {
       accessorKey: "yojana_year_id",
@@ -165,11 +169,11 @@ const Parivahan = ({
 
     {
       accessorKey: "yojana_type",
-      header: `${t("amount")}`,
+      header: `${t("javaksr")}`,
     },
     {
       accessorKey: "yojana_id",
-      header: `${t("amount")}`,
+      header: `${t("javaksr")}`,
     },
     {
       accessorKey: "beneficiary_id",
@@ -214,14 +218,14 @@ const Parivahan = ({
                           beneficiary.beneficiary_id as any == item.beneficiary_id
                       ).map((filteredItem) => filteredItem.fullname == "" ? filteredItem.gat_name : filteredItem.fullname).join(', ')}{/* Assuming you want to display the current item's beneficiary_id */}
                     </td>
-                    
+
                     <td className="border border-gray-300 px-4 py-2">
                       {Beneficiary.filter(
                         (beneficiary) =>
                           beneficiary.beneficiary_id as any == item.beneficiary_id
                       ).map((filteredItem) => filteredItem.tot_finance).join(', ')} {/* Joining multiple finance values with a comma */}
                     </td>
-                    
+
                   </tr>
                 ))}
 
@@ -267,6 +271,7 @@ const Parivahan = ({
     setCurrentDate(now.toLocaleDateString()); // Formats date only
   }, []);
 
+ 
   const handleDeactivate = async (category_id: any, currentStatus: any) => {
     const confirmMessage =
       currentStatus === "Active"
@@ -310,10 +315,48 @@ const Parivahan = ({
       }
     }
   };
+  const datafilter = Beneficiary.filter((data) => data.yojana_year_id as any == yojnayear && data.yojana_type == yojanatype && data.yojana_id as any == yojnaname && data.status =="Active").map((data) => ({
+    gat_name: data.gat_name,
+    tot_finance: data.tot_finance,
+    amount_paid: data.amount_paid,
+    caste_id: data.caste_id,
+  }))
+  const filtercolumns = [
+    {
+      accessorKey: "serial_number",
+      header: () => (
+        <div style={{ fontWeight: "bold", padding: "5px" }}>{t("SrNo")}</div>
+      ),
+      cell: ({ row }: any) => <div>{row.index + 1}</div>,
+    },
 
+    {
+      accessorKey: "gat_name",
+      header: `लाभार्थी नाव - तालुका - ग्राम पंचायत - गाव`,
+    },
+    {
+      accessorKey: "tot_finance",
+      header: `एकुण अर्थसहाय्य रक्कम`,
+    },
+    {
+      accessorKey: "amount_paid",
+      header: `अदा करावयाची रक्कम`,
+    },
+    {
+      accessorKey: "caste_id",
+      header: `अदा करावयाची रक्कम`,
+    },
+
+    {
+      accessorKey: "caste_id",
+      header: `निवड करा`,
+    },
+
+
+  ];
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    // const errorMsg = validatecategoryName(categoryName);
+    // const errorMsg = validateadhikanchaname(adhikanchaname);
     // if (errorMsg) {
     //   setError(errorMsg);
     //   return;
@@ -329,11 +372,11 @@ const Parivahan = ({
 
       // Prepare the request body
       const requestBody = {
-        category_id: categoryName,
-        sub_category_name: subcategoryName,
+        category_id: adhikanchaname,
+        sub_category_name: ParivahanDate,
         yojana_year_id: yojnayear,
         bank_id: bankname,
-        amount: amount,
+        javaksr: javaksr,
 
         ...(updateClusterId && { sub_category_id: updateClusterId }),
       };
@@ -353,10 +396,10 @@ const Parivahan = ({
               cluster.parivahan_id === updateClusterId
                 ? {
                   ...cluster,
-                  sub_category_name: subcategoryName,
-                  category_id: parseInt(categoryName),
+                  sub_category_name: ParivahanDate,
+                  category_id: parseInt(adhikanchaname),
                   bank_id: parseInt(bankname),
-                  amount: amount as any,
+                  javaksr: javaksr as any,
                   yojana_year_id: parseInt(yojnayear),
                 }
                 : cluster
@@ -385,9 +428,9 @@ const Parivahan = ({
 
   const handleEdit = (cluster: any) => {
     setUpdateClusterId(cluster.sub_category_id); // Set ID for updating
-    setCategoryName(cluster.categoryid); // Set current name for editing
-    setSubCategoryName(cluster.sub_category_name);
-    setAmount(cluster.amount);
+    setAdhikanchaname(cluster.categoryid); // Set current name for editing
+    setParivahanDate(cluster.sub_category_name);
+    setJavakSr(cluster.javaksr);
     setYojnaYear(cluster.yojanayearid);
     setBankname(cluster.bankid);
     handleShowPrint(); // Open modal for editing
@@ -395,17 +438,17 @@ const Parivahan = ({
 
   const handleShowPrint = () => setShowPrintModal(true);
   const reset = () => {
-    setCategoryName("");
-    setSubCategoryName("");
+    setAdhikanchaname("");
+    // setParivahanDate();
     setYojnaYear("");
     setBankname("");
     setError("");
-    setAmount("");
+    setJavakSr("");
   };
   const handleClosePrint = () => {
     reset();
     setShowPrintModal(false);
-    setCategoryName("");
+    setAdhikanchaname("");
     setError("");
     setUpdateClusterId(null); // Reset update ID when closing
   };
@@ -436,31 +479,47 @@ const Parivahan = ({
         show={showPrintModal}
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
-        title={updateClusterId ? `${t("updatepage")}` : `${t("insertpage")}`}
+        filterdata={datafilter.length !=0 && <Tablefilter
+          data={datafilter}
+          columns={filtercolumns}
+
+        />
+        }
+        title={updateClusterId ? `${t("updatepage")}` : `${yojnayear} ${yojanatype} ${yojnaname}`}
         formData={{
           fields: [
             {
-              label: `${t("categoryname")}`,
-              value: categoryName,
-              onChange: (e: any) => setCategoryName(e.target.value),
-              type: "select",
-              options: category.map((category: Categorys) => ({
-                value: category.category_id,
-                label: category.category_name,
-              })),
-
-              placeholder: `${t("categoryname")}`, // Optional placeholder for select input
-              className: "col-3",
-            },
-            {
-              label: `${t("subcategoryname")}`,
-              value: subcategoryName,
+              label: `${t("ParivahanDate")}`,
+              value: ParivahanDate,
               type: "date",
               required: true,
-              placeholder: `${t("subcategoryname")}`,
+              placeholder: `${t("ParivahanDate")}`,
               className: "col-3",
-              onChange: (e: any) => setSubCategoryName(e.target.value),
+              onChange: (e: any) => setParivahanDate(e.target.value),
             },
+            {
+              label: `${t("javaksr")}`,
+              value: javaksr,
+              type: "text",
+              placeholder: `${t("javaksr")}`,
+              required: true,
+              className: "col-3",
+              onChange: (e: any) => setJavakSr(e.target.value),
+            },
+            {
+              label: `${t("adhikanchaname")}`,
+              value: adhikanchaname,
+              onChange: (e: any) => setAdhikanchaname(e.target.value),
+              type: "select",
+              options: Userdata.map((Userdata: TblUsers) => ({
+                value: Userdata.category_id,
+                label: Userdata.name,
+              })),
+
+              placeholder: `${t("adhikanchaname")}`, // Optional placeholder for select input
+              className: "col-6",
+            },
+
             {
               label: `${t("year")}`,
               value: yojnayear,
@@ -470,39 +529,40 @@ const Parivahan = ({
                 value: year.yojana_year_id,
                 label: year.yojana_year,
               })),
-              className: "col-6",
+              className: "col-3",
               placeholder: `${t("year")}`, // Optional placeholder for select input
             },
+            {
+              label: `${t("adhikanchaname")}`,
+              value: yojanatype,
+              onChange: (e: any) => setYojnatype(e.target.value),
+              type: "select",
+              options: yojnatype.map((yojnatype: TblYojanaType) => ({
+                value: yojnatype.yojana_type_id,
+                label: yojnatype.yojana_type,
+              })),
+
+              placeholder: `${t("adhikanchaname")}`, // Optional placeholder for select input
+              className: "col-3",
+            },
+
 
             {
-              label: `${t("Bankname")}`,
-              value: bankname,
-              onChange: (e: any) => setBankname(e.target.value),
+              label: `${t('yojnaname')}`,
+              value: yojnaname,
+              onChange: (e: any) => setYojnaname(e.target.value),
               type: "select",
-              options: Bankdata.map((Bank: Bank) => ({
-                value: Bank.id,
-                label: Bank.name,
-              })),
-              className: "col-3",
-              placeholder: `${t("Bankname")}`, // Optional placeholder for select input
-            },
-            {
-              label: `${t("amount")}`,
-              value: amount,
-              type: "text",
-              placeholder: `${t("amount")}`,
-              required: true,
-              className: "col-3",
-              onChange: (e: any) => setAmount(e.target.value),
-            },
-            {
-              label: `${t("amount")}`,
-              value: amount,
-              type: "text",
-              placeholder: `${t("amount")}`,
-              required: true,
-              className: "col-6",
-              onChange: (e: any) => setAmount(e.target.value),
+              className: 'col-6',
+              options: yojanaMaster
+                .filter((type) =>
+                  String(type.yojana_year_id)  == yojnayear &&
+                  type.yojana_type  === yojanatype
+                )
+                .map((yojna) => ({
+                  value: yojna.yojana_id,
+                  label: yojna.yojana_name,
+                })),
+              placeholder: `${t("yojnaname")}`, // Optional placeholder for select input
             },
           ],
           error,

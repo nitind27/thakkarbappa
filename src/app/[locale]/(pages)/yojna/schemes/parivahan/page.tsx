@@ -58,6 +58,7 @@ const Page = async () => {
   }
 
   const usersdata = Userdata.filter((user) => user.category_id === 35);
+  const yojnamaster = yojanaMaster.filter((yojna) => yojna.status =="Active" );
   return (
     <div>
       <h1 className="card card-body mt-5">
@@ -69,7 +70,7 @@ const Page = async () => {
         YojnaYear={YojnaYear}
         Bankdata={Bankdata}
         yojnatype={yojnatype}
-        yojanaMaster={yojanaMaster}
+        yojanaMaster={yojnamaster}
         category={category}
         Parivahanbeneficiarys={Parivahanbeneficiarys}
         Parivahantbl={Parivahantbl}
