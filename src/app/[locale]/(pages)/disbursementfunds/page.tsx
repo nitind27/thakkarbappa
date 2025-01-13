@@ -10,6 +10,7 @@ const page = async () => {
 
   let disbursementfunds: NidhiVitaran[] = [];
   let workmaster: WorkMaster[] = [];
+  let workmasterdemo: WorkMasterDemo[] = [];
   let reprenstive: Representative[] = [];
   let Workmasters: WorkMasterDemo[] = [];
   let talukas: talukasdata[] = [];
@@ -19,6 +20,7 @@ const page = async () => {
   try {
     disbursementfunds = await prisma.nidhiVitaran.findMany(); // Fetch all clusters
     workmaster = await prisma.workMaster.findMany(); // Fetch all clusters
+    workmasterdemo = await prisma.workMasterDemo.findMany(); // Fetch all clusters
     reprenstive = await prisma.representative.findMany();
     Workmasters = await prisma.workMasterDemo.findMany();
     talukas = await prisma.talukasData.findMany();
@@ -45,7 +47,7 @@ const page = async () => {
       <h1 className="card card-body mt-5">
       <TitleCard breadcrumbs={breadcrumbs} />
       </h1>
-      <div><Disbursementfunds initialdisbursementfunds={disbursementfunds} workmaster={workmaster} reprenstive={reprenstive} Workmasters={workgen} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages}/></div>
+      <div><Disbursementfunds initialdisbursementfunds={disbursementfunds} workmaster={workmaster} reprenstive={reprenstive} Workmasters={workgen} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} workmasterdemo={workmasterdemo}/></div>
     </div>
   )
 }

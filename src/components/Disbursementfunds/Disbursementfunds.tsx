@@ -21,9 +21,10 @@ type Props = {
   talukas: talukasdata[];
   grampanchayat: grampanchayat[];
   Villages: Villages[];
+  workmasterdemo: WorkMasterDemo[];
 };
 
-const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, Workmasters, talukas, grampanchayat, Villages }: Props) => {
+const Disbursementfunds = ({ initialdisbursementfunds, workmaster,workmasterdemo, reprenstive, Workmasters, talukas, grampanchayat, Villages }: Props) => {
   const t = useTranslations("Disbursementfunds");
   const { latitude, longitude } = useLocation();
   const [showPrintModal, setShowPrintModal] = useState(false);
@@ -60,8 +61,8 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
           window.removeEventListener("resize", handleResize);
       };
   }, []);
-  const workid = Workmasters.reduce((acc, work: any) => {
-    acc[work.id.toString] = work.name; // Convert bigint to string
+  const workid = workmasterdemo.reduce((acc, work: WorkMasterDemo) => {
+    acc[work.id as any]  = work.name; // Convert bigint to string
     return acc;
   }, {} as Record<string, string>); // Change Record<number, string> to Record<string, string>
   const gpmap = grampanchayat.reduce((acc, gp: any) => {
@@ -86,7 +87,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
   const data = clusterData
     .map((NidhiVitaran) => ({
       id: NidhiVitaran.id,
-      work_master_id: workid[NidhiVitaran.work_master_id.toString()],
+      work_master_id: workid[NidhiVitaran.work_master_id as any],
       work_id: NidhiVitaran.work_master_id,
       date:
         NidhiVitaran.date && typeof NidhiVitaran.date === "string"
@@ -115,6 +116,10 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
       ),
     },
     {
+      accessorKey: "requirement_id",
+      header: `${t("representativeid")}`,
+    },
+    {
       accessorKey: "work_master_id",
       header: `${t("work")}`,
     },
@@ -134,6 +139,17 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
     //   accessorKey: "photo",
     //   header: `${t('attechments')}`,
     // },
+
+    {
+      accessorKey: "latitude",
+      header: `${t("latlong")}`,
+    },
+
+    {
+      accessorKey: "address",
+      header: `${t("address")}`,
+    },
+
     {
       accessorKey: "photo",
       header: `${t("attechments")}`,
@@ -157,20 +173,6 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
           </div>
         );
       },
-    },
-    {
-      accessorKey: "latitude",
-      header: `${t("latlong")}`,
-    },
-
-    {
-      accessorKey: "address",
-      header: `${t("address")}`,
-    },
-
-    {
-      accessorKey: "requirement_id",
-      header: `${t("representativeid")}`,
     },
     {
       accessorKey: "status",
@@ -434,7 +436,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, reprenstive, 
               value: selectwork,
               onChange: (e: any) => setSelectwork(e.target.value),
               type: "select",
-              className: isResponsive ? 'col-12' : 'col-4',
+              className: isResponsive ? 'col-12' : 'col-8',
               options: Workmasters
                 .filter((type) =>
                   String(type.representative_id) as any == requirementid

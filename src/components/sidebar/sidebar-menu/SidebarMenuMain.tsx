@@ -39,10 +39,10 @@ const SidebarMenuMain = () => {
 
 
   return (
-    
+
     <>
       <div>
-      {loading && <Loader />}
+        {loading && <Loader />}
 
         <SidebarMenuItem
           to={`/${localActive}/dashboard`}
@@ -178,7 +178,7 @@ const SidebarMenuMain = () => {
             hasBullet={true}
             onClick={() => handleItemClick(`/${localActive}/yojna/schemes/beneficiary`)} // Store path on click
           />
-           <SidebarMenuItem
+          <SidebarMenuItem
             to={`/${localActive}/yojna/schemes/parivahan`}
             title={t("Sightseeing_Transport")}
             hasBullet={true}
@@ -197,28 +197,46 @@ const SidebarMenuMain = () => {
             title={t("Costmatters")}
             hasBullet={true}
             onClick={() => handleItemClick(`/${localActive}/manage/supervisor`)} // Store path on click
-          /> 
+          />
 
         </SidebarMenuItemWithSub>
         {/* Disbursement Funds Menu Item */}
-        <SidebarMenuItem
-          to={`/${localActive}/disbursementfunds`}
-          icon="home"
-          title={t("disbursementfunds")}
-          fontIcon="bi-app-indicator"
+
+
+        {/* <SidebarMenuItem
+          to={`/${localActive}/workmaster`}
+          icon="abstract-2"
+          title={"Workmaster"}
+          fontIcon="bi-app-notification"
           onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)} // Store path on click
-        />
+        /> */}
+
+        <SidebarMenuItemWithSub
+          to={`/${localActive}/workmaster`}
+          title={"Workmaster"}
+          fontIcon="bi-chat-left"
+          icon="abstract-2"
+        >
+          {/* List of Manage Submenu Items */}
+          <SidebarMenuItem
+            to={`/${localActive}/workmaster`}
+            title={"Add"}
+            hasBullet={true}
+            onClick={() => handleItemClick(`/${localActive}/workmaster`)} // Store path on click
+          />
+          <SidebarMenuItem
+            to={`/${localActive}/disbursementfunds`}
+            // icon="home"
+            title={t("disbursementfunds")}
+            // fontIcon="bi-app-indicator"
+            hasBullet={true}
+            onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)} // Store path on click
+          />
+        </SidebarMenuItemWithSub>
         <SidebarMenuItem
           to={`/${localActive}/notification`}
           icon="notification"
           title={"Notification"}
-          fontIcon="bi-app-notification"
-          onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)} // Store path on click
-        />
-        <SidebarMenuItem
-          to={`/${localActive}/workmaster`}
-          icon="abstract-2"
-          title={"Workmaster"}
           fontIcon="bi-app-notification"
           onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)} // Store path on click
         />

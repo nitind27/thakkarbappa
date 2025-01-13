@@ -90,7 +90,7 @@ const Parivahan = ({
     return acc;
   }, {} as Record<number, string>);
   const [currentDate, setCurrentDate] = useState("");
-
+  
 
   const data = parivahandata
     .map((parivhan) => ({
@@ -111,7 +111,7 @@ const Parivahan = ({
         ")" + Userdata.filter((user) => user.user_id == parivhan.sup_id).map((users) => users.contact_no),
       yojana_year_id: yojna_year[parivhan.yojana_year_id],
       yojana_type: yojna_type[parivhan.yojana_type as any],
-      yojana_id: yojnamster[parivhan.yojana_id],
+      yojana_id: yojnamster[parivhan.yojana_id] + yojanaMaster.filter((master)=>{}).map((f)=>f.amount),
       beneficiary_id: parivhan.beneficiary_id,
       beneficiaryid: beneficiaryname[parivhan.beneficiary_id as any],
       status: parivhan.status,
@@ -175,10 +175,10 @@ const Parivahan = ({
       accessorKey: "yojana_id",
       header: `${t("javaksr")}`,
     },
-    {
-      accessorKey: "beneficiary_id",
-      header: `idbe`,
-    },
+    // {
+    //   accessorKey: "beneficiary_id",
+    //   header: `idbe`,
+    // },
     {
       accessorKey: "status",
       header: `${t("Status")}`,
