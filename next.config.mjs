@@ -4,7 +4,8 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const nextConfig = {
     images: {
         domains: [
-            "localhost"
+            "localhost",
+            "thakkarbappa.vercel.app"
         ],
         remotePatterns: [
             {
