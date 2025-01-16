@@ -35,7 +35,7 @@
     "Bank": "Bank",
     "nbschemes": "Nb Schems",
     "PraranbhikSillak": "Opening Balance",
-    "disbursementfunds": "Disbursementfunds",
+  "disbursementfunds": "Fund Distribution",
     "category": "Category",
     "subcategory": "SubCategory",
     "Plan_type": "Plan Type",
@@ -51,7 +51,7 @@
     "schoolwisestudents": "Standard Wise",
     "notificaiton": "Notification",
     "workmaster": "Work Master",
-    "work": "Work"
+    "work": "Works"
   },
   "Townpage": {
     "title": "Taluka",
@@ -305,7 +305,7 @@
     "title": "Disbursement of Funds",
     "addDisbursement": "Add",
     "SrNo": "S.No",
-    "work": "Work",
+    "work": "Works",
     "VitranDate": "Vitran Date",
     "Installment": "Installment",
     "amount": "Amount",
@@ -321,7 +321,7 @@
     "Deactive": "Deactive",
     "insertpage": "Fund Distribution",
     "updatepage": "Fund Distribution",
-    "enterwork": "work",
+    "enterwork": "Works",
     "ImagePreview": "Image Preview",
     "vitrandate": "Vitran Date",
     "selectInstallment": "Installment (%)",
@@ -334,7 +334,7 @@
     "editsubmit": "Edit",
     "representativeid": "Representative",
     "dist": "District",
-    "grampanchayatname": "GramPanchayat",
+    "grampanchayatname": "Gram Panchayat",
     "Village": "Village",
     "estimateamounttotal": "Est. total amt",
     "date": "Work Of date"
