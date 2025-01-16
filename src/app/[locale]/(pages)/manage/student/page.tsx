@@ -3,7 +3,7 @@
 import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import Schooltitle from "@/app/[locale]/title/Studenttitle";
 import Student from "@/components/manage/Student";
-import { Schooldata, Standarddata, StudentData } from "@/components/type";
+import { Schooldata, Standarddata, StudentData, tblstudentsscholarship } from "@/components/type";
 import prisma from "@/lib/db";
 import React from "react";
 
@@ -11,10 +11,12 @@ const Page = async () => {
   let studentdata: StudentData[] = [];
   let schooldata: Schooldata[] = [];
   let standarddata: Standarddata[] = [];
+  let scholarship: tblstudentsscholarship[] = [];
   try {
     schooldata = await prisma.school.findMany(); // Fetch all school
     studentdata = await prisma.student.findMany(); // Fetch all student
     standarddata = await prisma.standard.findMany(); // Fetch all standard
+    scholarship = await prisma.tblstudentsscholarship.findMany(); // Fetch all standard
   } catch (error) {
     console.error("Error fetching cluster data:", error);
     return (
@@ -36,6 +38,7 @@ const Page = async () => {
         initialstudentData={studentdata}
         schooldata={schooldata}
         standarddata={standarddata}
+        scholarship={scholarship}
       />
     </div>
   );

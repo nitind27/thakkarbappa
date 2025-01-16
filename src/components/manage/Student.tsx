@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
-import { Schooldata, Standarddata, StudentData } from "../type";
+import { Schooldata, Standarddata, StudentData, tblstudentsscholarship } from "../type";
 import { toast } from "react-toastify";
 
 import { useTranslations } from "next-intl";
@@ -18,9 +18,10 @@ type Props = {
   initialstudentData: StudentData[];
   schooldata: Schooldata[];
   standarddata: Standarddata[];
+  scholarship: tblstudentsscholarship[];
 };
 
-const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
+const Student = ({ initialstudentData, schooldata, standarddata,scholarship }: Props) => {
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [serialnumber, setSerialnumber] = useState("");
   const [studentId, setStudentId] = useState("");
@@ -41,11 +42,23 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
   const [sicklereport, setsickleReport] = useState("");
   const [error, setError] = useState<string>("");
   const [updateTownId, setUpdateTownId] = useState<number | null>(null);
+  
+  const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
+
+
   const [studentdata, setstudentdata] =
     useState<StudentData[]>(initialstudentData);
   const t = useTranslations("student");
   const confirm = createConfirmation(ConfirmationDialog);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [filterscholarship, setFilterscholarship] = useState("");
+
+  const handlescholarshipFilterChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setFilterscholarship(e.target.value);
+
+  };
   const schoolmap = schooldata.reduce((acc, school: Schooldata) => {
     acc[school.school_id] = school.school_name; // Assuming taluka has id and name properties
     return acc;
@@ -100,8 +113,100 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
       sickle_report: student.sickle_report,
     }))
     .reverse();
+  const handleCheckboxChange = (studentId: number) => {
+    setSelectedStudents((prev) =>
+      prev.includes(studentId)
+        ? prev.filter(id => id !== studentId)
+        : [...prev, studentId]
+    );
+  };
 
+  // Function to handle submit
+  const handleSubmit = async ()=> {
+    const dobs = new Date(dob);
+   
+       const bodyData = {
+         student_id:studentId,
+         serial_number: serialnumber,
+         full_name: studentName,
+         gr_no: grno,
+         uid: saralid,
+         school_id: schoolname,
+         current_std: standard,
+         mother_name: mothername,
+         date_of_birth: dobs,
+         gender: gender,
+         cast: cast,
+         aadhaar: aadhaar,
+         contact_no: contactNo,
+         address: address,
+         sickle_cell: sicklecell,
+         sickle_report:sicklereport,
+         student_scholarship_id:selectedStudents,
+         scholarship_name:filterscholarship,
+       };
+   
+       try {
+         const method = updateTownId ? "PUT" : "POST";
+         const url = updateTownId
+           ? `/api/scholarshipstudent/insert`
+           : `/api/scholarshipstudent/insert`;
+   
+         const response = await fetch(url, {
+           method,
+           headers: {
+             "Content-Type": "application/json",
+           },
+           body: JSON.stringify(bodyData),
+         });
+   
+         if (response.ok) {
+           const message = updateTownId ? "updated" : "added";
+           toast.success(`Student ${message} successfully!`);
+   
+           const updatedStudent = await response.json();
+           // if (studentId) {
+           //   setStudentData((prevData) =>
+           //     prevData.map((student) =>
+           //       student.student_id === values.studentId
+           //         ? { ...student, ...updatedStudent }
+           //         : student
+           //     )
+           //   );
+           // } else {
+           //   setStudentData((prevData) => [...prevData, updatedStudent]);
+           // }
+   
+           // setShowModel(false);
+         } else {
+           const error = await response.json();
+           toast.error(`Failed to save student: ${error.message}`);
+         }
+       } catch (error) {
+         console.error("Submission error:", error);
+         toast.error("An unexpected error occurred.");
+       } finally {
+         setIsLoading(false);
+       }
+     };
   const columns = [
+    {
+      accessorKey: "profile_photo",
+      header: `${t("image_urls")}`,
+      cell: ({ row }: any) => {
+
+        return (
+          <>
+            <input
+              type="checkbox"
+              value={row.original.student_id}
+              onChange={() => handleCheckboxChange(row.original.student_id)}
+              checked={selectedStudents.includes(row.original.student_id)}
+            />
+          </>
+        );
+      },
+    },
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
       header: `${t("SrNo")}`, // Header for the serial number
@@ -119,31 +224,31 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
       accessorKey: "full_name",
       header: `${t("studentName")}`,
     },
-      {
-        accessorKey: "profile_photo",
-        header: `${t("image_urls")}`,
-        cell: ({ row }: any) => {
-          const photoSrc = row.original.profile_photo && row.original.profile_photo.startsWith("/")
+    {
+      accessorKey: "profile_photo",
+      header: `${t("image_urls")}`,
+      cell: ({ row }: any) => {
+        const photoSrc = row.original.profile_photo && row.original.profile_photo.startsWith("/")
           ? row.original.profile_photo
           : `/${row.original.profile_photo}`;
-          
-          const notfound = "/media/img/imgenotfound.jpg";
-          return (
-            <div style={{ textAlign: "center" }}>
-              <Image
-                src={photoSrc}
-                alt={t("image_urls")}
-                style={{ objectFit: "cover" }}
-                height={100} // Adjust size as needed
-                width={100}
-              />
-              <br />
-              {/* <Link href={photoSrc} target="_blank" rel="noopener noreferrer">
+
+        const notfound = "/media/img/imgenotfound.jpg";
+        return (
+          <div style={{ textAlign: "center" }}>
+            <Image
+              src={photoSrc}
+              alt={t("image_urls")}
+              style={{ objectFit: "cover" }}
+              height={100} // Adjust size as needed
+              width={100}
+            />
+            <br />
+            {/* <Link href={photoSrc} target="_blank" rel="noopener noreferrer">
                 view
               </Link> */}
-            </div>
-          );
-        },
+          </div>
+        );
+      },
     },
     {
       accessorKey: "school_id",
@@ -265,7 +370,7 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
   };
 
   const uploadImage = async (studentId: number, file: File) => {
-  
+
     const formData = new FormData();
     formData.append("photo", file);
 
@@ -285,7 +390,7 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
             ? { ...school, profile_photo: data.profile_photo }
             : school
         );
-        console.log('fsdafee',updatedData)
+        console.log('fsdafee', updatedData)
         setstudentdata(updatedData);
       } else {
         toast.error(data.error || "Failed to upload image.");
@@ -395,6 +500,7 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
 
   let schoolnameoption;
 
+
   if (retrievedSchoolName) {
 
     schoolnameoption = [
@@ -410,16 +516,90 @@ const Student = ({ initialstudentData, schooldata, standarddata }: Props) => {
       label: student.school_name,
     }));
   }
+  let scholarshipoption;
+
+
+  if (retrievedSchoolName) {
+
+    scholarshipoption = [
+      {
+        value: retrievedSchoolName,
+        label: retrievedSchoolName,
+      },
+    ];
+  } else {
+
+    scholarshipoption = [{
+      label: "नवोदय",
+      value: "नवोदय",
+
+    },
+    {
+      label: "शिष्यवृत्ती 5 वी",
+      value: "शिष्यवृत्ती 5 वी",
+
+    },
+    {
+      label: "शिष्यवृत्ती 8 वी",
+      value: "शिष्यवृत्ती 8 वी",
+
+    },
+    {
+      label: "विभागीय क्रीडा स्पर्धा",
+      value: "विभागीय क्रीडा स्पर्धा",
+
+    },
+    {
+      label: "राज्यस्तरीय क्रीडा स्पर्धा",
+      value: "राज्यस्तरीय क्रीडा स्पर्धा",
+
+    },
+    {
+      label: "खासदार क्रीडा महोत्सव",
+      value: "खासदार क्रीडा महोत्सव",
+
+    },
+    {
+      label: "संगीत",
+      value: "संगीत",
+
+    },
+    {
+      label: "कला",
+      value: "कला",
+
+    },
+    {
+      label: "शालेय विभागीय क्रीडा स्पर्धा",
+      value: "शालेय विभागीय क्रीडा स्पर्धा",
+
+    },
+    ]
+
+  }
 
 
   return (
     <div>
+      <button onClick={handleSubmit}>lic</button>
       <TableOption
-        
+
         data={data}
         columns={columns}
         filterOptions={options}
         additionalFilterOptions={schoolnameoption}
+        scholarshipoption={<select
+          className="form-select ms-2" // Added margin for spacing
+          value={filterscholarship}
+          onChange={handlescholarshipFilterChange} // Use new handler for additional filter
+        >
+          <option value="">All Scholarship</option>
+          {scholarshipoption.map((option: any) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>}
         Button={
           <StudentAddData values={{
             serialnumber: "",

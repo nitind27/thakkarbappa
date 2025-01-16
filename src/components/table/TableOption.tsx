@@ -13,14 +13,17 @@ export default function TableOption({
   Button,
   filterOptions,
   additionalFilterOptions,
+  scholarshipoption
 }: any) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState(
     filterOptions.length > 0 ? filterOptions[0].value : ""
   );
+  console.log('fdasfaf',scholarshipoption)
   const [filterData, setFilterData] = useState(
     additionalFilterOptions.length > 0 ? additionalFilterOptions[0].value : ""
-  ); // State for second filter
+  );
+
   const [currentPageIndex, setCurrentPageIndex] = useState(0); // New state for current page index
   const t = useTranslations("IndexPage");
 
@@ -149,6 +152,14 @@ export default function TableOption({
               </option>
             ))}
           </select>
+        </div>
+        <div className="col-auto">
+          {/* Second select box for additional filtering */}
+         {scholarshipoption}
+        </div>
+        <div className="col-auto">
+          {/* Second select box for additional filtering */}
+         <button className="btn btn-sm btn-success">Submit</button>
         </div>
         <div className="col-auto ms-auto">{Button}</div>
       </div>

@@ -430,3 +430,51 @@ export type TblUsers = {
   cluster_id: number;
   padnam_id: number;
 };
+
+export type tblstudentsscholarship = {
+  student_id: number;
+  serial_number?: string | null;
+  uid?: string | null;
+  gr_no?: string | null;
+  date_of_admision?: Date | null;
+  year_add?: string | null;
+  school_id?: number | null;
+  admited_in_std?: number | null;
+  current_std?: number | null;
+  division?: string | null;
+  first_name?: string | null;
+  middle_name?: string | null;
+  last_name?: string | null;
+  date_of_birth?: Date | null;
+  place_of_birth: string; // Not nullable
+  gender?: string | null;
+  height?: string | null;
+  weight?: string | null;
+  mother_name?: string | null;
+  religion?: string | null;
+  lang_id?: number | null;
+  cast: string; // Not nullable
+  address?: string | null;
+  contact_no?: string | null;
+  full_name?: string | null;
+  user_id?: number | null;
+  cluster_id?: number | null;
+  dropout: any; // Assuming these are the only two values
+  dropout_date_time?: Date | null;
+  status: any; // Assuming these are the only two values
+  ins_date_time?: Date | null;
+  update_date_time?: Date | null;
+  students_id_saral?: string | null;
+  type_of_students?: string | null;
+  saral_id?: string | null;
+  date_leave?: Date | null;
+  remarks?: string | null;
+  stream?: string | null;
+  profile_photo?: string | null;
+  photo_update_date_time?: Date | null;
+  sickle_cell?: string | null;
+  aadhaar?: string | null;
+  sickle_report?: string | null;
+  scholarship_name?: string | null;
+  student_scholarship_id?: string | null; 
+};

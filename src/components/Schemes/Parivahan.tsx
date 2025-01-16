@@ -81,6 +81,10 @@ const Parivahan = ({
     acc[year.yojana_id] = year.yojana_name; // Assuming taluka has id and name properties
     return acc;
   }, {} as Record<number, string>);
+  const yojnamsteramount = yojanaMaster.reduce((acc, year: YojanaMaster) => {
+    acc[year.yojana_id] = year.amount; // Assuming taluka has id and name properties
+    return acc;
+  }, {} as Record<number, string>);
   const usersdata = Userdata.reduce((acc, year: TblUsers) => {
     acc[year.user_id] = year.name; // Assuming taluka has id and name properties
     return acc;
@@ -90,7 +94,7 @@ const Parivahan = ({
     return acc;
   }, {} as Record<number, string>);
   const [currentDate, setCurrentDate] = useState("");
-  
+
 
   const data = parivahandata
     .map((parivhan) => ({
@@ -111,7 +115,7 @@ const Parivahan = ({
         ")" + Userdata.filter((user) => user.user_id == parivhan.sup_id).map((users) => users.contact_no),
       yojana_year_id: yojna_year[parivhan.yojana_year_id],
       yojana_type: yojna_type[parivhan.yojana_type as any],
-      yojana_id: yojnamster[parivhan.yojana_id] + yojanaMaster.filter((master)=>{}).map((f)=>f.amount),
+      yojana_id: yojnamster[parivhan.yojana_id] + "Amount" +yojnamsteramount[parivhan.yojana_id],
       beneficiary_id: parivhan.beneficiary_id,
       beneficiaryid: beneficiaryname[parivhan.beneficiary_id as any],
       status: parivhan.status,
@@ -136,9 +140,6 @@ const Parivahan = ({
     status: parivhan.status,
     ins_date: parivhan.ins_date,
   })).reverse(); // Reverse the order to show the last added items first
-  const beneficiaryIdsToMatch = data.map((f) => f.beneficiary_id); // This should be an array
-  const beneficiaryIdsToMatch1 = data1.map((f) => f.beneficiary_id); // This should be an array
-
 
   // Displaying the result
   const columns = [
@@ -175,10 +176,10 @@ const Parivahan = ({
       accessorKey: "yojana_id",
       header: `${t("javaksr")}`,
     },
-    // {
-    //   accessorKey: "beneficiary_id",
-    //   header: `idbe`,
-    // },
+    {
+      accessorKey: "beneficiary_id",
+      header: `idbe`,
+    },
     {
       accessorKey: "status",
       header: `${t("Status")}`,
@@ -194,10 +195,16 @@ const Parivahan = ({
             <thead className="bg-gray-200">
               <tr>
                 <th className="border border-gray-300 px-4 py-2 text-left">
+                  sr
+                </th>
+                <th className="border border-gray-300 px-4 py-2 text-left">
                   Name
                 </th>
                 <th className="border border-gray-300 px-4 py-2 text-left">
                   Total
+                </th>
+                <th className="border border-gray-300 px-4 py-2 text-left">
+                  Totaldd
                 </th>
               </tr>
             </thead>
@@ -207,16 +214,21 @@ const Parivahan = ({
                 .filter((item) => {
                   // Split the original beneficiary_id by comma and trim whitespace
                   const beneficiaryIds = row.original.beneficiary_id.split(',').map((id: string) => id.trim());
-                  // Check if the item's beneficiary_id is in the array of IDs
+         
                   return beneficiaryIds.includes(item.beneficiary_id);
                 })
                 .map((item, index) => (
                   <tr key={index} className="hover:bg-gray-100">
                     <td className="border border-gray-300 px-4 py-2">
+                    {index +1}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
                       {Beneficiary.filter(
                         (beneficiary) =>
-                          beneficiary.beneficiary_id as any == item.beneficiary_id
-                      ).map((filteredItem) => filteredItem.fullname == "" ? filteredItem.gat_name : filteredItem.fullname).join(', ')}{/* Assuming you want to display the current item's beneficiary_id */}
+                          beneficiary.beneficiary_id as any == item.beneficiary_id 
+                      ).map((filteredItem) => filteredItem.yojana_type == '2' ? filteredItem.gat_name : filteredItem.fullname).join(', ')}
+              
+                    
                     </td>
 
                     <td className="border border-gray-300 px-4 py-2">
@@ -224,6 +236,12 @@ const Parivahan = ({
                         (beneficiary) =>
                           beneficiary.beneficiary_id as any == item.beneficiary_id
                       ).map((filteredItem) => filteredItem.tot_finance).join(', ')} {/* Joining multiple finance values with a comma */}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      {Parivahanbeneficiarys.filter(
+                        (beneficiary) =>
+                          beneficiary.beneficiary_id as any == item.beneficiary_id
+                      ).map((filteredItem) => filteredItem.installment + "%").join(', ')} 
                     </td>
 
                   </tr>
@@ -271,7 +289,7 @@ const Parivahan = ({
     setCurrentDate(now.toLocaleDateString()); // Formats date only
   }, []);
 
- 
+
   const handleDeactivate = async (category_id: any, currentStatus: any) => {
     const confirmMessage =
       currentStatus === "Active"
@@ -315,8 +333,8 @@ const Parivahan = ({
       }
     }
   };
-  const datafilter = Beneficiary.filter((data) => data.yojana_year_id as any == yojnayear && data.yojana_type == yojanatype && data.yojana_id as any == yojnaname && data.status =="Active").map((data) => ({
-    gat_name: data.gat_name,
+  const datafilter = Beneficiary.filter((data) => data.yojana_year_id as any == yojnayear && data.yojana_type == yojanatype && data.yojana_id as any == yojnaname && data.status == "Active").map((data) => ({
+    gat_name: data.fullname,
     tot_finance: data.tot_finance,
     amount_paid: data.amount_paid,
     caste_id: data.caste_id,
@@ -342,15 +360,35 @@ const Parivahan = ({
       accessorKey: "amount_paid",
       header: `अदा करावयाची रक्कम`,
     },
+    
     {
       accessorKey: "caste_id",
       header: `अदा करावयाची रक्कम`,
     },
 
     {
-      accessorKey: "caste_id",
-      header: `निवड करा`,
+      accessorKey: "actions",
+      header: `अदा करावयाची रक्कम`,
+      cell: ({ row }: any) => (
+        <div style={{ display: "flex", whiteSpace: "nowrap" }}>
+         <select name="" id="" className="form-control">
+          <option value="">NA%</option>
+     
+         </select>
+        </div>
+      ),
     },
+
+    {
+      accessorKey: "actions",
+      header: `निवड करा`,
+      cell: ({ row }: any) => (
+        <div style={{ display: "flex", whiteSpace: "nowrap" }}>
+       <input type="checkbox" />
+        </div>
+      ),
+    },
+
 
 
   ];
@@ -372,11 +410,13 @@ const Parivahan = ({
 
       // Prepare the request body
       const requestBody = {
-        category_id: adhikanchaname,
-        sub_category_name: ParivahanDate,
-        yojana_year_id: yojnayear,
-        bank_id: bankname,
-        javaksr: javaksr,
+        parivahan_date: adhikanchaname,
+        outward_no: ParivahanDate,
+        sup_id: yojnayear,
+        yojana_year_id: bankname,
+        yojana_type: javaksr,
+        yojana_id: javaksr,
+        beneficiary_id: javaksr,
 
         ...(updateClusterId && { sub_category_id: updateClusterId }),
       };
@@ -427,13 +467,13 @@ const Parivahan = ({
   };
 
   const handleEdit = (cluster: any) => {
-    setUpdateClusterId(cluster.sub_category_id); // Set ID for updating
-    setAdhikanchaname(cluster.categoryid); // Set current name for editing
+    setUpdateClusterId(cluster.sub_category_id); 
+    setAdhikanchaname(cluster.categoryid); 
     setParivahanDate(cluster.sub_category_name);
     setJavakSr(cluster.javaksr);
     setYojnaYear(cluster.yojanayearid);
     setBankname(cluster.bankid);
-    handleShowPrint(); // Open modal for editing
+    handleShowPrint(); 
   };
 
   const handleShowPrint = () => setShowPrintModal(true);
@@ -479,7 +519,7 @@ const Parivahan = ({
         show={showPrintModal}
         handleClose={handleClosePrint}
         handleSubmit={handleSubmit}
-        filterdata={datafilter.length !=0 && <Tablefilter
+        filterdata={datafilter.length != 0 && <Tablefilter
           data={datafilter}
           columns={filtercolumns}
 
@@ -555,8 +595,8 @@ const Parivahan = ({
               className: 'col-6',
               options: yojanaMaster
                 .filter((type) =>
-                  String(type.yojana_year_id)  == yojnayear &&
-                  type.yojana_type  === yojanatype
+                  String(type.yojana_year_id) == yojnayear &&
+                  type.yojana_type === yojanatype
                 )
                 .map((yojna) => ({
                   value: yojna.yojana_id,
