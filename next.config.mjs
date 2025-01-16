@@ -8,8 +8,7 @@ const nextConfig = {
             "thakkarbappa.vercel.app"
 
         ],
-        imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-        qualities: [25, 50, 75],
+
         remotePatterns: [
             {
                 hostname: process.env.IMAGE_HOSTNAME,
