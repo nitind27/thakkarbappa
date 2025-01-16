@@ -14,6 +14,7 @@ import { formatDate } from "@/lib/utils";
 
 import StudentAddData from "./StudentAddData";
 import Image from "next/image";
+import Studentlistinsert from "./Studentlistinsert";
 type Props = {
   initialstudentData: StudentData[];
   schooldata: Schooldata[];
@@ -120,94 +121,12 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
         : [...prev, studentId]
     );
   };
+  const ab = scholarship.map((f) => f.student_scholarship_id);
+  const formattedScholarshipIDs = ab.join(', ');
 
-  // Function to handle submit
-  const handleSubmit = async () => {
-    const dobs = new Date(dob);
-
-    const bodyData = {
-      student_id: studentId,
-      serial_number: serialnumber,
-      full_name: studentName,
-      gr_no: grno,
-      uid: saralid,
-      school_id: schoolname,
-      current_std: standard,
-      mother_name: mothername,
-      date_of_birth: dobs,
-      gender: gender,
-      cast: cast,
-      aadhaar: aadhaar,
-      contact_no: contactNo,
-      address: address,
-      sickle_cell: sicklecell,
-      sickle_report: sicklereport,
-      student_scholarship_id: selectedStudents,
-      scholarship_name: filterscholarship,
-    };
-
-    try {
-      const method = updateTownId ? "PUT" : "POST";
-      const url = updateTownId
-        ? `/api/scholarshipstudent/insert`
-        : `/api/scholarshipstudent/insert`;
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bodyData),
-      });
-
-      if (response.ok) {
-        const message = updateTownId ? "updated" : "added";
-        toast.success(`Student ${message} successfully!`);
-
-        const updatedStudent = await response.json();
-        // if (studentId) {
-        //   setStudentData((prevData) =>
-        //     prevData.map((student) =>
-        //       student.student_id === values.studentId
-        //         ? { ...student, ...updatedStudent }
-        //         : student
-        //     )
-        //   );
-        // } else {
-        //   setStudentData((prevData) => [...prevData, updatedStudent]);
-        // }
-
-        // setShowModel(false);
-      } else {
-        const error = await response.json();
-        toast.error(`Failed to save student: ${error.message}`);
-      }
-    } catch (error) {
-
-      toast.error("An unexpected error occurred.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const columns = [
-    {
-      accessorKey: "profile_photo",
-      header: `${t("image_urls")}`,
-      cell: ({ row }: any) => {
 
-        return (
-          <>
-            <input
-              type="checkbox"
-              value={row.original.student_id}
-              onChange={() => handleCheckboxChange(row.original.student_id)}
-              checked={selectedStudents.includes(row.original.student_id)}
-            />
-          </>
-        );
-      },
-    },
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
       header: `${t("SrNo")}`, // Header for the serial number
@@ -216,6 +135,18 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
           {row.index + 1} {/* Display the index + 1 for serial number */}
         </div>
       ),
+    },
+    {
+      accessorKey: "profile_photo",
+      header: `Check`,
+      cell: ({ row }: any) => {
+
+        return (
+          <>
+            <Studentlistinsert formattedScholarshipIDs={formattedScholarshipIDs} studentid={row.original.student_id} filterscholarship={filterscholarship} updateTownId={updateTownId} isConfirmed={[]} />
+          </>
+        );
+      },
     },
     {
       accessorKey: "gr_no",
@@ -587,7 +518,7 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
         data={data}
         columns={columns}
         filterOptions={options}
-        submitbtn={<button className="btn btn-sm btn-success" onClick={handleSubmit}>submit</button>}
+
 
         additionalFilterOptions={schoolnameoption}
         scholarshipoption={<select
