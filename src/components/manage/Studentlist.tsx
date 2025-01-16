@@ -14,6 +14,7 @@ import { formatDate } from "@/lib/utils";
 
 import StudentAddData from "./StudentAddData";
 import Image from "next/image";
+import Table from "../table/Table";
 type Props = {
   initialstudentData: StudentData[];
   schooldata: Schooldata[];
@@ -21,7 +22,7 @@ type Props = {
   scholarship: tblstudentsscholarship[];
 };
 
-const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: Props) => {
+const Studentlist = ({ initialstudentData, schooldata, standarddata,scholarship }: Props) => {
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [serialnumber, setSerialnumber] = useState("");
   const [studentId, setStudentId] = useState("");
@@ -42,12 +43,12 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
   const [sicklereport, setsickleReport] = useState("");
   const [error, setError] = useState<string>("");
   const [updateTownId, setUpdateTownId] = useState<number | null>(null);
-
+  
   const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
 
 
   const [studentdata, setstudentdata] =
-    useState<StudentData[]>(initialstudentData);
+    useState<tblstudentsscholarship[]>(scholarship);
   const t = useTranslations("student");
   const confirm = createConfirmation(ConfirmationDialog);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -75,9 +76,9 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
       gr_no: student.gr_no,
       date_of_admision: student.date_of_admision,
       year_add: student.year_add,
-      school_id: schoolmap[student.school_id as any],
+      school_id: initialstudentData.filter((d)=>d.student_id== student.student_scholarship_id as any).map((d)=> schoolmap[d.school_id as any]),
       schoolid: student.school_id,
-      admited_in_std: student.admitted_in_std,
+      admited_in_std: student.admited_in_std,
       current_std: standardmap[student.current_std as any],
       currentstd: student.current_std,
       division: student.division,
@@ -96,7 +97,7 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
       cast: student.cast,
       address: student.address,
       contact_no: student.contact_no,
-      full_name: student.full_name,
+      full_name: initialstudentData.filter((d)=>d.student_id== student.student_scholarship_id as any).map((d)=> d.full_name),
       user_id: student.user_id,
       cluster_id: student.cluster_id,
       dropout: student.dropout,
@@ -111,6 +112,8 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
       sickle_cell: student.sickle_cell,
       aadhaar: student.aadhaar,
       sickle_report: student.sickle_report,
+      scholarship_name:student.scholarship_name,
+      student_scholarship_id:student.student_scholarship_id
     }))
     .reverse();
   const handleCheckboxChange = (studentId: number) => {
@@ -122,92 +125,76 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
   };
 
   // Function to handle submit
-  const handleSubmit = async () => {
+  const handleSubmit = async ()=> {
     const dobs = new Date(dob);
-
-    const bodyData = {
-      student_id: studentId,
-      serial_number: serialnumber,
-      full_name: studentName,
-      gr_no: grno,
-      uid: saralid,
-      school_id: schoolname,
-      current_std: standard,
-      mother_name: mothername,
-      date_of_birth: dobs,
-      gender: gender,
-      cast: cast,
-      aadhaar: aadhaar,
-      contact_no: contactNo,
-      address: address,
-      sickle_cell: sicklecell,
-      sickle_report: sicklereport,
-      student_scholarship_id: selectedStudents,
-      scholarship_name: filterscholarship,
-    };
-
-    try {
-      const method = updateTownId ? "PUT" : "POST";
-      const url = updateTownId
-        ? `/api/scholarshipstudent/insert`
-        : `/api/scholarshipstudent/insert`;
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bodyData),
-      });
-
-      if (response.ok) {
-        const message = updateTownId ? "updated" : "added";
-        toast.success(`Student ${message} successfully!`);
-
-        const updatedStudent = await response.json();
-        // if (studentId) {
-        //   setStudentData((prevData) =>
-        //     prevData.map((student) =>
-        //       student.student_id === values.studentId
-        //         ? { ...student, ...updatedStudent }
-        //         : student
-        //     )
-        //   );
-        // } else {
-        //   setStudentData((prevData) => [...prevData, updatedStudent]);
-        // }
-
-        // setShowModel(false);
-      } else {
-        const error = await response.json();
-        toast.error(`Failed to save student: ${error.message}`);
-      }
-    } catch (error) {
-
-      toast.error("An unexpected error occurred.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+   
+       const bodyData = {
+         student_id:studentId,
+         serial_number: serialnumber,
+         full_name: studentName,
+         gr_no: grno,
+         uid: saralid,
+         school_id: schoolname,
+         current_std: standard,
+         mother_name: mothername,
+         date_of_birth: dobs,
+         gender: gender,
+         cast: cast,
+         aadhaar: aadhaar,
+         contact_no: contactNo,
+         address: address,
+         sickle_cell: sicklecell,
+         sickle_report:sicklereport,
+         student_scholarship_id:selectedStudents,
+         scholarship_name:filterscholarship,
+       };
+   
+       try {
+         const method = updateTownId ? "PUT" : "POST";
+         const url = updateTownId
+           ? `/api/scholarshipstudent/insert`
+           : `/api/scholarshipstudent/insert`;
+   
+         const response = await fetch(url, {
+           method,
+           headers: {
+             "Content-Type": "application/json",
+           },
+           body: JSON.stringify(bodyData),
+         });
+   
+         if (response.ok) {
+           const message = updateTownId ? "updated" : "added";
+           toast.success(`Student ${message} successfully!`);
+   
+           const updatedStudent = await response.json();
+           // if (studentId) {
+           //   setStudentData((prevData) =>
+           //     prevData.map((student) =>
+           //       student.student_id === values.studentId
+           //         ? { ...student, ...updatedStudent }
+           //         : student
+           //     )
+           //   );
+           // } else {
+           //   setStudentData((prevData) => [...prevData, updatedStudent]);
+           // }
+   
+           // setShowModel(false);
+         } else {
+           const error = await response.json();
+           toast.error(`Failed to save student: ${error.message}`);
+         }
+       } catch (error) {
+         console.error("Submission error:", error);
+         toast.error("An unexpected error occurred.");
+       } finally {
+         setIsLoading(false);
+       }
+     };
+  
   const columns = [
-    {
-      accessorKey: "profile_photo",
-      header: `${t("image_urls")}`,
-      cell: ({ row }: any) => {
-
-        return (
-          <>
-            <input
-              type="checkbox"
-              value={row.original.student_id}
-              onChange={() => handleCheckboxChange(row.original.student_id)}
-              checked={selectedStudents.includes(row.original.student_id)}
-            />
-          </>
-        );
-      },
-    },
+    
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
       header: `${t("SrNo")}`, // Header for the serial number
@@ -217,142 +204,25 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
         </div>
       ),
     },
-    {
-      accessorKey: "gr_no",
-      header: `${t("grno")}`,
-    },
+    
+  
+   
     {
       accessorKey: "full_name",
-      header: `${t("studentName")}`,
-    },
-    {
-      accessorKey: "profile_photo",
-      header: `${t("image_urls")}`,
-      cell: ({ row }: any) => {
-        const photoSrc = row.original.profile_photo && row.original.profile_photo.startsWith("/")
-          ? row.original.profile_photo
-          : `/${row.original.profile_photo}`;
 
-        const notfound = "/media/img/imgenotfound.jpg";
-        return (
-          <div style={{ textAlign: "center" }}>
-            <Image
-              src={photoSrc}
-              alt={t("image_urls")}
-              style={{ objectFit: "cover" }}
-              height={100} // Adjust size as needed
-              width={100}
-            />
-            <br />
-            {/* <Link href={photoSrc} target="_blank" rel="noopener noreferrer">
-                view
-              </Link> */}
-          </div>
-        );
-      },
+      header: `student full name`,
     },
     {
       accessorKey: "school_id",
-      header: `${t("Schoolname")}`,
+      header: `school name`,
     },
     {
-      accessorKey: "current_std",
-      header: `${t("std")}`,
+      accessorKey: "scholarship_name",
+      header: `scholarship`,
     },
+   
 
-    {
-      accessorKey: "uid",
-      header: `${t("saralid")}`,
-    },
-    {
-      accessorKey: "mother_name",
-      header: `${t("Monthername")}`,
-    },
-    {
-      accessorKey: "date_of_birth",
-      header: `${t("dob")}`,
-    },
-
-    {
-      accessorKey: "gender",
-      header: `${t("gender")}`,
-    },
-    {
-      accessorKey: "cast",
-      header: `${t("cast")}`,
-    },
-    {
-      accessorKey: "aadhaar",
-      header: `${t("aadharcard")}`,
-    },
-    {
-      accessorKey: "contact_no",
-      header: `${t("Contact")}`,
-    },
-    {
-      accessorKey: "address",
-      header: `${t("address")}`,
-    },
-    {
-      accessorKey: "sickle_cell",
-      header: `${t("sicklecell")}`,
-    },
-    {
-      accessorKey: "sickle_report",
-      header: `${t("status")}`,
-    },
-
-    {
-      accessorKey: "actions",
-      header: `${t("Action")}`,
-      cell: ({ row }: any) => (
-        <div style={{ display: "flex", whiteSpace: "nowrap" }}>
-
-
-
-          <StudentAddData values={{
-            serialnumber: row.original.serial_number,
-            studentId: row.original.student_id,
-            studentName: row.original.full_name,
-            grno: row.original.gr_no,
-            saralid: row.original.uid,
-            isLoading: false,
-            schoolname: row.original.schoolid,
-            standard: row.original.currentstd,
-            mothername: row.original.mother_name,
-            dob: row.original.date_of_birth,
-            gender: row.original.gender,
-            cast: row.original.cast,
-            aadhaar: row.original.aadhaar,
-            contactNo: row.original.contact_no,
-            address: row.original.address,
-            sicklecell: row.original.sickle_cell,
-            sicklereport: row.original.sickle_report,
-            error: "", // Added error handling
-            updateTownId: row.original.student_id
-          }} schooldata={schooldata} standarddata={standarddata} setStudentData={setstudentdata} />
-
-          <button
-            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
-              } ms-5`}
-            onClick={() =>
-              handleDeactivate(row.original.student_id, row.original.status)
-            }
-          >
-            <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-            {row.original.status === "Active"
-              ? `${t("Deactive")}`
-              : `${t("Active")}`}
-          </button>
-          <button
-            className="btn btn-sm btn-primary ms-5"
-            onClick={() => handleImageClick(row.original.student_id)}
-          >
-            Upload Image
-          </button>
-        </div>
-      ),
-    },
+    
   ];
   const handleImageClick = (studentId: any) => {
     // Open file input to select image
@@ -582,13 +452,13 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
 
   return (
     <div>
-      <TableOption
+      
+      <Table
 
         data={data}
         columns={columns}
         filterOptions={options}
-        submitbtn={<button className="btn btn-sm btn-success" onClick={handleSubmit}>submit</button>}
-
+   
         additionalFilterOptions={schoolnameoption}
         scholarshipoption={<select
           className="form-select ms-2" // Added margin for spacing
@@ -602,29 +472,29 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
             </option>
           ))}
         </select>}
-        Button={
-          <StudentAddData values={{
-            serialnumber: "",
-            studentId: "",
-            studentName: "",
-            grno: "",
-            saralid: "",
-            isLoading: false,
-            schoolname: "",
-            standard: "",
-            mothername: "",
-            dob: "",
-            gender: "",
-            cast: "",
-            aadhaar: "",
-            contactNo: "",
-            address: "",
-            sicklecell: "No",
-            sicklereport: "",
-            error: "", // Added error handling
-            updateTownId: null
-          }} schooldata={schooldata} standarddata={standarddata} setStudentData={setstudentdata} />
-        }
+        // Button={
+        //   <StudentAddData values={{
+        //     serialnumber: "",
+        //     studentId: "",
+        //     studentName: "",
+        //     grno: "",
+        //     saralid: "",
+        //     isLoading: false,
+        //     schoolname: "",
+        //     standard: "",
+        //     mothername: "",
+        //     dob: "",
+        //     gender: "",
+        //     cast: "",
+        //     aadhaar: "",
+        //     contactNo: "",
+        //     address: "",
+        //     sicklecell: "No",
+        //     sicklereport: "",
+        //     error: "", // Added error handling
+        //     updateTownId: null
+        //   }} schooldata={schooldata} standarddata={standarddata} setStudentData={setstudentdata} />
+        // }
       />
 
 
@@ -639,4 +509,4 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
   );
 };
 
-export default Student;
+export default Studentlist;

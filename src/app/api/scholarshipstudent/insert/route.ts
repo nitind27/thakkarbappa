@@ -21,94 +21,88 @@ export async function POST(req: Request) {
       sickle_cell,
       sickle_report,
       scholarship_name,
-      student_scholarship_id
+      student_scholarship_id // Expecting this to be an array of IDs
     } = body;
 
     // Validate input
-    // if (
-    //   !serial_number ||
-    //   !full_name ||
-    //   !gr_no ||
-    //   !uid ||
-    //   !school_id ||
-    //   !current_std ||
-    //   !mother_name ||
-    //   !date_of_birth ||
-    //   !gender ||
-    //   !cast ||
-    //   !address ||
-    //   !aadhaar ||
-    //   !contact_no ||
-    //   !sickle_cell
-    // ) {
-    //   return NextResponse.json(
-    //     { error: "All required fields must be filled" },
-    //     { status: 400 }
-    //   );
-    // }
+    // Uncomment the validation if needed
+    /*
+    if (
+      !serial_number ||
+      !full_name ||
+      !gr_no ||
+      !uid ||
+      !school_id ||
+      !current_std ||
+      !mother_name ||
+      !date_of_birth ||
+      !gender ||
+      !cast ||
+      !address ||
+      !aadhaar ||
+      !contact_no ||
+      !sickle_cell
+    ) {
+      return NextResponse.json(
+        { error: "All required fields must be filled" },
+        { status: 400 }
+      );
+    }
+    */
 
-    // Convert taluka_id, cluster_id, and other numeric fields to integers
+    // Convert school_id and current_std to integers
     const schoolid = parseInt(school_id, 10);
     const currentstd = parseInt(current_std, 10);
-    // const castId = parseInt(cast, 10);
 
     // Check if conversion was successful
-    // if (isNaN(schoolid)) {
+    // if (isNaN(schoolid) || isNaN(currentstd)) {
     //   return NextResponse.json(
-    //     { error: "castId ID and Student ID must be valid numbers" },
+    //     { error: "School ID and Current Standard must be valid numbers" },
     //     { status: 400 }
     //   );
     // }
-    const studentScholarshipId = Array.isArray(student_scholarship_id) && student_scholarship_id.length > 0 
-    ? student_scholarship_id[0] 
-    : null;
 
-    // Create new School entry
-    const newSchool = await prisma.tblstudentsscholarship.create({
-      data: {
-        serial_number,
-        full_name,
-        gr_no,
-        uid,
-        school_id: schoolid,
-        current_std: currentstd,
-        mother_name,
-        date_of_birth,
-        gender,
-        cast,
-        aadhaar,
-        address,
-        contact_no,
-        sickle_cell,
-        sickle_report,
-        status: "Active", // Default status
-        year_add: "2024", // Add appropriate values for required fields
-        admited_in_std: 1, // Example value
-        division: "A", // Example value
-        first_name: full_name.split(" ")[0], // Assuming first name is the first part of full_name
-        middle_name: "", // Add appropriate value or handle as needed
-        last_name: "", // Add appropriate value or handle as needed
-        place_of_birth: "", // Add appropriate value or handle as needed
-        religion: "", // Add appropriate value or handle as needed
-        scholarship_name,
-        student_scholarship_id:student_scholarship_id.toString()
+    // Prepare data for insertion
+    const studentData = student_scholarship_id.map((id: { toString: () => any; }) => ({
+      serial_number,
+      full_name,
+      gr_no,
+      uid,
+      school_id: schoolid,
+      current_std: currentstd,
+      mother_name,
+      date_of_birth,
+      gender,
+      cast,
+      aadhaar,
+      address,
+      contact_no,
+      sickle_cell,
+      sickle_report,
+      status: "Active", // Default status
+      year_add: "2024", // Add appropriate values for required fields
+      admited_in_std: 1, // Example value
+      division: "A", // Example value
+      first_name: full_name.split(" ")[0], // Assuming first name is the first part of full_name
+      middle_name: "", // Add appropriate value or handle as needed
+      last_name: "", // Add appropriate value or handle as needed
+      place_of_birth: "", // Add appropriate value or handle as needed
+      religion: "", // Add appropriate value or handle as needed
+      scholarship_name,
+      student_scholarship_id: id.toString() // Convert each ID to string
+    }));
 
-        // Add other required fields here...
-      },
+    // Create new entries in the database
+    const newStudents = await prisma.tblstudentsscholarship.createMany({
+        data: studentData
     });
-    // Convert BigInt fields to string before sending the response (if applicable)
-    const responseData = {
-      ...newSchool,
-      school_id: newSchool.school_id, // Assuming school_id is a BigInt
-    };
 
-    return NextResponse.json(responseData, { status: 201 });
+    return NextResponse.json(newStudents, { status: 201 });
   } catch (error) {
-    console.error("Error during school creation:", error);
-    // Return specific error message if available
+    console.error("Error during student creation:", error);
     return NextResponse.json(
-      { error: error || "Internal Server Error" },
-      { status: 500 }
+        { error:  "Internal Server Error" },
+        { status: 500 }
     );
   }
 }

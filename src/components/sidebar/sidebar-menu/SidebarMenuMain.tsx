@@ -234,6 +234,13 @@ const SidebarMenuMain = () => {
           />
         </SidebarMenuItemWithSub>
         <SidebarMenuItem
+          to={`/${localActive}/manage/studentlist`}
+          icon="search-list"
+          title={"Student List"}
+          fontIcon="bi-app-notification"
+          onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)} // Store path on click
+        />
+        <SidebarMenuItem
           to={`/${localActive}/notification`}
           icon="notification"
           title={"Notification"}

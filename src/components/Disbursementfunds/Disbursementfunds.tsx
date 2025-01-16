@@ -61,8 +61,8 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster,workmasterdemo
           window.removeEventListener("resize", handleResize);
       };
   }, []);
-  const workid = workmasterdemo.reduce((acc, work: WorkMasterDemo) => {
-    acc[work.id]  = work.name as any; // Convert bigint to string
+  const workid = workmasterdemo.reduce((acc, work: any) => {
+    acc[work.id]=work.name; // Convert bigint to string
     return acc;
   }, {} as Record<string, string>); // Change Record<number, string> to Record<string, string>
   const gpmap = grampanchayat.reduce((acc, gp: any) => {
