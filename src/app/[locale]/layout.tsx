@@ -30,6 +30,7 @@ export default function RootLayout({
                   <AuthProvider>
                    <ToastContainer /> */}
         {/* <LanguageProvider> */}
+        
         <ThemeModeProvider>{children}</ThemeModeProvider>
         {/* </LanguageProvider> */}
         {/* </AuthProvider>

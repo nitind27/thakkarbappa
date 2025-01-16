@@ -21,48 +21,14 @@ export async function POST(req: Request) {
       sickle_cell,
       sickle_report,
       scholarship_name,
-      student_scholarship_id // Expecting this to be an array of IDs
+      student_scholarship_id 
     } = body;
 
-    // Validate input
-    // Uncomment the validation if needed
-    /*
-    if (
-      !serial_number ||
-      !full_name ||
-      !gr_no ||
-      !uid ||
-      !school_id ||
-      !current_std ||
-      !mother_name ||
-      !date_of_birth ||
-      !gender ||
-      !cast ||
-      !address ||
-      !aadhaar ||
-      !contact_no ||
-      !sickle_cell
-    ) {
-      return NextResponse.json(
-        { error: "All required fields must be filled" },
-        { status: 400 }
-      );
-    }
-    */
-
-    // Convert school_id and current_std to integers
+  
     const schoolid = parseInt(school_id, 10);
     const currentstd = parseInt(current_std, 10);
 
-    // Check if conversion was successful
-    // if (isNaN(schoolid) || isNaN(currentstd)) {
-    //   return NextResponse.json(
-    //     { error: "School ID and Current Standard must be valid numbers" },
-    //     { status: 400 }
-    //   );
-    // }
 
-    // Prepare data for insertion
     const studentData = student_scholarship_id.map((id: { toString: () => any; }) => ({
       serial_number,
       full_name,

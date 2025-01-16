@@ -513,26 +513,13 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
 
   return (
     <div>
+      
       <TableOption
-
         data={data}
         columns={columns}
         filterOptions={options}
-
-
         additionalFilterOptions={schoolnameoption}
-        scholarshipoption={<select
-          className="form-select ms-2" // Added margin for spacing
-          value={filterscholarship}
-          onChange={handlescholarshipFilterChange} // Use new handler for additional filter
-        >
-          <option value="">All Scholarship</option>
-          {scholarshipoption.map((option: any) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>}
+        scholarshipoption={scholarshipoption}
         Button={
           <StudentAddData values={{
             serialnumber: "",

@@ -70,7 +70,14 @@ export default function TableOption({
     setFilterData(e.target.value);
     // Do not reset current page index here
   };
+  const [filterscholarship, setFilterscholarship] = useState("");
 
+  const handlescholarshipFilterChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setFilterscholarship(e.target.value);
+
+  };
   // Render pagination controls
   const renderPagination = () => {
     return (
@@ -155,7 +162,18 @@ export default function TableOption({
         </div>
         <div className="col-auto">
           {/* Second select box for additional filtering */}
-         {scholarshipoption}
+          <select
+          className="form-select ms-2" // Added margin for spacing
+          value={filterscholarship}
+          onChange={handlescholarshipFilterChange} // Use new handler for additional filter
+        >
+          <option value="">All Scholarship</option>
+          {scholarshipoption.map((option: any) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
         </div>
         <div className="col-auto">
           {/* Second select box for additional filtering */}

@@ -220,7 +220,32 @@ const Studentlist = ({ initialstudentData, schooldata, standarddata,scholarship 
       accessorKey: "scholarship_name",
       header: `scholarship`,
     },
-   
+     {
+         accessorKey: "actions",
+         header: `${t("Action")}`,
+         cell: ({ row }: any) => (
+           <div>
+             <div style={{ display: "flex", whiteSpace: "nowrap" }}>
+              
+               <button
+                 className={`btn btn-sm ${row.original.status === "Active"
+                   ? "btn-danger"
+                   : "btn-warning"
+                   } ms-5`}
+                 onClick={() =>
+                   handleDeactivate(row.original.student_id, row.original.status)
+                 }
+               >
+                 {" "}
+                 <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
+                 {row.original.status === "Active"
+                   ? `${t("Deactive")}`
+                   : `${t("Active")}`}
+               </button>
+             </div>
+           </div>
+         ),
+       },
 
     
   ];
@@ -284,7 +309,7 @@ const Studentlist = ({ initialstudentData, schooldata, standarddata,scholarship 
       try {
         const newStatus = currentStatus === "Active" ? "Deactive" : "Active";
 
-        const response = await fetch(`/api/student/delete/${student_id}`, {
+        const response = await fetch(`/api/scholarshipstudent/${student_id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",

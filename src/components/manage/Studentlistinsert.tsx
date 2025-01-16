@@ -21,14 +21,16 @@ const Studentlistinsert = ({ formattedScholarshipIDs, studentid, filterscholarsh
     }, [selectedStudents]);
 
     const handleSubmit = async (updatedSelected: number[]) => {
-        // Check if filterscholarship is empty
-        if (!filterscholarship) {
+        // Check if the student is already selected to skip scholarship validation
+        const isStudentAlreadySelected = updatedSelected.some(id => formattedScholarshipIDs.includes(id));
+
+        if (!filterscholarship && !isStudentAlreadySelected) {
             toast.error("Please select a scholarship first.");
-            return; // Exit the function early
+            return;
         }
 
         const dobs = new Date();
-
+            
         const bodyData = {
             student_id: "",
             serial_number: '',
@@ -89,6 +91,7 @@ const Studentlistinsert = ({ formattedScholarshipIDs, studentid, filterscholarsh
                 value={studentid}
                 onChange={() => handleCheckboxChange(studentid)}
                 checked={formattedScholarshipIDs.includes(studentid) || selectedStudents.includes(studentid)}
+                disabled={formattedScholarshipIDs.includes(studentid) || selectedStudents.includes(studentid)}
             />
         </div>
     );
