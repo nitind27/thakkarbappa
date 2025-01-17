@@ -15,6 +15,8 @@ import { formatDate } from "@/lib/utils";
 import StudentAddData from "./StudentAddData";
 import Image from "next/image";
 import Studentlistinsert from "./Studentlistinsert";
+import { useScholarship } from "../table/ScholarshipContext";
+import { clippingParents } from "@popperjs/core";
 type Props = {
   initialstudentData: StudentData[];
   schooldata: Schooldata[];
@@ -124,6 +126,9 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
   const ab = scholarship.map((f) => f.student_scholarship_id);
   const formattedScholarshipIDs = ab.join(', ');
 
+  const scholarshipname = scholarship.map((f) => f.scholarship_name);
+  const formattedScholarshipname = scholarshipname.join(', ');
+
 
   const columns = [
 
@@ -143,7 +148,7 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
 
         return (
           <>
-            <Studentlistinsert formattedScholarshipIDs={formattedScholarshipIDs} studentid={row.original.student_id} filterscholarship={filterscholarship} updateTownId={updateTownId} isConfirmed={[]} />
+            <Studentlistinsert formattedScholarshipIDs={formattedScholarshipIDs} studentid={row.original.student_id} filterscholarship={filterscholarship} updateTownId={updateTownId} formattedScholarshipname={formattedScholarshipname} scholarship={scholarship} />
           </>
         );
       },
@@ -513,7 +518,7 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
 
   return (
     <div>
-      
+      {/* {selectedScholarship} */}
       <TableOption
         data={data}
         columns={columns}

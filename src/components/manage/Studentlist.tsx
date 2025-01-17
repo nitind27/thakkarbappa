@@ -5,6 +5,7 @@ import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
 import { Schooldata, Standarddata, StudentData, tblstudentsscholarship } from "../type";
 import { toast } from "react-toastify";
+import * as XLSX from 'xlsx';
 
 import { useTranslations } from "next-intl";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
@@ -22,7 +23,7 @@ type Props = {
   scholarship: tblstudentsscholarship[];
 };
 
-const Studentlist = ({ initialstudentData, schooldata, standarddata,scholarship }: Props) => {
+const Studentlist = ({ initialstudentData, schooldata, standarddata, scholarship }: Props) => {
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [serialnumber, setSerialnumber] = useState("");
   const [studentId, setStudentId] = useState("");
@@ -43,7 +44,7 @@ const Studentlist = ({ initialstudentData, schooldata, standarddata,scholarship 
   const [sicklereport, setsickleReport] = useState("");
   const [error, setError] = useState<string>("");
   const [updateTownId, setUpdateTownId] = useState<number | null>(null);
-  
+
   const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
 
 
@@ -71,49 +72,49 @@ const Studentlist = ({ initialstudentData, schooldata, standarddata,scholarship 
   const data = studentdata
     .map((student) => ({
       student_id: student.student_id,
-      serial_number: student.serial_number,
-      uid: student.uid,
-      gr_no: student.gr_no,
-      date_of_admision: student.date_of_admision,
-      year_add: student.year_add,
-      school_id: initialstudentData.filter((d)=>d.student_id== student.student_scholarship_id as any).map((d)=> schoolmap[d.school_id as any]),
+      // serial_number: student.serial_number,
+      // uid: student.uid,
+      // gr_no: student.gr_no,
+      // date_of_admision: student.date_of_admision,
+      // year_add: student.year_add,
+      school_id: initialstudentData.filter((d) => d.student_id == student.student_scholarship_id as any).map((d) => schoolmap[d.school_id as any]),
       schoolid: student.school_id,
-      admited_in_std: student.admited_in_std,
-      current_std: standardmap[student.current_std as any],
-      currentstd: student.current_std,
-      division: student.division,
-      first_name: student.first_name + " " + student.last_name,
-      middle_name: student.middle_name,
-      last_name: student.last_name,
-      date_of_birth: typeof student.date_of_birth === "string"
-        ? formatDate(student.date_of_birth)
-        : formatDate(student.date_of_birth as any),
+      // admited_in_std: student.admited_in_std,
+      // current_std: standardmap[student.current_std as any],
+      // currentstd: student.current_std,
+      // division: student.division,
+      // first_name: student.first_name + " " + student.last_name,
+      // middle_name: student.middle_name,
+      // last_name: student.last_name,
+      // date_of_birth: typeof student.date_of_birth === "string"
+      // ? formatDate(student.date_of_birth)
+      // : formatDate(student.date_of_birth as any),
 
-      place_of_birth: student.place_of_birth,
-      gender: student.gender,
-      mother_name: student.mother_name,
-      religion: student.religion,
-      lang_id: student.lang_id,
-      cast: student.cast,
-      address: student.address,
-      contact_no: student.contact_no,
-      full_name: initialstudentData.filter((d)=>d.student_id== student.student_scholarship_id as any).map((d)=> d.full_name),
-      user_id: student.user_id,
-      cluster_id: student.cluster_id,
-      dropout: student.dropout,
-      dropout_date_time: student.dropout_date_time,
+      // place_of_birth: student.place_of_birth,
+      // gender: student.gender,
+      // mother_name: student.mother_name,
+      // religion: student.religion,
+      // lang_id: student.lang_id,
+      // cast: student.cast,
+      // address: student.address,
+      // contact_no: student.contact_no,
+      full_name: initialstudentData.filter((d) => d.student_id == student.student_scholarship_id as any).map((d) => d.full_name),
+      // user_id: student.user_id,
+      // cluster_id: student.cluster_id,
+      // dropout: student.dropout,
+      // dropout_date_time: student.dropout_date_time,
       status: student.status,
-      type_of_students: student.type_of_students,
-      saral_id: student.saral_id,
-      date_leave: student.date_leave,
-      remarks: student.remarks,
-      stream: student.stream,
-      profile_photo: student.profile_photo,
-      sickle_cell: student.sickle_cell,
-      aadhaar: student.aadhaar,
-      sickle_report: student.sickle_report,
-      scholarship_name:student.scholarship_name,
-      student_scholarship_id:student.student_scholarship_id
+      // type_of_students: student.type_of_students,
+      // saral_id: student.saral_id,
+      // date_leave: student.date_leave,
+      // remarks: student.remarks,
+      // stream: student.stream,
+      // profile_photo: student.profile_photo,
+      // sickle_cell: student.sickle_cell,
+      // aadhaar: student.aadhaar,
+      // sickle_report: student.sickle_report,
+      scholarship_name: student.scholarship_name,
+      student_scholarship_id: student.student_scholarship_id
     }))
     .reverse();
   const handleCheckboxChange = (studentId: number) => {
@@ -125,76 +126,76 @@ const Studentlist = ({ initialstudentData, schooldata, standarddata,scholarship 
   };
 
   // Function to handle submit
-  const handleSubmit = async ()=> {
+  const handleSubmit = async () => {
     const dobs = new Date(dob);
-   
-       const bodyData = {
-         student_id:studentId,
-         serial_number: serialnumber,
-         full_name: studentName,
-         gr_no: grno,
-         uid: saralid,
-         school_id: schoolname,
-         current_std: standard,
-         mother_name: mothername,
-         date_of_birth: dobs,
-         gender: gender,
-         cast: cast,
-         aadhaar: aadhaar,
-         contact_no: contactNo,
-         address: address,
-         sickle_cell: sicklecell,
-         sickle_report:sicklereport,
-         student_scholarship_id:selectedStudents,
-         scholarship_name:filterscholarship,
-       };
-   
-       try {
-         const method = updateTownId ? "PUT" : "POST";
-         const url = updateTownId
-           ? `/api/scholarshipstudent/insert`
-           : `/api/scholarshipstudent/insert`;
-   
-         const response = await fetch(url, {
-           method,
-           headers: {
-             "Content-Type": "application/json",
-           },
-           body: JSON.stringify(bodyData),
-         });
-   
-         if (response.ok) {
-           const message = updateTownId ? "updated" : "added";
-           toast.success(`Student ${message} successfully!`);
-   
-           const updatedStudent = await response.json();
-           // if (studentId) {
-           //   setStudentData((prevData) =>
-           //     prevData.map((student) =>
-           //       student.student_id === values.studentId
-           //         ? { ...student, ...updatedStudent }
-           //         : student
-           //     )
-           //   );
-           // } else {
-           //   setStudentData((prevData) => [...prevData, updatedStudent]);
-           // }
-   
-           // setShowModel(false);
-         } else {
-           const error = await response.json();
-           toast.error(`Failed to save student: ${error.message}`);
-         }
-       } catch (error) {
-         console.error("Submission error:", error);
-         toast.error("An unexpected error occurred.");
-       } finally {
-         setIsLoading(false);
-       }
-     };
-  
+
+    const bodyData = {
+      student_id: studentId,
+      serial_number: serialnumber,
+      full_name: studentName,
+      gr_no: grno,
+      uid: saralid,
+      school_id: schoolname,
+      current_std: standard,
+      mother_name: mothername,
+      date_of_birth: dobs,
+      gender: gender,
+      cast: cast,
+      aadhaar: aadhaar,
+      contact_no: contactNo,
+      address: address,
+      sickle_cell: sicklecell,
+      sickle_report: sicklereport,
+      student_scholarship_id: selectedStudents,
+      scholarship_name: filterscholarship,
+    };
+
+    try {
+      const method = updateTownId ? "PUT" : "POST";
+      const url = updateTownId
+        ? `/api/scholarshipstudent/insert`
+        : `/api/scholarshipstudent/insert`;
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyData),
+      });
+
+      if (response.ok) {
+        const message = updateTownId ? "updated" : "added";
+        toast.success(`Student ${message} successfully!`);
+
+        const updatedStudent = await response.json();
+        // if (studentId) {
+        //   setStudentData((prevData) =>
+        //     prevData.map((student) =>
+        //       student.student_id === values.studentId
+        //         ? { ...student, ...updatedStudent }
+        //         : student
+        //     )
+        //   );
+        // } else {
+        //   setStudentData((prevData) => [...prevData, updatedStudent]);
+        // }
+
+        // setShowModel(false);
+      } else {
+        const error = await response.json();
+        toast.error(`Failed to save student: ${error.message}`);
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      toast.error("An unexpected error occurred.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const columns = [
-    
+
     {
       accessorKey: "serial_number", // Use a new accessor for the serial number
       header: `${t("SrNo")}`, // Header for the serial number
@@ -204,9 +205,9 @@ const Studentlist = ({ initialstudentData, schooldata, standarddata,scholarship 
         </div>
       ),
     },
-    
-  
-   
+
+
+
     {
       accessorKey: "full_name",
 
@@ -220,34 +221,34 @@ const Studentlist = ({ initialstudentData, schooldata, standarddata,scholarship 
       accessorKey: "scholarship_name",
       header: `scholarship`,
     },
-     {
-         accessorKey: "actions",
-         header: `${t("Action")}`,
-         cell: ({ row }: any) => (
-           <div>
-             <div style={{ display: "flex", whiteSpace: "nowrap" }}>
-              
-               <button
-                 className={`btn btn-sm ${row.original.status === "Active"
-                   ? "btn-danger"
-                   : "btn-warning"
-                   } ms-5`}
-                 onClick={() =>
-                   handleDeactivate(row.original.student_id, row.original.status)
-                 }
-               >
-                 {" "}
-                 <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-                 {row.original.status === "Active"
-                   ? `${t("Deactive")}`
-                   : `${t("Active")}`}
-               </button>
-             </div>
-           </div>
-         ),
-       },
+    {
+      accessorKey: "actions",
+      header: `${t("Action")}`,
+      cell: ({ row }: any) => (
+        <div>
+          <div style={{ display: "flex", whiteSpace: "nowrap" }}>
 
-    
+            <button
+              className={`btn btn-sm ${row.original.status == "Active"
+                ? "btn-danger"
+                : "btn-warning"
+                } ms-5`}
+              onClick={() =>
+                handleDeactivate(row.original.student_id, row.original.status)
+              }
+            >
+              {" "}
+              <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
+              {row.original.status === "Active"
+                ? `${t("Deactive")}`
+                : `${t("Active")}`}
+            </button>
+          </div>
+        </div>
+      ),
+    },
+
+
   ];
   const handleImageClick = (studentId: any) => {
     // Open file input to select image
@@ -473,17 +474,28 @@ const Studentlist = ({ initialstudentData, schooldata, standarddata,scholarship 
     ]
 
   }
+  const downloadExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
+    XLSX.writeFile(workbook, "students_data.xlsx");
+  };
 
 
   return (
     <div>
+      <button onClick={downloadExcel} className="btn btn-primary">
+        Download Excel
+      </button>
+
+      {/* Render your table or other components here */}
       
       <Table
 
         data={data}
         columns={columns}
         filterOptions={options}
-   
+
         additionalFilterOptions={schoolnameoption}
         scholarshipoption={<select
           className="form-select ms-2" // Added margin for spacing
@@ -497,29 +509,29 @@ const Studentlist = ({ initialstudentData, schooldata, standarddata,scholarship 
             </option>
           ))}
         </select>}
-        // Button={
-        //   <StudentAddData values={{
-        //     serialnumber: "",
-        //     studentId: "",
-        //     studentName: "",
-        //     grno: "",
-        //     saralid: "",
-        //     isLoading: false,
-        //     schoolname: "",
-        //     standard: "",
-        //     mothername: "",
-        //     dob: "",
-        //     gender: "",
-        //     cast: "",
-        //     aadhaar: "",
-        //     contactNo: "",
-        //     address: "",
-        //     sicklecell: "No",
-        //     sicklereport: "",
-        //     error: "", // Added error handling
-        //     updateTownId: null
-        //   }} schooldata={schooldata} standarddata={standarddata} setStudentData={setstudentdata} />
-        // }
+      // Button={
+      //   <StudentAddData values={{
+      //     serialnumber: "",
+      //     studentId: "",
+      //     studentName: "",
+      //     grno: "",
+      //     saralid: "",
+      //     isLoading: false,
+      //     schoolname: "",
+      //     standard: "",
+      //     mothername: "",
+      //     dob: "",
+      //     gender: "",
+      //     cast: "",
+      //     aadhaar: "",
+      //     contactNo: "",
+      //     address: "",
+      //     sicklecell: "No",
+      //     sicklereport: "",
+      //     error: "", // Added error handling
+      //     updateTownId: null
+      //   }} schooldata={schooldata} standarddata={standarddata} setStudentData={setstudentdata} />
+      // }
       />
 
 

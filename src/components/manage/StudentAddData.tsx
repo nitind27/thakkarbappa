@@ -339,7 +339,7 @@ const StudentAddData = ({
           <KTIcon iconName={"plus-circle"} className="fs-3" iconType="solid" />
         )}
         {values.updateTownId ? t("edit") : t("submit")}
-        {values.studentId}
+      
       </Button>
 
       <CustomModal

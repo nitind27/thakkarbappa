@@ -6,6 +6,7 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { useTranslations } from "next-intl";
+import { useScholarship } from "./ScholarshipContext";
 
 export default function TableOption({
   data,
@@ -23,7 +24,8 @@ export default function TableOption({
   const [filterData, setFilterData] = useState(
     additionalFilterOptions.length > 0 ? additionalFilterOptions[0].value : ""
   );
-
+  const { selectedScholarship, setSelectedScholarship } = useScholarship();
+  
   const [currentPageIndex, setCurrentPageIndex] = useState(0); // New state for current page index
   const t = useTranslations("IndexPage");
 
@@ -37,7 +39,8 @@ export default function TableOption({
       const matchesStatus =
         filterStatus === "" || row.current_std === filterStatus;
       const matchesData = filterData === "" || row.school_id === filterData; // Adjust field as needed
-
+      const matchesScholarship =
+      selectedScholarship === "" || row.scholarship_id === selectedScholarship;
       return matchesSearch && matchesStatus && matchesData;
     });
   }, [data, searchQuery, filterStatus, filterData]);
@@ -72,12 +75,10 @@ export default function TableOption({
   };
   const [filterscholarship, setFilterscholarship] = useState("");
 
-  const handlescholarshipFilterChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setFilterscholarship(e.target.value);
-
+  const handlescholarshipFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedScholarship(e.target.value); // Update context state
   };
+
   // Render pagination controls
   const renderPagination = () => {
     return (
@@ -164,8 +165,8 @@ export default function TableOption({
           {/* Second select box for additional filtering */}
           <select
           className="form-select ms-2" // Added margin for spacing
-          value={filterscholarship}
-          onChange={handlescholarshipFilterChange} // Use new handler for additional filter
+          value={selectedScholarship} // Use context value here
+          onChange={handlescholarshipFilterChange} 
         >
           <option value="">All Scholarship</option>
           {scholarshipoption.map((option: any) => (

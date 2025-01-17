@@ -10,6 +10,7 @@ import { LayoutSplashScreen, LayoutProvider } from "@/layout/core";
 import { AuthInit, AuthProvider } from "@/modules/auth";
 
 import { LocationProvider } from "@/common/LocationComponent";
+import { ScholarshipProvider } from "@/components/table/ScholarshipContext";
 
 export const metadata: Metadata = {
   title: "thakkarbappa",
@@ -46,7 +47,7 @@ export default async function RootLayout({
             <MasterLayout>
               <AuthProvider>
                 <ToastContainer />
-                <LocationProvider>{children}</LocationProvider>
+                <LocationProvider>   <ScholarshipProvider>{children}</ScholarshipProvider></LocationProvider>
               </AuthProvider>
             </MasterLayout>
             <MasterInit />

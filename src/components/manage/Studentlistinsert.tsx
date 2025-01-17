@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { useScholarship } from '../table/ScholarshipContext';
+import './Studentlistinsert.css'; // Import your CSS file
+import { tblstudentsscholarship } from '../type';
 
-const Studentlistinsert = ({ formattedScholarshipIDs, studentid, filterscholarship, updateTownId }: any) => {
+const Studentlistinsert = ({ formattedScholarshipIDs, studentid, filterscholarship, updateTownId, formattedScholarshipname, scholarship }: any) => {
     const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
+    const { selectedScholarship } = useScholarship(); // Removed setSelectedScholarship as it's not used here
 
     const handleCheckboxChange = (studentId: number) => {
+        // Check if a scholarship is selected
+        if (!selectedScholarship) {
+            toast.error("Please select a scholarship first.");
+            return;
+        }
+
         setSelectedStudents((prev) => {
             const updatedSelected = prev.includes(studentId)
                 ? prev.filter(id => id !== studentId)
@@ -24,13 +34,13 @@ const Studentlistinsert = ({ formattedScholarshipIDs, studentid, filterscholarsh
         // Check if the student is already selected to skip scholarship validation
         const isStudentAlreadySelected = updatedSelected.some(id => formattedScholarshipIDs.includes(id));
 
-        if (!filterscholarship && !isStudentAlreadySelected) {
+        if (!selectedScholarship && !isStudentAlreadySelected) {
             toast.error("Please select a scholarship first.");
             return;
         }
 
         const dobs = new Date();
-            
+
         const bodyData = {
             student_id: "",
             serial_number: '',
@@ -49,7 +59,7 @@ const Studentlistinsert = ({ formattedScholarshipIDs, studentid, filterscholarsh
             sickle_cell: "",
             sickle_report: "",
             student_scholarship_id: updatedSelected,
-            scholarship_name: filterscholarship,
+            scholarship_name: selectedScholarship,
         };
 
         try {
@@ -71,7 +81,7 @@ const Studentlistinsert = ({ formattedScholarshipIDs, studentid, filterscholarsh
                 const updatedStudent = await response.json();
                 // Handle the updated student data as necessary
                 // ...
-                
+
                 // setShowModel(false);
             } else {
                 const error = await response.json();
@@ -83,6 +93,12 @@ const Studentlistinsert = ({ formattedScholarshipIDs, studentid, filterscholarsh
             // setIsLoading(false);
         }
     };
+    const checkconditiondata = scholarship.filter((f: tblstudentsscholarship) => f.student_scholarship_id == studentid && f.status == "Active").map((d: tblstudentsscholarship) => d.scholarship_name)
+
+    const isChecked = checkconditiondata.includes(selectedScholarship) &&
+        formattedScholarshipIDs.includes(studentid) || selectedStudents.includes(studentid);
+
+    const isDisabled = isChecked;
 
     return (
         <div>
@@ -90,8 +106,10 @@ const Studentlistinsert = ({ formattedScholarshipIDs, studentid, filterscholarsh
                 type="checkbox"
                 value={studentid}
                 onChange={() => handleCheckboxChange(studentid)}
-                checked={formattedScholarshipIDs.includes(studentid) || selectedStudents.includes(studentid)}
-                disabled={formattedScholarshipIDs.includes(studentid) || selectedStudents.includes(studentid)}
+                checked={isChecked}
+                disabled={isDisabled} // Disable checkbox if already checked
+                className={`custom-checkbox ${isDisabled ? 'disabled' : ''}`} // Add custom class
+                style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }} // Change cursor style for disabled 
             />
         </div>
     );
