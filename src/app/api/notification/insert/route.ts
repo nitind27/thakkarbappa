@@ -43,7 +43,8 @@ export async function POST(req: Request) {
     }
 
     // Ensure 'public/uploads' directory exists
-    const uploadDir = path.join(process.cwd(), "public/uploads");
+    const uploadDir = '/tmp'; // Change to /tmp directory
+
     await fs.mkdir(uploadDir, { recursive: true });
 
     // Generate a unique filename using nanoid
