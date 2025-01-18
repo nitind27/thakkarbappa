@@ -97,7 +97,7 @@ const Studentlist = ({ initialstudentData, schooldata, standarddata, scholarship
       // lang_id: student.lang_id,
       // cast: student.cast,
       // address: student.address,
-      // contact_no: student.contact_no,
+      contact_no: initialstudentData.filter((d) => d.student_id == student.student_scholarship_id as any).map((d) => d.contact_no),
       full_name: initialstudentData.filter((d) => d.student_id == student.student_scholarship_id as any).map((d) => d.full_name),
       // user_id: student.user_id,
       // cluster_id: student.cluster_id,
@@ -211,15 +211,20 @@ const Studentlist = ({ initialstudentData, schooldata, standarddata, scholarship
     {
       accessorKey: "full_name",
 
-      header: `student full name`,
+      header: `Student Name`,
+    },
+    {
+      accessorKey: "contact_no",
+
+      header: `Contact No`,
     },
     {
       accessorKey: "school_id",
-      header: `school name`,
+      header: `School Name`,
     },
     {
       accessorKey: "scholarship_name",
-      header: `scholarship`,
+      header: `Scholarship Name`,
     },
     {
       accessorKey: "actions",
@@ -475,23 +480,51 @@ const Studentlist = ({ initialstudentData, schooldata, standarddata, scholarship
 
   }
   const downloadExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(data);
+    // Transform data for better compatibility with Excel
+    const transformedData = data.map((student, index) => ({
+      Index: index + 1, // Adding index number starting from 1
+      FullName: student.full_name.filter(name => name).join(", "), // Join names and filter nulls
+      ContactNo: student.contact_no ? student.contact_no.join(", ") : "N/A", // Join contact numbers or default to "N/A"
+      SchoolIDs: student.school_id.join(", "), // Join array into a string
+      ScholarshipName: student.scholarship_name || "N/A", // Default value for scholarship name
+    }));
+
+    // Define custom headings as an array of strings
+    const headings = [
+      "Index",
+      "Student Contact No",
+      "Full Name",
+      "School Name",
+      "Scholarship Name"
+    ];
+
+    // Combine headings with transformed data
+    const finalData = [headings, ...transformedData.map(({ Index, SchoolIDs, ContactNo, FullName, ScholarshipName }) =>
+      [Index, SchoolIDs, ContactNo, FullName, ScholarshipName])];
+
+    // Create worksheet and workbook
+    const worksheet = XLSX.utils.aoa_to_sheet(finalData); // Use aoa_to_sheet for array of arrays
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
+
+    // Write file
     XLSX.writeFile(workbook, "students_data.xlsx");
   };
 
 
+
   return (
     <div>
-      <button onClick={downloadExcel} className="btn btn-primary">
-        Download Excel
-      </button>
 
       {/* Render your table or other components here */}
-      
-      <Table
 
+      <Table
+        Button={
+          <button onClick={downloadExcel} className="btn btn-primary">
+            Download Excel
+          </button>
+
+        }
         data={data}
         columns={columns}
         filterOptions={options}
