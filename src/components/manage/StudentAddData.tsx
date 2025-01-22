@@ -303,7 +303,7 @@ const StudentAddData = ({
   }
 
   const handleEdit = (school: any) => {
-    console.log("fsafsadf", school);
+  
     setFormState({
       serialnumber: school.serialnumber || formState.serialnumber,
       studentName: school.studentName || formState.studentName,

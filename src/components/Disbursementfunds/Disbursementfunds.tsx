@@ -407,11 +407,11 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, workmasterdem
               src={imagePreview}
               alt="Preview"
               style={{
-                width: "150px", // Set a fixed width for the circular effect
-                height: "150px", // Set a fixed height equal to width
-                borderRadius: "5%", // Make the image circular
-                objectFit: "cover", // Ensure the image covers the circular area
-                overflow: "hidden", // Hide overflow to keep the circle shape
+                width: "150px", 
+                height: "150px",  
+                borderRadius: "5%", 
+                objectFit: "cover",  
+                overflow: "hidden",  
               }}
             />
           )
@@ -430,7 +430,6 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster, workmasterdem
               })),
               placeholder: `${t("representativeid")}`, // Optional placeholder for select input
             },
-
             {
               label: `${t('enterwork')}`,
               value: selectwork,
