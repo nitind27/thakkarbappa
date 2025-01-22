@@ -492,8 +492,8 @@ const Studentlist = ({ initialstudentData, schooldata, standarddata, scholarship
     // Define custom headings as an array of strings
     const headings = [
       "Index",
-      "Student Contact No",
       "Full Name",
+      "Student Contact No",
       "School Name",
       "Scholarship Name"
     ];

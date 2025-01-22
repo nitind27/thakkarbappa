@@ -24,7 +24,7 @@ type Props = {
   workmasterdemo: WorkMasterDemo[];
 };
 
-const Disbursementfunds = ({ initialdisbursementfunds, workmaster,workmasterdemo, reprenstive, Workmasters, talukas, grampanchayat, Villages }: Props) => {
+const Disbursementfunds = ({ initialdisbursementfunds, workmaster, workmasterdemo, reprenstive, Workmasters, talukas, grampanchayat, Villages }: Props) => {
   const t = useTranslations("Disbursementfunds");
   const { latitude, longitude } = useLocation();
   const [showPrintModal, setShowPrintModal] = useState(false);
@@ -50,19 +50,19 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster,workmasterdemo
   const [isResponsive, setIsResponsive] = useState<boolean>(false);
 
   useEffect(() => {
-      const handleResize = () => {
-          setIsResponsive(window.innerWidth < 768); // Adjust threshold as needed
-      };
+    const handleResize = () => {
+      setIsResponsive(window.innerWidth < 768); // Adjust threshold as needed
+    };
 
-      window.addEventListener("resize", handleResize);
-      handleResize(); // Check on mount
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Check on mount
 
-      return () => {
-          window.removeEventListener("resize", handleResize);
-      };
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
   const workid = workmasterdemo.reduce((acc, work: any) => {
-    acc[work.id]  = work.name; // Convert bigint to string
+    acc[work.id] = work.name; // Convert bigint to string
     return acc;
   }, {} as Record<string, string>); // Change Record<number, string> to Record<string, string>
   const gpmap = grampanchayat.reduce((acc, gp: any) => {
@@ -511,7 +511,7 @@ const Disbursementfunds = ({ initialdisbursementfunds, workmaster,workmasterdemo
                   yojna.estimated_amount
 
                 )),
-                className: isResponsive ? 'col-12' : 'col-4',
+              className: isResponsive ? 'col-12' : 'col-4',
               disabled: true,
               required: true,
               type: "text",

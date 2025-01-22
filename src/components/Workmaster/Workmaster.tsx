@@ -633,9 +633,9 @@ const Workmaster = ({
       onChange: (e: any) => setFacility(e.target.value),
       type: "select",
       className: isResponsive ? "col-12" : "col-12",
-      options: facilities.map((taluka: Facility) => ({
+      options: facilities.map((taluka: Facility,index) => ({
         value: taluka.id,
-        label: taluka.name,
+        label: index + 1 +")" +" " +taluka.name,
       })),
       placeholder: `${t("suvidha")}`, // Optional placeholder for select input
     },
