@@ -70,9 +70,9 @@ const Page = async ({ params }: any) => {
   const workgen = Workmasters.filter(
     (gen) => gen.type !== "workgen" && gen.generatednumber === genid
   );
-  const workdata = Workmasters.filter((gen) => gen.generatednumber === genid && gen.status =="Active");
+  const workdata = Workmasters.filter((gen) => gen.generatednumber == genid && gen.status == "Active");
   const statuscheck = Workmasters.filter(
-    (gen) => gen.generatednumber === genid && gen.status !== "Active"
+    (gen) => gen.generatednumber == genid && gen.status !== "Active"
   );
 
   const hasInactiveWorkmasters = statuscheck.length > 0; // true if there are inactive workmasters, false otherwise
@@ -83,19 +83,19 @@ const Page = async ({ params }: any) => {
         <TitleCard breadcrumbs={breadcrumbs} />
       </h1>
       <Workmaster
-          initialcategoryData={subCategory}
-          YojnaYear={YojnaYear}
-          Bankdata={Bankdata}
-          category={category}
-          Workmasters={workgen}
-          reprenstive={reprenstive}
-          talukas={talukas}
-          Villages={Villages}
-          grampanchayat={grampanchayat}
-          facilities={facilities}
-          Workmastersdata={workdata}
-          genid={genid}
-        />
+        initialcategoryData={subCategory}
+        YojnaYear={YojnaYear}
+        Bankdata={Bankdata}
+        category={category}
+        Workmasters={workgen}
+        reprenstive={reprenstive}
+        talukas={talukas}
+        Villages={Villages}
+        grampanchayat={grampanchayat}
+        facilities={facilities}
+        Workmastersdata={workdata}
+        genid={genid}
+      />
       {/* {hasInactiveWorkmasters ? (
         <Workmaster
           initialcategoryData={subCategory}

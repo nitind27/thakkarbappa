@@ -107,7 +107,7 @@ const Workmaster = ({
     useState("");
   const [AdministrativerecognitionDate, setAdministrativerecognitionDate] =
     useState("");
-    console.log('ddddddd',AdministrativerecognitionDate)
+  console.log('ddddddd', AdministrativerecognitionDate)
   const [error, setError] = useState<string>("");
   const [isResponsive, setIsResponsive] = useState<boolean>(false);
 
@@ -170,7 +170,7 @@ const Workmaster = ({
       prashashakiya_manyata: workmaster.prashashakiya_manyata,
       prashashakiya_manyata_no: workmaster.prashashakiya_manyata_no,
       // prashashakiya_manyata_date: workmaster.prashashakiya_manyata_date,
-      prashashakiya_manyata_date:workmaster.prashashakiya_manyata == "Yes" ?
+      prashashakiya_manyata_date: workmaster.prashashakiya_manyata == "Yes" ?
         typeof workmaster.prashashakiya_manyata_date === "string"
           ? formatDate(workmaster.prashashakiya_manyata_date)
           : formatDate(workmaster.prashashakiya_manyata_date as any) : "",
@@ -184,13 +184,25 @@ const Workmaster = ({
       updated_at: workmaster.updated_at,
     }))
     .reverse();
-  // const totalamountminusdata = (estimatetotalamount as any) - totalAmountest;
+  const calculateTotalEstimatedAmount = (data: any[]) => {
+    return data.reduce((total, item) => total + item.estimated_amount, 0);
+  };
+  const calculateTotaltantrikmanyataamount = (data: any[]) => {
+    return data.reduce((total, item) => total + item.tantrik_manyata_amount, 0);
+  };
+  const customRow = {
+
+    estimated_amount: "Total" + " " + calculateTotalEstimatedAmount(workmasterdata), // Custom name for the row
+    tantrik_manyata_amount: "Total" + " " + calculateTotaltantrikmanyataamount(workmasterdata), // Custom name for the row
+
+  };
+  const finalData = [customRow, ...data];
+
   const totalamountminusdata =
     Number(totalestamountsstate) + Number(totalAmountest);
 
   const totalamountminus = (estimatetotalamount as any) - totalamountminusdata;
 
-  console.log("fasdfe0", totalamountminus);
   const columns = [
     {
       accessorKey: "serial_number",
@@ -288,9 +300,8 @@ const Workmaster = ({
             {t("edit")}
           </button>
           <button
-            className={`btn btn-sm ${
-              row.original.status === "Active" ? "btn-danger" : "btn-warning"
-            } ms-5`}
+            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+              } ms-5`}
             onClick={() =>
               handleDeactivate(row.original.id, row.original.status)
             }
@@ -329,15 +340,14 @@ const Workmaster = ({
             prevData.map((cluster) =>
               cluster.id === category_id
                 ? {
-                    ...cluster,
-                    status: currentStatus === "Active" ? "Deactive" : "Active",
-                  }
+                  ...cluster,
+                  status: currentStatus === "Active" ? "Deactive" : "Active",
+                }
                 : cluster
             )
           );
           toast.success(
-            `Workshop ${
-              currentStatus === "Active" ? "deactivated" : "activated"
+            `Workshop ${currentStatus === "Active" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
@@ -399,26 +409,26 @@ const Workmaster = ({
             prevData.map((cluster: any) =>
               cluster.id == updateClusterId
                 ? {
-                    ...cluster,
-                    representative_id: String(RepresentativeName),
-                    representative_name: String(subRepresentativeName),
-                    number_work: String(numberofwork),
-                    genratedworkdate: workofdate.toISOString(),
-                    estimatedtotalamount: String(estimatetotalamount),
-                    generatednumber: genid,
-                    taluka_id: dist,
-                    gp_id: town,
-                    village_id: mahasulgaav,
-                    facility_id: Facility,
-                    name: workname,
-                    estimated_amount: EstimatedAmount,
-                    tantrik_manyata_amount: Tantricrecognitionamount,
-                    prashashakiya_manyata: Administrativerecognition,
-                    prashashakiya_manyata_no: Noadministrativerecognition,
-                    prashashakiya_manyata_date: AdministrativerecognitionDate,
-                    prashashakiya_manyata_amount:
-                      Administrativerecognitionamount,
-                  }
+                  ...cluster,
+                  representative_id: String(RepresentativeName),
+                  representative_name: String(subRepresentativeName),
+                  number_work: String(numberofwork),
+                  genratedworkdate: workofdate.toISOString(),
+                  estimatedtotalamount: String(estimatetotalamount),
+                  generatednumber: genid,
+                  taluka_id: dist,
+                  gp_id: town,
+                  village_id: mahasulgaav,
+                  facility_id: Facility,
+                  name: workname,
+                  estimated_amount: EstimatedAmount,
+                  tantrik_manyata_amount: Tantricrecognitionamount,
+                  prashashakiya_manyata: Administrativerecognition,
+                  prashashakiya_manyata_no: Noadministrativerecognition,
+                  prashashakiya_manyata_date: AdministrativerecognitionDate,
+                  prashashakiya_manyata_amount:
+                    Administrativerecognitionamount,
+                }
                 : cluster
             )
           );
@@ -633,9 +643,9 @@ const Workmaster = ({
       onChange: (e: any) => setFacility(e.target.value),
       type: "select",
       className: isResponsive ? "col-12" : "col-12",
-      options: facilities.map((taluka: Facility,index) => ({
+      options: facilities.map((taluka: Facility, index) => ({
         value: taluka.id,
-        label: index + 1 +")" +" " +taluka.name,
+        label: index + 1 + ")" + " " + taluka.name,
       })),
       placeholder: `${t("suvidha")}`, // Optional placeholder for select input
     },
@@ -737,7 +747,7 @@ const Workmaster = ({
   return (
     <div>
       <Table
-        data={data}
+        data={finalData}
         columns={columns}
         Button={
           (numberofwork as any) !== workmasterdata.length + 1 && (
@@ -773,8 +783,8 @@ const Workmaster = ({
               ? "Submitting..."
               : t("editsubmit")
             : isLoading
-            ? "Submitting..."
-            : t("submit")
+              ? "Submitting..."
+              : t("submit")
         }
         disabledButton={isLoading}
       />

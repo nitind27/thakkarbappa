@@ -7,7 +7,7 @@ type FormField = {
   label: string;
   value: string | number | File | null;
   placeholder?: string;
-  
+
 
   error?: string;
   onChange: (
@@ -18,7 +18,7 @@ type FormField = {
   className?: string; // Optional className property
   required?: boolean; // New property to indicate if field is required
   disabled?: boolean;
-  filterdata?:any;
+  filterdata?: any;
 };
 
 // Enhanced validation function with conditional logic
