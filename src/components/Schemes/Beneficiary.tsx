@@ -2,7 +2,7 @@
 "use client";
 import React, { useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
-import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, TblBeneficiary, TblYojanaType, Villages, YojanaMaster, YojanaYear } from "../type";
+import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, TblBeneficiary, TblCaste, TblYojanaType, Villages, YojanaMaster, YojanaYear } from "../type";
 
 import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { useTranslations } from "next-intl";
 import { createConfirmation } from "react-confirm";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
+import { formatDate } from "@/lib/utils";
 
 type Props = {
     initialcategoryData: SubCategory[];
@@ -24,9 +25,10 @@ type Props = {
     talukas: talukasdata[];
     grampanchayat: grampanchayat[];
     Villages: Villages[];
+    castdata:TblCaste[];
 };
 
-const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages }: Props) => {
+const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages ,castdata}: Props) => {
     const t = useTranslations("beneficiary");
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [categoryName, setCategoryName] = useState("");
@@ -67,8 +69,8 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
         return acc;
     }, {} as Record<number, string>);
-    const bankdata = Bankdata.reduce((acc, year: Bank) => {
-        acc[year.id] = year.name; // Assuming taluka has id and name properties
+    const usercastdata = castdata.reduce((acc, year: TblCaste) => {
+        acc[year.caste_id] = year.caste_name; // Assuming taluka has id and name properties
         return acc;
     }, {} as Record<number, string>);
     const categorydata = category.reduce((acc, year: Categorys) => {
@@ -128,6 +130,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             gat_certificate: beneficiary.gat_certificate,
             member: beneficiary.member,
             caste_id: beneficiary.caste_id,
+            casteid: usercastdata[beneficiary.caste_id],
             beneficiary_type: beneficiary.beneficiary_type,
             rashion_no: beneficiary.rashion_no,
             aadhar: beneficiary.aadhar,
@@ -144,9 +147,14 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             date_ins: beneficiary.date_ins,
             date_update: beneficiary.date_update,
             organization: beneficiary.organization,
-            work_order_date: beneficiary.work_order_date,
-        }))
-        .reverse(); // Reverse the order to show the last added items first
+            // work_order_date: beneficiary.work_order_date,    
+
+            work_order_date: 
+                    typeof beneficiary.work_order_date == "string"
+                      ? formatDate(beneficiary.work_order_date)
+                      : formatDate(beneficiary.work_order_date as any),
+        })).reverse()
+        ; // Reverse the order to show the last added items first
 
     const columns = [
        {
@@ -195,11 +203,6 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             header: `${t("Village")}`,
         },
 
-
-        {
-            accessorKey: "fullname",
-            header: `${t("FullName")}`,
-        },
         {
             accessorKey: "gat_name",
             header: `${t("bachtgat")}`,
@@ -212,8 +215,24 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             accessorKey: "member",
             header: `${t("members")}`,
         },
+
         {
-            accessorKey: "caste_id",
+            accessorKey: "organization", // Organization managing the scheme
+            header: `${t("Organization")}`
+        },
+        {
+            accessorKey: "work_order_date", // Date related to work orders issued
+            header: `${t("Commencementorderdate")}`
+        },
+        {
+            accessorKey: "fullname",
+            header: `${t("FullName")}`,
+        },
+
+   
+    
+        {
+            accessorKey: "casteid",
             header: `${t("Cast")}`,
         },
         {
@@ -269,14 +288,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             header: `${t("Status")}`,
         },
 
-        {
-            accessorKey: "organization", // Organization managing the scheme
-            header: `${t("Organization")}`
-        },
-        {
-            accessorKey: "work_order_date", // Date related to work orders issued
-            header: `${t("Commencementorderdate")}`
-        },
+       
         {
             accessorKey: "actions",
             header: `${t("Action")}`,
@@ -368,6 +380,8 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 : `/api/benefucuary/insert`;
 
             // Prepare the request body
+            const workofdate = new Date();
+
             const requestBody = {
                 category_id: categoryName,
                 sub_category_id: subcategoryName,
@@ -398,7 +412,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 sixty: sixty,
                 hundred: hundred,
                 organization: amount,
-                work_order_date: Commencementdate,
+                work_order_date: workofdate.toISOString(),
                 ...(updateClusterId && { beneficiary_id: updateClusterId }),
             };
 

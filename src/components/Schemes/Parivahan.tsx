@@ -176,10 +176,7 @@ const Parivahan = ({
       accessorKey: "yojana_id",
       header: `${t("javaksr")}`,
     },
-    {
-      accessorKey: "beneficiary_id",
-      header: `idbe`,
-    },
+
     {
       accessorKey: "status",
       header: `${t("Status")}`,
@@ -214,21 +211,18 @@ const Parivahan = ({
                 .filter((item) => {
                   // Split the original beneficiary_id by comma and trim whitespace
                   const beneficiaryIds = row.original.beneficiary_id.split(',').map((id: string) => id.trim());
-         
-                  return beneficiaryIds.includes(item.beneficiary_id);
+                  return beneficiaryIds.includes(item.beneficiary_id) && row.original.parivahan_no == item.parivahan_no;
                 })
                 .map((item, index) => (
                   <tr key={index} className="hover:bg-gray-100">
                     <td className="border border-gray-300 px-4 py-2">
-                    {index +1}
+                    {item.parivahan_no}
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
                       {Beneficiary.filter(
                         (beneficiary) =>
-                          beneficiary.beneficiary_id as any == item.beneficiary_id 
-                      ).map((filteredItem) => filteredItem.yojana_type == '2' ? filteredItem.gat_name : filteredItem.fullname).join(', ')}
-              
-                    
+                          beneficiary.beneficiary_id as any == item.beneficiary_id
+                      ).map((filteredItem) => filteredItem.yojana_type == '2' ? filteredItem.gat_name : filteredItem.fullname).join(', ')}      
                     </td>
 
                     <td className="border border-gray-300 px-4 py-2">
@@ -334,7 +328,7 @@ const Parivahan = ({
     }
   };
   const datafilter = Beneficiary.filter((data) => data.yojana_year_id as any == yojnayear && data.yojana_type == yojanatype && data.yojana_id as any == yojnaname && data.status == "Active").map((data) => ({
-    gat_name: data.fullname,
+    gat_name: data.yojana_type =='2' ? data.gat_name :data.fullname,
     tot_finance: data.tot_finance,
     amount_paid: data.amount_paid,
     caste_id: data.caste_id,
@@ -405,17 +399,17 @@ const Parivahan = ({
     try {
       const method = updateClusterId ? "PUT" : "POST";
       const url = updateClusterId
-        ? `/api/subcategory/update`
-        : `/api/subcategory/insert`;
+        ? `/api/parivahan/insert`
+        : `/api/parivahan/insert`;
 
       // Prepare the request body
       const requestBody = {
-        parivahan_date: adhikanchaname,
-        outward_no: ParivahanDate,
-        sup_id: yojnayear,
-        yojana_year_id: bankname,
-        yojana_type: javaksr,
-        yojana_id: javaksr,
+        parivahan_date: parivahandata,
+        outward_no: javaksr,
+        sup_id: adhikanchaname,
+        yojana_year_id: yojnayear,
+        yojana_type: yojanatype,
+        yojana_id: yojnaname,
         beneficiary_id: javaksr,
 
         ...(updateClusterId && { sub_category_id: updateClusterId }),
@@ -598,9 +592,9 @@ const Parivahan = ({
                   String(type.yojana_year_id) == yojnayear &&
                   type.yojana_type === yojanatype
                 )
-                .map((yojna) => ({
+                .map((yojna,index) => ({
                   value: yojna.yojana_id,
-                  label: yojna.yojana_name,
+                  label: index+1 + ") "+ yojna.yojana_name,
                 })),
               placeholder: `${t("yojnaname")}`, // Optional placeholder for select input
             },

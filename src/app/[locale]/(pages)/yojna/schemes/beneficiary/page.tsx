@@ -7,7 +7,7 @@ import Clusteradd from "@/components/manage/Clusteradd";
 import Beneficiary from "@/components/Schemes/Beneficiary";
 import Category from "@/components/Schemes/Category";
 import SubCategorys from "@/components/Schemes/SubCategorys";
-import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, TblBeneficiary, TblYojanaType, Villages, YojanaYear } from "@/components/type";
+import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, TblBeneficiary, TblCaste, TblYojanaType, Villages, YojanaYear } from "@/components/type";
 import prisma from "@/lib/db";
 import { YojanaMaster } from "@prisma/client";
 import React from "react";
@@ -22,6 +22,7 @@ const Page = async () => {
     let yojnamaster: YojanaMaster[] = [];
     let talukas: talukasdata[] = [];
     let grampanchayat: grampanchayat[] = [];
+    let cast: TblCaste[] = [];
     let Villages: Villages[] = [];
     try {
         category = await prisma.category.findMany(); // Fetch all clusters
@@ -32,7 +33,7 @@ const Page = async () => {
         yojnatype = await prisma.yojnatype.findMany();
         yojnamaster = await prisma.yojanaMaster.findMany();
         talukas = await prisma.talukasData.findMany();
-
+        cast = await prisma.tblcaste.findMany();
         Villages = await prisma.villages.findMany(); // Fetch all QR codes
         grampanchayat = await prisma.grampanchayat.findMany();
     } catch (error) {
@@ -55,13 +56,14 @@ const Page = async () => {
         { label: 'dashboard', href: '/dashboard' },
         { label: 'Beneficiary', href: '/yojna/schemes/beneficiary' },
     ];
+  
     return (
         <div>
 
             <h1 className="card card-body mt-5">
                 <TitleCard breadcrumbs={breadcrumbs} />
             </h1>
-            <Beneficiary initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} />
+            <Beneficiary initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={cast}/>
         </div>
     );
 };

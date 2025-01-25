@@ -583,3 +583,12 @@ model tblstudentsscholarship {
   student_scholarship_id       String?   @db.VarChar(50)
    @@map("tbl_students_scholarship")
 }
+
+
+model tblcaste {
+  caste_id   Int    @id @default(autoincrement())
+  caste_name String
+  status     String @default("Active")
+
+  @@map("tbl_caste") // Maps the model to the existing table name
+}

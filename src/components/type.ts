@@ -478,3 +478,9 @@ export type tblstudentsscholarship = {
   scholarship_name?: string | null;
   student_scholarship_id?: string | null; 
 };
+
+export type TblCaste ={
+  caste_id: number;       // Corresponds to int(11)
+  caste_name: string;     // Corresponds to varchar(50)
+  status: 'Active' | string; // Corresponds to varchar(10) with default 'Active'
+}
