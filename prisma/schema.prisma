@@ -491,7 +491,7 @@ model parivahanbeneficiary {
 
 
 model tblparivahan {
-  parivahan_id      Int      @id
+  parivahan_id      Int        @id @default(autoincrement())
   parivahan_no      BigInt
   parivahan_date    DateTime @db.Date
   outward_no        String   @db.VarChar(50)

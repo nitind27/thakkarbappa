@@ -25,10 +25,10 @@ type Props = {
     talukas: talukasdata[];
     grampanchayat: grampanchayat[];
     Villages: Villages[];
-    castdata:TblCaste[];
+    castdata: TblCaste[];
 };
 
-const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages ,castdata}: Props) => {
+const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata }: Props) => {
     const t = useTranslations("beneficiary");
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [categoryName, setCategoryName] = useState("");
@@ -62,6 +62,9 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
     const [error, setError] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
+    const calculateTotalEstimatedAmount = (category: any[]) => {
+        return category.reduce((total, item) => total + item.amount, 0);
+    };
     const [clusterData, setClusterData] =
         useState<TblBeneficiary[]>(beneficiary); // State for Beneficiary data
     const confirm = createConfirmation(ConfirmationDialog);
@@ -149,18 +152,18 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             organization: beneficiary.organization,
             // work_order_date: beneficiary.work_order_date,    
 
-            work_order_date: 
-                    typeof beneficiary.work_order_date == "string"
-                      ? formatDate(beneficiary.work_order_date)
-                      : formatDate(beneficiary.work_order_date as any),
+            work_order_date:
+                typeof beneficiary.work_order_date == "string"
+                    ? formatDate(beneficiary.work_order_date)
+                    : formatDate(beneficiary.work_order_date as any),
         })).reverse()
         ; // Reverse the order to show the last added items first
 
     const columns = [
-       {
+        {
             accessorKey: "serial_number",
             header: () => (
-                <div style={{ fontWeight: 'bold',padding: '5px' }}>
+                <div style={{ fontWeight: 'bold', padding: '5px' }}>
                     {t("SrNo")}
                 </div>
             ),
@@ -229,8 +232,8 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             header: `${t("FullName")}`,
         },
 
-   
-    
+
+
         {
             accessorKey: "casteid",
             header: `${t("Cast")}`,
@@ -288,7 +291,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             header: `${t("Status")}`,
         },
 
-       
+
         {
             accessorKey: "actions",
             header: `${t("Action")}`,
@@ -547,16 +550,25 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             value: subcategoryName, // Use state for the selected subcategory
             onChange: (e: any) => setSubCategoryName(e.target.value), // Function to update selected subcategory
             type: "select", // Type of input
-            options: initialcategoryData
-
-                .filter((category: SubCategory) => String(category.category_id) == categoryName) // Filter based on categoryName
-                .map((category: SubCategory) => ({
-                    value: category.sub_category_id, // Assuming sub_category_id is the unique identifier for subcategories
-                    label: category.sub_category_name, // Display name for the select option
-                })),
+            options: [
+                ...initialcategoryData
+                    .filter((category: SubCategory) => String(category.category_id) == categoryName && category.status == "Active")
+                    .map((category: SubCategory) => ({
+                        value: category.sub_category_id, // Unique identifier for subcategories
+                        label: `${category.sub_category_name} ( ${category.amount} )`, // Display name for the select option
+                    })),
+                {
+                    value: 'Other', // Unique value for the create option
+                    label: "Other", // Label for the create option, assuming you have a translation key for it
+                },
+                {
+                    value: 'Other', // Unique value for the create option
+                    label: calculateTotalEstimatedAmount(initialcategoryData.filter((category: SubCategory) => String(category.sub_category_id) == categoryName && category.status == "Active").map((category: SubCategory) => { category.amount })), // Label for the create option, assuming you have a translation key for it
+                },
+            ],
             placeholder: `${t('subcategoryname')}`, // Optional placeholder for select input
-        },
-
+        }
+        ,
 
         {
             label: `${t('year')}`,

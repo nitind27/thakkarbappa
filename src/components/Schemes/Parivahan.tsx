@@ -115,7 +115,7 @@ const Parivahan = ({
         ")" + Userdata.filter((user) => user.user_id == parivhan.sup_id).map((users) => users.contact_no),
       yojana_year_id: yojna_year[parivhan.yojana_year_id],
       yojana_type: yojna_type[parivhan.yojana_type as any],
-      yojana_id: yojnamster[parivhan.yojana_id] + "Amount" +yojnamsteramount[parivhan.yojana_id],
+      yojana_id: yojnamster[parivhan.yojana_id] + "Amount" + yojnamsteramount[parivhan.yojana_id],
       beneficiary_id: parivhan.beneficiary_id,
       beneficiaryid: beneficiaryname[parivhan.beneficiary_id as any],
       status: parivhan.status,
@@ -216,13 +216,13 @@ const Parivahan = ({
                 .map((item, index) => (
                   <tr key={index} className="hover:bg-gray-100">
                     <td className="border border-gray-300 px-4 py-2">
-                    {item.parivahan_no}
+                      {item.parivahan_no}
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
                       {Beneficiary.filter(
                         (beneficiary) =>
                           beneficiary.beneficiary_id as any == item.beneficiary_id
-                      ).map((filteredItem) => filteredItem.yojana_type == '2' ? filteredItem.gat_name : filteredItem.fullname).join(', ')}      
+                      ).map((filteredItem) => filteredItem.yojana_type == '2' ? filteredItem.gat_name : filteredItem.fullname).join(', ')}
                     </td>
 
                     <td className="border border-gray-300 px-4 py-2">
@@ -235,7 +235,7 @@ const Parivahan = ({
                       {Parivahanbeneficiarys.filter(
                         (beneficiary) =>
                           beneficiary.beneficiary_id as any == item.beneficiary_id
-                      ).map((filteredItem) => filteredItem.installment + "%").join(', ')} 
+                      ).map((filteredItem) => filteredItem.installment + "%").join(', ')}
                     </td>
 
                   </tr>
@@ -328,7 +328,7 @@ const Parivahan = ({
     }
   };
   const datafilter = Beneficiary.filter((data) => data.yojana_year_id as any == yojnayear && data.yojana_type == yojanatype && data.yojana_id as any == yojnaname && data.status == "Active").map((data) => ({
-    gat_name: data.yojana_type =='2' ? data.gat_name :data.fullname,
+    gat_name: data.yojana_type == '2' ? data.gat_name : data.fullname,
     tot_finance: data.tot_finance,
     amount_paid: data.amount_paid,
     caste_id: data.caste_id,
@@ -354,7 +354,7 @@ const Parivahan = ({
       accessorKey: "amount_paid",
       header: `अदा करावयाची रक्कम`,
     },
-    
+
     {
       accessorKey: "caste_id",
       header: `अदा करावयाची रक्कम`,
@@ -365,10 +365,10 @@ const Parivahan = ({
       header: `अदा करावयाची रक्कम`,
       cell: ({ row }: any) => (
         <div style={{ display: "flex", whiteSpace: "nowrap" }}>
-         <select name="" id="" className="form-control">
-          <option value="">NA%</option>
-     
-         </select>
+          <select name="" id="" className="form-control">
+            <option value="">NA%</option>
+
+          </select>
         </div>
       ),
     },
@@ -378,7 +378,7 @@ const Parivahan = ({
       header: `निवड करा`,
       cell: ({ row }: any) => (
         <div style={{ display: "flex", whiteSpace: "nowrap" }}>
-       <input type="checkbox" />
+          <input type="checkbox" />
         </div>
       ),
     },
@@ -388,31 +388,25 @@ const Parivahan = ({
   ];
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    // const errorMsg = validateadhikanchaname(adhikanchaname);
-    // if (errorMsg) {
-    //   setError(errorMsg);
-    //   return;
-    // }
 
     setIsLoading(true); // Start loading
 
     try {
-      const method = updateClusterId ? "PUT" : "POST";
-      const url = updateClusterId
-        ? `/api/parivahan/insert`
-        : `/api/parivahan/insert`;
+      const method = "POST";
+      const url = `/api/parivahan/insert`;
 
+console.log('fsadf',ParivahanDate)
       // Prepare the request body
       const requestBody = {
-        parivahan_date: parivahandata,
+        parivahan_date: ParivahanDate,
         outward_no: javaksr,
         sup_id: adhikanchaname,
         yojana_year_id: yojnayear,
         yojana_type: yojanatype,
         yojana_id: yojnaname,
-        beneficiary_id: javaksr,
+        beneficiary_id: 524,
 
-        ...(updateClusterId && { sub_category_id: updateClusterId }),
+        ...(updateClusterId && { parivahan_id: updateClusterId }),
       };
 
       const response = await fetch(url, {
@@ -461,13 +455,13 @@ const Parivahan = ({
   };
 
   const handleEdit = (cluster: any) => {
-    setUpdateClusterId(cluster.sub_category_id); 
-    setAdhikanchaname(cluster.categoryid); 
+    setUpdateClusterId(cluster.sub_category_id);
+    setAdhikanchaname(cluster.categoryid);
     setParivahanDate(cluster.sub_category_name);
     setJavakSr(cluster.javaksr);
     setYojnaYear(cluster.yojanayearid);
     setBankname(cluster.bankid);
-    handleShowPrint(); 
+    handleShowPrint();
   };
 
   const handleShowPrint = () => setShowPrintModal(true);
@@ -592,9 +586,9 @@ const Parivahan = ({
                   String(type.yojana_year_id) == yojnayear &&
                   type.yojana_type === yojanatype
                 )
-                .map((yojna,index) => ({
+                .map((yojna, index) => ({
                   value: yojna.yojana_id,
-                  label: index+1 + ") "+ yojna.yojana_name,
+                  label: index + 1 + ") " + yojna.yojana_name,
                 })),
               placeholder: `${t("yojnaname")}`, // Optional placeholder for select input
             },
