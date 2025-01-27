@@ -62,9 +62,6 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
     const [error, setError] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
-    const calculateTotalEstimatedAmount = (category: any[]) => {
-        return category.reduce((total, item) => total + item.amount, 0);
-    };
     const [clusterData, setClusterData] =
         useState<TblBeneficiary[]>(beneficiary); // State for Beneficiary data
     const confirm = createConfirmation(ConfirmationDialog);
@@ -555,7 +552,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                     .filter((category: SubCategory) => String(category.category_id) == categoryName && category.status == "Active")
                     .map((category: SubCategory) => ({
                         value: category.sub_category_id, // Unique identifier for subcategories
-                        label: `${category.sub_category_name} ( ${category.amount} )`, // Display name for the select option
+                        label: `${category.sub_category_name} ( ${category.amount} )`, // Display name for the 
                     })),
                 {
                     value: 'Other', // Unique value for the create option
@@ -563,7 +560,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 },
                 {
                     value: 'Other', // Unique value for the create option
-                    label: calculateTotalEstimatedAmount(initialcategoryData.filter((category: SubCategory) => String(category.sub_category_id) == categoryName && category.status == "Active").map((category: SubCategory) => { category.amount })), // Label for the create option, assuming you have a translation key for it
+                    label: ``, // Label for the create option, assuming you have a translation key for it
                 },
             ],
             placeholder: `${t('subcategoryname')}`, // Optional placeholder for select input
@@ -730,22 +727,22 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             placeholder: `${t('parentsname')}`,
             onChange: (e: any) => setParentsname(e.target.value),
         },);
-        formFields.push({
-            label: `${t('Organization')}`,
-            value: organizationname || "",
-            type: "text",
-            required: true,
-            placeholder: `${t('Organization')}`,
-            onChange: (e: any) => setorganizationname(e.target.value),
-        },);
-        formFields.push({
-            label: `${t('Commencementorderdate')}`,
-            value: Commencementdate || "",
-            type: "date",
-            required: true,
-            placeholder: `${t('Commencementorderdate')}`,
-            onChange: (e: any) => setCommencementdate(e.target.value),
-        },);
+        // formFields.push({
+        //     label: `${t('Organization')}`,
+        //     value: organizationname || "",
+        //     type: "text",
+        //     required: true,
+        //     placeholder: `${t('Organization')}`,
+        //     onChange: (e: any) => setorganizationname(e.target.value),
+        // },);
+        // formFields.push({
+        //     label: `${t('Commencementorderdate')}`,
+        //     value: Commencementdate || "",
+        //     type: "date",
+        //     required: true,
+        //     placeholder: `${t('Commencementorderdate')}`,
+        //     onChange: (e: any) => setCommencementdate(e.target.value),
+        // },);
         formFields.push({
             label: `${t('Cast')}`,
             value: cast || "",
@@ -843,14 +840,14 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 placeholder: `${t('sansthaname')}`,
                 onChange: (e: any) => setorganizationname(e.target.value),
             },
-            {
-                label: `${t('Commencementorderdate')}`,
-                value: Commencementdate || "",
-                type: "date",
-                required: true,
-                placeholder: `${t('Commencementorderdate')}`,
-                onChange: (e: any) => setCommencementdate(e.target.value),
-            },
+            // {
+            //     label: `${t('Commencementorderdate')}`,
+            //     value: Commencementdate || "",
+            //     type: "date",
+            //     required: true,
+            //     placeholder: `${t('Commencementorderdate')}`,
+            //     onChange: (e: any) => setCommencementdate(e.target.value),
+            // },
             {
                 label: `${t('Eligible40')}`,
                 value: fourty || "",
@@ -886,14 +883,14 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             placeholder: `${t('sansthaname')}`,
             onChange: (e: any) => setorganizationname(e.target.value),
         },);
-        formFields.push({
-            label: `${t('Commencementorderdate')}`,
-            value: Commencementdate || "",
-            type: "date",
-            required: true,
-            placeholder: `${t('Commencementorderdate')}`,
-            onChange: (e: any) => setCommencementdate(e.target.value),
-        },);
+        // formFields.push({
+        //     label: `${t('Commencementorderdate')}`,
+        //     value: Commencementdate || "",
+        //     type: "date",
+        //     required: true,
+        //     placeholder: `${t('Commencementorderdate')}`,
+        //     onChange: (e: any) => setCommencementdate(e.target.value),
+        // },);
         formFields.push(
             {
                 label: `${t('Eligible40')}`,

@@ -192,8 +192,8 @@ const Workmaster = ({
   };
   const customRow = {
 
-    estimated_amount: "Total" + " " + calculateTotalEstimatedAmount(workmasterdata), // Custom name for the row
-    tantrik_manyata_amount: "Total" + " " + calculateTotaltantrikmanyataamount(workmasterdata), // Custom name for the row
+    estimated_amount: "Total" + " " + calculateTotalEstimatedAmount(workmasterdata),
+    tantrik_manyata_amount: "Total" + " " + calculateTotaltantrikmanyataamount(workmasterdata),
 
   };
   const finalData = [customRow, ...data];
@@ -290,28 +290,32 @@ const Workmaster = ({
       accessorKey: "actions",
       header: `${t("Action")}`,
       cell: ({ row }: any) => (
-        <div style={{ display: "flex", whiteSpace: "nowrap" }}>
-          <button
-            className="btn btn-sm btn-primary"
-            onClick={() => handleEdit(row.original)}
-          >
-            {" "}
-            <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
-            {t("edit")}
-          </button>
-          <button
-            className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
-              } ms-5`}
-            onClick={() =>
-              handleDeactivate(row.original.id, row.original.status)
-            }
-          >
-            <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-            {row.original.status === "Active"
-              ? `${t("Deactive")}`
-              : `${t("Active")}`}
-          </button>
-        </div>
+        <>
+          {row.index +1 != 1&&
+            <div style={{ display: "flex", whiteSpace: "nowrap" }}>
+              <button
+                className="btn btn-sm btn-primary"
+                onClick={() => handleEdit(row.original)}
+              >
+                {" "}
+                <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
+                {t("edit")}
+              </button>
+              <button
+                className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+                  } ms-5`}
+                onClick={() =>
+                  handleDeactivate(row.original.id, row.original.status)
+                }
+              >
+                <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
+                {row.original.status === "Active"
+                  ? `${t("Deactive")}`
+                  : `${t("Active")}`}
+              </button>
+            </div>
+          }
+        </>
       ),
     },
   ];
