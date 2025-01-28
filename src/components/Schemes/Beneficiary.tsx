@@ -103,6 +103,20 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         acc[gp.id] = gp.name; // Assuming taluka has id and name properties
         return acc;
     }, {} as Record<number, string>);
+
+    const calculateTotalEstimatedAmount = (category: { amount: string }[]) => {
+        return category.reduce((total, item) => total + parseFloat(item.amount), 0);
+    };
+
+    const sumcategory = initialcategoryData
+        .filter((category: SubCategory) => String(category.category_id) === categoryName && category.status === "Active")
+        .map((category: SubCategory) => ({
+            amount: category.amount // Ensure this is an object with an 'amount' property
+        }));
+
+    const totalEstimatedAmount = calculateTotalEstimatedAmount(sumcategory);
+
+
     const data = clusterData
         .map((beneficiary) => ({
             beneficiary_id: beneficiary.beneficiary_id,
@@ -528,6 +542,18 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         reset();
         setUpdateClusterId(null); // Reset update ID when closing
     };
+    const optionsdata = [
+        {
+            label: "अपंग",
+            value: "अपंग",
+        },
+        { label: "B.P.L", value: "B.P.L" },
+        { label: "वन पट्टेधारक", value: "वन पट्टेधारक" },
+        { label: "वन पट्टेधारक", value: "वन पट्टेधारक" },
+        { label: "विधवा", value: "विधवा" },
+        { label: "परितक्त्या", value: "परितक्त्या" },
+        { label: "इतर", value: "इतर" },
+    ]
 
     const formFields = [
         {
@@ -555,12 +581,12 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                         label: `${category.sub_category_name} ( ${category.amount} )`, // Display name for the 
                     })),
                 {
-                    value: 'Other', // Unique value for the create option
-                    label: "Other", // Label for the create option, assuming you have a translation key for it
+                    value: 'Oth', // Unique value for the create option
+                    label: 'Other', // Label for the create option, assuming you have a translation key for it
                 },
                 {
                     value: 'Other', // Unique value for the create option
-                    label: ``, // Label for the create option, assuming you have a translation key for it
+                    label: "Total" + " " + totalEstimatedAmount, // Label for the create option, assuming you have a translation key for it
                 },
             ],
             placeholder: `${t('subcategoryname')}`, // Optional placeholder for select input
@@ -746,19 +772,34 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         formFields.push({
             label: `${t('Cast')}`,
             value: cast || "",
-            type: "text",
+            type: "select",
             required: true,
+            options: castdata.map((cast: TblCaste) => ({
+                value: cast.caste_id,
+                label: cast.caste_name,
+            })),
             placeholder: `${t('Cast')}`,
             onChange: (e: any) => setcast(e.target.value),
         },);
+
+
+
+
         formFields.push({
             label: `${t('beneficiarytype')}`,
             value: beneficiariestype || "",
-            type: "text",
+            type: "select",
             required: true,
+            options: optionsdata.map((cast: any) => ({
+                value: cast.value,
+                label: cast.label,
+            })),
             placeholder: `${t('beneficiarytype')}`,
             onChange: (e: any) => setbeneficiariestype(e.target.value),
+
+
         },);
+
         formFields.push({
             label: `${t('Registrationcard')}`,
             value: rationcardnumber || "",
@@ -786,8 +827,9 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('Eligible40')}`,
             value: fourty || "",
             required: false,
+
             type: "checkbox",
-            placeholder: `${t('Eligible40')}`,
+            placeholder: `40%`,
             onChange: (e: any) => setfourty(e.target.value),
         },
             {
@@ -795,7 +837,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 value: sixty || "",
                 type: "checkbox",
                 required: false,
-                placeholder: `${t('Eligible60')}`,
+               placeholder: `60%`,
                 onChange: (e: any) => setsixty(e.target.value),
             },
             {
@@ -803,7 +845,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 value: hundred || "",
                 type: "checkbox",
                 required: false,
-                placeholder: `${t('Eligible100')}`,
+               placeholder: `100%`,
                 onChange: (e: any) => sethundred(e.target.value),
             },);
 
@@ -853,7 +895,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 value: fourty || "",
                 type: "checkbox",
                 required: false,
-                placeholder: `${t('Eligible40')}`,
+                 placeholder: `40%`,
                 onChange: (e: any) => setfourty(e.target.value),
             },
             {
@@ -861,14 +903,14 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 value: sixty || "",
                 type: "checkbox",
                 required: false,
-                placeholder: `${t('Eligible60')}`,
+                placeholder: `60%`,
                 onChange: (e: any) => setsixty(e.target.value),
             },
             {
                 label: `${t('Eligible100')}`,
                 value: hundred || "",
                 type: "checkbox", required: false,
-                placeholder: `${t('Eligible100')}`,
+                placeholder: `100%`,
                 onChange: (e: any) => sethundred(e.target.value),
             },
 

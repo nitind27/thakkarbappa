@@ -141,7 +141,7 @@ const CustomModal: React.FC<any> = ({
                       onChange={field.onChange as any}
                       placeholder={field.placeholder}
                       disabled={field.disabled}
-                      className=""
+                      className="mt-2"
                       isInvalid={!!formErrors[field.label]}
                     />
                   ) : field.type === "email" ? (
@@ -151,6 +151,7 @@ const CustomModal: React.FC<any> = ({
                       onChange={field.onChange as any}
                       placeholder={field.placeholder}
                       disabled={field.disabled}
+                      className="mt-2"
                       isInvalid={!!formErrors[field.label]}
                     />
                   ) : field.type === "select" ? (
@@ -158,6 +159,7 @@ const CustomModal: React.FC<any> = ({
                       as="select"
                       value={field.value as string}
                       disabled={field.disabled}
+                      className="mt-2"
                       onChange={field.onChange as any}
                       isInvalid={!!formErrors[field.label]}
                     >
@@ -173,6 +175,7 @@ const CustomModal: React.FC<any> = ({
                   ) : field.type === "file" ? (
                     <Form.Control
                       type="file"
+                      className="mt-2"
                       onChange={(e: any) => {
                         if (e.target.files) {
                           field.onChange(e);
@@ -183,6 +186,7 @@ const CustomModal: React.FC<any> = ({
                   ) : field.type === "date" ? (
                     <Form.Control
                       type="date"
+                    
                       value={field.value ? new Date(field.value).toISOString().split("T")[0] : ""}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         field.onChange({
@@ -190,7 +194,7 @@ const CustomModal: React.FC<any> = ({
                         } as any);
                       }}
                       disabled={field.disabled}
-                      className="form-control"
+                      className="form-control mt-2"
                     />
 
                   ) : field.type === "checkbox" ? (
@@ -198,6 +202,7 @@ const CustomModal: React.FC<any> = ({
                       type="checkbox"
                       label={field.placeholder || field.label}
                       checked={!!(field.value as any)}
+                      className="mt-3"
                       onChange={(e) =>
                         field.onChange({
                           target: { value: e.target.checked },
