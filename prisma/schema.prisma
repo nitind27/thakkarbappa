@@ -592,3 +592,21 @@ model tblcaste {
 
   @@map("tbl_caste") // Maps the model to the existing table name
 }
+
+model tbl_members {
+  member_id          Int      @id @default(autoincrement())
+  beneficiary_id     Int
+  surname            String   @db.VarChar(50)
+  firstname          String   @db.VarChar(50)
+  middlename         String   @db.VarChar(50)
+  fullname           String   @db.VarChar(100)
+  designation        String   @db.VarChar(20)
+  caste_id           Int
+  beneficiary_type   String   @db.VarChar(20)
+  ration_no          String   @db.VarChar(50)
+  aadhar_no          String   @db.VarChar(50)
+  mobile_no          String   @db.VarChar(10)
+  status             String   @default("Active") @db.VarChar(10)
+  ins_date_time      DateTime @default(now())
+  update_date_time   DateTime?
+}

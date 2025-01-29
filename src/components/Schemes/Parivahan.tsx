@@ -15,7 +15,7 @@ import {
   YojanaYear,
 } from "../type";
 
-import { Button } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
 import { toast } from "react-toastify";
@@ -377,8 +377,15 @@ const Parivahan = ({
       accessorKey: "actions",
       header: `निवड करा`,
       cell: ({ row }: any) => (
-        <div style={{ display: "flex", whiteSpace: "nowrap" }}>
-          <input type="checkbox" />
+        <div style={{ display: "flex", whiteSpace: "nowrap" }} className="mt-3">
+          {/* <input type="checkbox" className=""/> */}
+          <Form.Check
+            inline
+
+            name="group2"
+            type={'checkbox'}
+            id={`inline-${"checkbox"}-1`}
+          />
         </div>
       ),
     },
@@ -395,7 +402,7 @@ const Parivahan = ({
       const method = "POST";
       const url = `/api/parivahan/insert`;
 
-console.log('fsadf',ParivahanDate)
+      console.log('fsadf', ParivahanDate)
       // Prepare the request body
       const requestBody = {
         parivahan_date: ParivahanDate,

@@ -7,7 +7,7 @@ import Clusteradd from "@/components/manage/Clusteradd";
 import Beneficiary from "@/components/Schemes/Beneficiary";
 import Category from "@/components/Schemes/Category";
 import SubCategorys from "@/components/Schemes/SubCategorys";
-import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, TblBeneficiary, TblCaste, TblYojanaType, Villages, YojanaYear } from "@/components/type";
+import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, TblBeneficiary, TblCaste, TblMembers, TblYojanaType, Villages, YojanaYear } from "@/components/type";
 import prisma from "@/lib/db";
 import { YojanaMaster } from "@prisma/client";
 import React from "react";
@@ -24,6 +24,7 @@ const Page = async () => {
     let grampanchayat: grampanchayat[] = [];
     let cast: TblCaste[] = [];
     let Villages: Villages[] = [];
+    let membersadd: TblMembers[] = [];
     try {
         category = await prisma.category.findMany(); // Fetch all clusters
         subCategory = await prisma.subCategory.findMany(); // Fetch all clusters
@@ -36,6 +37,7 @@ const Page = async () => {
         cast = await prisma.tblcaste.findMany();
         Villages = await prisma.villages.findMany(); // Fetch all QR codes
         grampanchayat = await prisma.grampanchayat.findMany();
+        membersadd = await prisma.tbl_members.findMany();
     } catch (error) {
         console.error("Error fetching cluster data:", error);
         return (
@@ -56,14 +58,14 @@ const Page = async () => {
         { label: 'dashboard', href: '/dashboard' },
         { label: 'Beneficiary', href: '/yojna/schemes/beneficiary' },
     ];
-  
+
     return (
         <div>
 
             <h1 className="card card-body mt-5">
                 <TitleCard breadcrumbs={breadcrumbs} />
             </h1>
-            <Beneficiary initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={cast}/>
+            <Beneficiary initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={cast} membersadd={membersadd} />
         </div>
     );
 };

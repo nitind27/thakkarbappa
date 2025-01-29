@@ -476,11 +476,31 @@ export type tblstudentsscholarship = {
   aadhaar?: string | null;
   sickle_report?: string | null;
   scholarship_name?: string | null;
-  student_scholarship_id?: string | null; 
+  student_scholarship_id?: string | null;
 };
 
-export type TblCaste ={
+export type TblCaste = {
   caste_id: number;       // Corresponds to int(11)
   caste_name: string;     // Corresponds to varchar(50)
   status: 'Active' | string; // Corresponds to varchar(10) with default 'Active'
 }
+
+
+
+export type TblMembers = {
+  member_id: number;
+  beneficiary_id: number;
+  surname: string;
+  firstname: string;
+  middlename: string;
+  fullname: string;
+  designation: string;
+  caste_id: number;
+  beneficiary_type: string;
+  ration_no: string;
+  aadhar_no: string;
+  mobile_no: string;
+  status?: any; // Assuming these are the only possible values
+  ins_date_time?: Date; // Optional, as it defaults to now()
+  update_date_time?: Date | null; // Can be null
+};

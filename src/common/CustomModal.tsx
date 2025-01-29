@@ -186,7 +186,7 @@ const CustomModal: React.FC<any> = ({
                   ) : field.type === "date" ? (
                     <Form.Control
                       type="date"
-                    
+
                       value={field.value ? new Date(field.value).toISOString().split("T")[0] : ""}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         field.onChange({
@@ -198,18 +198,23 @@ const CustomModal: React.FC<any> = ({
                     />
 
                   ) : field.type === "checkbox" ? (
-                    <Form.Check
-                      type="checkbox"
-                      label={field.placeholder || field.label}
-                      checked={!!(field.value as any)}
-                      className="mt-3"
-                      onChange={(e) =>
-                        field.onChange({
-                          target: { value: e.target.checked },
-                        } as any)
-                      }
-                      isInvalid={!!formErrors[field.label]}
-                    />
+                    <>
+                  
+
+                        <Form.Check
+                          type="checkbox"
+                          label={field.placeholder || field.label}
+                          checked={!!(field.value as any)}
+                          className="mt-3"
+                          onChange={(e) =>
+                            field.onChange({
+                              target: { value: e.target.checked },
+                            } as any)
+                          }
+                          isInvalid={!!formErrors[field.label]}
+                        />
+                     
+                    </>
                   ) : null}
 
                   {/* Show error message only for required fields */}

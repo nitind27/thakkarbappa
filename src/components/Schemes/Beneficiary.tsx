@@ -2,7 +2,7 @@
 "use client";
 import React, { useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
-import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, TblBeneficiary, TblCaste, TblYojanaType, Villages, YojanaMaster, YojanaYear } from "../type";
+import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, TblBeneficiary, TblCaste, TblMembers, TblYojanaType, Villages, YojanaMaster, YojanaYear } from "../type";
 
 import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
@@ -13,6 +13,7 @@ import { useTranslations } from "next-intl";
 import { createConfirmation } from "react-confirm";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
 import { formatDate } from "@/lib/utils";
+import Addmembers from "./Addmembers";
 
 type Props = {
     initialcategoryData: SubCategory[];
@@ -26,11 +27,14 @@ type Props = {
     grampanchayat: grampanchayat[];
     Villages: Villages[];
     castdata: TblCaste[];
+    membersadd: TblMembers[];
 };
 
-const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata }: Props) => {
+const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata, membersadd }: Props) => {
     const t = useTranslations("beneficiary");
     const [showPrintModal, setShowPrintModal] = useState(false);
+    const [showPrintModalMembers, setShowPrintModalMembers] = useState(false);
+    const [showNumberMembers, setShowNumberMembers] = useState(0);
     const [categoryName, setCategoryName] = useState("");
     const [subcategoryName, setSubCategoryName] = useState("");
     const [yojnayear, setYojnaYear] = useState("");
@@ -115,7 +119,10 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         }));
 
     const totalEstimatedAmount = calculateTotalEstimatedAmount(sumcategory);
-
+    const handlepassdatamembers = (number: any) => {
+        setShowPrintModalMembers(prev => !prev)
+        setShowNumberMembers(number)
+    }
 
     const data = clusterData
         .map((beneficiary) => ({
@@ -128,6 +135,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             yojanayearid: beneficiary.yojana_year_id,
             yojana_type: yojnatypes[beneficiary.yojana_type as any],
             yojanatype: beneficiary.yojana_type,
+            // Addmember: beneficiary.yojana_type == '2' ? "Nitin" : "",
             yojana_id: yojnamastername[beneficiary.yojana_id],
             yojanaid: beneficiary.yojana_id,
             taluka_id: talukaMap[beneficiary.taluka_id],
@@ -184,6 +192,18 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 </div>
             ),
         },
+
+        {
+            accessorKey: "actions",
+            header: `${t("Action")}`,
+            cell: ({ row }: any) => (
+                <div style={{ display: "flex", whiteSpace: "nowrap", cursor: "pointer", color: 'green', fontWeight: "bold" }} onClick={() => handlepassdatamembers(row.original.beneficiary_id)}>
+                    {row.original.yojanatype == 2 && 'सदस्य टाका' + row.original.beneficiary_id}
+                </div>
+
+            ),
+        },
+
         {
             accessorKey: "category_id",
             header: `${t("categoryname")}`,
@@ -814,7 +834,14 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             type: "text",
             required: true,
             placeholder: `${t('aadharcard')}`,
-            onChange: (e: any) => setaddharcardnumber(e.target.value),
+            // onChange: (e: any) => setaddharcardnumber(e.target.value),
+            onChange: (e: any) => {
+                // Ensure that only digits are allowed and limit to 11 digits
+                const inputValue = e.target.value;
+                if (/^\d*$/.test(inputValue) && inputValue.length <= 12) {
+                    setaddharcardnumber(inputValue);
+                }
+              },
         },);
         formFields.push({
             label: `${t('Contact')}`,
@@ -822,12 +849,20 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             required: true,
             type: "text",
             placeholder: `${t('Contact')}`,
-            onChange: (e: any) => setmobilenumber(e.target.value),
+            // onChange: (e: any) => setmobilenumber(e.target.value),
+
+            onChange: (e: any) => {
+                // Ensure that only digits are allowed and limit to 11 digits
+                const inputValue = e.target.value;
+                if (/^\d*$/.test(inputValue) && inputValue.length <= 12) {
+                    setmobilenumber(inputValue);
+                }
+              },
         }, {
             label: `${t('Eligible40')}`,
             value: fourty || "",
             required: false,
-
+            
             type: "checkbox",
             placeholder: `40%`,
             onChange: (e: any) => setfourty(e.target.value),
@@ -837,7 +872,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 value: sixty || "",
                 type: "checkbox",
                 required: false,
-               placeholder: `60%`,
+                placeholder: `60%`,
                 onChange: (e: any) => setsixty(e.target.value),
             },
             {
@@ -845,7 +880,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 value: hundred || "",
                 type: "checkbox",
                 required: false,
-               placeholder: `100%`,
+                placeholder: `100%`,
                 onChange: (e: any) => sethundred(e.target.value),
             },);
 
@@ -874,14 +909,14 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 placeholder: `${t('members')}`,
                 onChange: (e: any) => setnumberofmember(e.target.value),
             },
-            {
-                label: `${t('sansthaname')}`,
-                value: organizationname || "",
-                type: "text",
-                required: true,
-                placeholder: `${t('sansthaname')}`,
-                onChange: (e: any) => setorganizationname(e.target.value),
-            },
+            // {
+            //     label: `${t('sansthaname')}`,
+            //     value: organizationname || "",
+            //     type: "text",
+            //     required: true,
+            //     placeholder: `${t('sansthaname')}`,
+            //     onChange: (e: any) => setorganizationname(e.target.value),
+            // },
             // {
             //     label: `${t('Commencementorderdate')}`,
             //     value: Commencementdate || "",
@@ -895,7 +930,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 value: fourty || "",
                 type: "checkbox",
                 required: false,
-                 placeholder: `40%`,
+                placeholder: `40%`,
                 onChange: (e: any) => setfourty(e.target.value),
             },
             {
@@ -903,6 +938,8 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 value: sixty || "",
                 type: "checkbox",
                 required: false,
+
+                   
                 placeholder: `60%`,
                 onChange: (e: any) => setsixty(e.target.value),
             },
@@ -925,14 +962,14 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             placeholder: `${t('sansthaname')}`,
             onChange: (e: any) => setorganizationname(e.target.value),
         },);
-        // formFields.push({
-        //     label: `${t('Commencementorderdate')}`,
-        //     value: Commencementdate || "",
-        //     type: "date",
-        //     required: true,
-        //     placeholder: `${t('Commencementorderdate')}`,
-        //     onChange: (e: any) => setCommencementdate(e.target.value),
-        // },);
+        formFields.push({
+            label: `${t('Commencementorderdate')}`,
+            value: Commencementdate || "",
+            type: "date",
+            required: true,
+            placeholder: `${t('Commencementorderdate')}`,
+            onChange: (e: any) => setCommencementdate(e.target.value),
+        },);
         formFields.push(
             {
                 label: `${t('Eligible40')}`,
@@ -964,6 +1001,8 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
 
     return (
         <div>
+            <Addmembers initialcategoryData={initialcategoryData} YojnaYear={[]} Bankdata={[]} category={[]} beneficiary={[]} yojnatype={yojnatype} yojnamaster={[]} talukas={[]} grampanchayat={[]} Villages={[]} castdata={castdata} showPrintModalMembers={showPrintModalMembers} showNumberMembers={showNumberMembers} membersadd={membersadd} />
+
             <Table
                 data={data}
                 columns={columns}
