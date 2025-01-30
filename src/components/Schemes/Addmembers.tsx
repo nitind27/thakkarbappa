@@ -101,6 +101,7 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
     }, [showPrintModalMembers])
     const data = clusterData.filter((member) => member.beneficiary_id == showNumberMembers)
         .map((beneficiary) => ({
+            member_id: beneficiary.member_id,
             beneficiary_id: beneficiary.beneficiary_id,
 
             // Addmember: beneficiary.yojana_type == '2' ? "Nitin" : "",
@@ -108,11 +109,12 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
             surname: beneficiary.surname,
             aadhar_no: beneficiary.aadhar_no,
             mobile_no: beneficiary.mobile_no,
+            ration_no: beneficiary.ration_no,
             designation: beneficiary.designation,
             firstname: beneficiary.firstname,
             middlename: beneficiary.middlename,
             status: beneficiary.status,
-            fullname: beneficiary.surname + beneficiary.firstname + beneficiary.middlename,
+            fullname: beneficiary.surname + " " + beneficiary.firstname + " " + beneficiary.middlename,
             caste_id: beneficiary.caste_id,
             casteid: usercastdata[beneficiary.caste_id],
             beneficiary_type: beneficiary.beneficiary_type,
@@ -138,22 +140,14 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
             ),
         },
 
-        {
-            accessorKey: "actions",
-            header: `${t("Action")}`,
-            cell: ({ row }: any) => (
-                <div style={{ display: "flex", whiteSpace: "nowrap", cursor: "pointer", color: 'green', fontWeight: "bold" }}>
-                    {row.original.yojanatype == 2 && 'सदस्य टाका'}
-                </div>
-            ),
-        },
+
         {
             accessorKey: "fullname",
             header: `${t("FullName")}`,
         },
         {
             accessorKey: "designation",
-            header: `designation`,
+            header: `${t("Designation")}`,
         },
         {
             accessorKey: "casteid",
@@ -164,7 +158,7 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
             header: `${t("beneficiarytype")}`,
         },
         {
-            accessorKey: "rashion_no",
+            accessorKey: "ration_no",
             header: `${t("Registrationcard")}`,
         },
         {
@@ -197,7 +191,7 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
                         className={`btn btn-sm ${row.original.status == "Active" ? "btn-danger" : "btn-warning"
                             } ms-5`}
                         onClick={() =>
-                            handleDeactivate(row.original.beneficiary_id, row.original.status)
+                            handleDeactivate(row.original.member_id, row.original.status)
                         }
                     >
                         <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
@@ -213,12 +207,12 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
     const handleDeactivate = async (category_id: any, currentStatus: any) => {
         const confirmMessage =
             currentStatus == "Active"
-                ? "Are you sure you want to deactivate this Beneficiary?"
-                : "Are you sure you want to activate this Beneficiary?";
+                ? "Are you sure you want to deactivate this Member?"
+                : "Are you sure you want to activate this Member?";
         const confirmed = await confirm({ confirmation: confirmMessage });
         if (confirmed) {
             try {
-                const response = await fetch(`/api/benefucuary/delete/${category_id}`, {
+                const response = await fetch(`/api/members/delete/${category_id}`, {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
@@ -232,7 +226,7 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
                     // Update local state without page reload
                     setClusterData((prevData) =>
                         prevData.map((cluster) =>
-                            cluster.beneficiary_id == category_id
+                            cluster.member_id == category_id
                                 ? {
                                     ...cluster,
                                     status: currentStatus == "Active" ? "Deactive" : "Active",
@@ -241,14 +235,14 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
                         )
                     );
                     toast.success(
-                        `Beneficiary ${currentStatus == "Active" ? "deactivated" : "activated"
+                        `Member ${currentStatus == "Active" ? "deactivated" : "activated"
                         } successfully!`
                     );
                 } else {
-                    toast.error("Failed to change the Beneficiary status.");
+                    toast.error("Failed to change the Member status.");
                 }
             } catch (error) {
-                console.error("Error changing the Beneficiary status:", error);
+                console.error("Error changing the Member status:", error);
                 toast.error("An unexpected error occurred.");
             }
         }
@@ -265,9 +259,9 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
         setIsLoading(true); // Start loading
 
         try {
-            const method = updateClusterId ? "PUT" : "POST";
+            const method = updateClusterId ? "POST" : "POST";
             const url = updateClusterId
-                ? `/api/members/insert`
+                ? `/api/members/update`
                 : `/api/members/insert`;
 
             // Prepare the request body
@@ -288,7 +282,7 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
                 mobile_no: mobilenumber,
                 // status: "Active",
                 work_order_date: workofdate.toISOString(),
-                ...(updateClusterId && { beneficiary_id: updateClusterId }),
+                ...(updateClusterId && { member_id: updateClusterId }),
             };
 
             const response = await fetch(url, {
@@ -303,7 +297,7 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
                 if (updateClusterId) {
                     setClusterData((prevData) =>
                         prevData.map((cluster) =>
-                            cluster.beneficiary_id == updateClusterId
+                            cluster.member_id == updateClusterId
                                 ? { ...cluster, ...requestBody as any }
                                 : cluster
                         )
@@ -329,16 +323,16 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
         }
     };
     const handleEdit = (benefit: any) => {
-        setUpdateClusterId(benefit.beneficiary_id); // Set ID for updating
+        setUpdateClusterId(benefit.member_id); // Set ID for updating
         setSurname(benefit.surname);
         setFistname(benefit.firstname);
         setParentsname(benefit.middlename);
         setcast(benefit.caste_id);
         setbeneficiariestype(benefit.beneficiary_type);
         setDesignation(benefit.designation)
-        setrationcardnumber(benefit.rashion_no);
-        setaddharcardnumber(benefit.aadhar);
-        setmobilenumber(benefit.mobile);
+        setrationcardnumber(benefit.ration_no);
+        setaddharcardnumber(benefit.aadhar_no);
+        setmobilenumber(benefit.mobile_no);
         setnumberofmember(benefit.member);
         handleShowPrint(); // Open modal for editing
 
@@ -414,7 +408,7 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
             placeholder: `${t('parentsname')}`,
             onChange: (e: any) => setParentsname(e.target.value),
         }, {
-            label: `${t('beneficiarytype')}`,
+            label: `${t('Designation')}`,
             value: designation || "",
             type: "select",
             required: true,
@@ -464,7 +458,7 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
                 if (/^\d*$/.test(inputValue) && inputValue.length <= 11) {
                     setrationcardnumber(inputValue);
                 }
-              },
+            },
         }, {
             label: `${t('aadharcard')}`,
             value: aadharcardnumber || "",
@@ -478,7 +472,7 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
                 if (/^\d*$/.test(inputValue) && inputValue.length <= 12) {
                     setaddharcardnumber(inputValue);
                 }
-              },
+            },
         }, {
             label: `${t('Contact')}`,
             value: mobilenumber || "",
@@ -492,7 +486,7 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
                 if (/^\d*$/.test(inputValue) && inputValue.length <= 10) {
                     setmobilenumber(inputValue);
                 }
-              },
+            },
         },
     ]
 

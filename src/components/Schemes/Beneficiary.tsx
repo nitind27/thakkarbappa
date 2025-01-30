@@ -198,7 +198,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             header: `${t("Action")}`,
             cell: ({ row }: any) => (
                 <div style={{ display: "flex", whiteSpace: "nowrap", cursor: "pointer", color: 'green', fontWeight: "bold" }} onClick={() => handlepassdatamembers(row.original.beneficiary_id)}>
-                    {row.original.yojanatype == 2 && 'सदस्य टाका' + row.original.beneficiary_id}
+                    {row.original.yojanatype == 2 && 'सदस्य टाका'}
                 </div>
 
             ),
@@ -841,7 +841,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 if (/^\d*$/.test(inputValue) && inputValue.length <= 12) {
                     setaddharcardnumber(inputValue);
                 }
-              },
+            },
         },);
         formFields.push({
             label: `${t('Contact')}`,
@@ -857,12 +857,12 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 if (/^\d*$/.test(inputValue) && inputValue.length <= 12) {
                     setmobilenumber(inputValue);
                 }
-              },
+            },
         }, {
             label: `${t('Eligible40')}`,
             value: fourty || "",
             required: false,
-            
+
             type: "checkbox",
             placeholder: `40%`,
             onChange: (e: any) => setfourty(e.target.value),
@@ -939,7 +939,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 type: "checkbox",
                 required: false,
 
-                   
+
                 placeholder: `60%`,
                 onChange: (e: any) => setsixty(e.target.value),
             },
