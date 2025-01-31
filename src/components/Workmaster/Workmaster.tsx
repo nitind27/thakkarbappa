@@ -107,7 +107,6 @@ const Workmaster = ({
     useState("");
   const [AdministrativerecognitionDate, setAdministrativerecognitionDate] =
     useState("");
-  console.log('ddddddd', AdministrativerecognitionDate)
   const [error, setError] = useState<string>("");
   const [isResponsive, setIsResponsive] = useState<boolean>(false);
 
@@ -209,8 +208,9 @@ const Workmaster = ({
       header: () => (
         <div style={{ fontWeight: "bold", padding: "5px" }}>{t("SrNo")}</div>
       ),
-      cell: ({ row }: any) => <div>{row.index + 1}</div>,
-    },
+      cell: ({ row }: any) => <div>{row.index === 0 ? '' : row.index}</div>,
+    }
+    ,
     {
       accessorKey: "taluka_id",
       header: `${t("Dist")}`,
@@ -291,7 +291,7 @@ const Workmaster = ({
       header: `${t("Action")}`,
       cell: ({ row }: any) => (
         <>
-          {row.index +1 != 1&&
+          {row.index + 1 != 1 &&
             <div style={{ display: "flex", whiteSpace: "nowrap" }}>
               <button
                 className="btn btn-sm btn-primary"

@@ -35,6 +35,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [showPrintModalMembers, setShowPrintModalMembers] = useState(false);
     const [showNumberMembers, setShowNumberMembers] = useState(0);
+    const [showBachatNameMembers, setShowBachatnameMembers] = useState("");
     const [categoryName, setCategoryName] = useState("");
     const [subcategoryName, setSubCategoryName] = useState("");
     const [yojnayear, setYojnaYear] = useState("");
@@ -121,7 +122,8 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
     const totalEstimatedAmount = calculateTotalEstimatedAmount(sumcategory);
     const handlepassdatamembers = (number: any) => {
         setShowPrintModalMembers(prev => !prev)
-        setShowNumberMembers(number)
+        setShowNumberMembers(number.beneficiary_id)
+        setShowBachatnameMembers(number.gat_name)
     }
 
     const data = clusterData
@@ -197,7 +199,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             accessorKey: "actions",
             header: `${t("Action")}`,
             cell: ({ row }: any) => (
-                <div style={{ display: "flex", whiteSpace: "nowrap", cursor: "pointer", color: 'green', fontWeight: "bold" }} onClick={() => handlepassdatamembers(row.original.beneficiary_id)}>
+                <div style={{ display: "flex", whiteSpace: "nowrap", cursor: "pointer", color: 'green', fontWeight: "bold" }} onClick={() => handlepassdatamembers(row.original)}>
                     {row.original.yojanatype == 2 && 'सदस्य टाका'}
                 </div>
 
@@ -674,7 +676,8 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         {
             label: `${t('GramPanchayat')}`,
             value: town, // Ensure this uses townName
-            type: "select",
+
+            type: "inputselect",
             placeholder: `${t('GramPanchayat')}`,
             onChange: (e: any) => setTown(e.target.value), // Keep this to set townName
 
@@ -683,9 +686,9 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                     String(type.taluka_id) == dist
 
                 )
-                .map((yojna) => ({
+                .map((yojna, index) => ({
                     value: yojna.id,
-                    label: yojna.name,
+                    label: `${index + 1}) ${yojna.name_marathi}`,
                 })),
         },
 
@@ -694,7 +697,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             {
                 label: `${t('Village')}`,
                 value: mahasulgaav,
-                type: "select",
+                type: "inputselect",
                 placeholder: `${t('Village')}`,
                 onChange: (e: any) => setMahsulgaav(e.target.value),
                 options: Villages
@@ -705,7 +708,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                     )
                     .map((yojna) => ({
                         value: yojna.id,
-                        label: yojna.name,
+                        label: yojna.name_marathi,
                     })),
             },
         ] : []),
@@ -1001,7 +1004,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
 
     return (
         <div>
-            <Addmembers initialcategoryData={initialcategoryData} YojnaYear={[]} Bankdata={[]} category={[]} beneficiary={[]} yojnatype={yojnatype} yojnamaster={[]} talukas={[]} grampanchayat={[]} Villages={[]} castdata={castdata} showPrintModalMembers={showPrintModalMembers} showNumberMembers={showNumberMembers} membersadd={membersadd} />
+            <Addmembers initialcategoryData={initialcategoryData} YojnaYear={[]} Bankdata={[]} category={[]} beneficiary={[]} yojnatype={yojnatype} yojnamaster={[]} talukas={[]} grampanchayat={[]} Villages={[]} castdata={castdata} showPrintModalMembers={showPrintModalMembers} showNumberMembers={showNumberMembers} membersadd={membersadd} showBachatNameMembers={showBachatNameMembers} />
 
             <Table
                 data={data}
@@ -1025,9 +1028,17 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             <CustomModal
                 show={showPrintModal}
                 handleClose={handleClosePrint}
+
+                btttongroup={
+
+                    <Button variant="primary" id="button-addon2" size="sm" >
+                        +
+                    </Button>
+                }
+
                 handleSubmit={handleSubmit}
                 size={"xl"}
-                title={updateClusterId ? `${t("updatepage")}` : `${t("insertpage")}`}
+                title={updateClusterId ? `${t("updatepage")}` : `${dist + "or" + town}`}
                 formData={{
                     fields: formFields as any,
                     error: "",

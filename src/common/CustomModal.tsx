@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, InputGroup } from "react-bootstrap";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css"; // Adjust the theme based on your preference
 
@@ -19,6 +19,9 @@ type FormField = {
   required?: boolean; // New property to indicate if field is required
   disabled?: boolean;
   filterdata?: any;
+  btttongroup?:any
+
+
 };
 
 // Enhanced validation function with conditional logic
@@ -40,7 +43,6 @@ const validateForm = (fields: FormField[]) => {
         errors[field.label] = `${field.label} should only contain letters, numbers, and spaces. Special characters are not allowed.`;
       }
     }
-
 
 
 
@@ -87,6 +89,8 @@ const CustomModal: React.FC<any> = ({
   formData,
   filterdata,
   imagepriview,
+  btttongroup,
+  titiledetails,
   submitButtonLabel = "Submit",
   disabledButton = false,
   size,
@@ -114,7 +118,9 @@ const CustomModal: React.FC<any> = ({
   };
   // Determine grid classes based on size prop
   const gridClass = size ? 'col-6 col-md-3' : 'col-12';
-
+  const propmtopen = () => {
+    prompt(`Nitin Dube`)
+  }
   return (
     <Modal show={show} size={size}>
       <Modal.Header closeButton onClick={closeModal}>
@@ -124,6 +130,14 @@ const CustomModal: React.FC<any> = ({
         <span style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
           {imagepriview}
         </span>
+
+        {titiledetails &&
+          <span style={{ display: "flex", justifyContent: "start", alignItems: "center", gap: "50px", marginBottom: "20px" }}>
+
+            <span style={{ fontSize: "20px", fontWeight: "bold" }}>बचत गट :</span> <span style={{ fontSize: "20px", fontWeight: "bold" }}>{titiledetails}</span>
+          </span>
+        }
+
         <Form onSubmit={onSubmit}>
           <div className="row">
             {formData.fields.map((field: any, index: any) => (
@@ -172,6 +186,31 @@ const CustomModal: React.FC<any> = ({
                         </option>
                       ))}
                     </Form.Control>
+                  ) : field.type === "inputselect" ? (
+                    <InputGroup className="mt-2">
+                      <Form.Control
+                        as="select"
+                        value={field.value as string}
+                        disabled={field.disabled}
+                        className=""
+
+                        onChange={field.onChange as any}
+                        isInvalid={!!formErrors[field.label]}
+                      >
+                        <option value="">
+                          {field.placeholder || "Select an option"}
+                        </option>
+                        {field.options?.map((option: any) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </Form.Control>
+                      
+
+                      {btttongroup}
+                      
+                    </InputGroup>
                   ) : field.type === "file" ? (
                     <Form.Control
                       type="file"
@@ -199,21 +238,21 @@ const CustomModal: React.FC<any> = ({
 
                   ) : field.type === "checkbox" ? (
                     <>
-                  
 
-                        <Form.Check
-                          type="checkbox"
-                          label={field.placeholder || field.label}
-                          checked={!!(field.value as any)}
-                          className="mt-3"
-                          onChange={(e) =>
-                            field.onChange({
-                              target: { value: e.target.checked },
-                            } as any)
-                          }
-                          isInvalid={!!formErrors[field.label]}
-                        />
-                     
+
+                      <Form.Check
+                        type="checkbox"
+                        label={field.placeholder || field.label}
+                        checked={!!(field.value as any)}
+                        className="mt-3"
+                        onChange={(e) =>
+                          field.onChange({
+                            target: { value: e.target.checked },
+                          } as any)
+                        }
+                        isInvalid={!!formErrors[field.label]}
+                      />
+
                     </>
                   ) : null}
 

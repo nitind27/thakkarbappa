@@ -216,7 +216,7 @@ const Parivahan = ({
                 .map((item, index) => (
                   <tr key={index} className="hover:bg-gray-100">
                     <td className="border border-gray-300 px-4 py-2">
-                      {item.parivahan_no}
+                      {index + 1}
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
                       {Beneficiary.filter(
@@ -355,10 +355,6 @@ const Parivahan = ({
       header: `अदा करावयाची रक्कम`,
     },
 
-    {
-      accessorKey: "caste_id",
-      header: `अदा करावयाची रक्कम`,
-    },
 
     {
       accessorKey: "actions",
@@ -366,6 +362,7 @@ const Parivahan = ({
       cell: ({ row }: any) => (
         <div style={{ display: "flex", whiteSpace: "nowrap" }}>
           <select name="" id="" className="form-control">
+
             <option value="">NA%</option>
 
           </select>
@@ -520,7 +517,7 @@ const Parivahan = ({
 
         />
         }
-        title={updateClusterId ? `${t("updatepage")}` : `${yojnayear} ${yojanatype} ${yojnaname}`}
+        title={updateClusterId ? `${t("updatepage")}` : `${yojnayear + yojanatype + yojnaname}`}
         formData={{
           fields: [
             {

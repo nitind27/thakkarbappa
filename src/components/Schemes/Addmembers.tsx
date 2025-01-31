@@ -29,10 +29,11 @@ type Props = {
     castdata: TblCaste[];
     showPrintModalMembers: any;
     showNumberMembers: any;
+    showBachatNameMembers: any;
     membersadd: TblMembers[];
 };
 
-const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata, showPrintModalMembers, showNumberMembers, membersadd }: Props) => {
+const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata, showPrintModalMembers, showNumberMembers, membersadd,showBachatNameMembers }: Props) => {
     const t = useTranslations("beneficiary");
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [surname, setSurname] = useState("");
@@ -495,6 +496,7 @@ const Addmembers = ({ initialcategoryData, YojnaYear, Bankdata, category, benefi
 
             <CustomModal
                 show={showPrintModal}
+                titiledetails={showBachatNameMembers}
                 handleClose={handleClosePrint}
                 handleSubmit={handleSubmit}
                 size={"xl"}
