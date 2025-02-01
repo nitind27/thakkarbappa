@@ -164,16 +164,6 @@ const Grampanchayat = ({ grampanchayat, talukas }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // const errorMsg = validateFormgrampanchayat(
-    //   townName,
-    //   nameMarathi,
-    //   String(talukaId),
-    //   String(population)
-    // );
-    // if (errorMsg) {
-    //   setError(errorMsg.join("<br />"));
-    //   return;
-    // }
 
     setIsLoading(true); // Start loading
 

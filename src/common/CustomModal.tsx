@@ -19,7 +19,9 @@ type FormField = {
   required?: boolean; // New property to indicate if field is required
   disabled?: boolean;
   filterdata?: any;
-  btttongroup?:any
+  btttongroupgp?:any
+  btttongroupgpvi?:any
+
 
 
 };
@@ -89,7 +91,8 @@ const CustomModal: React.FC<any> = ({
   formData,
   filterdata,
   imagepriview,
-  btttongroup,
+  btttongroupgp,
+  btttongroupgpvi,
   titiledetails,
   submitButtonLabel = "Submit",
   disabledButton = false,
@@ -186,7 +189,7 @@ const CustomModal: React.FC<any> = ({
                         </option>
                       ))}
                     </Form.Control>
-                  ) : field.type === "inputselect" ? (
+                  ) : field.type === "inputselectgp" ? (
                     <InputGroup className="mt-2">
                       <Form.Control
                         as="select"
@@ -208,9 +211,34 @@ const CustomModal: React.FC<any> = ({
                       </Form.Control>
                       
 
-                      {btttongroup}
+                      {btttongroupgp}
                       
                     </InputGroup>
+                    ) : field.type === "inputselectvi" ? (
+                      <InputGroup className="mt-2">
+                        <Form.Control
+                          as="select"
+                          value={field.value as string}
+                          disabled={field.disabled}
+                          className=""
+  
+                          onChange={field.onChange as any}
+                          isInvalid={!!formErrors[field.label]}
+                        >
+                          <option value="">
+                            {field.placeholder || "Select an option"}
+                          </option>
+                          {field.options?.map((option: any) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </Form.Control>
+                        
+  
+                        {btttongroupgpvi}
+                        
+                      </InputGroup>
                   ) : field.type === "file" ? (
                     <Form.Control
                       type="file"

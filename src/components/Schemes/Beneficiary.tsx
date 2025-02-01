@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
 import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, TblBeneficiary, TblCaste, TblMembers, TblYojanaType, Villages, YojanaMaster, YojanaYear } from "../type";
-
+import { useRouter } from 'next/navigation';
 import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
 import CustomModal from "@/common/CustomModal";
@@ -32,7 +32,16 @@ type Props = {
 
 const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata, membersadd }: Props) => {
     const t = useTranslations("beneficiary");
+    const router = useRouter();
+
     const [showPrintModal, setShowPrintModal] = useState(false);
+    const [showPrintModalvi, setShowPrintModalvi] = useState(false);
+
+    const [showPrintModalgp, setShowPrintModalgp] = useState(false);
+     const [townName, setTownName] = useState("");
+      const [nameMarathi, setNameMarathi] = useState("");
+       const [nameEnglish, setNamenglish] = useState("");
+      const [population, setPopulation] = useState<number | string>("");
     const [showPrintModalMembers, setShowPrintModalMembers] = useState(false);
     const [showNumberMembers, setShowNumberMembers] = useState(0);
     const [showBachatNameMembers, setShowBachatnameMembers] = useState("");
@@ -489,6 +498,133 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             setIsLoading(false); // End loading
         }
     };
+
+      const handleSubmitgpvi = async (event: React.FormEvent) => {
+        event.preventDefault();
+    
+    
+        setIsLoading(true); // Start loading
+    
+        try {
+          const method ="POST";
+          const url = 
+            `/api/grampanchayat/insert`;
+    
+          const bodyData = {
+            // id: updateTownId ? updateTownId.toString() : undefined,
+            name: town,
+            name_marathi: nameMarathi,
+            taluka_id: dist,
+            population,
+          };
+    
+          const response = await fetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(bodyData),
+          });
+    
+          if (response.ok) {
+            toast.success(
+              `Grampanchayat inserted successfully!`
+            );
+    
+            // Update local state without page reload
+            // if (!updateTownId) {
+            //   // If inserting a new entry
+            //   const newGrampanchayat = await response.json();
+            //   setGrampanchayatData((prevData) => [...prevData, newGrampanchayat]);
+            // } else {
+            //   // If updating an existing entry
+            //   setGrampanchayatData((prevData: any) =>
+            //     prevData.map((gp: any) =>
+            //       gp.id === updateTownId ? { ...gp, ...bodyData } : gp
+            //     )
+            //   );
+            // }
+            router.refresh();
+            handleClosePrintgpvi();
+          } else {
+            const data = await response.json();
+    
+            toast.error(
+              `Failed to insert Grampanchayat: ${data.error
+              }`
+            );
+          }
+        } catch (error) {
+          console.error("Error during operation:", error);
+          toast.error("An unexpected error occurred.");
+        } finally {
+          setIsLoading(false); // End loading
+        }
+      };
+    
+
+        const handleSubmitvi = async (event: React.FormEvent) => {
+          event.preventDefault();
+      
+          setIsLoading(true); // Start loading
+      
+          try {
+            const method = "POST";
+            const url = `/api/mahasulgaav/insert`;
+      
+            // Prepare data for submission
+            const bodyData = {
+            
+              taluka_id: dist,
+              gp_id: town,
+              name: mahasulgaav,
+              name_marathi: nameMarathi,
+              total_population: 0,
+              trible_population: 0,
+              arthik_maryada: 0,
+              village_type: "",
+            };
+      
+            const response = await fetch(url, {
+              method,
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(bodyData),
+            });
+      
+            if (response.ok) {
+      
+            //   if (!updateTownId) {
+            //     // If inserting a new entry
+            //     const newVillage = await response.json(); // Assuming API returns the new village object
+      
+            //     setMahsulgaav((prevData) => [...prevData, newVillage]);
+            //   } else {
+            //     // If updating an existing entry
+            //     setMahsulgaav((prevData: any) =>
+            //       prevData.map((gp: any) =>
+            //         gp.id === updateTownId ? { ...gp, ...bodyData } : gp
+            //       )
+            //     );
+            //   }
+      
+              toast.success(
+                `Village inserted successfully!`
+              );
+              router.refresh();
+              handleClosePrintgpvi();
+            } else {
+              const data = await response.json();
+              toast.error(
+                `Failed to insert Village: ${data.error}`
+              );
+            }
+          } catch (error) {
+            console.error("Error during operation:", error);
+            toast.error("An unexpected error occurred.");
+          } finally {
+            setIsLoading(false); // End loading
+          }
+      
+        };
+      
     const handleEdit = (benefit: any) => {
         setUpdateClusterId(benefit.beneficiary_id); // Set ID for updating
         setCategoryName(benefit.categoryid);
@@ -555,15 +691,42 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         setsixty("");
         sethundred("");
     }
+
+    const resetgpvi = ()=>{
+        setUpdateClusterId(null); // Set ID for updating
+        setCategoryName("");
+        // setTown("");
+        setNameMarathi("");
+        // setDist("");
+        setPopulation("");
+    }
     const handleShowPrint = () => setShowPrintModal(true);
+    const handleShowPrintgp = () => setShowPrintModalgp(true);
+    const handleShowPrintvi = () => setShowPrintModalvi(true);
 
     const handleClosePrint = () => {
         setShowPrintModal(false);
+        setShowPrintModalgp(false);
+        setShowPrintModalvi(false);
+        
         setCategoryName("");
         setError("");
         reset();
         setUpdateClusterId(null); // Reset update ID when closing
     };
+
+
+    const handleClosePrintgpvi = () => {
+   
+        setShowPrintModalgp(false);
+        setShowPrintModalvi(false);
+        
+        setCategoryName("");
+        setError("");
+        resetgpvi();
+        setUpdateClusterId(null); // Reset update ID when closing
+    };
+
     const optionsdata = [
         {
             label: "अपंग",
@@ -677,7 +840,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('GramPanchayat')}`,
             value: town, // Ensure this uses townName
 
-            type: "inputselect",
+            type: "inputselectgp",
             placeholder: `${t('GramPanchayat')}`,
             onChange: (e: any) => setTown(e.target.value), // Keep this to set townName
 
@@ -697,7 +860,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             {
                 label: `${t('Village')}`,
                 value: mahasulgaav,
-                type: "inputselect",
+                type: "inputselectvi",
                 placeholder: `${t('Village')}`,
                 onChange: (e: any) => setMahsulgaav(e.target.value),
                 options: Villages
@@ -708,7 +871,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                     )
                     .map((yojna) => ({
                         value: yojna.id,
-                        label: yojna.name_marathi,
+                        label:  yojna.name_marathi,
                     })),
             },
         ] : []),
@@ -751,256 +914,111 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         },
 
     ];
-    if (yojnatyp == "1") {
-        formFields.push({
-            label: `${t('surname')}`,
-            value: surname || "",
+
+
+    const formFieldsGp = [
+        {
+            label: `enterGrampanchayatname`,
+            value: town,
             required: true,
+            className:"col-12",
+            onChange: (e: any) => setTown(e.target.value),
             type: "text",
-            placeholder: `${t('surname')}`,
-            onChange: (e: any) => setSurname(e.target.value),
-        },);
-        formFields.push({
-            label: `${t('firstname')}`,
-            value: firstname || "",
-            type: "text",
+            placeholder: `${t("enterGrampanchayatname")}`,
+
+          },
+          {
+            label: `nameMarathi`,
+            value: nameMarathi,
             required: true,
-            placeholder: `${t('firstname')}`,
-            onChange: (e: any) => setFistname(e.target.value),
-        },);
-        formFields.push({
-            label: `${t('parentsname')}`,
-            value: parentsname || "",
+            className:"col-12",
             type: "text",
-            required: true,
-            placeholder: `${t('parentsname')}`,
-            onChange: (e: any) => setParentsname(e.target.value),
-        },);
-        // formFields.push({
-        //     label: `${t('Organization')}`,
-        //     value: organizationname || "",
-        //     type: "text",
-        //     required: true,
-        //     placeholder: `${t('Organization')}`,
-        //     onChange: (e: any) => setorganizationname(e.target.value),
-        // },);
-        // formFields.push({
-        //     label: `${t('Commencementorderdate')}`,
-        //     value: Commencementdate || "",
-        //     type: "date",
-        //     required: true,
-        //     placeholder: `${t('Commencementorderdate')}`,
-        //     onChange: (e: any) => setCommencementdate(e.target.value),
-        // },);
-        formFields.push({
-            label: `${t('Cast')}`,
-            value: cast || "",
+            placeholder: `${t("enternamemarathi")}`,
+            onChange: (e: any) => setNameMarathi(e.target.value),
+          },
+          {
+            label: `selecttaluka`,
+            value: dist,
+            
+            className:"col-12",
+            onChange: (e: any) => setDist(e.target.value),
             type: "select",
-            required: true,
-            options: castdata.map((cast: TblCaste) => ({
-                value: cast.caste_id,
-                label: cast.caste_name,
+            options: talukas.map((taluka: any) => ({
+              value: taluka.id,
+              label: taluka.name,
             })),
-            placeholder: `${t('Cast')}`,
-            onChange: (e: any) => setcast(e.target.value),
-        },);
+            placeholder: `${t("selecttaluka")}`, // Optional placeholder for select input
+          },
+
+          {
+            label: `enterpopulation`,
+            value: population || "",
+            className:"col-12",
+            required: true,
+            type: "text",
+            placeholder: `${t("enterpopulation")}`,
+            onChange: (e: any) => setPopulation(e.target.value),
+          },
 
 
+     
 
+    ]
 
-        formFields.push({
-            label: `${t('beneficiarytype')}`,
-            value: beneficiariestype || "",
+    const formFieldsVi = [
+        {
+            label: `GramPanchayat`,
+            value: town, // Ensure this uses townName
+            className:"col-12",
+            readonly:true,
+            type: "inputselectgp",
+            placeholder: `${t('GramPanchayat')}`,
+            onChange: (e: any) => setTown(e.target.value), // Keep this to set townName
+
+            options: grampanchayat
+                .filter((type) =>
+                    String(type.taluka_id) == dist
+
+                )
+                .map((yojna, index) => ({
+                    value: yojna.id,
+                    label: `${index + 1}) ${yojna.name_marathi}`,
+                })),
+        },
+         
+          {
+            label: `selecttaluka`,
+            value: dist,
+            
+            className:"col-12",
+            onChange: (e: any) => setDist(e.target.value),
             type: "select",
-            required: true,
-            options: optionsdata.map((cast: any) => ({
-                value: cast.value,
-                label: cast.label,
+            options: talukas.map((taluka: any) => ({
+              value: taluka.id,
+              label: taluka.name,
             })),
-            placeholder: `${t('beneficiarytype')}`,
-            onChange: (e: any) => setbeneficiariestype(e.target.value),
-
-
-        },);
-
-        formFields.push({
-            label: `${t('Registrationcard')}`,
-            value: rationcardnumber || "",
+            placeholder: `${t("selecttaluka")}`, // Optional placeholder for select input
+          },
+          {
+            label: `enternamemarathi`,
+            value: mahasulgaav,
+            required: true,
+            className:"col-12",
             type: "text",
+            placeholder: `${t("enternamemarathi")}`,
+            onChange: (e: any) => setMahsulgaav(e.target.value),
+          },
+
+          {
+            label: `enternamemarathi`,
+            value: nameMarathi,
             required: true,
-            placeholder: `${t('Registrationcard')}`,
-            onChange: (e: any) => setrationcardnumber(e.target.value),
-        },);
-        formFields.push({
-            label: `${t('aadharcard')}`,
-            value: aadharcardnumber || "",
+            className:"col-12",
             type: "text",
-            required: true,
-            placeholder: `${t('aadharcard')}`,
-            // onChange: (e: any) => setaddharcardnumber(e.target.value),
-            onChange: (e: any) => {
-                // Ensure that only digits are allowed and limit to 11 digits
-                const inputValue = e.target.value;
-                if (/^\d*$/.test(inputValue) && inputValue.length <= 12) {
-                    setaddharcardnumber(inputValue);
-                }
-            },
-        },);
-        formFields.push({
-            label: `${t('Contact')}`,
-            value: mobilenumber || "",
-            required: true,
-            type: "text",
-            placeholder: `${t('Contact')}`,
-            // onChange: (e: any) => setmobilenumber(e.target.value),
-
-            onChange: (e: any) => {
-                // Ensure that only digits are allowed and limit to 11 digits
-                const inputValue = e.target.value;
-                if (/^\d*$/.test(inputValue) && inputValue.length <= 12) {
-                    setmobilenumber(inputValue);
-                }
-            },
-        }, {
-            label: `${t('Eligible40')}`,
-            value: fourty || "",
-            required: false,
-
-            type: "checkbox",
-            placeholder: `40%`,
-            onChange: (e: any) => setfourty(e.target.value),
-        },
-            {
-                label: `${t('Eligible60')}`,
-                value: sixty || "",
-                type: "checkbox",
-                required: false,
-                placeholder: `60%`,
-                onChange: (e: any) => setsixty(e.target.value),
-            },
-            {
-                label: `${t('Eligible100')}`,
-                value: hundred || "",
-                type: "checkbox",
-                required: false,
-                placeholder: `100%`,
-                onChange: (e: any) => sethundred(e.target.value),
-            },);
-
-    } else if (yojnatyp == "2") {
-        formFields.push({
-            label: `${t('bachtgat')}`,
-            value: savinggroupname || "",
-            type: "text",
-            required: true,
-            placeholder: `${t('bachtgat')}`,
-            onChange: (e: any) => setsavinggroupname(e.target.value),
-        },
-            {
-                label: `${t('registerdcert')}`,
-                value: Registrationerti || "",
-                type: "text",
-                required: true,
-                placeholder: `${t('registerdcert')}`,
-                onChange: (e: any) => setRegistrationerti(e.target.value),
-            },
-            {
-                label: `${t('members')}`,
-                value: numberofmember || "",
-                type: "text",
-                required: true,
-                placeholder: `${t('members')}`,
-                onChange: (e: any) => setnumberofmember(e.target.value),
-            },
-            // {
-            //     label: `${t('sansthaname')}`,
-            //     value: organizationname || "",
-            //     type: "text",
-            //     required: true,
-            //     placeholder: `${t('sansthaname')}`,
-            //     onChange: (e: any) => setorganizationname(e.target.value),
-            // },
-            // {
-            //     label: `${t('Commencementorderdate')}`,
-            //     value: Commencementdate || "",
-            //     type: "date",
-            //     required: true,
-            //     placeholder: `${t('Commencementorderdate')}`,
-            //     onChange: (e: any) => setCommencementdate(e.target.value),
-            // },
-            {
-                label: `${t('Eligible40')}`,
-                value: fourty || "",
-                type: "checkbox",
-                required: false,
-                placeholder: `40%`,
-                onChange: (e: any) => setfourty(e.target.value),
-            },
-            {
-                label: `${t('Eligible60')}`,
-                value: sixty || "",
-                type: "checkbox",
-                required: false,
-
-
-                placeholder: `60%`,
-                onChange: (e: any) => setsixty(e.target.value),
-            },
-            {
-                label: `${t('Eligible100')}`,
-                value: hundred || "",
-                type: "checkbox", required: false,
-                placeholder: `100%`,
-                onChange: (e: any) => sethundred(e.target.value),
-            },
-
-        );
-    }
-    else if (yojnatyp == "3") {
-        formFields.push({
-            label: `${t('sansthaname')}`,
-            value: organizationname || "",
-            type: "text",
-            required: true,
-            placeholder: `${t('sansthaname')}`,
-            onChange: (e: any) => setorganizationname(e.target.value),
-        },);
-        formFields.push({
-            label: `${t('Commencementorderdate')}`,
-            value: Commencementdate || "",
-            type: "date",
-            required: true,
-            placeholder: `${t('Commencementorderdate')}`,
-            onChange: (e: any) => setCommencementdate(e.target.value),
-        },);
-        formFields.push(
-            {
-                label: `${t('Eligible40')}`,
-                value: (fourty == "true" ? 1 : fourty || "").toString(),
-                type: "text",
-                placeholder: `%`,
-                required: false,
-                onChange: (e: any) => setfourty(e.target.value),
-            },
-            {
-                label: `${t('Eligible60')}`,
-                value: (sixty == "true" ? 1 : sixty || "").toString(),
-                type: "text",
-                placeholder: `%`,
-                required: false,
-                onChange: (e: any) => setsixty(e.target.value),
-            },
-            {
-                label: `${t('Eligible100')}`,
-                value: (hundred == "true" ? 1 : hundred || "").toString(),
-                type: "text",
-                required: false,
-                placeholder: `%`,
-                onChange: (e: any) => sethundred(e.target.value),
-            },
-        );
-
-    }
+            placeholder: `${t("enternamemarathi")}`,
+            onChange: (e: any) => setNameMarathi(e.target.value),
+          },
+    ]
 
     return (
         <div>
@@ -1029,18 +1047,74 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 show={showPrintModal}
                 handleClose={handleClosePrint}
 
-                btttongroup={
+                btttongroupgp={
 
-                    <Button variant="primary" id="button-addon2" size="sm" >
+                    <Button variant="primary" id="button-addon2" size="sm" onClick={handleShowPrintgp}>
+                       +
+                    </Button>
+                }
+                btttongroupgpvi={
+
+                    <Button variant="primary" id="button-addon2" size="sm" onClick={handleShowPrintvi}>
                         +
                     </Button>
                 }
 
                 handleSubmit={handleSubmit}
                 size={"xl"}
-                title={updateClusterId ? `${t("updatepage")}` : `${dist + "or" + town}`}
+                title={updateClusterId ? `${t("updatepage")}` : `${t("insertpage")}`}
                 formData={{
                     fields: formFields as any,
+                    error: "",
+                }}
+
+                submitButtonLabel={
+                    updateClusterId
+                        ? isLoading
+                            ? "Submitting..."
+                            : t("editsubmit")
+                        : isLoading
+                            ? "Submitting..."
+                            : t("submit")
+                }
+                disabledButton={isLoading}
+            />
+
+<CustomModal
+                show={showPrintModalgp}
+                handleClose={handleClosePrintgpvi}
+
+        
+                handleSubmit={handleSubmitgpvi}
+                size={"ml"}
+                title={updateClusterId ? `${t("updatepage")}` : `${t("insertpage")}`}
+                formData={{
+                    fields: formFieldsGp as any,
+                    error: "",
+                }}
+
+                submitButtonLabel={
+                    updateClusterId
+                        ? isLoading
+                            ? "Submitting..."
+                            : t("editsubmit")
+                        : isLoading
+                            ? "Submitting..."
+                            : t("submit")
+                }
+                disabledButton={isLoading}
+            />
+
+            <CustomModal
+                show={showPrintModalvi}
+                handleClose={handleClosePrintgpvi}
+
+        
+                handleSubmit={handleSubmitvi}
+                size={"ml"}
+                title={updateClusterId ? `${t("updatepage")}` : `${t("insertpage")}`}
+                formData={{
+                    fields: formFieldsVi as any,
                     error: "",
                 }}
 

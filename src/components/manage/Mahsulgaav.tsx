@@ -196,22 +196,6 @@ const Mahsulgaav = ({ Villages, talukas, grampanchayat }: Props) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // // Validate fields and get error messages
-    // const errorMsg = validateMasulGaav(
-    //   townName,
-    //   nameMarathi,
-    //   String(talukaId),
-    //   String(population),
-    //   String(triblePopulation),
-    //   String(arthikMaryada),
-    //   villageType
-    // );
-
-    // // If there are error messages, set them and prevent submission
-    // if (errorMsg.length > 0) {
-    //   setError(errorMsg.join("<br />"));
-    //   return;
-    // }
     setIsLoading(true); // Start loading
 
     try {
