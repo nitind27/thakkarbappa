@@ -446,6 +446,8 @@
     "year": "Year",
     "yojnatype": "Yojna Type",
     "yojnaname": "Yojna Name",
+    "marathiname": "Marathi (Name)",
+    "englishname": "English (Name)",
     "dist": "Taluka",
     "GramPanchayat": "Gram Panchayat",
     "Village": "Village",

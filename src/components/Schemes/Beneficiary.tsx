@@ -38,10 +38,10 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
     const [showPrintModalvi, setShowPrintModalvi] = useState(false);
 
     const [showPrintModalgp, setShowPrintModalgp] = useState(false);
-     const [townName, setTownName] = useState("");
-      const [nameMarathi, setNameMarathi] = useState("");
-       const [nameEnglish, setNamenglish] = useState("");
-      const [population, setPopulation] = useState<number | string>("");
+    const [townName, setTownName] = useState("");
+    const [nameMarathi, setNameMarathi] = useState("");
+    const [nameEnglish, setNamenglish] = useState("");
+    const [population, setPopulation] = useState<number | string>("");
     const [showPrintModalMembers, setShowPrintModalMembers] = useState(false);
     const [showNumberMembers, setShowNumberMembers] = useState(0);
     const [showBachatNameMembers, setShowBachatnameMembers] = useState("");
@@ -75,6 +75,8 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
     const [hundred, sethundred] = useState("");
     const [error, setError] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadinggp, setIsLoadinggp] = useState(false);
+    const [isLoadingvi, setIsLoadingvi] = useState(false);
     const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
     const [clusterData, setClusterData] =
         useState<TblBeneficiary[]>(beneficiary); // State for Beneficiary data
@@ -499,132 +501,132 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         }
     };
 
-      const handleSubmitgpvi = async (event: React.FormEvent) => {
+    const handleSubmitgpvi = async (event: React.FormEvent) => {
         event.preventDefault();
-    
-    
-        setIsLoading(true); // Start loading
-    
-        try {
-          const method ="POST";
-          const url = 
-            `/api/grampanchayat/insert`;
-    
-          const bodyData = {
-            // id: updateTownId ? updateTownId.toString() : undefined,
-            name: town,
-            name_marathi: nameMarathi,
-            taluka_id: dist,
-            population,
-          };
-    
-          const response = await fetch(url, {
-            method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(bodyData),
-          });
-    
-          if (response.ok) {
-            toast.success(
-              `Grampanchayat inserted successfully!`
-            );
-    
-            // Update local state without page reload
-            // if (!updateTownId) {
-            //   // If inserting a new entry
-            //   const newGrampanchayat = await response.json();
-            //   setGrampanchayatData((prevData) => [...prevData, newGrampanchayat]);
-            // } else {
-            //   // If updating an existing entry
-            //   setGrampanchayatData((prevData: any) =>
-            //     prevData.map((gp: any) =>
-            //       gp.id === updateTownId ? { ...gp, ...bodyData } : gp
-            //     )
-            //   );
-            // }
-            router.refresh();
-            handleClosePrintgpvi();
-          } else {
-            const data = await response.json();
-    
-            toast.error(
-              `Failed to insert Grampanchayat: ${data.error
-              }`
-            );
-          }
-        } catch (error) {
-          console.error("Error during operation:", error);
-          toast.error("An unexpected error occurred.");
-        } finally {
-          setIsLoading(false); // End loading
-        }
-      };
-    
 
-        const handleSubmitvi = async (event: React.FormEvent) => {
-          event.preventDefault();
-      
-          setIsLoading(true); // Start loading
-      
-          try {
+
+        setIsLoadinggp(true); // Start loading
+
+        try {
             const method = "POST";
-            const url = `/api/mahasulgaav/insert`;
-      
-            // Prepare data for submission
+            const url =
+                `/api/grampanchayat/insert`;
+
             const bodyData = {
-            
-              taluka_id: dist,
-              gp_id: town,
-              name: mahasulgaav,
-              name_marathi: nameMarathi,
-              total_population: 0,
-              trible_population: 0,
-              arthik_maryada: 0,
-              village_type: "",
+                // id: updateTownId ? updateTownId.toString() : undefined,
+                name: town,
+                name_marathi: nameMarathi,
+                taluka_id: dist,
+                population: '0',
             };
-      
+
             const response = await fetch(url, {
-              method,
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(bodyData),
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(bodyData),
             });
-      
+
             if (response.ok) {
-      
-            //   if (!updateTownId) {
-            //     // If inserting a new entry
-            //     const newVillage = await response.json(); // Assuming API returns the new village object
-      
-            //     setMahsulgaav((prevData) => [...prevData, newVillage]);
-            //   } else {
-            //     // If updating an existing entry
-            //     setMahsulgaav((prevData: any) =>
-            //       prevData.map((gp: any) =>
-            //         gp.id === updateTownId ? { ...gp, ...bodyData } : gp
-            //       )
-            //     );
-            //   }
-      
-              toast.success(
-                `Village inserted successfully!`
-              );
-              router.refresh();
-              handleClosePrintgpvi();
+                toast.success(
+                    `Grampanchayat inserted successfully!`
+                );
+
+                // Update local state without page reload
+                // if (!updateTownId) {
+                //   // If inserting a new entry
+                //   const newGrampanchayat = await response.json();
+                //   setGrampanchayatData((prevData) => [...prevData, newGrampanchayat]);
+                // } else {
+                //   // If updating an existing entry
+                //   setGrampanchayatData((prevData: any) =>
+                //     prevData.map((gp: any) =>
+                //       gp.id === updateTownId ? { ...gp, ...bodyData } : gp
+                //     )
+                //   );
+                // }
+                router.refresh();
+                handleClosePrintgpvi();
             } else {
-              const data = await response.json();
-              toast.error(
-                `Failed to insert Village: ${data.error}`
-              );
+                const data = await response.json();
+
+                toast.error(
+                    `Failed to insert Grampanchayat: ${data.error
+                    }`
+                );
             }
-          } catch (error) {
+        } catch (error) {
             console.error("Error during operation:", error);
             toast.error("An unexpected error occurred.");
-          } finally {
-            setIsLoading(false); // End loading
-          }
-      
-        };
-      
+        } finally {
+            setIsLoadinggp(false); // End loading
+        }
+    };
+
+
+    const handleSubmitvi = async (event: React.FormEvent) => {
+        event.preventDefault();
+
+        setIsLoadingvi(true); // Start loading
+
+        try {
+            const method = "POST";
+            const url = `/api/mahasulgaav/insert`;
+
+            // Prepare data for submission
+            const bodyData = {
+
+                taluka_id: dist,
+                gp_id: town,
+                name: mahasulgaav,
+                name_marathi: nameMarathi,
+                total_population: 0,
+                trible_population: 0,
+                arthik_maryada: 0,
+                village_type: "",
+            };
+
+            const response = await fetch(url, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(bodyData),
+            });
+
+            if (response.ok) {
+
+                //   if (!updateTownId) {
+                //     // If inserting a new entry
+                //     const newVillage = await response.json(); // Assuming API returns the new village object
+
+                //     setMahsulgaav((prevData) => [...prevData, newVillage]);
+                //   } else {
+                //     // If updating an existing entry
+                //     setMahsulgaav((prevData: any) =>
+                //       prevData.map((gp: any) =>
+                //         gp.id === updateTownId ? { ...gp, ...bodyData } : gp
+                //       )
+                //     );
+                //   }
+
+                toast.success(
+                    `Village inserted successfully!`
+                );
+                router.refresh();
+                handleClosePrintgpvi();
+            } else {
+                const data = await response.json();
+                toast.error(
+                    `Failed to insert Village: ${data.error}`
+                );
+            }
+        } catch (error) {
+            console.error("Error during operation:", error);
+            toast.error("An unexpected error occurred.");
+        } finally {
+            setIsLoadingvi(false); // End loading
+        }
+
+    };
+
     const handleEdit = (benefit: any) => {
         setUpdateClusterId(benefit.beneficiary_id); // Set ID for updating
         setCategoryName(benefit.categoryid);
@@ -692,11 +694,13 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         sethundred("");
     }
 
-    const resetgpvi = ()=>{
+    const resetgpvi = () => {
         setUpdateClusterId(null); // Set ID for updating
         setCategoryName("");
         // setTown("");
         setNameMarathi("");
+        setTown("");
+        setMahsulgaav("");
         // setDist("");
         setPopulation("");
     }
@@ -708,7 +712,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         setShowPrintModal(false);
         setShowPrintModalgp(false);
         setShowPrintModalvi(false);
-        
+
         setCategoryName("");
         setError("");
         reset();
@@ -717,10 +721,10 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
 
 
     const handleClosePrintgpvi = () => {
-   
+
         setShowPrintModalgp(false);
         setShowPrintModalvi(false);
-        
+ 
         setCategoryName("");
         setError("");
         resetgpvi();
@@ -871,7 +875,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                     )
                     .map((yojna) => ({
                         value: yojna.id,
-                        label:  yojna.name_marathi,
+                        label: yojna.name_marathi,
                     })),
             },
         ] : []),
@@ -918,59 +922,47 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
 
     const formFieldsGp = [
         {
-            label: `enterGrampanchayatname`,
-            value: town,
-            required: true,
-            className:"col-12",
-            onChange: (e: any) => setTown(e.target.value),
-            type: "text",
-            placeholder: `${t("enterGrampanchayatname")}`,
-
-          },
-          {
-            label: `nameMarathi`,
-            value: nameMarathi,
-            required: true,
-            className:"col-12",
-            type: "text",
-            placeholder: `${t("enternamemarathi")}`,
-            onChange: (e: any) => setNameMarathi(e.target.value),
-          },
-          {
-            label: `selecttaluka`,
+            label: `${t("dist")}`,
             value: dist,
-            
-            className:"col-12",
+            disabled: dist !== "",
+            className: "col-12",
             onChange: (e: any) => setDist(e.target.value),
             type: "select",
             options: talukas.map((taluka: any) => ({
-              value: taluka.id,
-              label: taluka.name,
+                value: taluka.id,
+                label: taluka.name,
             })),
-            placeholder: `${t("selecttaluka")}`, // Optional placeholder for select input
-          },
-
-          {
-            label: `enterpopulation`,
-            value: population || "",
-            className:"col-12",
+            placeholder: `${t("dist")}`, // Optional placeholder for select input
+        },
+        {
+            label: `${t("englishname")}`,
+            value: town,
             required: true,
+            className: "col-12",
+            onChange: (e: any) => setTown(e.target.value),
             type: "text",
-            placeholder: `${t("enterpopulation")}`,
-            onChange: (e: any) => setPopulation(e.target.value),
-          },
+            placeholder: `${t("englishname")}`,
 
-
-     
-
+        },
+        {
+            label: `${t("marathiname")}`,
+            value: nameMarathi,
+            required: true,
+            className: "col-12",
+            type: "text",
+            placeholder: `${t("marathiname")}`,
+            onChange: (e: any) => setNameMarathi(e.target.value),
+        },
+    
     ]
 
     const formFieldsVi = [
         {
-            label: `GramPanchayat`,
+            label: `${t('GramPanchayat')}`,
             value: town, // Ensure this uses townName
-            className:"col-12",
-            readonly:true,
+            disabled: town !== "",
+            className: "col-12",
+            readonly: true,
             type: "inputselectgp",
             placeholder: `${t('GramPanchayat')}`,
             onChange: (e: any) => setTown(e.target.value), // Keep this to set townName
@@ -985,39 +977,39 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                     label: `${index + 1}) ${yojna.name_marathi}`,
                 })),
         },
-         
-          {
-            label: `selecttaluka`,
+
+        {
+            label: `${t("dist")}`,
             value: dist,
-            
-            className:"col-12",
+            disabled: dist !== "",
+            className: "col-12",
             onChange: (e: any) => setDist(e.target.value),
             type: "select",
             options: talukas.map((taluka: any) => ({
-              value: taluka.id,
-              label: taluka.name,
+                value: taluka.id,
+                label: taluka.name,
             })),
-            placeholder: `${t("selecttaluka")}`, // Optional placeholder for select input
-          },
-          {
-            label: `enternamemarathi`,
+            placeholder: `${t("dist")}`, // Optional placeholder for select input
+        },
+        {
+            label: `${t("englishname")}`,
             value: mahasulgaav,
             required: true,
-            className:"col-12",
+            className: "col-12",
             type: "text",
-            placeholder: `${t("enternamemarathi")}`,
+            placeholder: `${t("englishname")}`,
             onChange: (e: any) => setMahsulgaav(e.target.value),
-          },
+        },
 
-          {
-            label: `enternamemarathi`,
+        {
+            label: `${t("marathiname")}`,
             value: nameMarathi,
             required: true,
-            className:"col-12",
+            className: "col-12",
             type: "text",
-            placeholder: `${t("enternamemarathi")}`,
+            placeholder: `${t("marathiname")}`,
             onChange: (e: any) => setNameMarathi(e.target.value),
-          },
+        },
     ]
 
     return (
@@ -1050,7 +1042,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 btttongroupgp={
 
                     <Button variant="primary" id="button-addon2" size="sm" onClick={handleShowPrintgp}>
-                       +
+                        +
                     </Button>
                 }
                 btttongroupgpvi={
@@ -1080,14 +1072,14 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 disabledButton={isLoading}
             />
 
-<CustomModal
+            <CustomModal
                 show={showPrintModalgp}
                 handleClose={handleClosePrintgpvi}
 
-        
+
                 handleSubmit={handleSubmitgpvi}
                 size={"ml"}
-                title={updateClusterId ? `${t("updatepage")}` : `${t("insertpage")}`}
+                title={updateClusterId ? `${t("GramPanchayat")}` : `${t("GramPanchayat")}`}
                 formData={{
                     fields: formFieldsGp as any,
                     error: "",
@@ -1095,24 +1087,24 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
 
                 submitButtonLabel={
                     updateClusterId
-                        ? isLoading
+                        ? isLoadinggp
                             ? "Submitting..."
                             : t("editsubmit")
-                        : isLoading
+                        : isLoadinggp
                             ? "Submitting..."
                             : t("submit")
                 }
-                disabledButton={isLoading}
+                disabledButton={isLoadinggp}
             />
 
             <CustomModal
                 show={showPrintModalvi}
                 handleClose={handleClosePrintgpvi}
 
-        
+
                 handleSubmit={handleSubmitvi}
                 size={"ml"}
-                title={updateClusterId ? `${t("updatepage")}` : `${t("insertpage")}`}
+                title={updateClusterId ? `${t("Village")}` : `${t("Village")}`}
                 formData={{
                     fields: formFieldsVi as any,
                     error: "",
@@ -1120,10 +1112,10 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
 
                 submitButtonLabel={
                     updateClusterId
-                        ? isLoading
+                        ? isLoadingvi
                             ? "Submitting..."
                             : t("editsubmit")
-                        : isLoading
+                        : isLoadingvi
                             ? "Submitting..."
                             : t("submit")
                 }
