@@ -192,6 +192,7 @@ const Workmaster = ({
   const customRow = {
 
     estimated_amount: "Total" + " " + calculateTotalEstimatedAmount(workmasterdata),
+    estimated_amountfix: calculateTotalEstimatedAmount(workmasterdata),
     tantrik_manyata_amount: "Total" + " " + calculateTotaltantrikmanyataamount(workmasterdata),
 
   };
@@ -201,7 +202,8 @@ const Workmaster = ({
     Number(totalestamountsstate) + Number(totalAmountest);
 
   const totalamountminus = (estimatetotalamount as any) - totalamountminusdata;
-
+  const fixestimatetotalamount = estimatetotalamount as any - customRow.estimated_amountfix
+  
   const columns = [
     {
       accessorKey: "serial_number",
@@ -668,16 +670,19 @@ const Workmaster = ({
         seTtotalestamountsstate(inputValue);
         // Ensure inputValue is converted to a number for comparison
         const numericInputValue = Number(inputValue);
-
+       
         // Check if numericInputValue is a valid number and greater than estimatedTotalAmount
         if (
           !isNaN(numericInputValue) &&
-          (((numericInputValue as any) > totalamountminus) as any)
+          (((numericInputValue as any) > fixestimatetotalamount) as any)
         ) {
+
           alert(
+
             "This is invalid. The estimated amount cannot exceed the total amount."
           );
-        } else {
+        }
+        else {
           setEstimatedAmount(inputValue);
         }
       },
