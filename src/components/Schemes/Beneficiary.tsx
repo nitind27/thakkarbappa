@@ -2,7 +2,7 @@
 "use client";
 import React, { useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
-import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, TblBeneficiary, TblCaste, TblMembers, TblYojanaType, Villages, YojanaMaster, YojanaYear } from "../type";
+import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, Tblbankmaster, TblBeneficiary, TblCaste, TblMembers, TblYojanaType, Villages, YojanaMaster, YojanaYear } from "../type";
 import { useRouter } from 'next/navigation';
 import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
@@ -14,6 +14,7 @@ import { createConfirmation } from "react-confirm";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
 import { formatDate } from "@/lib/utils";
 import Addmembers from "./Addmembers";
+import { diskStorage } from "multer";
 
 type Props = {
     initialcategoryData: SubCategory[];
@@ -28,9 +29,10 @@ type Props = {
     Villages: Villages[];
     castdata: TblCaste[];
     membersadd: TblMembers[];
+      Bankmasterdata: Tblbankmaster[];
 };
 
-const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata, membersadd }: Props) => {
+const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata, membersadd ,Bankmasterdata}: Props) => {
     const t = useTranslations("beneficiary");
     const router = useRouter();
 
@@ -531,19 +533,6 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                     `Grampanchayat inserted successfully!`
                 );
 
-                // Update local state without page reload
-                // if (!updateTownId) {
-                //   // If inserting a new entry
-                //   const newGrampanchayat = await response.json();
-                //   setGrampanchayatData((prevData) => [...prevData, newGrampanchayat]);
-                // } else {
-                //   // If updating an existing entry
-                //   setGrampanchayatData((prevData: any) =>
-                //     prevData.map((gp: any) =>
-                //       gp.id === updateTownId ? { ...gp, ...bodyData } : gp
-                //     )
-                //   );
-                // }
                 router.refresh();
                 handleClosePrintgpvi();
             } else {
@@ -699,7 +688,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         setCategoryName("");
         // setTown("");
         setNameMarathi("");
-        setTown("");
+        // setTown("");
         setMahsulgaav("");
         // setDist("");
         setPopulation("");
@@ -843,21 +832,19 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         {
             label: `${t('GramPanchayat')}`,
             value: town, // Ensure this uses townName
-
+        
             type: "inputselectgp",
             placeholder: `${t('GramPanchayat')}`,
             onChange: (e: any) => setTown(e.target.value), // Keep this to set townName
-
+        
             options: grampanchayat
-                .filter((type) =>
-                    String(type.taluka_id) == dist
-
-                )
-                .map((yojna, index) => ({
+                .filter((type) => String(type.taluka_id) == dist)
+                .map((yojna, index, array) => ({
                     value: yojna.id,
-                    label: `${index + 1}) ${yojna.name_marathi}`,
-                })),
-        },
+                    label: `${array.length - index}) ${yojna.name_marathi}`, // Reverse the order of display without altering the index
+                })).reverse(),
+        }
+,        
 
 
         ...(yojnatyp !== "3" ? [
@@ -876,25 +863,33 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                     .map((yojna) => ({
                         value: yojna.id,
                         label: yojna.name_marathi,
-                    })),
+                    })).reverse(),
             },
         ] : []),
-
 
 
         {
             label: `${t('BankName')}`,
             value: bankname || "",
-            type: "text",
-
+            type: "select",
+            options: Bankmasterdata
+            .filter((type) =>
+                String(type.talukaid) == dist 
+         
+            ).map((yojna) => ({
+                value: yojna.bank_name,
+                label: yojna.bank_name,
+            })),
             required: true,
             placeholder: `${t("BankName")}`,
             onChange: (e: any) => setBankname(e.target.value),
         },
+      
         {
             label: `${t('IFSCCode')}`,
-            value: ifccode || "",
+            value: Bankmasterdata.filter((f)=>f.bank_name == bankname && f.talukaid == dist as any).map((f)=>f.ifsc_code),
             type: "text",
+            readonly:true,
             required: true,
             placeholder: `${t("IFSCCode")}`,
             onChange: (e: any) => setIFCcode(e.target.value),
@@ -1010,7 +1005,260 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             placeholder: `${t("marathiname")}`,
             onChange: (e: any) => setNameMarathi(e.target.value),
         },
+
+        
     ]
+    if (yojnatyp == "1") {
+        formFields.push({
+            label: `${t('surname')}`,
+            value: surname || "",
+            required: true,
+            type: "text",
+            placeholder: `${t('surname')}`,
+            onChange: (e: any) => setSurname(e.target.value),
+        },);
+        formFields.push({
+            label: `${t('firstname')}`,
+            value: firstname || "",
+            type: "text",
+            required: true,
+            placeholder: `${t('firstname')}`,
+            onChange: (e: any) => setFistname(e.target.value),
+        },);
+        formFields.push({
+            label: `${t('parentsname')}`,
+            value: parentsname || "",
+            type: "text",
+            required: true,
+            placeholder: `${t('parentsname')}`,
+            onChange: (e: any) => setParentsname(e.target.value),
+        },);
+        // formFields.push({
+        //     label: `${t('Organization')}`,
+        //     value: organizationname || "",
+        //     type: "text",
+        //     required: true,
+        //     placeholder: `${t('Organization')}`,
+        //     onChange: (e: any) => setorganizationname(e.target.value),
+        // },);
+        // formFields.push({
+        //     label: `${t('Commencementorderdate')}`,
+        //     value: Commencementdate || "",
+        //     type: "date",
+        //     required: true,
+        //     placeholder: `${t('Commencementorderdate')}`,
+        //     onChange: (e: any) => setCommencementdate(e.target.value),
+        // },);
+        formFields.push({
+            label: `${t('Cast')}`,
+            value: cast || "",
+            type: "select",
+            required: true,
+            options: castdata.map((cast: TblCaste) => ({
+                value: cast.caste_id,
+                label: cast.caste_name,
+            })),
+            placeholder: `${t('Cast')}`,
+            onChange: (e: any) => setcast(e.target.value),
+        },);
+
+
+
+
+        formFields.push({
+            label: `${t('beneficiarytype')}`,
+            value: beneficiariestype || "",
+            type: "select",
+            required: true,
+            options: optionsdata.map((cast: any) => ({
+                value: cast.value,
+                label: cast.label,
+            })),
+            placeholder: `${t('beneficiarytype')}`,
+            onChange: (e: any) => setbeneficiariestype(e.target.value),
+
+
+        },);
+
+        formFields.push({
+            label: `${t('Registrationcard')}`,
+            value: rationcardnumber || "",
+            type: "text",
+            required: true,
+            placeholder: `${t('Registrationcard')}`,
+            onChange: (e: any) => setrationcardnumber(e.target.value),
+        },);
+        formFields.push({
+            label: `${t('aadharcard')}`,
+            value: aadharcardnumber || "",
+            type: "text",
+            required: true,
+            placeholder: `${t('aadharcard')}`,
+            // onChange: (e: any) => setaddharcardnumber(e.target.value),
+            onChange: (e: any) => {
+                // Ensure that only digits are allowed and limit to 11 digits
+                const inputValue = e.target.value;
+                if (/^\d*$/.test(inputValue) && inputValue.length <= 12) {
+                    setaddharcardnumber(inputValue);
+                }
+            },
+        },);
+        formFields.push({
+            label: `${t('Contact')}`,
+            value: mobilenumber || "",
+            required: true,
+            type: "text",
+            placeholder: `${t('Contact')}`,
+            // onChange: (e: any) => setmobilenumber(e.target.value),
+
+            onChange: (e: any) => {
+                // Ensure that only digits are allowed and limit to 11 digits
+                const inputValue = e.target.value;
+                if (/^\d*$/.test(inputValue) && inputValue.length <= 12) {
+                    setmobilenumber(inputValue);
+                }
+            },
+        }, {
+            label: `${t('Eligible40')}`,
+            value: fourty || "",
+            required: false,
+
+            type: "checkbox",
+            placeholder: `40%`,
+            onChange: (e: any) => setfourty(e.target.value),
+        },
+            {
+                label: `${t('Eligible60')}`,
+                value: sixty || "",
+                type: "checkbox",
+                required: false,
+                placeholder: `60%`,
+                onChange: (e: any) => setsixty(e.target.value),
+            },
+            {
+                label: `${t('Eligible100')}`,
+                value: hundred || "",
+                type: "checkbox",
+                required: false,
+                placeholder: `100%`,
+                onChange: (e: any) => sethundred(e.target.value),
+            },);
+
+    } else if (yojnatyp == "2") {
+        formFields.push({
+            label: `${t('bachtgat')}`,
+            value: savinggroupname || "",
+            type: "text",
+            required: true,
+            placeholder: `${t('bachtgat')}`,
+            onChange: (e: any) => setsavinggroupname(e.target.value),
+        },
+            {
+                label: `${t('registerdcert')}`,
+                value: Registrationerti || "",
+                type: "text",
+                required: true,
+                placeholder: `${t('registerdcert')}`,
+                onChange: (e: any) => setRegistrationerti(e.target.value),
+            },
+            {
+                label: `${t('members')}`,
+                value: numberofmember || "",
+                type: "text",
+                required: true,
+                placeholder: `${t('members')}`,
+                onChange: (e: any) => setnumberofmember(e.target.value),
+            },
+            // {
+            //     label: `${t('sansthaname')}`,
+            //     value: organizationname || "",
+            //     type: "text",
+            //     required: true,
+            //     placeholder: `${t('sansthaname')}`,
+            //     onChange: (e: any) => setorganizationname(e.target.value),
+            // },
+            // {
+            //     label: `${t('Commencementorderdate')}`,
+            //     value: Commencementdate || "",
+            //     type: "date",
+            //     required: true,
+            //     placeholder: `${t('Commencementorderdate')}`,
+            //     onChange: (e: any) => setCommencementdate(e.target.value),
+            // },
+            {
+                label: `${t('Eligible40')}`,
+                value: fourty || "",
+                type: "checkbox",
+                required: false,
+                placeholder: `40%`,
+                onChange: (e: any) => setfourty(e.target.value),
+            },
+            {
+                label: `${t('Eligible60')}`,
+                value: sixty || "",
+                type: "checkbox",
+                required: false,
+
+
+                placeholder: `60%`,
+                onChange: (e: any) => setsixty(e.target.value),
+            },
+            
+            {
+                label: `${t('Eligible100')}`,
+                value: hundred || "",
+                type: "checkbox", required: false,
+                placeholder: `100%`,
+                onChange: (e: any) => sethundred(e.target.value),
+            },
+
+        );
+    }
+    else if (yojnatyp == "3") {
+        formFields.push({
+            label: `${t('sansthaname')}`,
+            value: organizationname || "",
+            type: "text",
+            required: true,
+            placeholder: `${t('sansthaname')}`,
+            onChange: (e: any) => setorganizationname(e.target.value),
+        },);
+        formFields.push({
+            label: `${t('Commencementorderdate')}`,
+            value: Commencementdate || "",
+            type: "date",
+            required: true,
+            placeholder: `${t('Commencementorderdate')}`,
+            onChange: (e: any) => setCommencementdate(e.target.value),
+        },);
+        formFields.push(
+            {
+                label: `${t('Eligible40')}`,
+                value: (fourty == "true" ? 1 : fourty || "").toString(),
+                type: "text",
+                placeholder: `%`,
+                required: false,
+                onChange: (e: any) => setfourty(e.target.value),
+            },
+            {
+                label: `${t('Eligible60')}`,
+                value: (sixty == "true" ? 1 : sixty || "").toString(),
+                type: "text",
+                placeholder: `%`,
+                required: false,
+                onChange: (e: any) => setsixty(e.target.value),
+            },
+            {
+                label: `${t('Eligible100')}`,
+                value: (hundred == "true" ? 1 : hundred || "").toString(),
+                type: "text",
+                required: false,
+                placeholder: `%`,
+                onChange: (e: any) => sethundred(e.target.value),
+            },
+        );
+
+    }
 
     return (
         <div>

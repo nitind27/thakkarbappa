@@ -504,3 +504,12 @@ export type TblMembers = {
   ins_date_time?: Date; // Optional, as it defaults to now()
   update_date_time?: Date | null; // Can be null
 };
+
+
+export type Tblbankmaster = {
+  id: number;
+  talukaid?: number | null;
+  bank_name?: string | null;
+  ifsc_code?: string | null;
+  status?: string | null;
+};

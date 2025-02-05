@@ -610,3 +610,12 @@ model tbl_members {
   ins_date_time      DateTime @default(now())
   update_date_time   DateTime?
 }
+
+
+model tbl_bankmaster {
+  id        Int     @id @default(autoincrement())
+  talukaid  Int?    
+  bank_name String? @db.VarChar(25)
+  ifsc_code String? @db.VarChar(20)
+    status    String? @db.VarChar(10)
+}

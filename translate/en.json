@@ -40,6 +40,7 @@
     "subcategory": "SubCategory",
     "Plan_type": "Plan Type",
     "Plan": "Plan",
+    "BankMaster":"Bank Master",
     "App_plan": "App Plan",
     "Beneficiary": "Beneficiary",
     "Sightseeing_Transport": "Sightseeing Transport",
@@ -525,5 +526,24 @@
     "updatepage": "Work Master",
     "submit": "Add",
     "editsubmit": "Edit"
+  },
+  "Bankmaster":{
+    "title": "Bank Details",
+    "SrNo": " S.No",
+    "Dist": "Taluka",
+    "BankName":"Bank Name",
+    "IFSCCode":"IFSC Code",
+    "Status": "Status",
+    "Action": "Action",
+    "edit": "Edit",
+    "Active": "Active",
+    "Deactive": "Deactive",
+    "insertpage": "Work Master",
+    "updatepage": "Work Master",
+    "submit": "Add",
+    "editsubmit": "Edit"
+  
+
   }
+
 }

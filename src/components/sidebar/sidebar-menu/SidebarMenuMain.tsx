@@ -198,6 +198,13 @@ const SidebarMenuMain = () => {
             hasBullet={true}
             onClick={() => handleItemClick(`/${localActive}/manage/supervisor`)} // Store path on click
           />
+               <SidebarMenuItem
+            to={`/${localActive}/yojna/schemes/bankmaster`}
+            title={t("BankMaster")}
+            hasBullet={true}
+            onClick={() => handleItemClick(`/${localActive}/yojna/schemes/bankmaster`)} // Store path on click
+          />
+
 
         </SidebarMenuItemWithSub>
         {/* Disbursement Funds Menu Item */}

@@ -39,6 +39,7 @@
     "category": "श्रेणी",
     "subcategory": "उपश्रेणी",
     "Plan_type": "योजना प्रकार",
+    "BankMaster":"बैंक मास्टर",
     "Plan": "योजना",
     "App_plan": "ऐप योजना",
     "Beneficiary": "लाभार्थी",
@@ -521,5 +522,22 @@
     "updatepage": "कार्य मास्टर",
     "submit": "जोड़ें",
     "editsubmit": "संपादित करें"
-  }
+  },
+  "Bankmaster": {
+    "title": "बैंक विवरण",
+    "SrNo": "क्रमांक",
+    "Dist": "तालुका",
+    "BankName": "बैंक का नाम",
+    "IFSCCode": "आईएफएससी कोड",
+    "Status": "स्थिति",
+    "Action": "कार्य",
+    "edit": "संपादित करें",
+    "Active": "सक्रिय",
+    "Deactive": "निष्क्रिय",
+    "insertpage": "कार्य मास्टर",
+    "updatepage": "कार्य मास्टर",
+    "submit": "जोड़ें",
+    "editsubmit": "संपादित करें"
+}
+
 }
