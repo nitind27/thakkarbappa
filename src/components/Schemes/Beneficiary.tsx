@@ -889,7 +889,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             label: `${t('IFSCCode')}`,
             value: Bankmasterdata.filter((f)=>f.bank_name == bankname && f.talukaid == dist as any).map((f)=>f.ifsc_code),
             type: "text",
-            readonly:true,
+            disabled:true,
             required: true,
             placeholder: `${t("IFSCCode")}`,
             onChange: (e: any) => setIFCcode(e.target.value),
