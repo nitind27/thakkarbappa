@@ -131,6 +131,14 @@ const SidebarMenuMain = () => {
               handleItemClick(`/${localActive}/manage/openingbalance`)
             } // Store path on click
           />
+          <SidebarMenuItem
+            to={`/${localActive}/manage/slider`}
+            title={'slider'}
+            hasBullet={true}
+            onClick={() =>
+              handleItemClick(`/${localActive}/manage/slider`)
+            } // Store path on click
+          />
         </SidebarMenuItemWithSub>
 
         <SidebarMenuItemWithSub
@@ -164,25 +172,25 @@ const SidebarMenuMain = () => {
             to={`/${localActive}/yojna/schemes/plans`}
             title={t("Plan")}
             hasBullet={true}
-            onClick={() => handleItemClick(`/${localActive}/yojna/schemes/plans`)} // Store path on click
+            onClick={() => handleItemClick(`/${localActive}/yojna/schemes/plans`)}
           />
           <SidebarMenuItem
             to={`/${localActive}/yojna/schemes/appplans`}
             title={t("App_plan")}
             hasBullet={true}
-            onClick={() => handleItemClick(`/${localActive}/yojna/schemes/appplans`)} // Store path on click
+            onClick={() => handleItemClick(`/${localActive}/yojna/schemes/appplans`)}
           />
           <SidebarMenuItem
             to={`/${localActive}/yojna/schemes/beneficiary`}
             title={t("Beneficiary")}
             hasBullet={true}
-            onClick={() => handleItemClick(`/${localActive}/yojna/schemes/beneficiary`)} // Store path on click
+            onClick={() => handleItemClick(`/${localActive}/yojna/schemes/beneficiary`)}
           />
           <SidebarMenuItem
             to={`/${localActive}/yojna/schemes/parivahan`}
             title={t("Sightseeing_Transport")}
             hasBullet={true}
-            onClick={() => handleItemClick(`/${localActive}/yojna/schemes/parivahan`)} // Store path on click
+            onClick={() => handleItemClick(`/${localActive}/yojna/schemes/parivahan`)}
           />
           <SidebarMenuItem
             to={`/${localActive}/manage/representative`}
@@ -190,33 +198,23 @@ const SidebarMenuMain = () => {
             hasBullet={true}
             onClick={() =>
               handleItemClick(`/${localActive}/manage/representative`)
-            } // Store path on click
+            }
           />
           <SidebarMenuItem
             to={`/${localActive}/manage/supervisor`}
             title={t("Costmatters")}
             hasBullet={true}
-            onClick={() => handleItemClick(`/${localActive}/manage/supervisor`)} // Store path on click
+            onClick={() => handleItemClick(`/${localActive}/manage/supervisor`)}
           />
-               <SidebarMenuItem
+          <SidebarMenuItem
             to={`/${localActive}/yojna/schemes/bankmaster`}
             title={t("BankMaster")}
             hasBullet={true}
-            onClick={() => handleItemClick(`/${localActive}/yojna/schemes/bankmaster`)} // Store path on click
+            onClick={() => handleItemClick(`/${localActive}/yojna/schemes/bankmaster`)}
           />
 
 
         </SidebarMenuItemWithSub>
-        {/* Disbursement Funds Menu Item */}
-
-
-        {/* <SidebarMenuItem
-          to={`/${localActive}/workmaster`}
-          icon="abstract-2"
-          title={"Workmaster"}
-          fontIcon="bi-app-notification"
-          onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)} // Store path on click
-        /> */}
 
         <SidebarMenuItemWithSub
           to={`/${localActive}/workmaster`}
@@ -229,15 +227,15 @@ const SidebarMenuMain = () => {
             to={`/${localActive}/workmaster`}
             title={"Add"}
             hasBullet={true}
-            onClick={() => handleItemClick(`/${localActive}/workmaster`)} // Store path on click
+            onClick={() => handleItemClick(`/${localActive}/workmaster`)}
           />
           <SidebarMenuItem
             to={`/${localActive}/disbursementfunds`}
-            // icon="home"
+
             title={t("disbursementfunds")}
-            // fontIcon="bi-app-indicator"
+
             hasBullet={true}
-            onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)} // Store path on click
+            onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)}
           />
         </SidebarMenuItemWithSub>
         <SidebarMenuItem
@@ -245,14 +243,14 @@ const SidebarMenuMain = () => {
           icon="search-list"
           title={"Student List"}
           fontIcon="bi-app-notification"
-          onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)} // Store path on click
+          onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)}
         />
         <SidebarMenuItem
           to={`/${localActive}/notification`}
           icon="notification"
           title={"Notification"}
           fontIcon="bi-app-notification"
-          onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)} // Store path on click
+          onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)}
         />
       </div>
     </>

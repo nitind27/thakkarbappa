@@ -513,3 +513,10 @@ export type Tblbankmaster = {
   ifsc_code?: string | null;
   status?: string | null;
 };
+
+export type TblSlider = {
+  slider_id: number;
+  slider_name: string;
+  slider_img: string;
+  img_type: string;
+};

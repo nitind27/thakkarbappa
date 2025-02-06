@@ -2,10 +2,13 @@ import { SidebarMenuMain } from "./SidebarMenuMain";
 
 const SidebarMenu = () => {
   return (
-    <div className="app-sidebar-menu overflow-hidden flex-column-fluid"
-      style={{
-        backgroundColor: "#0D0E12"
-      }}
+    <div className="app-sidebar-menu overflow-scroll flex-column-fluid sidebaroverflow"
+    style={{
+      backgroundColor: "#0D0E12",
+      overflowY: "scroll",
+      scrollbarWidth: "none", // For Firefox
+      msOverflowStyle: "none", // For Internet Explorer/Edge
+    }}
     >
       <div
         id="kt_app_sidebar_menu_wrapper"

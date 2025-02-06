@@ -619,3 +619,10 @@ model tbl_bankmaster {
   ifsc_code String? @db.VarChar(20)
     status    String? @db.VarChar(10)
 }
+
+model tbl_slider {
+  slider_id   Int     @id @default(autoincrement())
+  slider_name String  @db.VarChar(255)
+  slider_img  String  @db.VarChar(255)
+  img_type    String  @db.VarChar(50)
+}
