@@ -28,8 +28,9 @@ const Appplans = ({ initialcategoryData, YojnaYear, category, yojnamasterapp }: 
     const [categoryName, setCategoryName] = useState("");
     const [subcategoryName, setSubCategoryName] = useState("");
     const [yojnayear, setYojnaYear] = useState("");
-
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [yojnname, setyojnaname] = useState("");
+    const [yojnid, setyojnaid] = useState("");
     const [amount, setAmount] = useState("");
 
     const [error, setError] = useState<string>("");
@@ -76,10 +77,10 @@ const Appplans = ({ initialcategoryData, YojnaYear, category, yojnamasterapp }: 
         .reverse(); // Reverse the order to show the last added items first
 
     const columns = [
-       {
+        {
             accessorKey: "serial_number",
             header: () => (
-                <div style={{ fontWeight: 'bold',padding: '5px' }}>
+                <div style={{ fontWeight: 'bold', padding: '5px' }}>
                     {t("SrNo")}
                 </div>
             ),
@@ -140,10 +141,69 @@ const Appplans = ({ initialcategoryData, YojnaYear, category, yojnamasterapp }: 
                             ? `${t("Deactive")}`
                             : `${t("Active")}`}
                     </button>
+                    <button
+                        className="btn btn-sm btn-primary ms-5"
+                        onClick={() => handleImageClick(row.original.yojana_id)}
+                    >
+                        Upload Image
+                    </button>
                 </div>
             ),
         },
     ];
+
+    const handleImageClick = (yojana_id: any) => {
+        // Open file input to select image
+        setyojnaid(yojana_id);
+        document.getElementById("fileInput")?.click();
+    };
+
+    const handleFileChange = async (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const files = event.target.files;
+        if (files && yojnid) {
+            const selectedFiles = Array.from(files).slice(0, 3); // Limit to 3 files
+            setSelectedFile(selectedFiles as any); // Update state with array of files
+
+            // Upload each selected image
+            for (const file of selectedFiles) {
+                await uploadImage(yojnid as any, file);
+            }
+        }
+    };
+
+    const uploadImage = async (studentId: number, file: File) => {
+
+        const formData = new FormData();
+        formData.append("yojna_img", file);
+
+        try {
+            const res = await fetch(`/api/yojnamasterapp/upload/${studentId}`, {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                toast.success("Image uploaded successfully!");
+
+                // Update the school data with the new image URL
+                // const updatedData = studentdata.map((school) =>
+                //     school.student_id == studentId
+                //         ? { ...school, profile_photo: data.profile_photo }
+                //         : school
+                // );
+                // console.log('fsdafee', updatedData)
+                // setstudentdata(updatedData);
+            } else {
+                toast.error(data.error || "Failed to upload image.");
+            }
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            toast.error("Error uploading image.");
+        }
+    };
 
     const handleDeactivate = async (category_id: any, currentStatus: any) => {
         const confirmMessage =
@@ -343,7 +403,7 @@ const Appplans = ({ initialcategoryData, YojnaYear, category, yojnamasterapp }: 
                             options: YojnaYear.map((year: YojanaYear) => ({
                                 value: year.yojana_year_id,
                                 label: year.yojana_year,
-                            })),
+                            })).reverse(),
                             placeholder: `${t("year")}`, // Optional placeholder for select input
                         },
                         {
@@ -372,6 +432,14 @@ const Appplans = ({ initialcategoryData, YojnaYear, category, yojnamasterapp }: 
                             : t("submit")
                 }
                 disabledButton={isLoading}
+            />
+            <input
+                type="file"
+                id="fileInput"
+                style={{ display: "none" }}
+                multiple
+                onChange={handleFileChange}
+                accept="image/*"
             />
         </div>
     );

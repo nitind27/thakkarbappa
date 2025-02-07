@@ -152,6 +152,7 @@ const CustomModal: React.FC<any> = ({
                   </span>
 
                   {field.type === "text" ? (
+
                     <Form.Control
                       type="text"
                       value={field.value as string}

@@ -29,10 +29,10 @@ type Props = {
     Villages: Villages[];
     castdata: TblCaste[];
     membersadd: TblMembers[];
-      Bankmasterdata: Tblbankmaster[];
+    Bankmasterdata: Tblbankmaster[];
 };
 
-const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata, membersadd ,Bankmasterdata}: Props) => {
+const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata, membersadd, Bankmasterdata }: Props) => {
     const t = useTranslations("beneficiary");
     const router = useRouter();
 
@@ -713,7 +713,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
 
         setShowPrintModalgp(false);
         setShowPrintModalvi(false);
- 
+
         setCategoryName("");
         setError("");
         resetgpvi();
@@ -832,11 +832,11 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
         {
             label: `${t('GramPanchayat')}`,
             value: town, // Ensure this uses townName
-        
+
             type: "inputselectgp",
             placeholder: `${t('GramPanchayat')}`,
             onChange: (e: any) => setTown(e.target.value), // Keep this to set townName
-        
+
             options: grampanchayat
                 .filter((type) => String(type.taluka_id) == dist)
                 .map((yojna, index, array) => ({
@@ -844,7 +844,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                     label: `${array.length - index}) ${yojna.name_marathi}`, // Reverse the order of display without altering the index
                 })).reverse(),
         }
-,        
+        ,
 
 
         ...(yojnatyp !== "3" ? [
@@ -873,23 +873,23 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             value: bankname || "",
             type: "select",
             options: Bankmasterdata
-            .filter((type) =>
-                String(type.talukaid) == dist 
-         
-            ).map((yojna) => ({
-                value: yojna.bank_name,
-                label: yojna.bank_name,
-            })),
+                .filter((type) =>
+                    String(type.talukaid) == dist
+
+                ).map((yojna) => ({
+                    value: yojna.bank_name,
+                    label: yojna.bank_name,
+                })),
             required: true,
             placeholder: `${t("BankName")}`,
             onChange: (e: any) => setBankname(e.target.value),
         },
-      
+
         {
             label: `${t('IFSCCode')}`,
-            value: Bankmasterdata.filter((f)=>f.bank_name == bankname && f.talukaid == dist as any).map((f)=>f.ifsc_code),
+            value: Bankmasterdata.filter((f) => f.bank_name == bankname && f.talukaid == dist as any).map((f) => f.ifsc_code),
             type: "text",
-            disabled:true,
+            disabled: true,
             required: true,
             placeholder: `${t("IFSCCode")}`,
             onChange: (e: any) => setIFCcode(e.target.value),
@@ -948,7 +948,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             placeholder: `${t("marathiname")}`,
             onChange: (e: any) => setNameMarathi(e.target.value),
         },
-    
+
     ]
 
     const formFieldsVi = [
@@ -1006,50 +1006,41 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             onChange: (e: any) => setNameMarathi(e.target.value),
         },
 
-        
+
     ]
     if (yojnatyp == "1") {
-        formFields.push({
+
+        const surnameField = {
             label: `${t('surname')}`,
             value: surname || "",
             required: true,
             type: "text",
             placeholder: `${t('surname')}`,
             onChange: (e: any) => setSurname(e.target.value),
-        },);
-        formFields.push({
+        };
+        formFields.splice(8, 0, surnameField);
+        const firstnameField = {
             label: `${t('firstname')}`,
             value: firstname || "",
             type: "text",
             required: true,
             placeholder: `${t('firstname')}`,
             onChange: (e: any) => setFistname(e.target.value),
-        },);
-        formFields.push({
+        };
+        formFields.splice(9, 0, firstnameField);
+        const parentsnameField = {
             label: `${t('parentsname')}`,
             value: parentsname || "",
             type: "text",
             required: true,
             placeholder: `${t('parentsname')}`,
             onChange: (e: any) => setParentsname(e.target.value),
-        },);
-        // formFields.push({
-        //     label: `${t('Organization')}`,
-        //     value: organizationname || "",
-        //     type: "text",
-        //     required: true,
-        //     placeholder: `${t('Organization')}`,
-        //     onChange: (e: any) => setorganizationname(e.target.value),
-        // },);
-        // formFields.push({
-        //     label: `${t('Commencementorderdate')}`,
-        //     value: Commencementdate || "",
-        //     type: "date",
-        //     required: true,
-        //     placeholder: `${t('Commencementorderdate')}`,
-        //     onChange: (e: any) => setCommencementdate(e.target.value),
-        // },);
-        formFields.push({
+        };
+        formFields.splice(10, 0, parentsnameField);
+        // Insert at index 2, shifting existing elements.
+
+
+        const castField = {
             label: `${t('Cast')}`,
             value: cast || "",
             type: "select",
@@ -1060,12 +1051,11 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             })),
             placeholder: `${t('Cast')}`,
             onChange: (e: any) => setcast(e.target.value),
-        },);
+        };
+        formFields.splice(11, 0, castField);
 
 
-
-
-        formFields.push({
+        const beneficiarytypeField = {
             label: `${t('beneficiarytype')}`,
             value: beneficiariestype || "",
             type: "select",
@@ -1076,19 +1066,23 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             })),
             placeholder: `${t('beneficiarytype')}`,
             onChange: (e: any) => setbeneficiariestype(e.target.value),
+        };
+        formFields.splice(12, 0, beneficiarytypeField);
 
 
-        },);
 
-        formFields.push({
+
+        const RegistrationcardField = {
             label: `${t('Registrationcard')}`,
             value: rationcardnumber || "",
             type: "text",
             required: true,
             placeholder: `${t('Registrationcard')}`,
             onChange: (e: any) => setrationcardnumber(e.target.value),
-        },);
-        formFields.push({
+        };
+        formFields.splice(14, 0, RegistrationcardField);
+
+        const aadharcardField = {
             label: `${t('aadharcard')}`,
             value: aadharcardnumber || "",
             type: "text",
@@ -1102,8 +1096,12 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                     setaddharcardnumber(inputValue);
                 }
             },
-        },);
-        formFields.push({
+        };
+        formFields.splice(13, 0, aadharcardField);
+
+
+
+        const ContactField = {
             label: `${t('Contact')}`,
             value: mobilenumber || "",
             required: true,
@@ -1118,7 +1116,15 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                     setmobilenumber(inputValue);
                 }
             },
-        }, {
+        };
+        formFields.splice(15, 0, ContactField);
+
+
+
+
+        formFields.push({
+
+
             label: `${t('Eligible40')}`,
             value: fourty || "",
             required: false,
@@ -1203,7 +1209,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 placeholder: `60%`,
                 onChange: (e: any) => setsixty(e.target.value),
             },
-            
+
             {
                 label: `${t('Eligible100')}`,
                 value: hundred || "",

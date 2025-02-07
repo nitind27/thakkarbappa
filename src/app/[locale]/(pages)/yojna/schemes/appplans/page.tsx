@@ -1,7 +1,7 @@
 // app/page.tsx
 import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
-import Cluster from "@/app/[locale]/title/cluster";import Planapptitle from "@/app/[locale]/title/Planapptitle";
- import Loader from "@/common/Loader ";
+import Cluster from "@/app/[locale]/title/cluster"; import Planapptitle from "@/app/[locale]/title/Planapptitle";
+import Loader from "@/common/Loader ";
 ;
 import Clusteradd from "@/components/manage/Clusteradd";
 import Appplans from "@/components/Schemes/Appplans";
@@ -49,13 +49,14 @@ const Page = async () => {
         { label: 'dashboard', href: '/dashboard' },
         { label: 'App_plan', href: '/yojna/schemes/appplans' },
     ];
+    const yojnayearfilter = YojnaYear.filter((data) => data.is_delete == "No").map((data) => data)
     return (
         <div>
 
             <h1 className="card card-body mt-5">
                 <TitleCard breadcrumbs={breadcrumbs} />
             </h1>
-            <Appplans initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} yojnatype={yojnatype} yojnamasterapp={yojnamasterapp} />
+            <Appplans initialcategoryData={subCategory} YojnaYear={yojnayearfilter} Bankdata={Bankdata} category={category} yojnatype={yojnatype} yojnamasterapp={yojnamasterapp} />
         </div>
     );
 };
