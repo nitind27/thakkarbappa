@@ -11,14 +11,11 @@ const nextConfig = {
 
         remotePatterns: [
             {
-                hostname: "thakkarbappa.nrcjewels.com",
-                pathname: '/uploads/**',
+                hostname: process.env.IMAGE_HOSTNAME,
             },
             {
-                hostname: "thakkarbappa.nrcjewels.com",
-                pathname: '/uploads/**',
+                hostname: process.env.AWS_IMAGE_HOSTNAME,
             },
-            
         ],
     },
 };

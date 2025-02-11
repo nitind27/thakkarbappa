@@ -370,8 +370,8 @@ const Notification = ({ initialnotificationdata }: Props) => {
             {
               label: `${t("link")}`,
               value: links,
-              required: true,
-              type: "text",
+              // required: true,
+              type: "url",
               placeholder: `${t("link")}`,
 
               onChange: (e: any) => setLinks(e.target.value),
