@@ -35,7 +35,7 @@ const Page = async () => {
     { label: 'dashboard', href: '/dashboard' },
     { label: 'notificaiton', href: '/notification' },
   ];
-  const notificationfilterdata = notificationdata.filter((data) => data.status == "Stop").map((data) => data)
+  const notificationfilterdata = notificationdata.filter((data) => data.status == "Start").map((data) => data)
   return (
     <div>
 
