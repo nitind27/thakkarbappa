@@ -163,139 +163,151 @@ const CustomModal: React.FC<any> = ({
                       isInvalid={!!formErrors[field.label]}
                     />
                   ) :
-                    field.type === "url" ? (
+                    field.type === "textwithoutval" ? (
 
                       <Form.Control
-                        type="url"
+                        type="text"
                         value={field.value as string}
                         onChange={field.onChange as any}
                         placeholder={field.placeholder}
                         disabled={field.disabled}
                         className="mt-2"
+                      // isInvalid={!!formErrors[field.label]}
+                      />
+                    ) :
+                      field.type === "url" ? (
+
+                        <Form.Control
+                          type="url"
+                          value={field.value as string}
+                          onChange={field.onChange as any}
+                          placeholder={field.placeholder}
+                          disabled={field.disabled}
+                          className="mt-2"
                         // isInvalid={!!formErrors[field.label]}
-                      />
-                    ) : field.type === "email" ? (
-                      <Form.Control
-                        type="email"
-                        value={field.value as string}
-                        onChange={field.onChange as any}
-                        placeholder={field.placeholder}
-                        disabled={field.disabled}
-                        className="mt-2"
-                        isInvalid={!!formErrors[field.label]}
-                      />
-                    ) : field.type === "select" ? (
-                      <Form.Control
-                        as="select"
-                        value={field.value as string}
-                        disabled={field.disabled}
-                        className="mt-2"
-                        onChange={field.onChange as any}
-                        isInvalid={!!formErrors[field.label]}
-                      >
-                        <option value="">
-                          {field.placeholder || "Select an option"}
-                        </option>
-                        {field.options?.map((option: any) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </Form.Control>
-                    ) : field.type === "inputselectgp" ? (
-                      <InputGroup className="mt-2">
+                        />
+                      ) : field.type === "email" ? (
                         <Form.Control
-                          as="select"
+                          type="email"
                           value={field.value as string}
-                          disabled={field.disabled}
-                          className=""
-
                           onChange={field.onChange as any}
-                          isInvalid={!!formErrors[field.label]}
-                        >
-                          <option value="">
-                            {field.placeholder || "Select an option"}
-                          </option>
-                          {field.options?.map((option: any) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </Form.Control>
-
-
-                        {btttongroupgp}
-
-                      </InputGroup>
-                    ) : field.type === "inputselectvi" ? (
-                      <InputGroup className="mt-2">
-                        <Form.Control
-                          as="select"
-                          value={field.value as string}
+                          placeholder={field.placeholder}
                           disabled={field.disabled}
-                          className=""
-
-                          onChange={field.onChange as any}
-                          isInvalid={!!formErrors[field.label]}
-                        >
-                          <option value="">
-                            {field.placeholder || "Select an option"}
-                          </option>
-                          {field.options?.map((option: any) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </Form.Control>
-
-
-                        {btttongroupgpvi}
-
-                      </InputGroup>
-                    ) : field.type === "file" ? (
-                      <Form.Control
-                        type="file"
-                        className="mt-2"
-                        onChange={(e: any) => {
-                          if (e.target.files) {
-                            field.onChange(e);
-                          }
-                        }}
-                        isInvalid={!!formErrors[field.label]}
-                      />
-                    ) : field.type === "date" ? (
-                      <Form.Control
-                        type="date"
-
-                        value={field.value ? new Date(field.value).toISOString().split("T")[0] : ""}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          field.onChange({
-                            target: { value: e.target.value },
-                          } as any);
-                        }}
-                        disabled={field.disabled}
-                        className="form-control mt-2"
-                      />
-
-                    ) : field.type === "checkbox" ? (
-                      <>
-
-
-                        <Form.Check
-                          type="checkbox"
-                          label={field.placeholder || field.label}
-                          checked={!!(field.value as any)}
-                          className="mt-3"
-                          onChange={(e) =>
-                            field.onChange({
-                              target: { value: e.target.checked },
-                            } as any)
-                          }
+                          className="mt-2"
                           isInvalid={!!formErrors[field.label]}
                         />
+                      ) : field.type === "select" ? (
+                        <Form.Control
+                          as="select"
+                          value={field.value as string}
+                          disabled={field.disabled}
+                          className="mt-2"
+                          onChange={field.onChange as any}
+                          isInvalid={!!formErrors[field.label]}
+                        >
+                          <option value="">
+                            {field.placeholder || "Select an option"}
+                          </option>
+                          {field.options?.map((option: any) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </Form.Control>
+                      ) : field.type === "inputselectgp" ? (
+                        <InputGroup className="mt-2">
+                          <Form.Control
+                            as="select"
+                            value={field.value as string}
+                            disabled={field.disabled}
+                            className=""
 
-                      </>
-                    ) : null}
+                            onChange={field.onChange as any}
+                            isInvalid={!!formErrors[field.label]}
+                          >
+                            <option value="">
+                              {field.placeholder || "Select an option"}
+                            </option>
+                            {field.options?.map((option: any) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </Form.Control>
+
+
+                          {btttongroupgp}
+
+                        </InputGroup>
+                      ) : field.type === "inputselectvi" ? (
+                        <InputGroup className="mt-2">
+                          <Form.Control
+                            as="select"
+                            value={field.value as string}
+                            disabled={field.disabled}
+                            className=""
+
+                            onChange={field.onChange as any}
+                            isInvalid={!!formErrors[field.label]}
+                          >
+                            <option value="">
+                              {field.placeholder || "Select an option"}
+                            </option>
+                            {field.options?.map((option: any) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </Form.Control>
+
+
+                          {btttongroupgpvi}
+
+                        </InputGroup>
+                      ) : field.type === "file" ? (
+                        <Form.Control
+                          type="file"
+                          className="mt-2"
+                          onChange={(e: any) => {
+                            if (e.target.files) {
+                              field.onChange(e);
+                            }
+                          }}
+                          isInvalid={!!formErrors[field.label]}
+                        />
+                      ) : field.type === "date" ? (
+                        <Form.Control
+                          type="date"
+
+                          value={field.value ? new Date(field.value).toISOString().split("T")[0] : ""}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            field.onChange({
+                              target: { value: e.target.value },
+                            } as any);
+                          }}
+                          disabled={field.disabled}
+                          className="form-control mt-2"
+                        />
+
+                      ) : field.type === "checkbox" ? (
+                        <>
+
+
+                          <Form.Check
+                            type="checkbox"
+                            label={field.placeholder || field.label}
+                            checked={!!(field.value as any)}
+                            className="mt-3"
+                            onChange={(e) =>
+                              field.onChange({
+                                target: { value: e.target.checked },
+                              } as any)
+                            }
+                            isInvalid={!!formErrors[field.label]}
+                          />
+
+                        </>
+                      ) : null}
 
                   {/* Show error message only for required fields */}
                   {formErrors[field.label] && (

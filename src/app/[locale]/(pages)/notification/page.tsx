@@ -35,13 +35,14 @@ const Page = async () => {
     { label: 'dashboard', href: '/dashboard' },
     { label: 'notificaiton', href: '/notification' },
   ];
+  const notificationfilterdata = notificationdata.filter((data) => data.status == "Stop").map((data) => data)
   return (
     <div>
 
       <h1 className="card card-body mt-5">
-      <TitleCard breadcrumbs={breadcrumbs} />
+        <TitleCard breadcrumbs={breadcrumbs} />
       </h1>
-      <Notification initialnotificationdata={notificationdata} />
+      <Notification initialnotificationdata={notificationfilterdata} />
     </div>
   );
 };

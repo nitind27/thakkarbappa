@@ -270,7 +270,7 @@ const Notification = ({ initialnotificationdata }: Props) => {
       setIsLoading(false); // End loading
     }
   };
- 
+
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -361,7 +361,7 @@ const Notification = ({ initialnotificationdata }: Props) => {
             {
               label: `${t("Detail")}`,
               value: details,
-              type: "text",
+              type: "textwithoutval",
               // required: true,
               placeholder: `${t("Detail")}`,
 
