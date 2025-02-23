@@ -626,3 +626,26 @@ model tbl_slider {
   slider_img  String  @db.VarChar(255)
   img_type    String  @db.VarChar(50)
 }
+
+
+model TblSports {
+  sports_id        Int      @id @default(autoincrement())
+  sports_name      String   @db.VarChar(30)
+  status           String   @default("Active") @db.VarChar(10)
+  ins_date_time    DateTime @db.DateTime
+  update_date_time DateTime? @db.DateTime
+  icon             String   @db.VarChar(255)
+  serial_number    Int      @db.Int
+
+  @@map("tbl_sports")
+}
+
+model SportsInfo {
+ sports_info_id   Int      @id @default(autoincrement())
+  sports_record    String   @db.Text
+  status           String   @default("Active") @db.VarChar(10)
+  ins_date_time    DateTime @db.DateTime
+  update_date_time DateTime? @db.DateTime
+  @@map(name: "tbl_sports_info_new")
+}
+

@@ -520,3 +520,24 @@ export type TblSlider = {
   slider_img: string;
   img_type: string;
 };
+
+
+export type TblSports = {
+  sports_id: number;
+  sports_name: string;
+  status: string;
+  ins_date_time: Date;
+  update_date_time: Date;
+  icon: string;
+  serial_number: number;
+};
+
+export type TblSportsInfoNew = {
+  sports_info_id: number;
+  sports_record: string;
+  status: string;
+  ins_date_time: Date;
+  update_date_time: Date;
+
+}
+

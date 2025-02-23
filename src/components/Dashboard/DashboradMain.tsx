@@ -7,6 +7,7 @@ import DashbordCard from "@/components/Dashboard/SchoolManage/DashbordCard";
 import Thakkarcard from "@/components/Dashboard/Thakkarbappa/Thakkarcard";
 import { useLocale } from "next-intl";
 import Link from "next/link";
+import Sports from "./Sports/Sports";
 
 
 const DashboradMain = () => {
@@ -49,6 +50,11 @@ const DashboradMain = () => {
                         <div className="col-md-3 " onClick={() => handleItemClick(`/dashboard`)}>
                             <Link href={`/${localActive}/dashboard`}>
                                 <Thakkarcard />
+                            </Link>
+                        </div>
+                        <div className="col-md-3 " onClick={() => handleItemClick(`/sports`)}>
+                            <Link href={`/${localActive}/dashboard/sports`}>
+                                <Sports />
                             </Link>
                         </div>
                     </div>
