@@ -527,7 +527,7 @@ export type TblSports = {
   sports_name: string;
   status: string;
   ins_date_time: Date;
-  update_date_time: Date;
+  update_date_time: Date | null;
   icon: string;
   serial_number: number;
 };
@@ -537,7 +537,7 @@ export type TblSportsInfoNew = {
   sports_record: string;
   status: string;
   ins_date_time: Date;
-  update_date_time: Date;
+  update_date_time: Date | null;
 
 }
 
