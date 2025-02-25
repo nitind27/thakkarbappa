@@ -541,3 +541,22 @@ export type TblSportsInfoNew = {
 
 }
 
+
+export type TblAchivments = {
+  achivment_id: number;
+  sports_id: number;
+  student_id: number;
+  standard_id: number;
+  school_id: number;
+  rank: string;
+  competition_date: Date;
+  levels: string;
+  details: string;
+  player_time: string;
+  winning_time: string;
+  state_level: string;
+  status: string;
+  ins_date_time: Date;
+  update_date_time: Date | null;
+
+}

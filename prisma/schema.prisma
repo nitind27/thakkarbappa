@@ -649,3 +649,21 @@ model SportsInfo {
   @@map(name: "tbl_sports_info_new")
 }
 
+model tbl_achivments {
+  achivment_id      Int      @id @default(autoincrement())
+  sports_id        Int
+  student_id       Int
+  standard_id      Int
+  school_id        Int
+  rank             String  @db.VarChar(20)
+  competition_date DateTime
+  levels           String  @db.VarChar(100)
+  details          String  @db.VarChar(255)
+  player_time      String  @db.VarChar(200)
+  winning_time     String  @db.VarChar(200)
+  state_level      String  @db.VarChar(200)
+  status           String  @default("Active") @db.VarChar(10)
+  ins_date_time    DateTime
+  update_date_time DateTime?
+
+}

@@ -23,7 +23,7 @@ const page = async () => {
     const breadcrumbs = [
 
         { label: 'dashboard', href: '/dashboard' },
-        { label: 'school', href: '/dashboard/school' },
+        { label: 'sports', href: '/dashboard/sports' },
 
     ];
 

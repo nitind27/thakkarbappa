@@ -33,7 +33,7 @@ const SportDashboard = ({
     return (
         <div>
             <Link
-                href={`/${localActive}/dashboard/sportwise/${members}`}
+                href={`/${localActive}/dashboard/sportwise/${members}/${schoolname}`}
             // href={"/"}
             >
                 <Card

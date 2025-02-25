@@ -1,6 +1,7 @@
 // components/manage/Clusteradd.tsx
 "use client";
 import React, { useState } from "react";
+import * as XLSX from 'xlsx';
 
 import { formatDate } from "@/lib/utils";
 import { Button } from "react-bootstrap";
@@ -11,19 +12,23 @@ import { validateClusterName } from "@/utils/Validation";
 import { useTranslations } from "next-intl";
 import { createConfirmation } from "react-confirm";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
-import Loader from "@/common/Loader ";
-import Table from "@/components/table/Table";
-import { clusterdata, Schooldata, StudentData, TblSportsInfoNew } from "@/components/type";
+
+import { clusterdata, Schooldata, Standarddata, StudentData, TblAchivments, TblSportsInfoNew } from "@/components/type";
+import TableOption from "@/components/table/TableOption";
+import Link from "next/link";
 
 type Props = {
     filtersportsInfo: TblSportsInfoNew[];
     studentdata: StudentData[];
     schooldata: Schooldata[];
+    standarddata: Standarddata[];
+    TblAchivments: TblAchivments[];
 };
 
-const Sporttable = ({ filtersportsInfo, studentdata, schooldata }: Props) => {
-    const t = useTranslations("IndexPage");
+const Sporttable = ({ filtersportsInfo, studentdata, schooldata, standarddata, TblAchivments }: Props) => {
+    const t = useTranslations("IndexPage"); console.log("TblAchivments", TblAchivments)
     const [showPrintModal, setShowPrintModal] = useState(false);
+    const [showPrintModalachivements, setShowPrintModalachivements] = useState(false);
     const [clusterName, setClusterName] = useState("");
     const [error, setError] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
@@ -32,18 +37,22 @@ const Sporttable = ({ filtersportsInfo, studentdata, schooldata }: Props) => {
         useState<TblSportsInfoNew[]>(filtersportsInfo); // State for cluster data
     const confirm = createConfirmation(ConfirmationDialog);
     const students = studentdata.reduce((acc, student: any) => {
-        acc[student.student_id ] = student.full_name; // Assuming taluka has id and name properties
+        acc[student.student_id] = student.full_name; // Assuming taluka has id and name properties
         return acc;
     }, {} as Record<number, string>);
     const schools = schooldata.reduce((acc, school: any) => {
-        acc[school.school_id  ] = school.school_name; // Assuming taluka has id and name properties
+        acc[school.school_id] = school.school_name; // Assuming taluka has id and name properties
         return acc;
     }, {} as Record<number, string>);
 
+    const standardmap = standarddata.reduce((acc, standard: Standarddata) => {
+        acc[standard.standard_id] = standard.standard_name; // Assuming taluka has id and name properties
+        return acc;
+    }, {} as Record<number, string>);
     const data = clusterData
         .map((cluster) => ({
-            cluster_id: cluster.sports_info_id,
-            cluster_name: cluster.sports_record.split("|")[3],
+            sports_info_id: cluster.sports_info_id,
+            std: standardmap[cluster.sports_record.split("|")[3] as any],
             studentname: cluster.sports_record.split("|")[2],
             student_name: students[cluster.sports_record.split("|")[2] as any],
             stdname: cluster.sports_record.split("|")[0],
@@ -68,54 +77,37 @@ const Sporttable = ({ filtersportsInfo, studentdata, schooldata }: Props) => {
         },
 
         {
-            accessorKey: "cluster_name",
-            header: `Name`,
-        },
-        {
             accessorKey: "student_name",
             header: `Student Name`,
         },
         {
             accessorKey: "std_name",
-            header: `Std`,
+            header: `School Name`,
         },
+
+
         {
-            accessorKey: "cluster_name",
-            header: `Name`,
+            accessorKey: "std",
+            header: `Standard`,
         },
         {
             accessorKey: "status",
             header: `${t("Status")}`,
         },
-        {
-            accessorKey: "ins_date_time",
-            header: `${t("AddTime")}`,
-        },
+
         {
             accessorKey: "actions",
             header: `${t("Action")}`,
             cell: ({ row }: any) => (
                 <div style={{ display: "flex", whiteSpace: "nowrap" }}>
-                    <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => handleEdit(row.original)}
-                    >
-                        {" "}
-                        <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
-                        {t("edit")}
+                    <button onClick={() =>
+                        handleDeactivate(row.original.sports_info_id, row.original.status)
+                    } className="btn btn-warning">
+
+                        View Achievement
+
                     </button>
-                    <button
-                        className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
-                            } ms-5`}
-                        onClick={() =>
-                            handleDeactivate(row.original.cluster_id, row.original.status)
-                        }
-                    >
-                        <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-                        {row.original.status === "Active"
-                            ? `${t("Deactive")}`
-                            : `${t("Active")}`}
-                    </button>
+
                 </div>
             ),
         },
@@ -123,46 +115,15 @@ const Sporttable = ({ filtersportsInfo, studentdata, schooldata }: Props) => {
 
     const handleDeactivate = async (clusterId: any, currentStatus: any) => {
         const confirmMessage =
-            currentStatus === "Active"
-                ? "Are you sure you want to deactivate this cluster?"
-                : "Are you sure you want to activate this cluster?";
-        const confirmed = await confirm({ confirmation: confirmMessage });
-        if (confirmed) {
-            try {
-                const response = await fetch(`/api/clustersapi/clusters/${clusterId}`, {
-                    method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        status: currentStatus === "Active" ? "Deactive" : "Active",
-                    }),
-                });
 
-                if (response.ok) {
-                    // Update local state without page reload
-                    setClusterData((prevData) =>
-                        prevData.map((cluster) =>
-                            cluster.sports_info_id === clusterId
-                                ? {
-                                    ...cluster,
-                                    status: currentStatus === "Active" ? "Deactive" : "Active",
-                                }
-                                : cluster
-                        )
-                    );
-                    toast.success(
-                        `Cluster ${currentStatus === "Active" ? "deactivated" : "activated"
-                        } successfully!`
-                    );
-                } else {
-                    toast.error("Failed to change the cluster status.");
-                }
-            } catch (error) {
-                console.error("Error changing the cluster status:", error);
-                toast.error("An unexpected error occurred.");
-            }
-        }
+            TblAchivments
+                .filter((data) => data.sports_id == clusterId)
+                .map((data) => data.details)
+                .join("\n");
+
+
+        const confirmed = await confirm({ confirmation: confirmMessage });
+
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -236,29 +197,119 @@ const Sporttable = ({ filtersportsInfo, studentdata, schooldata }: Props) => {
     };
 
 
+    let options;
+
+    if (true) {
+
+        options = standarddata.map((std) => ({
+            value: std.standard_name,
+            label: std.standard_name,
+        }));
+    } console.log('checkop', options)
+
+
+    let schoolnameoption;
+    if (true) {
+
+        schoolnameoption = schooldata.map((student) => ({
+            value: student.school_name,
+            label: student.school_name,
+        }));
+    }
+    let scholarshipoption;
+
+    console.log('schoolnameoption', schoolnameoption)
+
+    if (true) {
+
+        scholarshipoption = [
+            {
+                value: "",
+                label: "",
+            },
+        ];
+    }
+    const downloadExcel = () => {
+        // Transform data for better compatibility with Excel
+        const transformedData = data.map((student, index) => ({
+            Index: index + 1, // Adding index number starting from 1
+            FullName: student.student_name, // Join names and filter nulls
+            SchoolName: student.std_name, // Join contact numbers or default to "N/A"
+            Std: student.std, // Join array into a string
+            // Default value for scholarship name
+        }));
+
+        // Define custom headings as an array of strings
+        const headings = [
+            "Index",
+            "Full Name",
+            "School Name",
+            "Standard",
+
+        ];
+
+        // Combine headings with transformed data
+        const finalData = [headings, ...transformedData.map(({ Index, FullName, SchoolName, Std }) =>
+            [Index, FullName, SchoolName, Std])];
+
+        // Create worksheet and workbook
+        const worksheet = XLSX.utils.aoa_to_sheet(finalData); // Use aoa_to_sheet for array of arrays
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sports");
+
+        // Write file
+        XLSX.writeFile(workbook, "Sports.xlsx");
+    };
+
+
     return (
         <div>
-            <Table
+            <TableOption
                 data={data}
                 columns={columns}
+                filterOptions={options}
+                additionalFilterOptions={schoolnameoption}
+                scholarshipoption={[]}
                 Button={
-                    <Button
-                        variant="primary"
-                        onClick={handleShowPrint}
-                        className="btn btn-sm"
-                    >
-                        <KTIcon
-                            iconName={"plus-circle"}
-                            className="fs-3"
-                            iconType="solid"
-                        />
-                        {t("AddCluster")}
-                    </Button>
+                    <button onClick={downloadExcel} className="btn btn-primary">
+                        Download Excel
+                    </button>
+
                 }
             />
 
             <CustomModal
                 show={showPrintModal}
+
+                handleClose={handleClosePrint}
+                handleSubmit={handleSubmit}
+                title={updateClusterId ? `${t("updatepage")}` : `${t("insertpage")}`}
+                formData={{
+                    fields: [
+                        {
+                            label: `${t("enterclustername")}`,
+                            value: clusterName,
+                            type: "text",
+                            placeholder: `${t("enterclustername")}`,
+                            required: true,
+                            onChange: (e: any) => setClusterName(e.target.value),
+                        },
+                    ],
+                    error,
+                }}
+                submitButtonLabel={
+                    updateClusterId
+                        ? isLoading
+                            ? "Submitting..."
+                            : t("editsubmit")
+                        : isLoading
+                            ? "Submitting..."
+                            : t("submit")
+                }
+                disabledButton={isLoading}
+            />
+            <CustomModal
+                show={showPrintModalachivements}
                 handleClose={handleClosePrint}
                 handleSubmit={handleSubmit}
                 title={updateClusterId ? `${t("updatepage")}` : `${t("insertpage")}`}

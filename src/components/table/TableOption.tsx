@@ -8,6 +8,7 @@ import {
 import { useTranslations } from "next-intl";
 import { useScholarship } from "./ScholarshipContext";
 
+import { usePathname } from 'next/navigation'
 export default function TableOption({
   data,
   columns,
@@ -18,14 +19,19 @@ export default function TableOption({
   submitbtn
 }: any) {
   const [searchQuery, setSearchQuery] = useState("");
+  const pathname = usePathname()
   const [filterStatus, setFilterStatus] = useState(
-    filterOptions.length > 0 ? filterOptions[0].value : ""
+    pathname.slice(0, 23) !== "/en/dashboard/sportwise" ?
+      filterOptions.length > 0 ? filterOptions[0].value : "" :
+      filterOptions.length > 0 ? "" : ""
   );
   const [filterData, setFilterData] = useState(
-    additionalFilterOptions.length > 0 ? additionalFilterOptions[0].value : ""
+    pathname.slice(0, 23) !== "/en/dashboard/sportwise" ?
+      additionalFilterOptions.length > 0 ? additionalFilterOptions[0].value : "" :
+      additionalFilterOptions.length > 0 ? "" : ""
   );
   const { selectedScholarship, setSelectedScholarship } = useScholarship();
-  
+
   const [currentPageIndex, setCurrentPageIndex] = useState(0); // New state for current page index
   const t = useTranslations("IndexPage");
 
@@ -35,12 +41,13 @@ export default function TableOption({
       const matchesSearch = Object.values(row).some((value) =>
         String(value).toLowerCase().includes(searchQuery.toLowerCase())
       );
-
+      // console.log('checkdafs', pathname.slice(0, 23) == "/en/dashboard/sportwise" && row.std === filterStatus)
       const matchesStatus =
-        filterStatus === "" || row.current_std === filterStatus;
-      const matchesData = filterData === "" || row.school_id === filterData; // Adjust field as needed
+        filterStatus === "" || (pathname.slice(0, 23) == "/en/dashboard/sportwise" ? row.std : row.current_std) === filterStatus;
+      const matchesData = filterData === "" || (pathname.slice(0, 23) == "/en/dashboard/sportwise" ? row.std_name : row.school_id) === filterData; // Adjust field as needed
+      console.log('checafasf', filterStatus)
       const matchesScholarship =
-      selectedScholarship === "" || row.scholarship_id === selectedScholarship;
+        selectedScholarship === "" || row.scholarship_id === selectedScholarship;
       return matchesSearch && matchesStatus && matchesData;
     });
   }, [data, searchQuery, filterStatus, filterData]);
@@ -133,6 +140,7 @@ export default function TableOption({
           />
         </div>
         <div className="col-auto">
+
           <select
             className="form-select"
             value={filterStatus}
@@ -163,22 +171,25 @@ export default function TableOption({
         </div>
         <div className="col-auto">
           {/* Second select box for additional filtering */}
-          <select
-          className="form-select ms-2" // Added margin for spacing
-          value={selectedScholarship} // Use context value here
-          onChange={handlescholarshipFilterChange} 
-        >
-          <option value="">All Scholarship</option>
-          {scholarshipoption.map((option: any) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+          {
+            filterStatus === "" || (pathname.slice(0, 23) !== "/en/dashboard/sportwise") &&
+            <select
+              className="form-select ms-2" // Added margin for spacing
+              value={selectedScholarship} // Use context value here
+              onChange={handlescholarshipFilterChange}
+            >
+              <option value="">All Scholarship</option>
+              {scholarshipoption.map((option: any) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          }
         </div>
         <div className="col-auto">
           {/* Second select box for additional filtering */}
-        {submitbtn}
+          {submitbtn}
         </div>
         <div className="col-auto ms-auto">{Button}</div>
       </div>

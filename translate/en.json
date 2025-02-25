@@ -35,12 +35,12 @@
     "Bank": "Bank",
     "nbschemes": "Nb Schems",
     "PraranbhikSillak": "Opening Balance",
-  "disbursementfunds": "Fund Distribution",
+    "disbursementfunds": "Fund Distribution",
     "category": "Category",
     "subcategory": "SubCategory",
     "Plan_type": "Plan Type",
     "Plan": "Plan",
-    "BankMaster":"Bank Master",
+    "BankMaster": "Bank Master",
     "App_plan": "App Plan",
     "Beneficiary": "Beneficiary",
     "Sightseeing_Transport": "Sightseeing Transport",
@@ -52,7 +52,9 @@
     "schoolwisestudents": "Standard Wise",
     "notificaiton": "Notification",
     "workmaster": "Work Master",
-    "work": "Works"
+    "work": "Works",
+    "sports": "Sports",
+    "Sportswise": "Sports Wise"
   },
   "Townpage": {
     "title": "Taluka",
@@ -527,12 +529,12 @@
     "submit": "Add",
     "editsubmit": "Edit"
   },
-  "Bankmaster":{
+  "Bankmaster": {
     "title": "Bank Details",
     "SrNo": " S.No",
     "Dist": "Taluka",
-    "BankName":"Bank Name",
-    "IFSCCode":"IFSC Code",
+    "BankName": "Bank Name",
+    "IFSCCode": "IFSC Code",
     "Status": "Status",
     "Action": "Action",
     "edit": "Edit",
@@ -542,8 +544,5 @@
     "updatepage": "Work Master",
     "submit": "Add",
     "editsubmit": "Edit"
-  
-
   }
-
 }

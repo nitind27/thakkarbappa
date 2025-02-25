@@ -39,7 +39,7 @@
     "category": "श्रेणी",
     "subcategory": "उपश्रेणी",
     "Plan_type": "योजना प्रकार",
-    "BankMaster":"बैंक मास्टर",
+    "BankMaster": "बैंक मास्टर",
     "Plan": "योजना",
     "App_plan": "ऐप योजना",
     "Beneficiary": "लाभार्थी",
@@ -58,7 +58,9 @@
     "grampanchayatname": "ग्राम पंचायत",
     "Village": "गाँव",
     "estimateamounttotal": "अनुमानित कुल राशि",
-    "date": "कार्य की तिथि"
+    "date": "कार्य की तिथि",
+    "sports": "खेल",
+    "Sportswise": "खेल के लिहाज से"
   },
   "Townpage": {
     "title": "नगर प्रबंधन",
@@ -538,6 +540,5 @@
     "updatepage": "कार्य मास्टर",
     "submit": "जोड़ें",
     "editsubmit": "संपादित करें"
-}
-
+  }
 }
