@@ -70,6 +70,9 @@ const Sportsexcle = ({
                 sportsid: sportsIds.map((id) => sportsnames[id as any]).join(", "), // Map each ID and join the results
                 std: standardmap[recordParts[3] as any],
                 achivement: TblAchivments.filter((data) => data.achivment_id == cluster.sports_info_id).map((data) => data.details),
+                achivementplayertime: TblAchivments.filter((data) => data.achivment_id == cluster.sports_info_id).map((data) => data.player_time),
+                achivementwinnigtime: TblAchivments.filter((data) => data.achivment_id == cluster.sports_info_id).map((data) => data.winning_time),
+                achivementstatelavel: TblAchivments.filter((data) => data.achivment_id == cluster.sports_info_id).map((data) => data.state_level),
                 studentname: recordParts[2],
                 student_name: students[recordParts[2] as any],
                 stdname: recordParts[0],
@@ -88,6 +91,9 @@ const Sportsexcle = ({
             Std: student.std, // Join array into a string
             sportsid: student.sportsid, // Join array into a string
             achivement: student.achivement, // Join array into a string
+            achivementplayertime: student.achivementplayertime, // Join array into a string
+            achivementwinnigtime: student.achivementwinnigtime, // Join array into a string
+            achivementstatelavel: student.achivementstatelavel, // Join array into a string
             // Default value for scholarship name
         }));
 
@@ -98,13 +104,16 @@ const Sportsexcle = ({
             "School Name",
             "Standard",
             "Sports Name",
-            "Achievement"
+            "Achievement",
+            "Player Time",
+            "Wining Time",
+            "State Level"
 
         ];
 
         // Combine headings with transformed data
-        const finalData = [headings, ...transformedData.map(({ Index, FullName, SchoolName, Std, sportsid, achivement }) =>
-            [Index, FullName, SchoolName, Std, sportsid, achivement])];
+        const finalData = [headings, ...transformedData.map(({ Index, FullName, SchoolName, Std, sportsid, achivement, achivementplayertime, achivementwinnigtime, achivementstatelavel }) =>
+            [Index, FullName, SchoolName, Std, sportsid, achivement,achivementplayertime,achivementwinnigtime,achivementstatelavel])];
 
         // Create worksheet and workbook
         const worksheet = XLSX.utils.aoa_to_sheet(finalData); // Use aoa_to_sheet for array of arrays
