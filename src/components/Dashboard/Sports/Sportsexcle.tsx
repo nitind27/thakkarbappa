@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Card from "@/common/Card";
 import Link from "next/link";
 import { useLocale } from "next-intl";
-import { Schooldata, Standarddata, StudentData, TblSports, TblSportsInfoNew } from "@/components/type";
+import { Schooldata, Standarddata, StudentData, TblAchivments, TblSports, TblSportsInfoNew } from "@/components/type";
 import * as XLSX from 'xlsx';
 
 
@@ -19,6 +19,8 @@ type Props = {
     studentdata: StudentData[];
     schooldata: Schooldata[];
     standarddata: Standarddata[];
+    TblAchivments: TblAchivments[];
+
 };
 
 const Sportsexcle = ({
@@ -29,7 +31,8 @@ const Sportsexcle = ({
     stddata,
     index,
     studentdata, schooldata, standarddata,
-    sportsinfo
+    sportsinfo, TblAchivments
+
 }: Props) => {
     const localActive = useLocale();
 
@@ -53,6 +56,10 @@ const Sportsexcle = ({
         acc[standard.standard_id] = standard.standard_name; // Assuming taluka has id and name properties
         return acc;
     }, {} as Record<number, string>);
+    const TblAchivmentdata = TblAchivments.reduce((acc, standard: TblAchivments) => {
+        acc[standard.achivment_id] = standard.levels; // Assuming taluka has id and name properties
+        return acc;
+    }, {} as Record<number, string>);
     const data = clusterData
         .map((cluster) => {
             const recordParts = cluster.sports_record.split("|");
@@ -62,6 +69,7 @@ const Sportsexcle = ({
                 sports_info_id: cluster.sports_info_id,
                 sportsid: sportsIds.map((id) => sportsnames[id as any]).join(", "), // Map each ID and join the results
                 std: standardmap[recordParts[3] as any],
+                achivement: TblAchivments.filter((data) => data.achivment_id == cluster.sports_info_id).map((data) => data.details),
                 studentname: recordParts[2],
                 student_name: students[recordParts[2] as any],
                 stdname: recordParts[0],
@@ -79,6 +87,7 @@ const Sportsexcle = ({
             SchoolName: student.std_name, // Join contact numbers or default to "N/A"
             Std: student.std, // Join array into a string
             sportsid: student.sportsid, // Join array into a string
+            achivement: student.achivement, // Join array into a string
             // Default value for scholarship name
         }));
 
@@ -88,13 +97,14 @@ const Sportsexcle = ({
             "Full Name",
             "School Name",
             "Standard",
-            "Sports Name"
+            "Sports Name",
+            "Achievement"
 
         ];
 
         // Combine headings with transformed data
-        const finalData = [headings, ...transformedData.map(({ Index, FullName, SchoolName, Std, sportsid }) =>
-            [Index, FullName, SchoolName, Std, sportsid])];
+        const finalData = [headings, ...transformedData.map(({ Index, FullName, SchoolName, Std, sportsid, achivement }) =>
+            [Index, FullName, SchoolName, Std, sportsid, achivement])];
 
         // Create worksheet and workbook
         const worksheet = XLSX.utils.aoa_to_sheet(finalData); // Use aoa_to_sheet for array of arrays

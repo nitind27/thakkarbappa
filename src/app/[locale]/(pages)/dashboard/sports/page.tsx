@@ -2,7 +2,7 @@ import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 import SchoolDashboard from "@/components/Dashboard/SchoolManage/SchoolDashboard";
 import SportDashboard from "@/components/Dashboard/Sports/SportDashboard";
 import Sportsexcle from "@/components/Dashboard/Sports/Sportsexcle";
-import { Schooldata, Standarddata, StudentData, TblSports, TblSportsInfoNew } from "@/components/type";
+import { Schooldata, Standarddata, StudentData, TblAchivments, TblSports, TblSportsInfoNew } from "@/components/type";
 import prisma from "@/lib/db";
 
 const page = async () => {
@@ -11,10 +11,13 @@ const page = async () => {
     let sportsinfo: TblSportsInfoNew[] = [];
     let schooldata: Schooldata[] = [];
     let standarddata: Standarddata[] = [];
+    let TblAchivments: TblAchivments[] = [];
+
     try {
         sportsdata = await prisma.tblSports.findMany();
         standarddata = await prisma.standard.findMany();
         schooldata = await prisma.school.findMany();
+        TblAchivments = await prisma.tbl_achivments.findMany();
         studentdata = await prisma.student.findMany(); // Fetch all students
         sportsinfo = await prisma.sportsInfo.findMany(); // Fetch all students
     } catch (error) {
@@ -31,7 +34,7 @@ const page = async () => {
         { label: 'sports', href: '/dashboard/sports' },
 
     ];
- 
+
 
     // const studentdatas = studentdata.filter((data)=>data.student_id == sportsinfo.map((sports)=>sports.sports_record.split["|"][1]))
     return (
@@ -54,14 +57,15 @@ const page = async () => {
                             sportsinfo={sportsinfo}
                             index={[]}
                             studentdata={studentdata} schooldata={schooldata}
-                            standarddata={standarddata} />
+                            standarddata={standarddata}
+                            TblAchivments={TblAchivments} />
                     </div>
                 </div>
             </div>
             <div className="container mt-5">
                 <div className="row col-lg-12">
                     {sportsdata.map((school, index) => {
-                     
+
                         // // Filter students for the current school
                         const filteredStudents = sportsinfo.filter((student) => {
                             const studentsdatas = studentdata.filter((datas) => datas.student_id == student.sports_record.split("|")[1] as any && datas.admitted_in_std !== 0 && datas.current_std !== 0 && datas.status == "Active" && datas.school_id !== 0 && datas.type_of_students !== null && datas.dropout == 'Not' || 'Transfer')
