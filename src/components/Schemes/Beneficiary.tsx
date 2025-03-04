@@ -15,7 +15,7 @@ import ConfirmationDialog from "@/common/ConfirmationDialog";
 import { formatDate } from "@/lib/utils";
 import Addmembers from "./Addmembers";
 import { diskStorage } from "multer";
-
+import { usePathname } from "next/navigation";
 type Props = {
     initialcategoryData: SubCategory[];
     YojnaYear: YojanaYear[];
@@ -35,6 +35,9 @@ type Props = {
 const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata, membersadd, Bankmasterdata }: Props) => {
     const t = useTranslations("beneficiary");
     const router = useRouter();
+    const pathname = usePathname(); // Gets the current URL pathname
+    const pathSegments = pathname.split("/").filter(Boolean); // ['en', 'yojna', 'schemes', 'beneficiary', 'beneficiryidwise', '66']
+    const filteredPath = pathSegments.slice(1, 5).join("/"); // 'yojna/schemes/beneficiary'
 
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [showPrintModalvi, setShowPrintModalvi] = useState(false);
@@ -1273,7 +1276,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             <Table
                 data={data}
                 columns={columns}
-                Button={
+                Button={filteredPath !== "yojna/schemes/beneficiary/beneficiryidwise" &&
                     <Button
                         variant="primary"
                         onClick={handleShowPrint}
