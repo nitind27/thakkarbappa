@@ -1,3 +1,4 @@
+"use client";
 import Card from "@/common/Card";
 import React from "react";
 
