@@ -1,12 +1,12 @@
 import { useLocale } from 'next-intl';
 import Link from 'next/link'
 import React from 'react'
-
+import './Baneficiaryidwise.css'
 const Baneficiaryidwise = ({ idx, yojnaname, yojnaid }: any) => {
     const localActive = useLocale();
   return (
     <div>
-      <Link href={`/${localActive}/yojna/schemes/beneficiary/beneficiryidwise/${yojnaid}`} className="text-black hover:text-blue-700">
+      <Link href={`/${localActive}/yojna/schemes/beneficiary/beneficiryidwise/${yojnaid}`} className="linkcolor">
         {idx}. {yojnaname}{" "}
       </Link>
     </div>
