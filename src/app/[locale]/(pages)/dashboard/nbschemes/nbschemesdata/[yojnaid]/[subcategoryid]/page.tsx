@@ -1,17 +1,21 @@
 import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
-import { SubCategory, YojanaMaster } from "@/components/type";
+import Baneficiaryidwise from "@/components/Schemes/Baneficiaryidwise";
+import { SubCategory, TblBeneficiary, YojanaMaster } from "@/components/type";
 import prisma from "@/lib/db";
+import Link from "next/link";
 import React from "react";
 
 const page = async ({ params }: any) => {
   let subCategory: SubCategory[] = [];
   let yojnamaster: YojanaMaster[] = [];
+  let beneficiary: TblBeneficiary[] = [];
   const { yojnaid } = params;
   const { subcategoryid } = params;
 
   try {
     subCategory = await prisma.subCategory.findMany();
     yojnamaster = await prisma.yojanaMaster.findMany();
+    beneficiary = await prisma.beneficiary.findMany(); // Fetch all clusters
   } catch (error) {
     console.error("Error fetching cluster data:", error);
     return (
@@ -45,6 +49,7 @@ const page = async ({ params }: any) => {
     { label: 'Yojna', href: `/dashboard/nbschemes/nbschemesdata/${yojnaid}/${subcategoryid}` },
 
   ];
+
   return (
     <div className="container mx-auto p-4">
 
@@ -81,21 +86,33 @@ const page = async ({ params }: any) => {
                     key={yojna.category_id}
                     className="shadow-md rounded-lg p-4 card mb-4 "
                   >
-                    <h5 className="text-[16px] font-semibold ">
-                      {idx + 1 + ")"}. {yojna.yojana_name}{" "}
+                    <h5 className="d-flex text-[16px] font-semibold cursor-pointer ">
+
+                      <span>
+
+                        <Baneficiaryidwise idx={idx + 1 + ")"} yojnaname={yojna.yojana_name} yojnaid={yojna.yojana_id} />
+                      </span>
                       <span
                         className=""
                         style={{
                           backgroundColor: "red",
                           borderRadius: "50%",
-                          padding: "2px",
-                          marginTop: "10px",
+                          minWidth: "24px", // Ensures a minimum size
+                          height: "auto", // Allows height to adjust based on content
+                          padding: "5px 8px", // Adjusts inner spacing
+                          display: "inline-flex",
+                          justifyContent: "center",
+                          alignItems: "center",
                           color: "white",
+                          fontSize: "14px",
+                          fontWeight: "bold",
+                          whiteSpace: "nowrap", // Prevents text from wrapping
                         }}
                       >
-                        10
+                        {/* {yojna.yojana_id} */}
+                        {beneficiary.filter((data) => data.yojana_id == yojna.yojana_id).length}
                       </span>
-                      {/* Sequential numbering */}
+
                     </h5>
                   </div>
                 ))}

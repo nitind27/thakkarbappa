@@ -57,7 +57,7 @@ const Page = async ({ params }: any) => {
       <div className="container mt-5">
         <div className="row col-lg-12">
           {subCategory
-            .filter((d) => d.category_id === 2) // First filter the categories
+            .filter((d) => d.category_id === 2 && d.status == "Active") // First filter the categories
             .map((categoryName, index) => {
               // For each filtered category, filter yojnamaster
               const filteryojnamaster = yojnamaster.filter(
