@@ -60,14 +60,14 @@ const Page = async () => {
         { label: 'dashboard', href: '/dashboard' },
         { label: 'Beneficiary', href: '/yojna/schemes/beneficiary' },
     ];
-
+    const yojnayearfilter = YojnaYear.filter((data)=>data.year_status == "Y")
     return (
         <div>
 
             <h1 className="card card-body mt-5">
                 <TitleCard breadcrumbs={breadcrumbs} />
             </h1>
-            <Beneficiary initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={cast} membersadd={membersadd} Bankmasterdata={Bankmasterdata}/>
+            <Beneficiary initialcategoryData={subCategory} YojnaYear={yojnayearfilter} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={cast} membersadd={membersadd} Bankmasterdata={Bankmasterdata}/>
         </div>
     );
 };
