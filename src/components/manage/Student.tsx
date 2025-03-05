@@ -80,7 +80,7 @@ const Student = ({ initialstudentData, schooldata, standarddata, scholarship }: 
       year_add: student.year_add,
       school_id: schoolmap[student.school_id as any],
       schoolid: student.school_id,
-      admited_in_std: student.admitted_in_std,
+      admited_in_std: student.admited_in_std,
       current_std: standardmap[student.current_std as any],
       currentstd: student.current_std,
       division: student.division,
