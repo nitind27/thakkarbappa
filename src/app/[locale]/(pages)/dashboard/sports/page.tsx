@@ -34,7 +34,7 @@ const page = async () => {
         { label: 'sports', href: '/dashboard/sports' },
 
     ];
-
+    console.log("studentdata", studentdata.map((data) => data.admited_in_std))
 
     // const studentdatas = studentdata.filter((data)=>data.student_id == sportsinfo.map((sports)=>sports.sports_record.split["|"][1]))
     return (
@@ -70,15 +70,17 @@ const page = async () => {
                         const filteredStudents = sportsinfo.filter((student) => {
                             const sportsRecord = student.sports_record.replace(/,/g, "|"); // Normalize the record
                             const splitRecord = sportsRecord.split("|"); // Split by pipes
-                        
+
                             // Check if the first element matches school.sports_id
                             // and if the second element matches any active student's ID
+                            // console.log('fdsafsad',studentdata.map((data) => data.admitted_in_std ))
                             return (
                                 splitRecord[0] == school.sports_id as any &&
-                                studentdata.some((data) => data.student_id == splitRecord[1] as any && data.status == "Active")
+                                studentdata.some((data) => data.student_id == splitRecord[1] as any && data.status == "Active" && data.admited_in_std != null && data.admited_in_std != 0 && data.school_id != null && data.school_id != 0 && data.current_std != null && data.current_std != 0 && data.type_of_students != null && data.type_of_students != "0" && data.dropout == "Not" || data.dropout == "Transfer")
+
                             );
                         });
-                        
+
 
                         // const datass = filteredStudents.filter((stu) => stu.sports_record.split("|")[1] == studentdata.map((data) => data.student_id) as any && studentdata.map((data) => data.admitted_in_std) as any !== 0 && studentdata.map((data) => data.current_std) as any !== 0 && studentdata.map((data) => data.status) as any == "Active" && studentdata.map((data) => data.school_id) as any !== 0 && studentdata.map((data) => data.type_of_students) as any !== null && studentdata.map((data) => data.dropout) as any == 'Not' || 'Transfer')
 

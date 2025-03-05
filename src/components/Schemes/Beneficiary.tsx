@@ -1074,22 +1074,12 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
 
 
 
-
-        const RegistrationcardField = {
-            label: `${t('Registrationcard')}`,
-            value: rationcardnumber || "",
-            type: "text",
-            required: true,
-            placeholder: `${t('Registrationcard')}`,
-            onChange: (e: any) => setrationcardnumber(e.target.value),
-        };
-        formFields.splice(14, 0, RegistrationcardField);
-
         const aadharcardField = {
             label: `${t('aadharcard')}`,
             value: aadharcardnumber || "",
             type: "text",
             required: true,
+            className: "col-4",
             placeholder: `${t('aadharcard')}`,
             // onChange: (e: any) => setaddharcardnumber(e.target.value),
             onChange: (e: any) => {
@@ -1100,7 +1090,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 }
             },
         };
-        formFields.splice(13, 0, aadharcardField);
+        formFields.splice(13, 0, aadharcardField as any);
 
 
 
@@ -1109,6 +1099,7 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
             value: mobilenumber || "",
             required: true,
             type: "text",
+            className: "col-4",
             placeholder: `${t('Contact')}`,
             // onChange: (e: any) => setmobilenumber(e.target.value),
 
@@ -1120,9 +1111,21 @@ const Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, benef
                 }
             },
         };
-        formFields.splice(15, 0, ContactField);
+        formFields.splice(14, 0, ContactField as any);
 
 
+
+
+        const RegistrationcardField = {
+            label: `${t('Registrationcard')}`,
+            value: rationcardnumber || "",
+            type: "text",
+            className: "col-4",
+            required: true,
+            placeholder: `${t('Registrationcard')}`,
+            onChange: (e: any) => setrationcardnumber(e.target.value),
+        };
+        formFields.splice(15, 0, RegistrationcardField as any);
 
 
         formFields.push({

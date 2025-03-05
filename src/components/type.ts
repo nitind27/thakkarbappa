@@ -190,7 +190,7 @@ export interface StudentData {
   date_of_admision?: Date | null;
   year_add?: string | null;
   school_id?: number | null;
-  admitted_in_std?: number | null;
+  admited_in_std?: number | null;
   current_std?: number | null;
   division?: string | null;
   first_name?: string | null;
