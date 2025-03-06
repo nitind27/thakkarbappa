@@ -24,17 +24,18 @@ const Page = async ({ params }: any) => {
       </div>
     );
   }
+  const filteryojnayear = yojnayear
+    .filter((y) => y.yojana_year_id == yojnaid)
+    .map((y) => y.yojana_year);
   const breadcrumbs = [
 
     { label: 'dashboard', href: '/dashboard' },
     { label: 'nbschemes', href: '/dashboard/nbschemes' },
-    { label: 'NbSchmescategory', href: `/dashboard/nbschemes/nbschemescategory/${yojnaid}` },
+    { label: "", title: `${filteryojnayear}`, href: `/dashboard/nbschemes/nbschemescategory/${yojnaid}` },
 
   ];
   // Filter yojnamaster with additional conditions
-  const filteryojnayear = yojnayear
-    .filter((y) => y.yojana_year_id == yojnaid)
-    .map((y) => y.yojana_year);
+
   return (
     <div>
 
@@ -45,12 +46,12 @@ const Page = async ({ params }: any) => {
 
             <TitleCard breadcrumbs={breadcrumbs} />
           </div>
-
+{/* 
           <h3>
 
 
             वर्ष {filteryojnayear}
-          </h3>
+          </h3> */}
 
         </div>
       </div>
@@ -75,6 +76,7 @@ const Page = async ({ params }: any) => {
                     yojnacount={filteryojnamaster.length} // Count of filtered yojnamaster
                     yojnaid={yojnaid}
                     subcategoryid={categoryName.sub_category_id}
+                    filteryojnayear={filteryojnayear}
                   />
                 </div>
               );

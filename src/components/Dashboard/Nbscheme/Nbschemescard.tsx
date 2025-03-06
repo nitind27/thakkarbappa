@@ -10,18 +10,20 @@ const Nbschemescard = ({
   yojnacount,
   yojnaid,
   subcategoryid,
+  filteryojnayear,
 }: {
   yojnaname: any;
   yojnacount: any;
   yojnaid: any;
   subcategoryid: any;
+  filteryojnayear: any
 }) => {
   const localActive = useLocale();
 
   return (
     <div>
       <Link
-        href={`/${localActive}/dashboard/nbschemes/nbschemesdata/${yojnaid}/${subcategoryid}`}
+        href={`/${localActive}/dashboard/nbschemes/nbschemesdata/${yojnaid}/${subcategoryid}/${filteryojnayear}`}
       >
         <Card
           title={yojnaname}

@@ -1,3 +1,4 @@
+import Parivahantitle from "@/app/[locale]/title/Parivahantitle";
 import SubCategorytitle from "@/app/[locale]/title/Subcategory";
 import Loader from "@/common/Loader ";
 import Parivahan from "@/components/Schemes/Parivahan";
@@ -62,7 +63,7 @@ const Page = async () => {
   return (
     <div>
       <h1 className="card card-body mt-5">
-        <SubCategorytitle />
+        <Parivahantitle />
       </h1>
 
       <Parivahan

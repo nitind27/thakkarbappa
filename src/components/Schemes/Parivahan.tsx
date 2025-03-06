@@ -51,7 +51,7 @@ const Parivahan = ({
   Beneficiary,
   Userdata,
 }: Props) => {
-  const t = useTranslations("Subcategory");
+  const t = useTranslations("parivahan");
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [adhikanchaname, setAdhikanchaname] = useState("");
   const workofdates = new Date();
@@ -153,28 +153,28 @@ const Parivahan = ({
 
     {
       accessorKey: "parivahan_date",
-      header: `${t("year")}`,
+      header: `${t("parivahandate")}`,
     },
     {
       accessorKey: "outward_no",
-      header: `Bankname`,
+      header: `${t("outwardno")}`,
     },
     {
       accessorKey: "sup_id",
-      header: `${t("javaksr")}`,
+      header: `${t("officername")}`,
     },
     {
       accessorKey: "yojana_year_id",
-      header: `fasdf`,
+      header: `${t("year")}`,
     },
 
     {
       accessorKey: "yojana_type",
-      header: `${t("javaksr")}`,
+      header: `${t("yojnatype")}`,
     },
     {
       accessorKey: "yojana_id",
-      header: `${t("javaksr")}`,
+      header: `${t("yojnaname")}`,
     },
 
     {
@@ -185,7 +185,7 @@ const Parivahan = ({
 
     {
       accessorKey: "actions",
-      header: `${t("Action")}`,
+      header: `${t("beneficiary")}`,
       cell: ({ row }: any) => (
         <div className="overflow-x-auto">
           <table className="min-w-full border-collapse border border-gray-300">
@@ -195,13 +195,13 @@ const Parivahan = ({
                   sr
                 </th>
                 <th className="border border-gray-300 px-4 py-2 text-left">
-                  Name
+                {t("name")}
                 </th>
                 <th className="border border-gray-300 px-4 py-2 text-left">
-                  Total
+                {t("total")}
                 </th>
                 <th className="border border-gray-300 px-4 py-2 text-left">
-                  Totaldd
+                {t("AmountPaid")}
                 </th>
               </tr>
             </thead>
@@ -501,7 +501,7 @@ const Parivahan = ({
               className="fs-3"
               iconType="solid"
             />
-            {t("addsubcategory")}
+            {t("submit")}
           </Button>
         }
       />
@@ -517,29 +517,29 @@ const Parivahan = ({
 
         />
         }
-        title={updateClusterId ? `${t("updatepage")}` : `${yojnayear + yojanatype + yojnaname}`}
+        title={updateClusterId ? `${t("updatepage")}` : `${t("updatepage")}`}
         formData={{
           fields: [
             {
-              label: `${t("ParivahanDate")}`,
+              label: `${t("parivahandate")}`,
               value: ParivahanDate,
               type: "date",
               required: true,
-              placeholder: `${t("ParivahanDate")}`,
+              placeholder: `${t("parivahandate")}`,
               className: "col-3",
               onChange: (e: any) => setParivahanDate(e.target.value),
             },
             {
-              label: `${t("javaksr")}`,
+              label: `${t("outwardno")}`,
               value: javaksr,
               type: "text",
-              placeholder: `${t("javaksr")}`,
+              placeholder: `${t("outwardno")}`,
               required: true,
               className: "col-3",
               onChange: (e: any) => setJavakSr(e.target.value),
             },
             {
-              label: `${t("adhikanchaname")}`,
+              label: `${t("officername")}`,
               value: adhikanchaname,
               onChange: (e: any) => setAdhikanchaname(e.target.value),
               type: "select",
@@ -548,7 +548,7 @@ const Parivahan = ({
                 label: Userdata.name,
               })),
 
-              placeholder: `${t("adhikanchaname")}`, // Optional placeholder for select input
+              placeholder: `${t("officername")}`, // Optional placeholder for select input
               className: "col-6",
             },
 
@@ -565,7 +565,7 @@ const Parivahan = ({
               placeholder: `${t("year")}`, // Optional placeholder for select input
             },
             {
-              label: `${t("adhikanchaname")}`,
+              label: `${t("yojnatype")}`,
               value: yojanatype,
               onChange: (e: any) => setYojnatype(e.target.value),
               type: "select",
@@ -574,7 +574,7 @@ const Parivahan = ({
                 label: yojnatype.yojana_type,
               })),
 
-              placeholder: `${t("adhikanchaname")}`, // Optional placeholder for select input
+              placeholder: `${t("yojnatype")}`, // Optional placeholder for select input
               className: "col-3",
             },
 

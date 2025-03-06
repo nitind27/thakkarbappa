@@ -3,6 +3,7 @@ import Baneficiaryidwise from "@/components/Schemes/Baneficiaryidwise";
 import { SubCategory, TblBeneficiary, YojanaMaster } from "@/components/type";
 import prisma from "@/lib/db";
 import Link from "next/link";
+import { title } from "process";
 import React from "react";
 
 const page = async ({ params }: any) => {
@@ -11,6 +12,7 @@ const page = async ({ params }: any) => {
   let beneficiary: TblBeneficiary[] = [];
   const { yojnaid } = params;
   const { subcategoryid } = params;
+  const { filteryojnayear } = params;
 
   try {
     subCategory = await prisma.subCategory.findMany();
@@ -40,13 +42,16 @@ const page = async ({ params }: any) => {
   ).map((id) => {
     return subCategory.find((cat) => cat.sub_category_id === id); // Use 'id' to find the correct subcategory
   });
-
+  const categoriesnamelength = filteredYojnamaster.filter(
+    (yojna) => yojna.sub_category_id == uniqueSubCategories.map((data) => data?.sub_category_id) as any
+  );
+  const categoriesname = uniqueSubCategories.map((data) => data?.sub_category_name);
   const breadcrumbs = [
 
     { label: 'dashboard', href: '/dashboard' },
     { label: 'nbschemes', href: '/dashboard/nbschemes' },
-    { label: 'NbSchmescategory', href: `/dashboard/nbschemes/nbschemescategory/${yojnaid}` },
-    { label: 'Yojna', href: `/dashboard/nbschemes/nbschemesdata/${yojnaid}/${subcategoryid}` },
+    { label: '', title: `${filteryojnayear}`, href: `/dashboard/nbschemes/nbschemescategory/${yojnaid}` },
+    { label: '', title: `${categoriesname}${categoriesnamelength.length}`, href: `/dashboard/nbschemes/nbschemesdata/${yojnaid}/${subcategoryid}/${filteryojnayear}` },
 
   ];
 
@@ -68,15 +73,14 @@ const page = async ({ params }: any) => {
                 <div className=" d-flex justify-content-between ">
 
                   <div>
-
                     <TitleCard breadcrumbs={breadcrumbs} />
                   </div>
 
-                  <h3>
+                  {/* <h3>
 
 
-                    {category?.sub_category_name} ({categoryYojnas.length})
-                  </h3>
+                    {categoriesname} ({categoriesnamelength.length})
+                  </h3> */}
 
                 </div>
               </div>
@@ -88,7 +92,7 @@ const page = async ({ params }: any) => {
                   >
                     <h5 className="d-flex align-items-center gap-1">
                       <span>
-                        <Baneficiaryidwise idx={idx + 1 + ")"} yojnaname={yojna.yojana_name} yojnaid={yojna.yojana_id} />
+                        <Baneficiaryidwise idx={idx + 1 + ")"} yojnaname={yojna.yojana_name} yojnaid={yojna.yojana_id} filteryojnayear={filteryojnayear} categoriesnamelength={categoriesnamelength.length} categoriesname={categoriesname} />
                       </span>
                       <span
                         className="bg-danger rounded-circle text-white fw-bold px-2 py-1 text-center"

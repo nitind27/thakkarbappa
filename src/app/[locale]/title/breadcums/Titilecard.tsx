@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 // Define the type for breadcrumb items
 interface BreadcrumbItem {
     label: string;
+    title?: string;
     href: string;
 }
 
@@ -27,7 +28,7 @@ const Breadcrumbs: React.FC<{ items: BreadcrumbItem[] }> = ({ items }) => {
                     return (
                         <li key={index} className={`breadcrumb-item ${isActive ? 'active' : ''}`}>
                             <Link href={`/${localActive}${item.href}`} className={isActive ? 'text-dark' : ''} style={{ fontSize: isActive ? "18px" : "16px" }}>
-                                {t(`${item.label}`)} 
+                                {item.label == "" ? item.title : t(`${item.label}`)}
                             </Link>
                         </li>
                     );

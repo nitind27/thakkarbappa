@@ -28,7 +28,7 @@ const page = async () => {
     { label: 'nbschemes', href: '/dashboard/nbschemes' },
 
   ];
-
+  const yojnayearfilter = yojnayear.filter((data)=>data.year_status == "Y")
   return (
     <div>
       <div className="card mt-5 p-3 ">
@@ -37,7 +37,7 @@ const page = async () => {
       </div>
       <div className=" mt-5">
         <div className="row ">
-          {yojnayear.map((school, index) => {
+          {yojnayearfilter.map((school, index) => {
             return (
               <div className="col-md-3 mb-2" key={index}>
                 <NbSchemes

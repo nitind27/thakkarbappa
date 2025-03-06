@@ -5,6 +5,7 @@ import Cluster from "@/app/[locale]/title/cluster"; import Loader from "@/common
 ;
 import Clusteradd from "@/components/manage/Clusteradd";
 import Beneficiary from "@/components/Schemes/Beneficiary";
+import Beneficiarydata from "@/components/Schemes/Beneficiarydata";
 import Category from "@/components/Schemes/Category";
 import SubCategorys from "@/components/Schemes/SubCategorys";
 import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, Tblbankmaster, TblBeneficiary, TblCaste, TblMembers, TblYojanaType, Villages, YojanaYear } from "@/components/type";
@@ -60,6 +61,7 @@ const Page = async ({ params }: any) => {
 
         { label: 'dashboard', href: '/dashboard' },
         { label: 'Beneficiary', href: '/yojna/schemes/beneficiary' },
+        
     ];
     const filterdatabeneficiary = beneficiary.filter((data) => data.yojana_id == yojnaid)
     return (
@@ -68,7 +70,7 @@ const Page = async ({ params }: any) => {
             <h1 className="card card-body mt-5">
                 <TitleCard breadcrumbs={breadcrumbs} />
             </h1>
-            <Beneficiary initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={filterdatabeneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={cast} membersadd={membersadd} Bankmasterdata={Bankmasterdata} />
+            <Beneficiarydata initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={filterdatabeneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={cast} membersadd={membersadd} Bankmasterdata={Bankmasterdata} />
         </div>
     );
 };

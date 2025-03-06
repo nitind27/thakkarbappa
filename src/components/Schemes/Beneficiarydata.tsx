@@ -33,7 +33,7 @@ type Props = {
 };
 
 const 
-Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata, membersadd, Bankmasterdata }: Props) => {
+Beneficiarydata = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata, membersadd, Bankmasterdata }: Props) => {
     const t = useTranslations("beneficiary");
     const router = useRouter();
     const pathname = usePathname(); // Gets the current URL pathname
@@ -342,34 +342,7 @@ Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary
         },
 
 
-        { 
-            accessorKey: "actions",
-            header: `${t("Action")}`,
-            cell: ({ row }: any) => (
-                <div style={{ display: "flex", whiteSpace: "nowrap" }}>
-                    <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => handleEdit(row.original)}
-                    >
-                        {" "}
-                        <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
-                        {t("edit")}
-                    </button>
-                    <button
-                        className={`btn btn-sm ${row.original.status == "Active" ? "btn-danger" : "btn-warning"
-                            } ms-5`}
-                        onClick={() =>
-                            handleDeactivate(row.original.beneficiary_id, row.original.status)
-                        }
-                    >
-                        <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-                        {row.original.status == "Active"
-                            ? `${t("Deactive")}`
-                            : `${t("Active")}`}
-                    </button>
-                </div>
-            ),
-        },
+ 
     ];
 
     const handleDeactivate = async (category_id: any, currentStatus: any) => {
@@ -1386,4 +1359,4 @@ Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary
     );
 };
 
-export default Beneficiary;
+export default Beneficiarydata;
