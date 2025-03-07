@@ -11,10 +11,17 @@ import SubCategorys from "@/components/Schemes/SubCategorys";
 import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, Tblbankmaster, TblBeneficiary, TblCaste, TblMembers, TblYojanaType, Villages, YojanaYear } from "@/components/type";
 import prisma from "@/lib/db";
 import { YojanaMaster } from "@prisma/client";
+import { title } from "process";
 import React from "react";
 
 const Page = async ({ params }: any) => {
     const { yojnaid } = params;
+    const { filteryojnayear } = params;
+    const { categoriesnamelength } = params;
+    const { categoriesname } = params;
+    const { subcategoryid } = params;
+    const { yojnaids } = params;
+    // const { yojnaid } = params;
     let subCategory: SubCategory[] = [];
     let YojnaYear: YojanaYear[] = [];
     let Bankdata: Bank[] = [];
@@ -57,17 +64,38 @@ const Page = async ({ params }: any) => {
             </>
         )
     }
+
+    const filteredYojnamaster = yojnamaster.filter(
+        (d) =>
+            d.yojana_year_id == yojnaids && // Match the yojana year ID
+            d.category_id === 2 && // Ensure category_id is 2
+            d.status !== "Deactive" && // Exclude inactive statuses
+            d.sub_category_id == subcategoryid // Match the sub_category_id
+    );
+
+    // Get unique subcategories from the filtered YojanaMaster
+    const uniqueSubCategories = Array.from(
+        new Set(filteredYojnamaster.map((yojna) => yojna.sub_category_id))
+    ).map((id) => {
+        return subCategory.find((cat) => cat.sub_category_id == id); // Use 'id' to find the correct subcategory
+    });
+
+    const categoriesnames = uniqueSubCategories.map((data) => data?.sub_category_name);
+
     const breadcrumbs = [
 
         { label: 'dashboard', href: '/dashboard' },
-        { label: 'Beneficiary', href: '/yojna/schemes/beneficiary' },
-        
+        { label: 'nbschemes', href: '', linkurl: "/dashboard/nbschemes" },
+        { label: '', title: `${filteryojnayear}`, href: '', linkurl: `/dashboard/nbschemes/nbschemescategory/${yojnaids}` },
+        { label: '', title: `${categoriesnames}${categoriesnamelength}`, href: `/yojna/schemes/beneficiary/beneficiryidwise/${yojnaid}/${filteryojnayear}/${categoriesnamelength}/${categoriesnamelength}/${subcategoryid}/${yojnaids}` },
+
     ];
-    const filterdatabeneficiary = beneficiary.filter((data) => data.yojana_id == yojnaid)
+    const filterdatabeneficiary = beneficiary.filter((data) => data.yojana_id == yojnaids)
     return (
         <div>
 
             <h1 className="card card-body mt-5">
+
                 <TitleCard breadcrumbs={breadcrumbs} />
             </h1>
             <Beneficiarydata initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={filterdatabeneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={cast} membersadd={membersadd} Bankmasterdata={Bankmasterdata} />

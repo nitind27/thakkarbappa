@@ -92,7 +92,7 @@ const page = async ({ params }: any) => {
                   >
                     <h5 className="d-flex align-items-center gap-1">
                       <span>
-                        <Baneficiaryidwise idx={idx + 1 + ")"} yojnaname={yojna.yojana_name} yojnaid={yojna.yojana_id} filteryojnayear={filteryojnayear} categoriesnamelength={categoriesnamelength.length} categoriesname={categoriesname} />
+                        <Baneficiaryidwise idx={idx + 1 + ")"} yojnaname={yojna.yojana_name} yojnaid={yojna.yojana_id} filteryojnayear={filteryojnayear} categoriesnamelength={categoriesnamelength.length} categoriesname={categoriesname} subcategoryid={subcategoryid} yojnaids={yojnaid} />
                       </span>
                       <span
                         className="bg-danger rounded-circle text-white fw-bold px-2 py-1 text-center"
