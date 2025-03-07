@@ -667,3 +667,27 @@ model tbl_achivments {
   update_date_time DateTime?
 
 }
+
+
+model tbl_evaluation {
+  evaluation_id      Int      @id @default(autoincrement())
+  parivahan_id      Int
+  beneficiary_id    Int
+  photo            String   @db.VarChar(100)
+  remarks          String   @db.Text
+  other_remraks    String   @db.VarChar(200)
+  lat              String   @db.VarChar(100)
+  log              String   @db.VarChar(100)
+  address          String   @db.VarChar(100)
+  yojana_id        Int
+  yojana_year_id   Int
+  sub_category_id  Int
+  category_id      Int
+  yojana_type      Int
+  ins_date_time    DateTime
+  update_date_time DateTime?
+  evaluation_status String  @default("Pending") @db.VarChar(10)
+  status           String  @default("Active") @db.VarChar(10)
+  
+  @@map("tbl_evaluation")
+}

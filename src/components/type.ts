@@ -560,3 +560,24 @@ export type TblAchivments = {
   update_date_time: Date | null;
 
 }
+
+export type TblEvaluation = {
+  evaluation_id: number;
+  parivahan_id: number;
+  beneficiary_id: number;
+  photo: string;
+  remarks: string;
+  other_remraks: string;
+  lat: string;
+  log: string;
+  address: string;
+  yojana_id: number;
+  yojana_year_id: number;
+  sub_category_id: number;
+  category_id: number;
+  yojana_type: number;
+  ins_date_time: Date;
+  update_date_time: Date | null;
+  evaluation_status?: "Pending" | "Completed" | string;
+  status?: "Active" | "Inactive" | string;
+};

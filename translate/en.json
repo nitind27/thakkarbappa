@@ -440,14 +440,14 @@
     "submit": "Add",
     "editsubmit": "Edit"
   },
-  "parivahan":{
+  "parivahan": {
     "SrNo": "S.No",
     "parivahandate": "Parivahav Date",
-    "outwardno":"Outward No",
-    "officername":"Officer's Name",
-    "year":"Year",
-    "yojnatype":"Yojna Type",
-    "yojnaname":"Yojna Name",
+    "outwardno": "Outward No",
+    "officername": "Officer's Name",
+    "year": "Year",
+    "yojnatype": "Yojna Type",
+    "yojnaname": "Yojna Name",
     "Status": "Status",
     "Action": "Action",
     "edit": "Edit",
@@ -459,10 +459,19 @@
     "updatepageapp": "Plans App",
     "submit": "Add",
     "editsubmit": "Edit",
-    "beneficiary":"Beneficiary Name",
-    "AmountPaid":"Amount Paid",
-    "name":"Name",
-    "total":"Total"
+    "beneficiary": "Beneficiary Name",
+    "AmountPaid": "Amount Paid",
+    "name": "Name",
+    "total": "Total"
+  },
+  "Beneficrydatas": {
+    "SrNo": "Serial Number",
+    "Col1": "Name of Officer assigned for site inspection",
+    "Col2": "Total No. of Beneficiaries",
+    "Col3": "No. of Beneficiaries out of which site inspection has been conducted",
+    "Col4": "No. of Beneficiaries pending site inspection",
+    "Col5": "No. of Beneficiaries who have submitted photos",
+    "Status": "Status"
   },
   "beneficiary": {
     "title": "Beneficiary",

@@ -8,7 +8,7 @@ import Beneficiary from "@/components/Schemes/Beneficiary";
 import Beneficiarydata from "@/components/Schemes/Beneficiarydata";
 import Category from "@/components/Schemes/Category";
 import SubCategorys from "@/components/Schemes/SubCategorys";
-import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, Tblbankmaster, TblBeneficiary, TblCaste, TblMembers, TblYojanaType, Villages, YojanaYear } from "@/components/type";
+import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, Tblbankmaster, TblBeneficiary, TblCaste, TblEvaluation, TblMembers, tblparivahan, TblParivahanBeneficiary, TblUsers, TblYojanaType, Villages, YojanaYear } from "@/components/type";
 import prisma from "@/lib/db";
 import { YojanaMaster } from "@prisma/client";
 import { title } from "process";
@@ -35,6 +35,11 @@ const Page = async ({ params }: any) => {
     let Villages: Villages[] = [];
     let membersadd: TblMembers[] = [];
     let Bankmasterdata: Tblbankmaster[] = [];
+    let Parivahantbl: tblparivahan[] = [];
+    let tbluser: TblUsers[] = [];
+    let parivahanbeneficiary: TblParivahanBeneficiary[] = [];
+    let tblevaluation: TblEvaluation[] = [];
+
     try {
         category = await prisma.category.findMany(); // Fetch all clusters
         subCategory = await prisma.subCategory.findMany(); // Fetch all clusters
@@ -43,12 +48,16 @@ const Page = async ({ params }: any) => {
         Bankdata = await prisma.bank.findMany();
         yojnatype = await prisma.yojnatype.findMany();
         yojnamaster = await prisma.yojanaMaster.findMany();
+        Parivahantbl = await prisma.tblparivahan.findMany();
         talukas = await prisma.talukasData.findMany();
         cast = await prisma.tblcaste.findMany();
         Villages = await prisma.villages.findMany(); // Fetch all QR codes
         grampanchayat = await prisma.grampanchayat.findMany();
         membersadd = await prisma.tbl_members.findMany();
+        tblevaluation = await prisma.tbl_evaluation.findMany();
         Bankmasterdata = await prisma.tbl_bankmaster.findMany(); // Fetch all clusters
+        tbluser = await prisma.tblusers.findMany(); // Fetch all clusters
+        parivahanbeneficiary = await prisma.parivahanbeneficiary.findMany(); // Fetch all clusters
     } catch (error) {
         console.error("Error fetching cluster data:", error);
         return (
@@ -90,7 +99,9 @@ const Page = async ({ params }: any) => {
         { label: '', title: `${categoriesnames}${categoriesnamelength}`, href: `/yojna/schemes/beneficiary/beneficiryidwise/${yojnaid}/${filteryojnayear}/${categoriesnamelength}/${categoriesnamelength}/${subcategoryid}/${yojnaids}` },
 
     ];
-    const filterdatabeneficiary = beneficiary.filter((data) => data.yojana_id == yojnaids)
+    const filterdatabeneficiary = beneficiary.filter((data) => data.yojana_id == yojnaids);
+    const parivahanfilter = Parivahantbl.filter((data) => data.yojana_id == yojnaid)
+
     return (
         <div>
 
@@ -98,7 +109,7 @@ const Page = async ({ params }: any) => {
 
                 <TitleCard breadcrumbs={breadcrumbs} />
             </h1>
-            <Beneficiarydata initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={filterdatabeneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={cast} membersadd={membersadd} Bankmasterdata={Bankmasterdata} />
+            <Beneficiarydata initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={filterdatabeneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={cast} membersadd={membersadd} Bankmasterdata={Bankmasterdata} Parivahantbl={parivahanfilter} tbluserdata={tbluser} parivahanbeneficiary={parivahanbeneficiary} yojnaid={yojnaid} tblevaluation={tblevaluation}/>
         </div>
     );
 };

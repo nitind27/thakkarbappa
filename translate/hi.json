@@ -125,6 +125,10 @@
     "name": "नाम",
     "total": "कुल"
   },
+  "Beneficrydatas": {
+    "SrNo": "क्र. सं.",
+    "Col1": "अधिकारी का नाम"
+  },
   "MahasulGaav": {
     "title": "महसूल गांव",
     "addmahasulgaav": "जोड़ें",

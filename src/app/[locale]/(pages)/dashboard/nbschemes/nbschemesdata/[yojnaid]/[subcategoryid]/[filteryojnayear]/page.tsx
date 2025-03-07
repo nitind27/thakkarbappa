@@ -51,10 +51,10 @@ const page = async ({ params }: any) => {
     { label: 'dashboard', href: '/dashboard' },
     { label: 'nbschemes', href: '/dashboard/nbschemes' },
     { label: '', title: `${filteryojnayear}`, href: `/dashboard/nbschemes/nbschemescategory/${yojnaid}` },
-    { label: '', title: `${categoriesname}${categoriesnamelength.length}`, href: `/dashboard/nbschemes/nbschemesdata/${yojnaid}/${subcategoryid}/${filteryojnayear}` },
+    { label: '', title: `${categoriesname}(${categoriesnamelength.length})`, href: `/dashboard/nbschemes/nbschemesdata/${yojnaid}/${subcategoryid}/${filteryojnayear}` },
 
   ];
-
+  // const filterbeneficrydatacount = beneficiary.filter((data) => data.yojana_id == )
   return (
     <div className="container mx-auto p-4">
 
@@ -98,7 +98,7 @@ const page = async ({ params }: any) => {
                         className="bg-danger rounded-circle text-white fw-bold px-2 py-1 text-center"
                         style={{ minWidth: "24px" }}
                       >
-                        {beneficiary.filter((data) => data.yojana_id == yojna.yojana_id).length}
+                        {beneficiary.filter((data) => data.yojana_id == yojna.yojana_id && data.status == "Active").length}
                       </span>
                     </h5>
                   </div>
