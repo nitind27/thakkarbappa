@@ -63,6 +63,7 @@ export type Schooldata = {
   school_name_mr: string;
   image_urls: string;
   pat_sankhya?: number | null;
+  school_type: string;
   // cluster?: ClusterData; // Optional relationship
   // taluka?: TalukasData; // Optional relationship
 };
@@ -580,4 +581,39 @@ export type TblEvaluation = {
   update_date_time: Date | null;
   evaluation_status?: "Pending" | "Completed" | string;
   status?: "Active" | "Inactive" | string;
+};
+
+
+export type TblHostel = {
+  hostel_id: number;
+  aapar_aayukt: string;
+  prakalp: string;
+  hostel_name: string;
+  hostel_type: string;
+  address: string;
+  cluster_id: number;
+  taluka: string;
+  dist: string;
+  warden_name: string;
+  hostel_darja: string;
+  hostel_manjur_shkamata: string;
+  hostel_imarat_shkamata: string;
+  contact_no: string;
+  email: string;
+  status: string;
+  image_urls: string;
+}
+
+
+export type MissionShikari = {
+  id: number;
+  designation?: string;
+  studentname?: string;
+  schoolhosteltype?: string;
+  schoolhostelname?: string;
+  subject?: string;
+  testdate?: string;
+  totalmarks?: string;
+  obtainmarks?: string;
+  percentage?: string;
 };

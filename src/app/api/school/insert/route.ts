@@ -63,6 +63,7 @@ export async function POST(req: Request) {
                 stri_contact,
                 stri_email,
                 image_urls,
+                school_type:"",
                 status: 'Active',  // Default status
             },
         });

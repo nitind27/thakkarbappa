@@ -121,9 +121,7 @@ const CustomModal: React.FC<any> = ({
   };
   // Determine grid classes based on size prop
   const gridClass = size ? 'col-6 col-md-3' : 'col-12';
-  const propmtopen = () => {
-    prompt(`Nitin Dube`)
-  }
+
   return (
     <Modal show={show} size={size}>
       <Modal.Header closeButton onClick={closeModal}>
@@ -329,15 +327,22 @@ const CustomModal: React.FC<any> = ({
               </ul>
             </div>
           )}
+          <span style={{
+            display: 'flex',
+            justifyContent: 'flex-end', // or 'end' in some frameworks
+            width: '100%' // Ensure the span takes full width
+          }}>
 
-          <Button
-            variant="primary"
-            type="submit"
-            className="mt-3"
-            disabled={disabledButton}
-          >
-            {submitButtonLabel}
-          </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              className="mt-3"
+              disabled={disabledButton}
+            >
+              {submitButtonLabel}
+            </Button>
+          </span>
+
         </Form>
         {filterdata}
       </Modal.Body>

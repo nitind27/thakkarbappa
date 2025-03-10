@@ -79,6 +79,7 @@ model School {
   school_name_mr   String    @db.VarChar(100) @map("school_name_mr")
   image_urls       String    @db.Text @map("image_urls")
   pat_sankhya     Int? 
+  school_type      String    @db.VarChar(11) @map("school_type")
   @@map("tbl_school") // Map the model to the "tbl_school" table in your database
 }
 
@@ -690,4 +691,37 @@ model tbl_evaluation {
   status           String  @default("Active") @db.VarChar(10)
   
   @@map("tbl_evaluation")
+}
+
+model tbl_hostels {
+  hostel_id                Int     @id @default(autoincrement())
+  aapar_aayukt             String
+  prakalp                  String
+  hostel_name              String  @db.VarChar(255)
+  hostel_type              String  @db.VarChar(50)
+  address                  String  @db.VarChar(255)
+  cluster_id               Int
+  taluka                   String  @db.VarChar(50)
+  dist                     String  @db.VarChar(50)
+  warden_name              String  @db.VarChar(100)
+  hostel_darja             String  @db.VarChar(100)
+  hostel_manjur_shkamata   String  @db.VarChar(100)
+  hostel_imarat_shkamata   String  @db.VarChar(100)
+  contact_no               String  @db.Text
+  email                    String  @db.VarChar(80)
+  status                   String  @default("Active") @db.VarChar(10)
+  image_urls               String  @db.Text
+}
+
+model missionshikari {
+  id               Int     @id @default(autoincrement())
+  designation      String? @db.VarChar(10)
+  studentname     String? @db.VarChar(35)
+  schoolhosteltype String? @db.VarChar(30)
+  schoolhostelname String? @db.VarChar(30)
+  subject         String? @db.VarChar(35)
+  testdate        String? @db.VarChar(30)
+  totalmarks      String? @db.VarChar(10)
+  obtainmarks     String? @db.VarChar(20)
+  percentage      String? @db.VarChar(20)
 }

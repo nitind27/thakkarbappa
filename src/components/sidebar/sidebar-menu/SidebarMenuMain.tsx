@@ -252,6 +252,13 @@ const SidebarMenuMain = () => {
           fontIcon="bi-app-notification"
           onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)}
         />
+        <SidebarMenuItem
+          to={`/${localActive}/missionPeak`}
+          icon="notification"
+          title={"Mission Peak"}
+          fontIcon="bi-app-notification"
+          onClick={() => handleItemClick(`/${localActive}/missionPeak`)}
+        />
       </div>
     </>
   );
