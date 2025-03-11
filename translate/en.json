@@ -577,5 +577,28 @@
     "updatepage": "Work Master",
     "submit": "Add",
     "editsubmit": "Edit"
+  },
+  "missionsikhri": {
+    "title": "Mission Sikhri",
+    "SrNo": " S.No",
+    "aadharcard": "Aadhar Card Number",
+    "parentsnum": "Parents Number",
+    "photo": "Photo",
+    "Designation": "Designation",
+    "StudentName": "Student Name",
+    "SchoolHostelType": "School/Hostel Type",
+    "SchoolHostelName": "School/Hostel Name",
+    "Subject": "Subject",
+    "TestDate": "Test Date",
+    "Totalmarks": "Total marks",
+    "ObtainMarks": "Obtain Marks",
+    "Percentage": "Percentage",
+    "submit": "Add",
+    "editsubmit": "Edit",
+    "Status": "Status",
+    "Action": "Action",
+   
+    "Active": "Active",
+    "Deactive": "Deactive"
   }
 }

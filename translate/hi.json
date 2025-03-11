@@ -568,5 +568,28 @@
     "updatepage": "कार्य मास्टर",
     "submit": "जोड़ें",
     "editsubmit": "संपादित करें"
-  }
+  },
+  "missionsikhri": {
+    "title": "मिशन सिक्खरी",
+    "SrNo": "क्रम संख्या",
+    "aadharcard": "आधार कार्ड नंबर",
+    "parentsnum": "माता-पिता का नंबर",
+    "photo": "फोटो",
+    "Designation": "पदनाम",
+    "StudentName": "छात्र का नाम",
+    "SchoolHostelType": "विद्यालय/छात्रावास प्रकार",
+    "SchoolHostelName": "विद्यालय/छात्रावास का नाम",
+    "Subject": "विषय",
+    "TestDate": "परीक्षा तिथि",
+    "Totalmarks": "कुल अंक",
+    "ObtainMarks": "प्राप्त अंक",
+    "Percentage": "प्रतिशत",
+    "submit": "जोड़ें",
+    "editsubmit": "संपादित करें",
+    "Status": "स्थिति",
+    "Action": "कार्यवाई",
+    "Active": "सक्रिय",
+    "Deactive": "निष्क्रिय"
+}
+
 }

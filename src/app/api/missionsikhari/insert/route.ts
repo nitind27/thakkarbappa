@@ -1,36 +1,86 @@
-import prisma from '@/lib/db';
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import prisma from "@/lib/db";
+import { promises as fs } from "fs";
+import path from "path";
+import { nanoid } from "nanoid"; // For generating unique file names
 
 export async function POST(req: Request) {
   try {
-    // Get the cluster_name from the request body
-    const body = await req.json();
-    const { designation, studentname, schoolhosteltype, schoolhostelname, subject, testdate, totalmarks, obtainmarks, percentage } = body;
+    // First, check if the content type is multipart/form-data (file upload)
+    const contentType = req.headers.get("content-type") || "";
 
+    if (!contentType.includes("multipart/form-data")) {
+      return NextResponse.json(
+        { error: "Invalid content type" },
+        { status: 400 }
+      );
+    }
 
+    // Get the form data
+    const formData = await req.formData();
 
-    // Insert the new cluster into the database
-    const newCluster = await prisma.missionshikari.create({
+    // Extract all fields
+    const designation = formData.get("designation");
+    const studentname = formData.get("studentname");
+    const schoolhosteltype = formData.get("schoolhosteltype");
+    const schoolhostelname = formData.get("schoolhostelname");
+    const subject = formData.get("subject");
+    const testdate = formData.get("testdate");
+    const totalmarks = formData.get("totalmarks");
+    const obtainmarks = formData.get("obtainmarks");
+    const percentage = formData.get("percentage");
+    const aadharcard = formData.get("aadharcard");
+    const parentsnumber = formData.get("parentsnumber");
+    const imgupload = formData.get("imgupload") as File;
+
+    // Validate the fields (ensure all required fields are present)
+   
+
+    // Ensure 'public/uploads' directory exists
+    const uploadDir = 'public/uploads'; // Change to /tmp directory
+
+    await fs.mkdir(uploadDir, { recursive: true });
+
+    // Generate a unique filename using nanoid
+    const fileExt = imgupload.name.split(".").pop(); // Extract the file extension
+    const uniqueFileName = `${nanoid()}.${fileExt}`;
+    const filePath = path.join(uploadDir, uniqueFileName);
+
+    // Save the file to the local filesystem
+    const buffer = await imgupload.arrayBuffer();
+    await fs.writeFile(filePath, Buffer.from(buffer));
+
+    // Insert into the database using Prisma
+    const newDisbursement = await prisma.missionshikari.create({
       data: {
-        designation: designation,
-        studentname: studentname,
-        schoolhosteltype: schoolhosteltype,
-        schoolhostelname: schoolhostelname,
-        subject: subject,
-        testdate: testdate,
-        totalmarks: totalmarks,
-        obtainmarks: obtainmarks,
-        percentage: percentage,
-
+        designation: designation?.toString(),
+        studentname: studentname?.toString(),
+        schoolhosteltype: schoolhosteltype?.toString(),
+        schoolhostelname: schoolhostelname?.toString(),
+        subject: subject?.toString(),
+        testdate: testdate?.toString(),
+        totalmarks: totalmarks?.toString(),
+        obtainmarks: obtainmarks?.toString(),
+        percentage: percentage?.toString(),
+        aadharcard: aadharcard?.toString(),
+        parentsnumber: parentsnumber?.toString(),
+        imgupload: `/uploads/${uniqueFileName}`, // Store the relative path of the uploaded image
+   
       },
     });
 
-    // Return the newly created cluster with a 201 Created status
-    return NextResponse.json(newCluster, { status: 201 });
-  } catch (error: any) {
-    console.error("Error during insertion:", error); // Log the error for debugging
+    // Convert BigInt fields to string for the response
+    const responseData = {
+      ...newDisbursement,
+      id: newDisbursement.id,
+    };
 
-    // Return a 500 error if something goes wrong
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(responseData, { status: 201 });
+  } catch (error) {
+    console.error("Error during disbursement creation:", error);
+    return NextResponse.json(
+      { error: error || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

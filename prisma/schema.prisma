@@ -724,4 +724,7 @@ model missionshikari {
   totalmarks      String? @db.VarChar(10)
   obtainmarks     String? @db.VarChar(20)
   percentage      String? @db.VarChar(20)
+  aadharcard      String? @db.VarChar(13)
+  parentsnumber      String? @db.VarChar(12)
+  imgupload      String? @db.VarChar(255)
 }

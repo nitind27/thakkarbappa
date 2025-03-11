@@ -607,13 +607,16 @@ export type TblHostel = {
 
 export type MissionShikari = {
   id: number;
-  designation?: string;
-  studentname?: string;
-  schoolhosteltype?: string;
-  schoolhostelname?: string;
-  subject?: string;
-  testdate?: string;
-  totalmarks?: string;
-  obtainmarks?: string;
-  percentage?: string;
+  designation?: string | null;
+  studentname?: string | null;
+  schoolhosteltype?: string | null;
+  schoolhostelname?: string | null;
+  subject?: string | null;
+  testdate?: string | null;
+  totalmarks?: string | null;
+  obtainmarks?: string | null;
+  percentage?: string | null;
+  aadharcard?: string | null;
+  parentsnumber?: string | null;
+  imgupload?: string | null;
 };

@@ -154,7 +154,7 @@
     "name": "नाव",
     "total": "एकूण"
   },
-  "Beneficrydatas":{
+  "Beneficrydatas": {
     "SrNo": "क्रमांक",
     "Col1": "स्थळ पाहणीसाठी आदेशित अधिकारी यांचे नाव",
     "Col2": "एकूण लाभार्थी संख्या",
@@ -568,5 +568,27 @@
     "updatepage": "काम मास्टर",
     "submit": "जोडा",
     "editsubmit": "संपादन करा"
+  },
+  "missionsikhri": {
+    "title": "मिशन सिक्खरी",
+    "SrNo": "क्रमांक",
+    "aadharcard": "आधार कार्ड क्रमांक",
+    "parentsnum": "पालकांचा क्रमांक",
+    "photo": "फोटो",
+    "Designation": "पदनाम",
+    "StudentName": "विद्यार्थ्याचे नाव",
+    "SchoolHostelType": "शाळा/वसतिगृह प्रकार",
+    "SchoolHostelName": "शाळा/वसतिगृहाचे नाव",
+    "Subject": "विषय",
+    "TestDate": "परीक्षेची तारीख",
+    "Totalmarks": "एकूण गुण",
+    "ObtainMarks": "प्राप्त गुण",
+    "Percentage": "टक्केवारी",
+    "submit": "जोडा",
+    "editsubmit": "संपादित करा",
+    "Status": "स्थिती",
+    "Action": "कृती",
+    "Active": "सक्रिय",
+    "Deactive": "निष्क्रिय"
   }
 }

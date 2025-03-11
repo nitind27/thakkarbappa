@@ -2,7 +2,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
-import { clusterdata, Schooldata, TblHostel } from "../type";
+import { clusterdata, MissionShikari, Schooldata, TblHostel } from "../type";
 import { formatDate } from "@/lib/utils";
 import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
@@ -13,48 +13,63 @@ import { useTranslations } from "next-intl";
 import { createConfirmation } from "react-confirm";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
 import Loader from "@/common/Loader ";
+import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
     initialClusterData: clusterdata[];
     Schooldata: Schooldata[];
     TblHostel: TblHostel[];
+    MissionShikari: MissionShikari[];
 };
 
-const MissionPeak = ({ initialClusterData, Schooldata, TblHostel }: Props) => {
-    const t = useTranslations("IndexPage");
+const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari }: Props) => {
+    const t = useTranslations("missionsikhri");
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [clusterName, setClusterName] = useState("");
     const [error, setError] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
+
     const [clusterData, setClusterData] =
-        useState<clusterdata[]>(initialClusterData); // State for cluster data
+        useState<MissionShikari[]>(MissionShikari); // State for cluster data
     const confirm = createConfirmation(ConfirmationDialog);
-    const [designation, setDesignation] = useState();
-    const [studentname, setStudentName] = useState();
-    const [SchoolHostelType, setSchoolostelType] = useState();
-    const [SchoolHostelName, setSchoolHostelName] = useState();
+    const [designation, setDesignation] = useState("");
+    const [studentname, setStudentName] = useState("");
+    const [SchoolHostelType, setSchoolostelType] = useState("");
+    const [SchoolHostelName, setSchoolHostelName] = useState("");
     const [Subject, setSubject] = useState("");
     const [TestDate, setTestDate] = useState("");
     const [Totalmarks, setTotalmarks] = useState("");
     const [obtainmarks, setObtainMarks] = useState("");
     const [Percentage, setPercentage] = useState("");
+    const [adharcard, setadharcard] = useState("");
+    const [parentsnumber, setParentsnumber] = useState("");
+    const [imgupload, setimgupload] = React.useState<File | null>(null);
+    const [imagePreview, setImagePreview] = React.useState<string>("");
     const data = clusterData
         .map((cluster) => ({
-            cluster_id: cluster.cluster_id,
-            cluster_name: cluster.cluster_name,
-            status: cluster.status,
-            ins_date_time:
-                typeof cluster.ins_date_time === "string"
-                    ? formatDate(cluster.ins_date_time)
-                    : formatDate(cluster.ins_date_time.toISOString()),
+            id: cluster.id,
+            designation: cluster.designation,
+            studentname: cluster.studentname,
+            schoolhostelname: cluster.schoolhostelname,
+            schoolhosteltype: cluster.schoolhosteltype,
+            subject: cluster.subject,
+            testdate: cluster.testdate,
+            totalmarks: cluster.totalmarks,
+            obtainmarks: cluster.obtainmarks,
+            percentage: cluster.percentage,
+            aadharnumber: cluster.aadharcard,
+            parentsnumber: cluster.parentsnumber,
+            imgupload: cluster.imgupload,
+
         }))
         .reverse(); // Reverse the order to show the last added items first
 
     const columns = [
         {
             accessorKey: "serial_number", // Use a new accessor for the serial number
-            header: `${t("Srno")}`, // Header for the serial number
+            header: `${t("SrNo")}`, // Header for the serial number
             cell: ({ row }: any) => (
                 <div>
                     {row.index + 1} {/* Display the index + 1 for serial number */}
@@ -63,16 +78,76 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel }: Props) => {
         },
 
         {
-            accessorKey: "cluster_name",
-            header: `${t("clustername")}`,
+            accessorKey: "aadharnumber",
+            header: `${t("aadharcard")}`,
         },
         {
-            accessorKey: "status",
-            header: `${t("Status")}`,
+            accessorKey: "parentsnumber",
+            header: `${t("parentsnum")}`,
         },
         {
-            accessorKey: "ins_date_time",
-            header: `${t("AddTime")}`,
+            accessorKey: "imgupload",
+            header: `${t("photo")}`,
+            cell: ({ row }: any) => {
+                const photoSrc =
+                    row.original.imgupload &&
+                        (row.original.imgupload.startsWith("http") || row.original.imgupload.startsWith("/"))
+                        ? row.original.imgupload
+                        : row.original.imgupload
+                            ? `/${row.original.imgupload}`
+                            : "/default-image.jpg"; // Provide a fallback image
+                return (
+                    <div style={{ textAlign: "center" }}>
+                        <Image
+                            src={photoSrc}
+                            alt={t("img")}
+                            style={{ objectFit: "cover" }}
+                            height={100} // Adjust size as needed
+                            width={100}
+                        />
+                        <br />
+                        <Link href={photoSrc} target="_blank" rel="noopener noreferrer">
+                            view
+                        </Link>
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: "designation",
+            header: `${t("Designation")}`,
+        },
+        {
+            accessorKey: "studentname",
+            header: `${t("StudentName")}`,
+        },
+        {
+            accessorKey: "schoolhostelname",
+            header: `${t("SchoolHostelName")}`,
+        },
+        {
+            accessorKey: "schoolhosteltype",
+            header: `${t("SchoolHostelType")}`,
+        },
+        {
+            accessorKey: "subject",
+            header: `${t("Subject")}`,
+        },
+        {
+            accessorKey: "testdate",
+            header: `${t("TestDate")}`,
+        },
+        {
+            accessorKey: "totalmarks",
+            header: `${t("Totalmarks")}`,
+        },
+        {
+            accessorKey: "obtainmarks",
+            header: `${t("ObtainMarks")}`,
+        },
+        {
+            accessorKey: "percentage",
+            header: `${t("Percentage")}`,
         },
         {
             accessorKey: "actions",
@@ -85,13 +160,13 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel }: Props) => {
                     >
                         {" "}
                         <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
-                        {t("edit")}
+                        {t("editsubmit")}
                     </button>
                     <button
                         className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
                             } ms-5`}
                         onClick={() =>
-                            handleDeactivate(row.original.cluster_id, row.original.status)
+                            handleDeactivate(row.original.id)
                         }
                     >
                         <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
@@ -110,8 +185,8 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel }: Props) => {
 
             if (total > 0 && obtained >= 0) {
                 const percent = (obtained / total) * 100;
-                setPercentage(percent as any);
-                // setPercentage(percent.toFixed(2) + "%");
+                // setPercentage(percent as any);
+                setPercentage(percent.toFixed(2) + "%");
             } else {
                 setPercentage("");
             }
@@ -119,45 +194,36 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel }: Props) => {
             setPercentage("");
         }
     }, [Totalmarks, obtainmarks]);
-    const handleDeactivate = async (clusterId: any, currentStatus: any) => {
+    const handleDeactivate = async (clusterId: any) => {
         const confirmMessage =
-            currentStatus === "Active"
-                ? "Are you sure you want to deactivate this cluster?"
-                : "Are you sure you want to activate this cluster?";
+            "Are you sure you want to Delete this Mission Sikhri ?";
         const confirmed = await confirm({ confirmation: confirmMessage });
         if (confirmed) {
             try {
-                const response = await fetch(`/api/clustersapi/clusters/${clusterId}`, {
-                    method: "PATCH",
+                const response = await fetch(`/api/missionsikhari/delete/${clusterId}`, {
+                    method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        status: currentStatus === "Active" ? "Deactive" : "Active",
+                        status: clusterId === "Active" ? "Deactive" : "Active",
                     }),
                 });
 
                 if (response.ok) {
                     // Update local state without page reload
-                    setClusterData((prevData) =>
-                        prevData.map((cluster) =>
-                            cluster.cluster_id === clusterId
-                                ? {
-                                    ...cluster,
-                                    status: currentStatus === "Active" ? "Deactive" : "Active",
-                                }
-                                : cluster
-                        )
+                    setClusterData(prevData =>
+                        prevData.filter(cluster => cluster.id !== clusterId)
                     );
                     toast.success(
-                        `Cluster ${currentStatus === "Active" ? "deactivated" : "activated"
-                        } successfully!`
+                        `
+                      Mission Sikhri  Delete successfully!`
                     );
                 } else {
-                    toast.error("Failed to change the cluster status.");
+                    toast.error("Failed to change the Mission Sikhri status.");
                 }
             } catch (error) {
-                console.error("Error changing the cluster status:", error);
+                console.error("Error changing the Mission Sikhri status:", error);
                 toast.error("An unexpected error occurred.");
             }
         }
@@ -165,57 +231,70 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel }: Props) => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        // Create FormData to handle both file and form data
+        const formData = new FormData();
+        formData.append("designation", designation as any);
+        formData.append("studentname", studentname as any);
 
+        formData.append("schoolhosteltype", SchoolHostelType as any);
+        formData.append("schoolhostelname", SchoolHostelName as any);
+        formData.append("subject", Subject);
+        formData.append("testdate", TestDate);
+        formData.append("totalmarks", Totalmarks);
+        formData.append("obtainmarks", obtainmarks);
+        formData.append("percentage", Percentage);
+        formData.append("aadharcard", adharcard);
+        formData.append("parentsnumber", parentsnumber);
+
+        // Add the image file to the form data if there's an image to upload
+        if (imgupload) {
+            formData.append("imgupload", imgupload);
+        }
         setIsLoading(true); // Start loading
 
         try {
-            const method = updateClusterId ? "PUT" : "POST";
+            // Determine if this is an insert or update operation
+            const method = updateClusterId ? "PATCH" : "POST";
             const url = updateClusterId
-                ? `/api/missionsikhari/update/updateCluster`
+                ? `/api/missionsikhari/update`
                 : `/api/missionsikhari/insert`;
+            // If updating, include the cluster ID
+            if (updateClusterId) {
+                formData.append("id", updateClusterId.toString());
+            }
 
-            // Prepare the request body
-            const requestBody = {
-                designation: designation,
-                studentname: studentname,
-                schoolhosteltype: SchoolHostelType,
-                schoolhostelname: SchoolHostelName,
-                subject: Subject,
-                testdate: TestDate,
-                totalmarks: Totalmarks,
-                obtainmarks: obtainmarks,
-                percentage: String(Percentage),
-                ...(updateClusterId && { id: updateClusterId }),
-            };
-
+            // Send the form data to the backend
             const response = await fetch(url, {
                 method,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(requestBody),
+                body: formData, // Use FormData instead of JSON string
             });
 
             if (response.ok) {
-                if (updateClusterId) {
-                    setClusterData((prevData) =>
-                        prevData.map((cluster) =>
-                            cluster.cluster_id === updateClusterId
-                                ? { ...cluster, cluster_name: clusterName }
+                const createdData = await response.json();
+
+                if (!updateClusterId) {
+                    // If inserting a new entry, update the state with the new data
+                    setClusterData((prevData) => [...prevData, createdData]);
+                    toast.success("Mission Sikhri inserted successfully!");
+                } else {
+                    // If updating an existing entry, update the specific item in the state
+                    setClusterData((prevData: any) =>
+                        prevData.map((cluster: any) =>
+                            cluster.id === updateClusterId
+                                ? { ...cluster, ...createdData }
                                 : cluster
                         )
                     );
-                    toast.success("Cluster updated successfully!");
-                } else {
-                    const createdData = await response.json();
-                    setClusterData((prevData) => [...prevData, createdData]);
-                    toast.success("Cluster inserted successfully!");
+                    toast.success("Mission Sikhri updated successfully!");
                 }
 
+                // Reset form and close modal after successful submission
+                resetform();
                 handleClosePrint();
             } else {
+                // Handle errors from the server
                 toast.error(
-                    `Failed to ${updateClusterId ? "update" : "insert"} cluster.`
+                    `Failed to ${updateClusterId ? "update" : "insert"} Mission Sikhri.`
                 );
             }
         } catch (error) {
@@ -227,25 +306,82 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel }: Props) => {
     };
 
     const handleEdit = (cluster: any) => {
-        setUpdateClusterId(cluster.cluster_id); // Set ID for updating
-        setClusterName(cluster.cluster_name); // Set current name for editing
-        handleShowPrint(); // Open modal for editing
+
+        setUpdateClusterId(cluster.id);
+        setDesignation(cluster.designation);
+        setStudentName(cluster.studentname);
+        setDesignation(cluster.designation);
+        setSchoolHostelName(cluster.schoolhostelname);
+        setSchoolostelType(cluster.schoolhosteltype);
+        setSubject(cluster.subject);
+        setTestDate(cluster.testdate);
+        setTotalmarks(cluster.totalmarks);
+        setObtainMarks(cluster.obtainmarks);
+        setPercentage(cluster.percentage);
+        setadharcard(cluster.aadharnumber);
+        setParentsnumber(cluster.parentsnumber);
+        setImagePreview(cluster.imgupload);
+        handleShowPrint();
     };
 
+    const resetform = () => {
+        // setUpdateClusterId();
+        setDesignation("");
+        setStudentName("");
+        setDesignation("");
+        setSchoolHostelName("");
+        setSchoolostelType("");
+        setSubject("");
+        setTestDate("");
+        setTotalmarks("");
+        setObtainMarks("");
+        setPercentage("");
+        setadharcard("");
+        setParentsnumber("");
+        setImagePreview("");
+    }
     const handleShowPrint = () => setShowPrintModal(true);
 
     const handleClosePrint = () => {
         setShowPrintModal(false);
         setClusterName("");
         setError("");
+        resetform();
         setUpdateClusterId(null); // Reset update ID when closing
     };
+    const adharname = MissionShikari
+        .filter((data) => data.aadharcard === adharcard)
+        .sort((a, b) => b.id - a.id) // Sort by id in descending order
+        .slice(0, 1) // Get the last id entry
+        .map((data) => data.studentname);
+
+    const adharimg = MissionShikari
+        .filter((data) => data.aadharcard === adharcard)
+        .sort((a, b) => b.id - a.id) // Sort by id in descending order
+        .slice(0, 1) // Get the last id entry
+        .map((data) => data.imgupload);
+
+    const adharcontact = MissionShikari
+        .filter((data) => data.aadharcard === adharcard)
+        .sort((a, b) => b.id - a.id) // Sort by id in descending order
+        .slice(0, 1) // Get the last id entry
+        .map((data) => data.parentsnumber);
 
 
+
+    const handleImageChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) => {
+        const file = (e.target as HTMLInputElement).files?.[0]; // Type assertion to HTMLInputElement
+        if (file) {
+            setimgupload(file); // Store the actual file object
+            setImagePreview(URL.createObjectURL(file)); // Create a preview URL
+        }
+    };
     return (
         <div>
             <Table
-                data={[]}
+                data={data}
                 columns={columns}
                 Button={
                     <Button
@@ -258,7 +394,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel }: Props) => {
                             className="fs-3"
                             iconType="solid"
                         />
-                        {t("AddCluster")}
+                        {t("submit")}
                     </Button>
                 }
             />
@@ -268,11 +404,71 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel }: Props) => {
                 size="xl"
                 handleClose={handleClosePrint}
                 handleSubmit={handleSubmit}
-                title={updateClusterId ? `Mission Shikhar` : `Mission Shikhar`}
+                imagepriview={
+                    adharimg.length !== 0 && (
+                        <>
+                            <img
+                                src={`${adharimg}`}
+                                alt="Preview"
+                                style={{
+                                    width: "150px", // Set a fixed width for the circular effect
+                                    height: "150px", // Set a fixed height equal to width
+                                    borderRadius: "5%", // Make the image circular
+                                    objectFit: "cover", // Ensure the image covers the circular area
+                                    overflow: "hidden", // Hide overflow to keep the circle shape
+                                }}
+                            />
+
+                        </>
+                    )
+                }
+                title={updateClusterId ? `${t('title')}` : `${t('title')}`}
                 formData={{
                     fields: [
                         {
-                            label: `Designation`,
+                            label: `${t('aadharcard')}`,
+                            value: adharcard,
+                            type: "text",
+                            className: "col-4",
+                            placeholder: `${t('aadharcard')}`,
+                            required: true,
+                            onChange: (e: any) => {
+                                // Ensure that only digits are allowed and limit to 11 digits
+                                const inputValue = e.target.value;
+                                if (/^\d*$/.test(inputValue) && inputValue.length <= 12) {
+                                    setadharcard(inputValue);
+                                }
+                            },
+                        },
+
+                        {
+                            label: `${t('parentsnum')}`,
+                            value: adharcontact.length == 0 ? parentsnumber : adharcontact,
+                            type: "text",
+                            className: "col-4",
+                            placeholder: `${t('parentsnum')}`,
+                            required: true,
+
+                            onChange: (e: any) => {
+                                // Ensure that only digits are allowed and limit to 11 digits
+                                const inputValue = e.target.value;
+                                if (/^\d*$/.test(inputValue) && inputValue.length <= 10) {
+                                    setParentsnumber(inputValue);
+                                }
+                            },
+                        },
+
+                        {
+                            label: `${t('photo')}`,
+                            value: "", // The value for file input is always empty (HTML behavior)
+                            type: "file",
+                            className: "col-4",
+                            placeholder: `${t('photo')}`,
+                            onChange: handleImageChange, // Handle image change here
+                        },
+
+                        {
+                            label: `${t('Designation')}`,
                             value: designation, // Default value when updating
                             onChange: (e: any) => setDesignation(e.target.value),
                             type: "select",
@@ -285,21 +481,21 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel }: Props) => {
                                 { label: "Miss", value: "Miss" },
 
                             ],
-                            placeholder: 'Designation', // Optional placeholder for select input
+                            placeholder: `${t('Designation')}`, // Optional placeholder for select input
                         },
 
                         {
-                            label: `Student Name`,
-                            value: studentname,
+                            label: `${t('StudentName')}`,
+                            value: adharname.length == 0 ? studentname : adharname,
                             type: "text",
                             className: "col-4",
-                            placeholder: `Student Name`,
+                            placeholder: `${t('StudentName')}`,
                             required: true,
                             onChange: (e: any) => setStudentName(e.target.value),
                         },
 
                         {
-                            label: `School/Hostel Type`,
+                            label: `${t('SchoolHostelType')}`,
                             value: SchoolHostelType, // Default value when updating
                             onChange: (e: any) => setSchoolostelType(e.target.value),
                             type: "select",
@@ -315,12 +511,12 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel }: Props) => {
                                 { label: "इतर", value: "इतर" },
 
                             ],
-                            placeholder: `School/Hostel Type`, // Optional placeholder for select input
+                            placeholder: `${t('SchoolHostelType')}`, // Optional placeholder for select input
                         },
 
 
                         {
-                            label: `School/Hostel Name`,
+                            label: `${t('SchoolHostelName')}`,
                             value: SchoolHostelName,
                             type: "select",
                             options: SchoolHostelType !== "वसती गृह" ? Schooldata
@@ -341,13 +537,13 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel }: Props) => {
                                         label: yojna.hostel_type,
                                     })),
                             className: "col-4",
-                            placeholder: `School/Hostel Name`,
+                            placeholder: `${t('SchoolHostelName')}`,
                             required: true,
                             onChange: (e: any) => setSchoolHostelName(e.target.value),
                         },
 
                         {
-                            label: `Subject`,
+                            label: `${t('Subject')}`,
                             value: Subject, // Default value when updating
                             onChange: (e: any) => setSubject(e.target.value),
                             type: "select",
@@ -362,45 +558,45 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel }: Props) => {
                                 { label: "Mathematics", value: "Mathematics" },
 
                             ],
-                            placeholder: `Subject`, // Optional placeholder for select input
+                            placeholder: `${t('Subject')}`, // Optional placeholder for select input
                         },
 
                         // chemistry
                         {
-                            label: `Test Date`,
+                            label: `${t('TestDate')}`,
                             value: TestDate,
                             type: "date",
 
                             className: "col-2",
-                            placeholder: `Test Date`,
+                            placeholder: `${t('TestDate')}`,
                             required: true,
                             onChange: (e: any) => setTestDate(e.target.value),
                         },
                         {
-                            label: `Total marks`,
+                            label: `${t('Totalmarks')}`,
                             value: Totalmarks,
                             type: "text",
                             className: "col-2",
-                            placeholder: `Total marks`,
+                            placeholder: `${t('Totalmarks')}`,
                             required: true,
                             onChange: (e: any) => setTotalmarks(e.target.value),
                         },
                         {
-                            label: `Obtain Marks`,
+                            label: `${t('ObtainMarks')}`,
                             value: obtainmarks,
                             type: "text",
                             className: "col-2",
-                            placeholder: `Obtain Marks`,
+                            placeholder: `${t('ObtainMarks')}`,
                             required: true,
                             onChange: (e: any) => setObtainMarks(e.target.value),
                         },
                         {
-                            label: `Percentage`,
+                            label: `${t('Percentage')}`,
                             value: Percentage,
-                            type: "text",
+                            type: "textwithoutval",
                             disabled: "true",
                             className: "col-2",
-                            placeholder: `Percentage`,
+                            placeholder: `${t('Percentage')}`,
                             // required: true,
                             onChange: (e: any) => setPercentage(e.target.value),
                         },
