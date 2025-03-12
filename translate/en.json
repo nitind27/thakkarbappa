@@ -579,7 +579,7 @@
     "editsubmit": "Edit"
   },
   "missionsikhri": {
-    "title": "Mission Sikhri",
+    "title": "Mission Sikhr",
     "SrNo": " S.No",
     "aadharcard": "Aadhar Card Number",
     "parentsnum": "Parents Number",
@@ -588,7 +588,7 @@
     "StudentName": "Student Name",
     "SchoolHostelType": "School/Hostel Type",
     "SchoolHostelName": "School/Hostel Name",
-    "Subject": "Subject",
+    "Subject": "Subjects",
     "TestDate": "Test Date",
     "Totalmarks": "Total marks",
     "ObtainMarks": "Obtain Marks",
@@ -599,6 +599,6 @@
     "Action": "Action",
    
     "Active": "Active",
-    "Deactive": "Deactive"
+    "Deactive": "Delete"
   }
 }

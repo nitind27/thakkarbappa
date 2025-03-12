@@ -5,7 +5,7 @@ import Cluster from "@/app/[locale]/title/cluster"; import Loader from "@/common
 ;
 import Clusteradd from "@/components/manage/Clusteradd";
 import MissionPeak from "@/components/MissionPeak/MissionPeak";
-import { clusterdata, MissionShikari, Schooldata, TblHostel } from "@/components/type";
+import { clusterdata, MissionShikari, Schooldata, StudentData, TblHostel } from "@/components/type";
 import prisma from "@/lib/db";
 import { useTranslations } from "next-intl";
 import React from "react";
@@ -15,11 +15,13 @@ const Page = async () => {
     let Schooldata: Schooldata[] = [];
     let TblHostel: TblHostel[] = [];
     let MissionShikari: MissionShikari[] = [];
+    let StudentData: StudentData[] = [];
 
     try {
         clusterdata = await prisma.clusterData.findMany(); // Fetch all clusters
         Schooldata = await prisma.school.findMany(); // Fetch all clusters
         TblHostel = await prisma.tbl_hostels.findMany(); // Fetch all clusters
+        StudentData = await prisma.student.findMany(); // Fetch all clusters
         MissionShikari = await prisma.missionshikari.findMany(); // Fetch all clusters
     } catch (error) {
         console.error("Error fetching cluster data:", error);
@@ -56,7 +58,7 @@ const Page = async () => {
                 </div>
             </div>
 
-            <MissionPeak initialClusterData={clusterdata} Schooldata={Schooldata} TblHostel={TblHostel} MissionShikari={MissionShikari}/>
+        <MissionPeak initialClusterData={clusterdata} Schooldata={Schooldata} TblHostel={TblHostel} MissionShikari={MissionShikari} StudentData={StudentData}/>
         </div>
     );
 };

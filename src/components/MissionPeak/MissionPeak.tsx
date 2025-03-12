@@ -2,7 +2,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
-import { clusterdata, MissionShikari, Schooldata, TblHostel } from "../type";
+import { clusterdata, MissionShikari, Schooldata, StudentData, TblHostel } from "../type";
 import { formatDate } from "@/lib/utils";
 import { Button } from "react-bootstrap";
 import { KTIcon } from "@/_metronic/helpers";
@@ -21,9 +21,10 @@ type Props = {
     Schooldata: Schooldata[];
     TblHostel: TblHostel[];
     MissionShikari: MissionShikari[];
+    StudentData: StudentData[];
 };
 
-const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari }: Props) => {
+const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari, StudentData }: Props) => {
     const t = useTranslations("missionsikhri");
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [clusterName, setClusterName] = useState("");
@@ -163,16 +164,16 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                         {t("editsubmit")}
                     </button>
                     <button
-                        className={`btn btn-sm ${row.original.status === "Active" ? "btn-danger" : "btn-warning"
+                        className={`btn btn-sm ${"btn-danger"
                             } ms-5`}
                         onClick={() =>
                             handleDeactivate(row.original.id)
                         }
                     >
                         <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-                        {row.original.status === "Active"
-                            ? `${t("Deactive")}`
-                            : `${t("Active")}`}
+
+                        {t("Deactive")}
+
                     </button>
                 </div>
             ),
@@ -229,22 +230,54 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
         }
     };
 
+    // start student data filter
+    const adhardesignation = MissionShikari
+        .filter((data) => data.aadharcard === adharcard)
+        .sort((a, b) => b.id - a.id) // Sort by id in descending order
+        .slice(0, 1) // Get the last id entry
+        .map((data) => data.designation);
+
+    const adharimg = MissionShikari
+        .filter((data) => data.aadharcard === adharcard)
+        .sort((a, b) => b.id - a.id) // Sort by id in descending order
+        .slice(0, 1) // Get the last id entry
+        .map((data) => data.imgupload);
+
+    const adharcontact = MissionShikari
+        .filter((data) => data.aadharcard === adharcard)
+        .sort((a, b) => b.id - a.id) // Sort by id in descending order
+        .slice(0, 1) // Get the last id entry
+        .map((data) => data.parentsnumber);
+
+    const adhardataname = StudentData.filter((data) => data.aadhaar == adharcard && data.aadhaar !== "").map((data) => data.full_name)
+
+    const adhardataimg = StudentData.filter((data) => data.aadhaar == adharcard && data.aadhaar !== "").map((data) => data.profile_photo)
+    const adhardataschool = StudentData.filter((data) => data.aadhaar == adharcard && data.aadhaar !== "").map((data) => data.school_id)
+
+    const adhardataschooltype = Schooldata.filter((data) => data.school_id == adhardataschool as any).map((data) => data)
+    // schooltypedata
+    const schooldatatype = adhardataschooltype.map((data) => data.school_type)
+    const schooldataname = adhardataschooltype.map((data) => data.school_name)
+
+    // end student data filter
+
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         // Create FormData to handle both file and form data
         const formData = new FormData();
-        formData.append("designation", designation as any);
-        formData.append("studentname", studentname as any);
+        formData.append("designation", designation as any == "" ? adhardesignation : designation as any);
+        formData.append("studentname", studentname as any == "" ? adhardataname : studentname as any);
 
-        formData.append("schoolhosteltype", SchoolHostelType as any);
-        formData.append("schoolhostelname", SchoolHostelName as any);
+        formData.append("schoolhosteltype", SchoolHostelType as any == "" ? schooldatatype : SchoolHostelType as any);
+        formData.append("schoolhostelname", SchoolHostelName as any == "" ? schooldataname : SchoolHostelName as any);
         formData.append("subject", Subject);
         formData.append("testdate", TestDate);
         formData.append("totalmarks", Totalmarks);
         formData.append("obtainmarks", obtainmarks);
         formData.append("percentage", Percentage);
         formData.append("aadharcard", adharcard);
-        formData.append("parentsnumber", parentsnumber);
+        formData.append("parentsnumber", parentsnumber == "" ? adharcontact : parentsnumber as any);
 
         // Add the image file to the form data if there's an image to upload
         if (imgupload) {
@@ -349,24 +382,6 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
         resetform();
         setUpdateClusterId(null); // Reset update ID when closing
     };
-    const adharname = MissionShikari
-        .filter((data) => data.aadharcard === adharcard)
-        .sort((a, b) => b.id - a.id) // Sort by id in descending order
-        .slice(0, 1) // Get the last id entry
-        .map((data) => data.studentname);
-
-    const adharimg = MissionShikari
-        .filter((data) => data.aadharcard === adharcard)
-        .sort((a, b) => b.id - a.id) // Sort by id in descending order
-        .slice(0, 1) // Get the last id entry
-        .map((data) => data.imgupload);
-
-    const adharcontact = MissionShikari
-        .filter((data) => data.aadharcard === adharcard)
-        .sort((a, b) => b.id - a.id) // Sort by id in descending order
-        .slice(0, 1) // Get the last id entry
-        .map((data) => data.parentsnumber);
-
 
 
     const handleImageChange = (
@@ -378,6 +393,8 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
             setImagePreview(URL.createObjectURL(file)); // Create a preview URL
         }
     };
+
+
     return (
         <div>
             <Table
@@ -469,7 +486,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
 
                         {
                             label: `${t('Designation')}`,
-                            value: designation, // Default value when updating
+                            value: adhardesignation.length == 0 ? designation : adhardesignation, // Default value when updating
                             onChange: (e: any) => setDesignation(e.target.value),
                             type: "select",
                             className: "col-2",
@@ -486,7 +503,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
 
                         {
                             label: `${t('StudentName')}`,
-                            value: adharname.length == 0 ? studentname : adharname,
+                            value: adhardataname.length == 0 ? studentname : adhardataname,
                             type: "text",
                             className: "col-4",
                             placeholder: `${t('StudentName')}`,
@@ -496,11 +513,13 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
 
                         {
                             label: `${t('SchoolHostelType')}`,
-                            value: SchoolHostelType, // Default value when updating
+                            value: schooldatatype.length == 0 ? SchoolHostelType : schooldatatype,
+
                             onChange: (e: any) => setSchoolostelType(e.target.value),
                             type: "select",
                             className: "col-2",
                             options: [
+
                                 {
                                     label: "शासकीय",
                                     value: "Govt",
@@ -513,29 +532,14 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                             ],
                             placeholder: `${t('SchoolHostelType')}`, // Optional placeholder for select input
                         },
-
-
                         {
                             label: `${t('SchoolHostelName')}`,
-                            value: SchoolHostelName,
+                            value: schooldataname.length == 0 ? SchoolHostelName : schooldataname,
                             type: "select",
-                            options: SchoolHostelType !== "वसती गृह" ? Schooldata
-                                .filter((type) =>
-                                    type.school_type == SchoolHostelType
-
-                                )
-                                .map((yojna) => ({
-                                    value: yojna.school_name,
-                                    label: yojna.school_name,
-                                })) : TblHostel
-                                    .filter((type) =>
-                                        type.hostel_type == SchoolHostelType
-
-                                    )
-                                    .map((yojna) => ({
-                                        value: yojna.hostel_type,
-                                        label: yojna.hostel_type,
-                                    })),
+                            options: Schooldata.map((yojna) => ({
+                                value: yojna.school_name,
+                                label: yojna.school_name,
+                            })),
                             className: "col-4",
                             placeholder: `${t('SchoolHostelName')}`,
                             required: true,
