@@ -570,24 +570,45 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                             label: `${t('SchoolHostelName')}`,
                             value: schooldataname.length == 0 ? SchoolHostelName : schooldataname,
                             type: "select",
-                            options: SchoolHostelType == "वसती गृह" ? TblHostel.map((yojna) => ({
-                                value: yojna.hostel_type,
-                                label: yojna.hostel_type,
-                            })) : schooldataname.length == 0
-                                ? Schooldata.filter((data) => data.school_type === SchoolHostelType)
-                                    .map((school) => ({
-                                        value: school.school_id,
-                                        label: school.school_name,
-                                    }))
-                                : Schooldata.map((school) => ({
-                                    value: school.school_name,
-                                    label: school.school_name,
-                                })),
-                                className: isResponsive ? 'col-12' : 'col-4',
+                            options: SchoolHostelType == "वसती गृह"
+                                ? [
+                                    ...TblHostel.map((yojna) => ({
+                                        value: yojna.hostel_type,
+                                        label: yojna.hostel_type,
+                                    })),
+                                    {
+                                        value: 'other',
+                                        label: "Other",
+                                    },
+                                ]
+                                : schooldataname.length == 0
+                                    ? [
+                                        ...Schooldata.filter((data) => data.school_type === SchoolHostelType)
+                                            .map((school) => ({
+                                                value: school.school_id,
+                                                label: school.school_name,
+                                            })),
+                                        {
+                                            value: 'other',
+                                            label: "Other",
+                                        },
+                                    ]
+                                    : [
+                                        ...Schooldata.map((school) => ({
+                                            value: school.school_name,
+                                            label: school.school_name,
+                                        })),
+                                        {
+                                            value: 'other',
+                                            label: "Other",
+                                        },
+                                    ],
+                            className: isResponsive ? 'col-12' : 'col-4',
                             placeholder: `${t('SchoolHostelName')}`,
                             required: true,
                             onChange: (e: any) => setSchoolHostelName(e.target.value),
                         },
+
 
                         {
                             label: `${t('Subject')}`,
