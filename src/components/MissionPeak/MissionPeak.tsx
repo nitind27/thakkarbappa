@@ -573,8 +573,8 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                             options: SchoolHostelType == "वसती गृह"
                                 ? [
                                     ...TblHostel.map((yojna) => ({
-                                        value: yojna.hostel_type,
-                                        label: yojna.hostel_type,
+                                        value: yojna.hostel_name,
+                                        label: yojna.hostel_name,
                                     })),
                                     {
                                         value: 'other',
