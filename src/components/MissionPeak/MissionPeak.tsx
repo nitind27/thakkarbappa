@@ -26,11 +26,13 @@ type Props = {
 
 const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari, StudentData }: Props) => {
     const t = useTranslations("missionsikhri");
+
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [clusterName, setClusterName] = useState("");
     const [error, setError] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
+    const [isResponsive, setIsResponsive] = useState<boolean>(false);
 
     const [clusterData, setClusterData] =
         useState<MissionShikari[]>(MissionShikari); // State for cluster data
@@ -179,6 +181,19 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
             ),
         },
     ];
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsResponsive(window.innerWidth < 768); // Adjust threshold as needed
+        };
+
+        window.addEventListener("resize", handleResize);
+        handleResize(); // Check on mount
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
     useEffect(() => {
         if (Totalmarks !== "" && obtainmarks !== "") {
             const total = parseFloat(Totalmarks);
@@ -258,8 +273,6 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
     // schooltypedata
     const schooldatatype = adhardataschooltype.map((data) => data.school_type)
     const schooldataname = adhardataschooltype.map((data) => data.school_name)
-
-    // end student data filter
 
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -394,6 +407,26 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
         }
     };
 
+    let options;
+    if (SchoolHostelType === "वसती गृह") {
+        options = TblHostel.map((yojna) => ({
+            value: yojna.hostel_type,
+            label: yojna.hostel_type,
+        }));
+    } else {
+        if (schooldataname.length === 0) {
+            options = Schooldata.filter((data) => data.school_type === SchoolHostelType)
+                .map((school) => ({
+                    value: school.school_name,
+                    label: school.school_name,
+                }));
+        } else {
+            options = Schooldata.map((school) => ({
+                value: school.school_name,
+                label: school.school_name,
+            }));
+        }
+    }
 
     return (
         <div>
@@ -446,7 +479,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                             label: `${t('aadharcard')}`,
                             value: adharcard,
                             type: "text",
-                            className: "col-4",
+                            className: isResponsive ? 'col-12' : 'col-4',
                             placeholder: `${t('aadharcard')}`,
                             required: true,
                             onChange: (e: any) => {
@@ -462,7 +495,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                             label: `${t('parentsnum')}`,
                             value: adharcontact.length == 0 ? parentsnumber : adharcontact,
                             type: "text",
-                            className: "col-4",
+                            className: isResponsive ? 'col-12' : 'col-4',
                             placeholder: `${t('parentsnum')}`,
                             required: true,
 
@@ -479,7 +512,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                             label: `${t('photo')}`,
                             value: "", // The value for file input is always empty (HTML behavior)
                             type: "file",
-                            className: "col-4",
+                            className: isResponsive ? 'col-12' : 'col-4',
                             placeholder: `${t('photo')}`,
                             onChange: handleImageChange, // Handle image change here
                         },
@@ -489,7 +522,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                             value: adhardesignation.length == 0 ? designation : adhardesignation, // Default value when updating
                             onChange: (e: any) => setDesignation(e.target.value),
                             type: "select",
-                            className: "col-2",
+                            className: isResponsive ? 'col-12' : 'col-2',
                             options: [
                                 {
                                     label: "Mr",
@@ -505,7 +538,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                             label: `${t('StudentName')}`,
                             value: adhardataname.length == 0 ? studentname : adhardataname,
                             type: "text",
-                            className: "col-4",
+                            className: isResponsive ? 'col-12' : 'col-4',
                             placeholder: `${t('StudentName')}`,
                             required: true,
                             onChange: (e: any) => setStudentName(e.target.value),
@@ -517,7 +550,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
 
                             onChange: (e: any) => setSchoolostelType(e.target.value),
                             type: "select",
-                            className: "col-2",
+                            className: isResponsive ? 'col-12' : 'col-2',
                             options: [
 
                                 {
@@ -532,15 +565,25 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                             ],
                             placeholder: `${t('SchoolHostelType')}`, // Optional placeholder for select input
                         },
+
                         {
                             label: `${t('SchoolHostelName')}`,
                             value: schooldataname.length == 0 ? SchoolHostelName : schooldataname,
                             type: "select",
-                            options: Schooldata.map((yojna) => ({
-                                value: yojna.school_name,
-                                label: yojna.school_name,
-                            })),
-                            className: "col-4",
+                            options: SchoolHostelType == "वसती गृह" ? TblHostel.map((yojna) => ({
+                                value: yojna.hostel_type,
+                                label: yojna.hostel_type,
+                            })) : schooldataname.length == 0
+                                ? Schooldata.filter((data) => data.school_type === SchoolHostelType)
+                                    .map((school) => ({
+                                        value: school.school_id,
+                                        label: school.school_name,
+                                    }))
+                                : Schooldata.map((school) => ({
+                                    value: school.school_name,
+                                    label: school.school_name,
+                                })),
+                                className: isResponsive ? 'col-12' : 'col-4',
                             placeholder: `${t('SchoolHostelName')}`,
                             required: true,
                             onChange: (e: any) => setSchoolHostelName(e.target.value),
@@ -548,11 +591,15 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
 
                         {
                             label: `${t('Subject')}`,
-                            value: Subject, // Default value when updating
+                            value: Subject,
                             onChange: (e: any) => setSubject(e.target.value),
                             type: "select",
-                            className: "col-4",
+                            className: isResponsive ? 'col-12' : 'col-4',
                             options: [
+                                {
+                                    label: "All",
+                                    value: "All",
+                                },
                                 {
                                     label: "Chemistry",
                                     value: "Chemistry",
@@ -562,16 +609,15 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                                 { label: "Mathematics", value: "Mathematics" },
 
                             ],
-                            placeholder: `${t('Subject')}`, // Optional placeholder for select input
+                            placeholder: `${t('Subject')}`,
                         },
 
-                        // chemistry
                         {
                             label: `${t('TestDate')}`,
                             value: TestDate,
                             type: "date",
 
-                            className: "col-2",
+                            className: isResponsive ? 'col-12' : 'col-2',
                             placeholder: `${t('TestDate')}`,
                             required: true,
                             onChange: (e: any) => setTestDate(e.target.value),
@@ -580,7 +626,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                             label: `${t('Totalmarks')}`,
                             value: Totalmarks,
                             type: "text",
-                            className: "col-2",
+                            className: isResponsive ? 'col-12' : 'col-2',
                             placeholder: `${t('Totalmarks')}`,
                             required: true,
                             onChange: (e: any) => setTotalmarks(e.target.value),
@@ -589,7 +635,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                             label: `${t('ObtainMarks')}`,
                             value: obtainmarks,
                             type: "text",
-                            className: "col-2",
+                            className: isResponsive ? 'col-12' : 'col-2',
                             placeholder: `${t('ObtainMarks')}`,
                             required: true,
                             onChange: (e: any) => setObtainMarks(e.target.value),
@@ -599,7 +645,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                             value: Percentage,
                             type: "textwithoutval",
                             disabled: "true",
-                            className: "col-2",
+                            className: isResponsive ? 'col-12' : 'col-2',
                             placeholder: `${t('Percentage')}`,
                             // required: true,
                             onChange: (e: any) => setPercentage(e.target.value),

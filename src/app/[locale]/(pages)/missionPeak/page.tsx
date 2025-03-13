@@ -44,6 +44,9 @@ const Page = async () => {
         { label: 'dashboard', href: '/dashboard' },
         { label: '', title: "Mission Sikhri", href: '/missionPeak' },
     ];
+    const Schooldatafilter = Schooldata.filter((data) => data.status == "Active")
+    const TblHosteldatafilter = TblHostel.filter((data) => data.status == "Active")
+    const StudentDatadatafilter = StudentData.filter((data) => data.status == "Active")
     return (
         <div>
 
@@ -58,7 +61,7 @@ const Page = async () => {
                 </div>
             </div>
 
-        <MissionPeak initialClusterData={clusterdata} Schooldata={Schooldata} TblHostel={TblHostel} MissionShikari={MissionShikari} StudentData={StudentData}/>
+            <MissionPeak initialClusterData={clusterdata} Schooldata={Schooldatafilter} TblHostel={TblHosteldatafilter} MissionShikari={MissionShikari} StudentData={StudentDatadatafilter} />
         </div>
     );
 };
