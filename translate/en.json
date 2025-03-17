@@ -462,7 +462,12 @@
     "beneficiary": "Beneficiary Name",
     "AmountPaid": "Amount Paid",
     "name": "Name",
-    "total": "Total"
+    "total": "Total",
+    "table1": "Beneficiary Name - Taluka - Gram Panchayat - Village",
+    "table2": "Total financial assistance amount",
+    "table3": "Amount to be paid",
+    "table4": "Amount to be paid",
+    "table5": "Make a choice"
   },
   "Beneficrydatas": {
     "SrNo": "Serial Number",

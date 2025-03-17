@@ -62,6 +62,7 @@ const Parivahan = ({
   const [javaksr, setJavakSr] = useState("");
   const [yojanatype, setYojnatype] = useState("");
   const [yojnaname, setYojnaname] = useState("");
+  const [installmentper, setinstallmentper] = useState("");
 
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -195,13 +196,13 @@ const Parivahan = ({
                   sr
                 </th>
                 <th className="border border-gray-300 px-4 py-2 text-left">
-                {t("name")}
+                  {t("name")}
                 </th>
                 <th className="border border-gray-300 px-4 py-2 text-left">
-                {t("total")}
+                  {t("total")}
                 </th>
                 <th className="border border-gray-300 px-4 py-2 text-left">
-                {t("AmountPaid")}
+                  {t("AmountPaid")}
                 </th>
               </tr>
             </thead>
@@ -283,7 +284,46 @@ const Parivahan = ({
     setCurrentDate(now.toLocaleDateString()); // Formats date only
   }, []);
 
+  const handleDeactivateupdatebeneficry = async (category_id: any, currentStatus: any) => {
 
+    try {
+      const response = await fetch(`/api/benefucuary/updatedata/${category_id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+
+          fourty: currentStatus == "No" ? "Yes" : "No",
+
+        }),
+      });
+
+      if (response.ok) {
+        // Update local state without page reload
+        setparivahandata((prevData) =>
+          prevData.map((cluster) =>
+            cluster.beneficiary_id == category_id
+              ? {
+                ...cluster,
+                fourty: currentStatus == "No" ? "Yes" : "No",
+              }
+              : cluster
+          )
+        );
+        toast.success(
+          `Beneficiary ${currentStatus == "Active" ? "deactivated" : "activated"
+          } successfully!`
+        );
+      } else {
+        toast.error("Failed to change the Beneficiary status.");
+      }
+    } catch (error) {
+      console.error("Error changing the Beneficiary status:", error);
+      toast.error("An unexpected error occurred.");
+    }
+
+  };
   const handleDeactivate = async (category_id: any, currentStatus: any) => {
     const confirmMessage =
       currentStatus === "Active"
@@ -327,12 +367,20 @@ const Parivahan = ({
       }
     }
   };
+
   const datafilter = Beneficiary.filter((data) => data.yojana_year_id as any == yojnayear && data.yojana_type == yojanatype && data.yojana_id as any == yojnaname && data.status == "Active").map((data) => ({
     gat_name: data.yojana_type == '2' ? data.gat_name : data.fullname,
     tot_finance: data.tot_finance,
-    amount_paid: data.amount_paid,
+    installmentcheck: data.fourty + data.sixty + data.hundred,
+    fourty: data.fourty,
+    sixty: data.sixty,
+    hundred: data.hundred,
+    amount_paid: [data.amount_paid],
     caste_id: data.caste_id,
+    beneficiary_id: data.beneficiary_id,
   }))
+
+
   const filtercolumns = [
     {
       accessorKey: "serial_number",
@@ -344,52 +392,81 @@ const Parivahan = ({
 
     {
       accessorKey: "gat_name",
-      header: `लाभार्थी नाव - तालुका - ग्राम पंचायत - गाव`,
+      header: `${t("table1")}`
     },
     {
       accessorKey: "tot_finance",
-      header: `एकुण अर्थसहाय्य रक्कम`,
+      header: `${t("table2")}`
     },
     {
       accessorKey: "amount_paid",
-      header: `अदा करावयाची रक्कम`,
+      header: `${t("table3")}`
     },
 
 
     {
       accessorKey: "actions",
-      header: `अदा करावयाची रक्कम`,
+      header: `${t("table4")}`,
       cell: ({ row }: any) => (
         <div style={{ display: "flex", whiteSpace: "nowrap" }}>
-          <select name="" id="" className="form-control">
 
-            <option value="">NA%</option>
+          <select name="" id="" className="form-control"  // Add this to control the select input
+            onChange={(e) => setinstallmentper(e.target.value)}>
+            {row.original.amount_paid[0].split(',').map((value: any, index: any) => {
+              const conditions = {
+                "40": row.original.fourty == "No",
+                "60": row.original.sixty == "No",
+                "100": row.original.hundred == "No",
+              } as any;
 
+              return (
+                <option key={index} value={value}>
+                  {conditions[value] ? `${value}%` : "N/A"}
+                </option>
+              );
+            })}
           </select>
         </div>
       ),
     },
-
     {
       accessorKey: "actions",
-      header: `निवड करा`,
-      cell: ({ row }: any) => (
-        <div style={{ display: "flex", whiteSpace: "nowrap" }} className="mt-3">
-          {/* <input type="checkbox" className=""/> */}
-          <Form.Check
-            inline
+      header: `${t("table5")}`,
+      cell: ({ row }: any) => {
+        const firstValue = row.original.amount_paid[0].split(',')[0];
+        const conditions = {
+          "40": row.original.fourty == "Yes",
+          "60": row.original.sixty == "Yes",
+          "100": row.original.hundred == "Yes",
+        } as any;
 
-            name="group2"
-            type={'checkbox'}
-            id={`inline-${"checkbox"}-1`}
-          />
-        </div>
-      ),
-    },
+        return (
+          <div style={{ display: "flex", whiteSpace: "nowrap" }} className="mt-3">
+            {row.original.amount_paid[0].split(',').length > 0 && (
+              <Form.Check
+                inline
+                disabled={conditions[firstValue] ? true : false}
+                name="group2"
+                type="checkbox"
+                id={`inline-checkbox-1`}
+                onClick={() =>
+                  handleDeactivateupdatebeneficry(
+                    row.original.beneficiary_id,
+                    row.original.fourty
+                  )
+                }
+              />
+            )}
+          </div>
+        );
+      },
+    }
 
 
 
   ];
+
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -398,8 +475,8 @@ const Parivahan = ({
     try {
       const method = "POST";
       const url = `/api/parivahan/insert`;
+      const updatebeneurl = `/api/beneficiaryupdate/update`;
 
-      console.log('fsadf', ParivahanDate)
       // Prepare the request body
       const requestBody = {
         parivahan_date: ParivahanDate,
