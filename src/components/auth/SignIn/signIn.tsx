@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+// import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
@@ -12,7 +12,7 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
- const localActive = useLocale();
+//  const localActive = useLocale();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -37,7 +37,7 @@ const LoginForm = () => {
   
         // Delay navigation to allow toast to display
         setTimeout(() => {
-          router.push(`${localActive}/dashboard`);
+          router.push(`/dashboard`);
         }, 1000);
       } else {
         const data = await res.json();
