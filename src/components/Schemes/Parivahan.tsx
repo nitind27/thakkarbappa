@@ -326,7 +326,7 @@ const Parivahan = ({
         );
         
         toast.success(
-          `Beneficiary ${updateValue === "Yes" ? "activated" : "deactivated"} successfully!`
+          `Beneficiary Updated successfully!`
         );
       } else {
         toast.error("Failed to update beneficiary status");
@@ -424,7 +424,7 @@ const Parivahan = ({
         <div style={{ display: "flex", whiteSpace: "nowrap" }}>
 
           <select name="" id="" className="form-control"  // Add this to control the select input
-            onChange={(e) => setinstallmentper(e.target.value)}>
+            onChange={(e) => setinstallmentper(e.target.value)}  value={installmentper}>
             {row.original.amount_paid[0].split(',').map((value: any, index: any) => {
               const conditions = {
                 "40": row.original.fourty == "No",

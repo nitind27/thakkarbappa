@@ -1,9 +1,11 @@
 "use client"
+import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import React from 'react'
 
 const Logout = () => {
   const router = useRouter();
+  const localActive = useLocale();
   const handleLogout = async () => {
     try {
       const res = await fetch("/api/logout", {
@@ -14,7 +16,7 @@ const Logout = () => {
         sessionStorage.removeItem("username");
 
 
-        router.push("/login"); // Redirect to login page
+        router.push(`/${localActive}`); // Redirect to login page
       }
     } catch (error) {
       console.error("Logout error:", error);
