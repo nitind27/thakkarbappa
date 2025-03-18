@@ -1,17 +1,15 @@
-
-
 import prisma from '@/lib/db';
 import { NextResponse } from 'next/server';
 
 export async function PATCH(req: Request, { params }: { params: { benefid: string } }) {
     const { benefid } = params;
-    const { status } = await req.json(); // Get new status from request body
+    const { sixty } = await req.json(); // Get new status from request body
 
     try {
         // Update the cluster's status
         await prisma.beneficiary.update({
             where: { beneficiary_id: Number(benefid) },
-            data: { status }, // Update with new status
+            data: { sixty }, // Update with new status
         });
 
         return new NextResponse(null, { status: 204 });

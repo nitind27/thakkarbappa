@@ -284,46 +284,59 @@ const Parivahan = ({
     setCurrentDate(now.toLocaleDateString()); // Formats date only
   }, []);
 
-  const handleDeactivateupdatebeneficry = async (category_id: any, currentStatus: any) => {
-
+  const handleDeactivateupdatebeneficry = async (category_id: string, currentStatus: string) => {
     try {
-      const response = await fetch(`/api/benefucuary/updatedata/${category_id}`, {
+      let apiUrl = '';
+      let updateField = '';
+      let updateValue = currentStatus === "No" ? "Yes" : "No";
+  
+      // Determine API endpoint and field to update based on installment percentage
+      if (installmentper == "40") {
+        apiUrl = `/api/parivahan/updatedata/${category_id}`;
+        updateField = 'fourty';
+      } else if (installmentper == "60") {
+        apiUrl = `/api/parivahan/updatesixty/${category_id}`;
+        updateField = 'sixty';
+      } else if (installmentper == "100") {
+        apiUrl = `/api/parivahan/updatehundred/${category_id}`;
+        updateField = 'hundred';
+      } else {
+        toast.error("Invalid installment percentage");
+        return;
+      }
+  
+      const response = await fetch(apiUrl, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-
-          fourty: currentStatus == "No" ? "Yes" : "No",
-
+          [updateField]: updateValue
         }),
       });
-
+  
       if (response.ok) {
-        // Update local state without page reload
-        setparivahandata((prevData) =>
-          prevData.map((cluster) =>
-            cluster.beneficiary_id == category_id
-              ? {
-                ...cluster,
-                fourty: currentStatus == "No" ? "Yes" : "No",
-              }
+        // Update local state
+        setparivahandata(prevData =>
+          prevData.map(cluster =>
+            cluster.beneficiary_id === category_id
+              ? { ...cluster, [updateField]: updateValue }
               : cluster
           )
         );
+        
         toast.success(
-          `Beneficiary ${currentStatus == "Active" ? "deactivated" : "activated"
-          } successfully!`
+          `Beneficiary ${updateValue === "Yes" ? "activated" : "deactivated"} successfully!`
         );
       } else {
-        toast.error("Failed to change the Beneficiary status.");
+        toast.error("Failed to update beneficiary status");
       }
     } catch (error) {
-      console.error("Error changing the Beneficiary status:", error);
-      toast.error("An unexpected error occurred.");
+      console.error("Error updating beneficiary:", error);
+      toast.error("An unexpected error occurred");
     }
-
   };
+  
   const handleDeactivate = async (category_id: any, currentStatus: any) => {
     const confirmMessage =
       currentStatus === "Active"
