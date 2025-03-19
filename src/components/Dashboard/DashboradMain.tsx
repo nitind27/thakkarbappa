@@ -35,24 +35,24 @@ const DashboradMain = () => {
                     <TitleCard breadcrumbs={breadcrumbs} />
 
                 </div>
-                <div className=" mt-5">
+                <div className="">
                     <div className="row">
-                        <div className="col-md-3" onClick={() => handleItemClick(`/dashboard/nbschemes`)}>
+                        <div className="col-md-3 mt-5" onClick={() => handleItemClick(`/dashboard/nbschemes`)}>
                             <Link href={`/${localActive}/dashboard/nbschemes`}>
                                 <NbCard />
                             </Link>
                         </div>
-                        <div className="col-md-3" onClick={() => handleItemClick(`dashboard/school`)}>
+                        <div className="col-md-3 mt-5" onClick={() => handleItemClick(`dashboard/school`)}>
                             <Link href={`/${localActive}/dashboard/school`}>
                                 <DashbordCard />
                             </Link>
                         </div>
-                        <div className="col-md-3 " onClick={() => handleItemClick(`/dashboard`)}>
+                        <div className="col-md-3 mt-5" onClick={() => handleItemClick(`/dashboard`)}>
                             <Link href={`/${localActive}/dashboard`}>
                                 <Thakkarcard />
                             </Link>
                         </div>
-                        <div className="col-md-3 " onClick={() => handleItemClick(`/sports`)}>
+                        <div className="col-md-3 mt-5" onClick={() => handleItemClick(`/sports`)}>
                             <Link href={`/${localActive}/dashboard/sports`}>
                                 <Sports />
                             </Link>

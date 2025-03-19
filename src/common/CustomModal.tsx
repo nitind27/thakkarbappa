@@ -332,15 +332,16 @@ const CustomModal: React.FC<any> = ({
             justifyContent: 'flex-end', // or 'end' in some frameworks
             width: '100%' // Ensure the span takes full width
           }}>
-
-            <Button
-              variant="primary"
-              type="submit"
-              className="mt-3"
-              disabled={disabledButton}
-            >
-              {submitButtonLabel}
-            </Button>
+            {submitButtonLabel.length !== 0 &&
+              < Button
+                variant="primary"
+                type="submit"
+                className="mt-3"
+                disabled={disabledButton}
+              >
+                {submitButtonLabel}
+              </Button>
+            }
           </span>
 
         </Form>

@@ -109,7 +109,7 @@ const Page = async ({ params }: any) => {
 
                 <TitleCard breadcrumbs={breadcrumbs} />
             </h1>
-            <Beneficiarydata initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={filterdatabeneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={cast} membersadd={membersadd} Bankmasterdata={Bankmasterdata} Parivahantbl={parivahanfilter} tbluserdata={tbluser} parivahanbeneficiary={parivahanbeneficiary} yojnaid={yojnaid} tblevaluation={tblevaluation}/>
+            <Beneficiarydata initialcategoryData={subCategory} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={cast} membersadd={membersadd} Bankmasterdata={Bankmasterdata} Parivahantbl={parivahanfilter} tbluserdata={tbluser} parivahanbeneficiary={parivahanbeneficiary} yojnaid={yojnaid} tblevaluation={tblevaluation}/>
         </div>
     );
 };

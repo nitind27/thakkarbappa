@@ -195,8 +195,7 @@ Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary
                     ? formatDate(beneficiary.work_order_date)
                     : formatDate(beneficiary.work_order_date as any),
         })).reverse()
-        ; // Reverse the order to show the last added items first
-
+        ; 
     const columns = [
         {
             accessorKey: "serial_number",

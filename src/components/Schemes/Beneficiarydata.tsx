@@ -16,6 +16,7 @@ import { formatDate } from "@/lib/utils";
 import Addmembers from "./Addmembers";
 import { diskStorage } from "multer";
 import { usePathname } from "next/navigation";
+import Tablefilter from "../table/Tablefilter";
 type Props = {
     initialcategoryData: SubCategory[];
     YojnaYear: YojanaYear[];
@@ -40,6 +41,7 @@ type Props = {
 const
     Beneficiarydata = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata, membersadd, Bankmasterdata, Parivahantbl, tbluserdata, parivahanbeneficiary, yojnaid, tblevaluation }: Props) => {
         const t = useTranslations("Beneficrydatas");
+        const t1 = useTranslations("beneficiary");
         console.log("tblevaluation", tblevaluation.filter((data) => data.yojana_id == yojnaid && data.parivahan_id == 124))
         const router = useRouter();
         const pathname = usePathname(); // Gets the current URL pathname
@@ -48,6 +50,7 @@ const
 
         const [showPrintModal, setShowPrintModal] = useState(false);
         const [showPrintModalvi, setShowPrintModalvi] = useState(false);
+        const [storedatabenef, setStoredatabenef] = useState("");
 
         const [showPrintModalgp, setShowPrintModalgp] = useState(false);
         const [townName, setTownName] = useState("");
@@ -92,6 +95,10 @@ const
         const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
         const [clusterData, setClusterData] =
             useState<tblparivahan[]>(Parivahantbl); // State for Beneficiary data
+
+
+        const [beneficiarydata, setbeneficiarydata] =
+            useState<TblBeneficiary[]>(beneficiary);
         const confirm = createConfirmation(ConfirmationDialog);
         const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
             acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
@@ -135,6 +142,10 @@ const
         const calculateTotalEstimatedAmount = (category: { amount: string }[]) => {
             return category.reduce((total, item) => total + parseFloat(item.amount), 0);
         };
+        const village = Villages.reduce((acc, gp: Villages) => {
+            acc[gp.id] = gp.name; // Assuming taluka has id and name properties
+            return acc;
+        }, {} as Record<number, string>);
 
         const sumcategory = initialcategoryData
             .filter((category: SubCategory) => String(category.category_id) === categoryName && category.status === "Active")
@@ -149,11 +160,17 @@ const
             setShowBachatnameMembers(number.gat_name)
         }
 
+
         const data = clusterData
             .map((beneficiary) => {
                 const parivahanCount = parivahanbeneficiary.filter(
                     (data) => data.yojana_id == yojnaid && data.sup_id == beneficiary.sup_id
                 ).length;
+                const parivahanCountsss = parivahanbeneficiary.filter(
+                    (data) => data.yojana_id == yojnaid && data.sup_id == beneficiary.sup_id
+                ).map((data) => data.beneficiary_id);
+
+                const bendata = parivahanCountsss.map((data: any) => data as any)
 
                 const evaluationCount = tblevaluation.filter(
                     (data) => data.yojana_id == yojnaid && data.parivahan_id == beneficiary.parivahan_id
@@ -169,8 +186,9 @@ const
             })
             .reverse();
 
-        ; // Reverse the order to show the last added items first
-        // console.log("parivahanbeneficiary",parivahanbeneficiary.filter((data)=>data.yojana_id == yojnaid && data.sup_id == 74))
+        ;
+
+        console.log("fdsafsdf", clusterData.map((data) => data.beneficiary_id))
         const columns = [
             {
                 accessorKey: "serial_number",
@@ -191,9 +209,19 @@ const
                 header: `${t("Col1")}`,
             },
             {
-                accessorKey: "parivahanbeneficiary",
-                header: `${t("Col2")}`,
+                accessorKey: "serial_number",
+                header: () => (
+                    <div style={{ fontWeight: 'bold', padding: '5px' }}>
+                        {t("Col2")}
+                    </div>
+                ),
+                cell: ({ row }: any) => (
+                    <div className="cursor-pointer" onClick={() => handleShowPrintbenefdata(row.original.beneficiary_id)}>
+                        {row.original.parivahanbeneficiary}
+                    </div>
+                ),
             },
+
             {
                 accessorKey: "col3",
                 header: `${t("Col3")}`,
@@ -207,6 +235,199 @@ const
                 header: `${t("Col5")}`,
             },
 
+
+
+        ];
+
+        const individualBeneficiaryIds = storedatabenef.split(',');
+
+        const dataaa = beneficiarydata
+            .filter(beneficiary =>
+                individualBeneficiaryIds.includes(String(beneficiary.beneficiary_id))
+            ).map((beneficiary) => ({
+                beneficiary_id: beneficiary.beneficiary_id,
+                category_id: categorydata[beneficiary.category_id],
+                categoryid: beneficiary.category_id,
+                sub_category_id: subcat[beneficiary.sub_category_id],
+                subcategoryid: beneficiary.sub_category_id,
+                yojana_year_id: yojna_year[beneficiary.yojana_year_id],
+                yojanayearid: beneficiary.yojana_year_id,
+                yojana_type: yojnatypes[beneficiary.yojana_type as any],
+                yojanatype: beneficiary.yojana_type,
+                yojana_id: yojnamastername[beneficiary.yojana_id],
+                yojanaid: beneficiary.yojana_id,
+                taluka_id: talukaMap[beneficiary.taluka_id],
+                talukaid: beneficiary.taluka_id,
+                gp_id: gpmap[beneficiary.gp_id],
+                gpid: beneficiary.gp_id,
+                village_id: village[beneficiary.village_id],
+                villageid: beneficiary.village_id,
+                surname: beneficiary.surname,
+                firstname: beneficiary.firstname,
+                middlename: beneficiary.middlename,
+                fullname: `${beneficiary.surname} ${beneficiary.firstname} ${beneficiary.middlename}`, // Better formatting
+                gat_name: beneficiary.gat_name,
+                gat_certificate: beneficiary.gat_certificate,
+                member: beneficiary.member,
+                caste_id: beneficiary.caste_id,
+                casteid: usercastdata[beneficiary.caste_id],
+                beneficiary_type: beneficiary.beneficiary_type,
+                rashion_no: beneficiary.rashion_no,
+                aadhar: beneficiary.aadhar,
+                mobile: beneficiary.mobile,
+                bank_name: beneficiary.bank_name,
+                ifsc: beneficiary.ifsc,
+                ac_no: beneficiary.ac_no,
+                tot_finance: beneficiary.tot_finance,
+                amount_paid: beneficiary.amount_paid,
+                fourty: beneficiary.fourty === '1' ? "Yes" : "No",
+                sixty: beneficiary.sixty === '1' ? "Yes" : "No",
+                hundred: beneficiary.hundred === '1' ? "Yes" : "No",
+                status: beneficiary.status,
+                date_ins: beneficiary.date_ins,
+                date_update: beneficiary.date_update,
+                organization: beneficiary.organization,
+                work_order_date:
+                    typeof beneficiary.work_order_date === "string"
+                        ? formatDate(beneficiary.work_order_date)
+                        : formatDate(beneficiary.work_order_date as any),
+            }))
+            .reverse();
+
+        const columnsss = [
+            {
+                accessorKey: "serial_number",
+                header: () => (
+                    <div style={{ fontWeight: 'bold', padding: '5px' }}>
+                        {t1("SrNo")}
+                    </div>
+                ),
+                cell: ({ row }: any) => (
+                    <div>
+                        {row.index + 1}
+                    </div>
+                ),
+            },
+
+
+
+            {
+                accessorKey: "category_id",
+                header: `${t1("categoryname")}`,
+            },
+            {
+                accessorKey: "sub_category_id",
+                header: `${t1("subcategoryname")}`,
+            },
+            {
+                accessorKey: "yojana_year_id",
+                header: `${t1("year")}`,
+            },
+            {
+                accessorKey: "yojana_type",
+                header: `${t1("yojnatype")}`,
+            },
+            {
+                accessorKey: "yojana_id",
+                header: `${t1("yojnaname")}`,
+            },
+            {
+                accessorKey: "taluka_id",
+                header: `${t1("dist")}`,
+            },
+            {
+                accessorKey: "gp_id",
+                header: `${t1("GramPanchayat")}`,
+            },
+            {
+                accessorKey: "village_id",
+                header: `${t1("Village")}`,
+            },
+
+            {
+                accessorKey: "gat_name",
+                header: `${t1("bachtgat")}`,
+            },
+            {
+                accessorKey: "gat_certificate",
+                header: `${t1("registerdcert")}`,
+            },
+            {
+                accessorKey: "member",
+                header: `${t1("members")}`,
+            },
+
+            {
+                accessorKey: "organization", // Organization managing the scheme
+                header: `${t1("Organization")}`
+            },
+            {
+                accessorKey: "work_order_date", // Date related to work orders issued
+                header: `${t1("Commencementorderdate")}`
+            },
+            {
+                accessorKey: "fullname",
+                header: `${t1("FullName")}`,
+            },
+
+
+
+            {
+                accessorKey: "casteid",
+                header: `${t1("Cast")}`,
+            },
+            {
+                accessorKey: "beneficiary_type",
+                header: `${t1("beneficiarytype")}`,
+            },
+            {
+                accessorKey: "rashion_no",
+                header: `${t1("Registrationcard")}`,
+            },
+            {
+                accessorKey: "aadhar",
+                header: `${t1("aadharcard")}`,
+            },
+            {
+                accessorKey: "mobile",
+                header: `${t1("Contact")}`,
+            },
+            {
+                accessorKey: "bank_name",
+                header: `${t1("BankName")}`,
+            },
+            {
+                accessorKey: "ifsc",
+                header: `${t1("IFSCCode")}`,
+            },
+            {
+                accessorKey: "ac_no",
+                header: `${t1("AccountNo")}`,
+            },
+            {
+                accessorKey: "tot_finance",
+                header: `${t1("TotalFinanceAllocated")}`,
+            },
+            {
+                accessorKey: "amount_paid",
+                header: `${t1("AmountPaid")}`,
+            },
+            {
+                accessorKey: "fourty", // Assuming this is a status indicator
+                header: `${t1("Eligible40")}`,
+            },
+            {
+                accessorKey: "sixty", // Assuming this is a status indicator
+                header: `${t1("Eligible60")}`,
+            },
+            {
+                accessorKey: "hundred", // Assuming this is a status indicator
+                header: `${t1("Eligible100")}`,
+            },
+            {
+                accessorKey: "status", // Current status of the beneficiary
+                header: `${t1("Status")}`,
+            },
 
 
         ];
@@ -539,6 +760,7 @@ const
         const handleShowPrint = () => setShowPrintModal(true);
         const handleShowPrintgp = () => setShowPrintModalgp(true);
         const handleShowPrintvi = () => setShowPrintModalvi(true);
+        const handleShowPrintbenefdata = (row: any) => (setStoredatabenef(row), setShowPrintModalvi(true));
 
         const handleClosePrint = () => {
             setShowPrintModal(false);
@@ -1114,6 +1336,7 @@ const
 
         return (
             <div>
+
                 <Addmembers initialcategoryData={initialcategoryData} YojnaYear={[]} Bankdata={[]} category={[]} beneficiary={[]} yojnatype={yojnatype} yojnamaster={[]} talukas={[]} grampanchayat={[]} Villages={[]} castdata={castdata} showPrintModalMembers={showPrintModalMembers} showNumberMembers={showNumberMembers} membersadd={membersadd} showBachatNameMembers={showBachatNameMembers} />
 
                 <Table
@@ -1200,24 +1423,21 @@ const
                 <CustomModal
                     show={showPrintModalvi}
                     handleClose={handleClosePrintgpvi}
+                    filterdata={
+                        <Tablefilter
+                            data={dataaa}
+                            columns={columnsss}
 
-
+                        />
+                    }
                     handleSubmit={handleSubmitvi}
-                    size={"ml"}
+                    size={"xl"}
                     title={updateClusterId ? `${t("Village")}` : `${t("Village")}`}
                     formData={{
-                        fields: formFieldsVi as any,
+                        fields: [],
                         error: "",
                     }}
-
-                    submitButtonLabel={
-                        updateClusterId
-                            ? isLoadingvi
-                                ? "Submitting..."
-                                : t("editsubmit")
-                            : isLoadingvi
-                                ? "Submitting..."
-                                : t("submit")
+                    submitButtonLabel={[]
                     }
                     disabledButton={isLoading}
                 />
