@@ -6,14 +6,14 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 export async function POST(request: Request) {
   try {
-    const { sup_contact, sup_password } = await request.json();
+    const { username, password } = await request.json();
 
-    if (!sup_contact || !sup_password) {
+    if (!username || !password) {
       return NextResponse.json({ message: 'Missing credentials' }, { status: 400 });
     }
 
-    const supervisor = await prisma.supervisor.findFirst({
-      where: { sup_contact },
+    const supervisor = await prisma.tblusers.findFirst({
+      where: { username },
     });
 
     if (!supervisor) {
@@ -21,12 +21,12 @@ export async function POST(request: Request) {
     }
 
     // Directly compare the provided password with the stored password
-    if (supervisor.sup_password !== sup_password) {
+    if (supervisor.password !== password) {
       return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
     }
 
     // Ensure supervisor has an id property
-    if (!supervisor.sup_id) {
+    if (!supervisor.user_id) {
       return NextResponse.json({ message: 'Supervisor ID not found' }, { status: 500 });
     }
 
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       throw new Error('JWT_SECRET is not defined');
     }
 
-    const token = sign({ id: supervisor.sup_id }, JWT_SECRET, { expiresIn: '1h' });
+    const token = sign({ id: supervisor.user_id }, JWT_SECRET, { expiresIn: '1h' });
     
     const response = NextResponse.json({ message: 'Login successful' });
     response.cookies.set('token', token, { httpOnly: true });

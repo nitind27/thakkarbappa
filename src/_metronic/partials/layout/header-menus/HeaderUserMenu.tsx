@@ -6,7 +6,7 @@ import Logout from "@/components/auth/logout/Logout";
 
 const HeaderUserMenu: FC = () => {
 
-  const username = sessionStorage.getItem("username");
+  const supervisorName = sessionStorage.getItem("supervisorName");
 
   // useEffect(() => {
   //   const fetchProfileInformation = async () => {
@@ -67,7 +67,7 @@ const HeaderUserMenu: FC = () => {
             <div className="fw-bolder d-flex align-items-center fs-5">
               <span className=" fs-5 py-1">
                 {/* {profileHeader && profileHeader?.data?.information?.full_name} */}
-                Welcome{""} {username}
+                Welcome{""} {supervisorName}
               </span>
             </div>
             {/* <div className="fw-bold text-muted text-hover-primary fs-7">

@@ -14,6 +14,8 @@ const Logout = () => {
 
       if (res.ok) {
         sessionStorage.removeItem("username");
+        sessionStorage.removeItem("supervisorName");
+
 
 
         router.push(`/${localActive}`); // Redirect to login page

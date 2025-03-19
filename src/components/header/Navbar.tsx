@@ -67,18 +67,7 @@ const Navbar = ({ increase, decrease, resetsize }: any) => {
         </div>
 
         <LocalSwitcher />
-        {/* <div
-          data-kt-menu-trigger="{default: 'click'}"
-          data-kt-menu-attach="parent"
-          data-kt-menu-placement="bottom-end"
-          className={btnClass}
-        >
-          <KTIcon
-            iconType="duotone"
-            iconName="notification-status"
-            className={btnIconClass}
-          />
-        </div> */}
+
 
         <HeaderNotificationsMenu />
       </div>

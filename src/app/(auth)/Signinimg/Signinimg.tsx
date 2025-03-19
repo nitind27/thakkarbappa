@@ -1,6 +1,6 @@
 import { toAbsoluteUrl } from "@/_metronic/helpers";
 import Image from "next/image";
-import img from "/public/media/logos/logos.png";
+import img from "/public/media/logos/loginlogo.png";
 const SignInImg = () => {
   return (
     <div className="d-flex h-100 flex-column flex-root" id="kt_app_root">

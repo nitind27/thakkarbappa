@@ -1,41 +1,42 @@
 "use client";
 
-// import { useLocale } from "next-intl";
+import { TblUsers } from "@/components/type";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-const LoginForm = () => {
-  const [sup_contact, setSupContact] = useState("");
-  const [sup_password, setSupPassword] = useState("");
+type Props = {
+  tbluserdata: TblUsers[];
+};
+
+const LoginForm = ({ tbluserdata }: Props) => {
+  const [username, setSupContact] = useState("");
+  const [password, setSupPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
   const router = useRouter();
-//  const localActive = useLocale();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
       const res = await fetch("/api/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ sup_contact, sup_password }),
+        body: JSON.stringify({ username, password }),
       });
-  
+
       if (res.ok) {
         const data = await res.json();
-  
-        // Store the username in session storage
-        sessionStorage.setItem("username", sup_contact);
-  
-        console.log("Login successful");
+        sessionStorage.setItem("username", username);
+        sessionStorage.setItem("supervisorName", tbluserdata.filter((data) => data.username === username && data.password === password).map((data) => data.name) as any);
         toast.success("Login successful! Redirecting to dashboard...");
-  
-        // Delay navigation to allow toast to display
+
         setTimeout(() => {
           router.push(`/dashboard`);
         }, 1000);
@@ -72,7 +73,7 @@ const LoginForm = () => {
             id="contact"
             type="text"
             className="form-control"
-            value={sup_contact}
+            value={username}
             onChange={(e) => setSupContact(e.target.value)}
             placeholder="Enter Username"
             required
@@ -80,19 +81,31 @@ const LoginForm = () => {
         </div>
 
         {/* Password Field */}
-        <div className="fv-row mb-3">
+        <div className="fv-row mb-3 position-relative">
           <label className="form-label fs-6 fw-bolder text-gray-900">
             Password
           </label>
           <input
             id="password"
-            type="password"
+            type={showPassword ? "text" : "password"} // Toggle input type
             className="form-control"
-            value={sup_password}
+            value={password}
             onChange={(e) => setSupPassword(e.target.value)}
             placeholder="Enter Password"
             required
           />
+          {/* Eye Icon */}
+          <span 
+            className={`position-absolute end-0 translate-middle-y pe-3 cursor-pointer`} 
+            onClick={() => setShowPassword(!showPassword)} // Toggle show/hide
+            style={{top:"50px"}}
+          >
+            {showPassword ? (
+              <i className="bi bi-eye-slash" aria-hidden="true" style={{fontSize:"16px"}}></i> // Use Bootstrap Icons or any other icon library
+            ) : (
+              <i className="bi bi-eye" aria-hidden="true" style={{fontSize:"16px"}}></i>
+            )}
+          </span>
         </div>
 
         {/* Submit Button */}
