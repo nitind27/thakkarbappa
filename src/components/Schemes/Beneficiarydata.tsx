@@ -1432,7 +1432,7 @@ const
                     }
                     handleSubmit={handleSubmitvi}
                     size={"xl"}
-                    title={updateClusterId ? `${t("Village")}` : `${t("Village")}`}
+                    title={updateClusterId ? `${t1("Village")}` : `${t1("Village")}`}
                     formData={{
                         fields: [],
                         error: "",
