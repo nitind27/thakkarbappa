@@ -146,7 +146,7 @@ const SidebarMenuMain = () => {
         }
 
         {
-           supervisorName !== "Desk Clerk" &&
+          supervisorName == "Desk Clerk" &&
           <SidebarMenuItemWithSub
             to="/apps/chat"
             title={t("nbschemes")}
@@ -222,28 +222,31 @@ const SidebarMenuMain = () => {
 
           </SidebarMenuItemWithSub>
         }
-        <SidebarMenuItemWithSub
-          to={`/${localActive}/workmaster`}
-          title={"Workmaster"}
-          fontIcon="bi-chat-left"
-          icon="abstract-2"
-        >
-          {/* List of Manage Submenu Items */}
-          <SidebarMenuItem
+        {
+          supervisorName !== "Desk Clerk" &&
+          <SidebarMenuItemWithSub
             to={`/${localActive}/workmaster`}
-            title={"Add"}
-            hasBullet={true}
-            onClick={() => handleItemClick(`/${localActive}/workmaster`)}
-          />
-          <SidebarMenuItem
-            to={`/${localActive}/disbursementfunds`}
+            title={"Workmaster"}
+            fontIcon="bi-chat-left"
+            icon="abstract-2"
+          >
+            {/* List of Manage Submenu Items */}
+            <SidebarMenuItem
+              to={`/${localActive}/workmaster`}
+              title={"Add"}
+              hasBullet={true}
+              onClick={() => handleItemClick(`/${localActive}/workmaster`)}
+            />
+            <SidebarMenuItem
+              to={`/${localActive}/disbursementfunds`}
 
-            title={t("disbursementfunds")}
+              title={t("disbursementfunds")}
 
-            hasBullet={true}
-            onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)}
-          />
-        </SidebarMenuItemWithSub>
+              hasBullet={true}
+              onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)}
+            />
+          </SidebarMenuItemWithSub>
+        }
         <SidebarMenuItem
           to={`/${localActive}/manage/studentlist`}
           icon="search-list"

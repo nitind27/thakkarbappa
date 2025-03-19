@@ -2,6 +2,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
+import '../../assets/parivahan.css'
 import {
   Bank,
   Categorys,
@@ -460,6 +461,7 @@ const Parivahan = ({
                 inline
                 disabled={conditions[firstValue] ? true : false}
                 name="group2"
+                
                 type="checkbox"
                 id={`inline-checkbox-1`}
                 onClick={() =>
