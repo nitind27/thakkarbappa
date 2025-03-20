@@ -50,13 +50,25 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
     const [parentsnumber, setParentsnumber] = useState("");
     const [imgupload, setimgupload] = React.useState<File | null>(null);
     const [imagePreview, setImagePreview] = React.useState<string>("");
+
+    const schoolmap = Schooldata.reduce((acc, school: Schooldata) => {
+        acc[school.school_id] = school.school_name; // Assuming taluka has id and name properties
+        return acc;
+    }, {} as Record<number, string>);
+    const hostelnamemao = TblHostel.reduce((acc, school: TblHostel) => {
+        acc[school.hostel_id] = school.hostel_name; // Assuming taluka has id and name properties
+        return acc;
+    }, {} as Record<number, string>);
+
+
     const data = clusterData
         .map((cluster) => ({
             id: cluster.id,
             designation: cluster.designation,
             studentname: cluster.studentname,
-            schoolhostelname: cluster.schoolhostelname,
-            schoolhosteltype: cluster.schoolhosteltype,
+            schoolhostelid: cluster.schoolhostelname,
+            schoolhostelname: cluster.schoolhosteltype == "वसती गृह" ? hostelnamemao[cluster.schoolhostelname as any] : schoolmap[cluster.schoolhostelname as any],
+            schoolhosteltype: cluster.schoolhosteltype == "Govt" ? "शासकीय" : cluster.schoolhosteltype == "Aided" ? "अनुदानित" : cluster.schoolhosteltype,
             subject: cluster.subject,
             testdate: cluster.testdate,
             totalmarks: cluster.totalmarks,
@@ -120,10 +132,19 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
             accessorKey: "designation",
             header: `${t("Designation")}`,
         },
+
         {
-            accessorKey: "studentname",
-            header: `${t("StudentName")}`,
+            accessorKey: "studentname", // Use a new accessor for the serial number
+            header: `${t("StudentName")}`, // Header for the serial number
+            cell: ({ row }: any) => (
+                <div style={{ textTransform: 'uppercase' }}>
+                    {row.original.studentname} {/* Display the index + 1 for serial number */}
+                </div>
+
+            ),
         },
+
+
         {
             accessorKey: "schoolhostelname",
             header: `${t("SchoolHostelName")}`,
@@ -258,6 +279,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
         .slice(0, 1) // Get the last id entry
         .map((data) => data.imgupload);
 
+  
     const adharcontact = MissionShikari
         .filter((data) => data.aadharcard === adharcard)
         .sort((a, b) => b.id - a.id) // Sort by id in descending order
@@ -265,14 +287,28 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
         .map((data) => data.parentsnumber);
 
     const adhardataname = StudentData.filter((data) => data.aadhaar == adharcard && data.aadhaar !== "").map((data) => data.full_name)
+    const adhardatanamemission = MissionShikari.filter((data) => data.aadharcard == adharcard && data.aadharcard !== "").map((data) => data.studentname)
 
     const adhardataimg = StudentData.filter((data) => data.aadhaar == adharcard && data.aadhaar !== "").map((data) => data.profile_photo)
     const adhardataschool = StudentData.filter((data) => data.aadhaar == adharcard && data.aadhaar !== "").map((data) => data.school_id)
 
+
+    const adhardataimgmissionsikri = MissionShikari.filter((data) => data.aadharcard == adharcard && data.aadharcard !== "").map((data) => data.imgupload)
+    const adhardataschoolmisisonsikri = MissionShikari.filter((data) => data.aadharcard == adharcard && data.aadharcard !== "").map((data) => data.schoolhostelname)
+    const adhardatahostelnamemisisonsikri = MissionShikari.filter((data) => data.aadharcard == adharcard && data.aadharcard !== "").map((data) => data.schoolhosteltype)
+
+
+    const finelhosteldata = TblHostel.filter((data) => data.hostel_id == adhardataschoolmisisonsikri as any).map((data) => data.hostel_name)
+    console.log("finelhosteldata", adhardataschoolmisisonsikri)
+
     const adhardataschooltype = Schooldata.filter((data) => data.school_id == adhardataschool as any).map((data) => data)
+    const adhardataschooltypemisison = Schooldata.filter((data) => data.school_id == adhardataschoolmisisonsikri as any).map((data) => data)
     // schooltypedata
     const schooldatatype = adhardataschooltype.map((data) => data.school_type)
+    const schooldatatypemission = adhardataschooltypemisison.map((data) => data.school_type)
+    console.log("fsafasf", adhardataschoolmisisonsikri)
     const schooldataname = adhardataschooltype.map((data) => data.school_name)
+    const schooldatanamemission = adhardataschooltypemisison.map((data) => data.school_id)
 
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -282,8 +318,8 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
         formData.append("designation", designation as any == "" ? adhardesignation : designation as any);
         formData.append("studentname", studentname as any == "" ? adhardataname : studentname as any);
 
-        formData.append("schoolhosteltype", SchoolHostelType as any == "" ? schooldatatype : SchoolHostelType as any);
-        formData.append("schoolhostelname", SchoolHostelName as any == "" ? schooldataname : SchoolHostelName as any);
+        formData.append("schoolhosteltype", SchoolHostelType as any !== "" ? SchoolHostelType : schooldatatype.length == 0 ? schooldatatypemission : schooldatatype as any);
+        formData.append("schoolhostelname", SchoolHostelName as any !== "" ? SchoolHostelName : schooldataname.length == 0 ? schooldatanamemission : schooldataname as any);
         formData.append("subject", Subject);
         formData.append("testdate", TestDate);
         formData.append("totalmarks", Totalmarks);
@@ -296,7 +332,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
         if (imgupload) {
             formData.append("imgupload", imgupload);
         }
-     
+
         setIsLoading(true); // Start loading
 
         try {
@@ -358,7 +394,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
         setDesignation(cluster.designation);
         setStudentName(cluster.studentname);
         setDesignation(cluster.designation);
-        setSchoolHostelName(cluster.schoolhostelname);
+        setSchoolHostelName(cluster.schoolhostelid);
         setSchoolostelType(cluster.schoolhosteltype);
         setSubject(cluster.subject);
         setTestDate(cluster.testdate);
@@ -456,7 +492,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                 handleClose={handleClosePrint}
                 handleSubmit={handleSubmit}
                 imagepriview={
-                    adharimg.length !== 0 && (
+                    adharimg[0] === null && (
                         <>
                             <img
                                 src={`${adharimg}`}
@@ -537,7 +573,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
 
                         {
                             label: `${t('StudentName')}`,
-                            value: adhardataname.length == 0 ? studentname : adhardataname,
+                            value: adhardataname.length !== 0 ? adhardataname : adhardatanamemission.length == 0 ? studentname : adhardatanamemission,
                             type: "text",
                             className: isResponsive ? 'col-12' : 'col-4',
                             placeholder: `${t('StudentName')}`,
@@ -547,7 +583,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
 
                         {
                             label: `${t('SchoolHostelType')}`,
-                            value: schooldatatype.length == 0 ? SchoolHostelType : schooldatatype,
+                            value: schooldatatype.length !== 0 ? schooldatatype : schooldatatypemission.length == 0 ? SchoolHostelType : adhardatahostelnamemisisonsikri,
 
                             onChange: (e: any) => setSchoolostelType(e.target.value),
                             type: "select",
@@ -569,12 +605,12 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
 
                         {
                             label: `${t('SchoolHostelName')}`,
-                            value: schooldataname.length == 0 ? SchoolHostelName : schooldataname,
-                            type: "select",
+                            value: adhardatahostelnamemisisonsikri == "वसती गृह" as any ? finelhosteldata : schooldataname.length !== 0 ? schooldataname : schooldatanamemission.length == 0 ? SchoolHostelName : schooldatanamemission,
+                            type: adhardatahostelnamemisisonsikri == "वसती गृह" as any ? "text" : "select",
                             options: SchoolHostelType == "वसती गृह"
                                 ? [
                                     ...TblHostel.map((yojna) => ({
-                                        value: yojna.hostel_name,
+                                        value: yojna.hostel_id,
                                         label: yojna.hostel_name,
                                     })),
                                     {
@@ -582,7 +618,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                                         label: "Other",
                                     },
                                 ]
-                                : schooldataname.length == 0
+                                : schooldataname.length == 0 && schooldatanamemission.length == 0
                                     ? [
                                         ...Schooldata.filter((data) => data.school_type === SchoolHostelType)
                                             .map((school) => ({
@@ -596,7 +632,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                                     ]
                                     : [
                                         ...Schooldata.map((school) => ({
-                                            value: school.school_name,
+                                            value: school.school_id,
                                             label: school.school_name,
                                         })),
                                         {
