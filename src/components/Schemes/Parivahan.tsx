@@ -106,7 +106,7 @@ const Parivahan = ({
         typeof parivhan.parivahan_date === "string"
           ? parivhan.parivahan_no + " " + formatDate(parivhan.parivahan_date)
           : parivhan.parivahan_no +
-          " " +
+          " / " +
           formatDate(parivhan.parivahan_date.toISOString()),
       outward_no: parivhan.outward_no,
       sup_id:
