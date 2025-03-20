@@ -33,22 +33,24 @@ export async function POST(req: Request) {
     const parentsnumber = formData.get("parentsnumber");
     const imgupload = formData.get("imgupload") as File;
 
-    // Validate the fields (ensure all required fields are present)
-   
-
     // Ensure 'public/uploads' directory exists
     const uploadDir = 'public/uploads'; // Change to /tmp directory
-
     await fs.mkdir(uploadDir, { recursive: true });
 
-    // Generate a unique filename using nanoid
-    const fileExt = imgupload.name.split(".").pop(); // Extract the file extension
-    const uniqueFileName = `${nanoid()}.${fileExt}`;
-    const filePath = path.join(uploadDir, uniqueFileName);
+    let imagePath;
+    
+    // Check if an image file was uploaded
+    if (imgupload) {
+      // Generate a unique filename using nanoid
+      const fileExt = imgupload.name.split(".").pop(); // Extract the file extension
+      const uniqueFileName = `${nanoid()}.${fileExt}`;
+      imagePath = `/uploads/${uniqueFileName}`;
+      const filePath = path.join(uploadDir, uniqueFileName);
 
-    // Save the file to the local filesystem
-    const buffer = await imgupload.arrayBuffer();
-    await fs.writeFile(filePath, Buffer.from(buffer));
+      // Save the file to the local filesystem
+      const buffer = await imgupload.arrayBuffer();
+      await fs.writeFile(filePath, Buffer.from(buffer));
+    }
 
     // Insert into the database using Prisma
     const newDisbursement = await prisma.missionshikari.create({
@@ -64,8 +66,7 @@ export async function POST(req: Request) {
         percentage: percentage?.toString(),
         aadharcard: aadharcard?.toString(),
         parentsnumber: parentsnumber?.toString(),
-        imgupload: `/uploads/${uniqueFileName}`, // Store the relative path of the uploaded image
-   
+        ...(imagePath && { imgupload: imagePath }), // Conditionally add imgupload only if an image was uploaded
       },
     });
 

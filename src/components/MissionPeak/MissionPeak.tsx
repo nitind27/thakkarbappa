@@ -296,6 +296,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
         if (imgupload) {
             formData.append("imgupload", imgupload);
         }
+     
         setIsLoading(true); // Start loading
 
         try {

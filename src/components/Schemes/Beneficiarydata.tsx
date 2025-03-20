@@ -188,7 +188,7 @@ const
 
         ;
 
-        console.log("fdsafsdf", clusterData.map((data) => data.beneficiary_id))
+
         const columns = [
             {
                 accessorKey: "serial_number",
@@ -226,13 +226,33 @@ const
                 accessorKey: "col3",
                 header: `${t("Col3")}`,
             },
+
+
             {
-                accessorKey: "col4",
-                header: `${t("Col4")}`,
+                accessorKey: "serial_number",
+                header: () => (
+                    <div style={{ fontWeight: 'bold', padding: '5px' }}>
+                        {t("Col4")}
+                    </div>
+                ),
+                cell: ({ row }: any) => (
+                    <div className="cursor-pointer" onClick={() => handleShowPrintbenefdata(row.original.beneficiary_id)}>
+                        {row.original.col4}
+                    </div>
+                ),
             },
             {
-                accessorKey: "col4",
-                header: `${t("Col5")}`,
+                accessorKey: "serial_number",
+                header: () => (
+                    <div style={{ fontWeight: 'bold', padding: '5px' }}>
+                        {t("Col5")}
+                    </div>
+                ),
+                cell: ({ row }: any) => (
+                    <div className="cursor-pointer" onClick={() => handleShowPrintbenefdata(row.original.beneficiary_id)}>
+                        {row.original.col4}
+                    </div>
+                ),
             },
 
 

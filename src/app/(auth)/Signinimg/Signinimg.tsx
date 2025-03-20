@@ -1,7 +1,25 @@
-import { toAbsoluteUrl } from "@/_metronic/helpers";
+"use client"
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import img from "/public/media/logos/loginlogo.png";
+
 const SignInImg = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Effect to determine if the screen is mobile
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Set mobile breakpoint at 768px
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Call handler initially to set state
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <div className="d-flex h-100 flex-column flex-root" id="kt_app_root">
       <div className="d-flex flex-column flex-lg-row flex-column-fluid">
@@ -9,23 +27,19 @@ const SignInImg = () => {
           <div className="d-flex flex-column flex-center pb-0 pb-lg-10 p-10 w-100">
             <Image
               src={img}
-              height={450}
-              width={450}
               alt="logo"
-              className="mx-auto mw-100  mb-5 mb-lg-2"
+              className="mx-auto mb-5 mb-lg-2"
+              style={{
+                width: isMobile ? '100px' : '350px', // Set width based on screen size
+                height: isMobile ? '100px' : 'auto', // Set height based on screen size
+                maxWidth: '100%', // Ensure it does not exceed container width
+              }}
             />
-
-            <h1 className="text-gray-800 fs-2qx fw-bold text-center mb-7">
-              Fast, Efficient and Productive...
-            </h1>
             <div
               style={{ color: "#78829d" }}
-              className=" text-gray w-600px fs-4 text-center fw-semibold"
+              className="text-gray w-600px fs-4 text-center fw-semibold"
             >
-              {/* In this kind of post, the blogger introduces a person they’ve
-              interviewed and provides some background information about the
-              interviewee and their work following this is a transcript of the
-              interview. */}
+              {/* Insert additional content or description here */}
             </div>
           </div>
         </div>
