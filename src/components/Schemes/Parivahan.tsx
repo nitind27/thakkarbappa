@@ -108,6 +108,14 @@ const Parivahan = ({
           : parivhan.parivahan_no +
           " / " +
           formatDate(parivhan.parivahan_date.toISOString()),
+
+      parivahandate:
+        typeof parivhan.parivahan_date === "string"
+          ? formatDate(parivhan.parivahan_date)
+          :
+
+          formatDate(parivhan.parivahan_date.toISOString()),
+
       outward_no: parivhan.outward_no,
       sup_id:
         usersdata[parivhan.sup_id] +
@@ -116,8 +124,14 @@ const Parivahan = ({
         Userdata.filter((user) => user.user_id == parivhan.sup_id).map((users) => users.address) +
         ")" + Userdata.filter((user) => user.user_id == parivhan.sup_id).map((users) => users.contact_no),
       yojana_year_id: yojna_year[parivhan.yojana_year_id],
+      yojana_yearid: parivhan.yojana_year_id,
+
+      sup_idusername:
+        parivhan.sup_id,
       yojana_type: yojna_type[parivhan.yojana_type as any],
+      yojanatype: parivhan.yojana_type,
       yojana_id: yojnamster[parivhan.yojana_id] + "Amount" + yojnamsteramount[parivhan.yojana_id],
+      yojanaid: parivhan.yojana_id,
       beneficiary_id: parivhan.beneficiary_id,
       beneficiaryid: beneficiaryname[parivhan.beneficiary_id as any],
       status: parivhan.status,
@@ -290,7 +304,7 @@ const Parivahan = ({
       let apiUrl = '';
       let updateField = '';
       let updateValue = currentStatus === "No" ? "Yes" : "No";
-  
+
       // Determine API endpoint and field to update based on installment percentage
       if (installmentper == "40") {
         apiUrl = `/api/parivahan/updatedata/${category_id}`;
@@ -305,7 +319,7 @@ const Parivahan = ({
         toast.error("Invalid installment percentage");
         return;
       }
-  
+
       const response = await fetch(apiUrl, {
         method: "PATCH",
         headers: {
@@ -315,7 +329,7 @@ const Parivahan = ({
           [updateField]: updateValue
         }),
       });
-  
+
       if (response.ok) {
         // Update local state
         setparivahandata(prevData =>
@@ -325,7 +339,7 @@ const Parivahan = ({
               : cluster
           )
         );
-        
+
         toast.success(
           `Beneficiary Updated successfully!`
         );
@@ -337,7 +351,7 @@ const Parivahan = ({
       toast.error("An unexpected error occurred");
     }
   };
-  
+
   const handleDeactivate = async (category_id: any, currentStatus: any) => {
     const confirmMessage =
       currentStatus === "Active"
@@ -425,7 +439,7 @@ const Parivahan = ({
         <div style={{ display: "flex", whiteSpace: "nowrap" }}>
 
           <select name="" id="" className="form-control"  // Add this to control the select input
-            onChange={(e) => setinstallmentper(e.target.value)}  value={installmentper}>
+            onChange={(e) => setinstallmentper(e.target.value)} value={installmentper}>
             {row.original.amount_paid[0].split(',').map((value: any, index: any) => {
               const conditions = {
                 "40": row.original.fourty == "No",
@@ -461,7 +475,7 @@ const Parivahan = ({
                 inline
                 disabled={conditions[firstValue] ? true : false}
                 name="group2"
-                
+
                 type="checkbox"
                 id={`inline-checkbox-1`}
                 onClick={() =>
@@ -546,17 +560,17 @@ const Parivahan = ({
       console.error("Error during operation:", error);
       toast.error("An unexpected error occurred.");
     } finally {
-      setIsLoading(false); // End loading
+      setIsLoading(false); // End loading 
     }
   };
 
   const handleEdit = (cluster: any) => {
-    console.log("fdsfefaf",cluster)
+    console.log("fdsfefaf", cluster)
     setUpdateClusterId(cluster.sub_category_id);
-    setAdhikanchaname(cluster.sup_id);
-    setParivahanDate(cluster.sub_category_name);
+    setAdhikanchaname(cluster.sup_idusername);
+    setParivahanDate(cluster.parivahandate);
     setJavakSr(cluster.outward_no);
-    setYojnaYear(cluster.yojanayearid);
+    setYojnaYear(cluster.yojana_yearid);
     setBankname(cluster.bankid);
     handleShowPrint();
   };
