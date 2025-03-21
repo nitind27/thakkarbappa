@@ -1026,7 +1026,6 @@ class MenuComponent {
       "click",
       function (this: HTMLElement, e: Event) {
         const menu = MenuComponent.getInstance(this) as MenuComponent;
-        console.log("hell ", menu);
 
         if (menu) {
           return menu.click(this, e);

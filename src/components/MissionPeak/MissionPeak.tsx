@@ -15,6 +15,7 @@ import ConfirmationDialog from "@/common/ConfirmationDialog";
 import Loader from "@/common/Loader ";
 import Image from "next/image";
 import Link from "next/link";
+import Tablemission from "../table/Tablemission";
 
 type Props = {
     initialClusterData: clusterdata[];
@@ -279,7 +280,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
         .slice(0, 1) // Get the last id entry
         .map((data) => data.imgupload);
 
-  
+
     const adharcontact = MissionShikari
         .filter((data) => data.aadharcard === adharcard)
         .sort((a, b) => b.id - a.id) // Sort by id in descending order
@@ -316,7 +317,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
         // Create FormData to handle both file and form data
         const formData = new FormData();
         formData.append("designation", designation as any == "" ? adhardesignation : designation as any);
-        formData.append("studentname", studentname as any == "" ? adhardataname : studentname as any);
+        formData.append("studentname", studentname as any !== "" ? studentname : adhardataname.length == 0 ? adhardatanamemission : adhardataname as any);
 
         formData.append("schoolhosteltype", SchoolHostelType as any !== "" ? SchoolHostelType : schooldatatype.length == 0 ? schooldatatypemission : schooldatatype as any);
         formData.append("schoolhostelname", SchoolHostelName as any !== "" ? SchoolHostelName : schooldataname.length == 0 ? schooldatanamemission : schooldataname as any);
@@ -467,7 +468,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
 
     return (
         <div>
-            <Table
+            <Tablemission
                 data={data}
                 columns={columns}
                 Button={

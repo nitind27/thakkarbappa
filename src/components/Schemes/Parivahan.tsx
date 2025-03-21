@@ -551,10 +551,11 @@ const Parivahan = ({
   };
 
   const handleEdit = (cluster: any) => {
+    console.log("fdsfefaf",cluster)
     setUpdateClusterId(cluster.sub_category_id);
-    setAdhikanchaname(cluster.categoryid);
+    setAdhikanchaname(cluster.sup_id);
     setParivahanDate(cluster.sub_category_name);
-    setJavakSr(cluster.javaksr);
+    setJavakSr(cluster.outward_no);
     setYojnaYear(cluster.yojanayearid);
     setBankname(cluster.bankid);
     handleShowPrint();
