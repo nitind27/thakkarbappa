@@ -637,8 +637,8 @@ const Parivahan = ({
 
         />
         }
-        title={updateClusterId ? `${parivahanno}` : `${parivahanno}`}
-        // title={updateClusterId ? `${t("updatepage")}` : `${t("updatepage")}`}
+        // title={updateClusterId ? `${parivahanno}` : `${parivahanno}`}
+        title={updateClusterId ? `${t("updatepage")}` : `${t("updatepage")}`}
         formData={{
           fields: [
             {
