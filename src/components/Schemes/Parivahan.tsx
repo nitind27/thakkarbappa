@@ -57,7 +57,8 @@ const Parivahan = ({
   const [adhikanchaname, setAdhikanchaname] = useState("");
   const workofdates = new Date();
   const [selectedBeneficiaries, setSelectedBeneficiaries] = useState(new Set());
-
+  const [installmentpers, setinstallmentpers] = useState<{ [key: string]: string }>({});
+console.log("installmentpers",installmentpers)
   const [ParivahanDate, setParivahanDate] = useState(workofdates);
   const [yojnayear, setYojnaYear] = useState("");
   const [beneficiaryid, setbeneficryid] = useState("");
@@ -65,7 +66,7 @@ const Parivahan = ({
   const [javaksr, setJavakSr] = useState("");
   const [yojanatype, setYojnatype] = useState("");
   const [yojnaname, setYojnaname] = useState("");
-  const [installmentper, setinstallmentpers] = useState("");
+  // const [installmentpers, setinstallmentpers] = useState("");
   const [parivahanno, setParivahanNo] = useState("");
 
   const [error, setError] = useState<string>("");
@@ -306,16 +307,17 @@ const Parivahan = ({
     try {
       let apiUrl = '';
       let updateField = '';
-      let updateValue = currentStatus === "No" ? "Yes" : "No";
+      let updateValue = currentStatus === "No" ? "Yes" : "Yes";
+      const installmentValues = Object.values(installmentpers); // Example: ['40', '60']
 
       // Determine API endpoint and field to update based on installment percentage
-      if (installmentper === "40") {
+      if (installmentValues.includes("40")) {
         apiUrl = `/api/parivahan/updatedata/${category_id}`;
-        updateField = 'fourty';
-      } else if (installmentper === "60") {
+        updateField = "fourty";
+      } else if (installmentValues.includes("60")) {
         apiUrl = `/api/parivahan/updatesixty/${category_id}`;
-        updateField = 'sixty';
-      } else if (installmentper === "100") {
+        updateField = "sixty";
+      } else if (installmentValues.includes("100")) {
         apiUrl = `/api/parivahan/updatehundred/${category_id}`;
         updateField = 'hundred';
       } else {
@@ -455,21 +457,21 @@ const Parivahan = ({
       accessorKey: "actions2",
       header: `${t("table4")}`,
       cell: ({ row }: any) => {
-        const [installmentper, setinstallmentper] = useState("");
-
-        const handleInstallmentChange = (value: any) => {
-          setinstallmentper(value);
-          setinstallmentpers(value)
+        const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+          setinstallmentpers((prev) => ({
+            ...prev,
+            [row.id]: e.target.value, // Row-wise state store
+          }));
         };
-
+    
         return (
           <div style={{ display: "flex", whiteSpace: "nowrap" }}>
             <select
               name=""
               id=""
               className="form-control"
-              onChange={(e) => handleInstallmentChange(e.target.value)}
-              value={installmentper}
+              onChange={handleChange}
+              value={installmentpers[row.id] || ""}
             >
               {row.original.amount_paid[0].split(",").map((value: any, index: any) => {
                 const conditions = {
