@@ -59,11 +59,13 @@ const Parivahan = ({
 
   const [ParivahanDate, setParivahanDate] = useState(workofdates);
   const [yojnayear, setYojnaYear] = useState("");
+  const [beneficiaryid, setbeneficryid] = useState("");
   const [bankname, setBankname] = useState("");
   const [javaksr, setJavakSr] = useState("");
   const [yojanatype, setYojnatype] = useState("");
   const [yojnaname, setYojnaname] = useState("");
   const [installmentper, setinstallmentper] = useState("");
+  const [parivahanno, setParivahanNo] = useState("");
 
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -263,7 +265,7 @@ const Parivahan = ({
       ),
     },
     {
-      accessorKey: "actions",
+      accessorKey: "actions1",
       header: `${t("Action")}`,
       cell: ({ row }: any) => (
         <div style={{ display: "flex", whiteSpace: "nowrap" }}>
@@ -433,7 +435,7 @@ const Parivahan = ({
 
 
     {
-      accessorKey: "actions",
+      accessorKey: "actions2",
       header: `${t("table4")}`,
       cell: ({ row }: any) => (
         <div style={{ display: "flex", whiteSpace: "nowrap" }}>
@@ -458,7 +460,7 @@ const Parivahan = ({
       ),
     },
     {
-      accessorKey: "actions",
+      accessorKey: "actions3",
       header: `${t("table5")}`,
       cell: ({ row }: any) => {
         const firstValue = row.original.amount_paid[0].split(',')[0];
@@ -500,21 +502,25 @@ const Parivahan = ({
     event.preventDefault();
 
     setIsLoading(true); // Start loading
+    const parivahan_no_string = parivahanno ? parivahanno.toString() : "";
 
     try {
-      const method = "POST";
-      const url = `/api/parivahan/insert`;
-      const updatebeneurl = `/api/beneficiaryupdate/update`;
+
+      const method = updateClusterId ? "PUT" : "PUT";
+      const url = updateClusterId
+        ? `/api/parivahan/update`
+        : `/api/parivahan/update`;
 
       // Prepare the request body
       const requestBody = {
         parivahan_date: ParivahanDate,
         outward_no: javaksr,
         sup_id: adhikanchaname,
+        parivahan_no: parivahan_no_string,
         yojana_year_id: yojnayear,
         yojana_type: yojanatype,
         yojana_id: yojnaname,
-        beneficiary_id: 524,
+        beneficiary_id: beneficiaryid,
 
         ...(updateClusterId && { parivahan_id: updateClusterId }),
       };
@@ -530,15 +536,18 @@ const Parivahan = ({
       if (response.ok) {
         if (updateClusterId) {
           setparivahandata((prevData) =>
-            prevData.map((cluster) =>
-              cluster.parivahan_id === updateClusterId
+            prevData.map((cluster: any) =>
+              cluster.parivahan_id == updateClusterId
                 ? {
                   ...cluster,
-                  sub_category_name: ParivahanDate,
-                  category_id: parseInt(adhikanchaname),
-                  bank_id: parseInt(bankname),
-                  javaksr: javaksr as any,
-                  yojana_year_id: parseInt(yojnayear),
+                  parivahan_date: ParivahanDate,
+                  outward_no: javaksr,
+                  sup_id: adhikanchaname,
+                  parivahan_no: parivahan_no_string,
+                  yojana_year_id: yojnayear,
+                  yojana_type: yojanatype,
+                  yojana_id: yojnaname,
+                  beneficiary_id: beneficiaryid,
                 }
                 : cluster
             )
@@ -565,13 +574,17 @@ const Parivahan = ({
   };
 
   const handleEdit = (cluster: any) => {
-    console.log("fdsfefaf", cluster)
-    setUpdateClusterId(cluster.sub_category_id);
+    console.log("cluster", cluster)
+    setbeneficryid(cluster.beneficiary_id)
+    setParivahanNo(cluster.parivahan_no)
+    setUpdateClusterId(cluster.parivahan_id);
     setAdhikanchaname(cluster.sup_idusername);
     setParivahanDate(cluster.parivahandate);
     setJavakSr(cluster.outward_no);
     setYojnaYear(cluster.yojana_yearid);
+    setYojnatype(cluster.yojanatype)
     setBankname(cluster.bankid);
+    setYojnaname(cluster.yojanaid)
     handleShowPrint();
   };
 
@@ -624,7 +637,8 @@ const Parivahan = ({
 
         />
         }
-        title={updateClusterId ? `${t("updatepage")}` : `${t("updatepage")}`}
+        title={updateClusterId ? `${parivahanno}` : `${parivahanno}`}
+        // title={updateClusterId ? `${t("updatepage")}` : `${t("updatepage")}`}
         formData={{
           fields: [
             {
@@ -651,7 +665,7 @@ const Parivahan = ({
               onChange: (e: any) => setAdhikanchaname(e.target.value),
               type: "select",
               options: Userdata.map((Userdata: TblUsers) => ({
-                value: Userdata.category_id,
+                value: Userdata.user_id,
                 label: Userdata.name,
               })),
 
