@@ -300,14 +300,14 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
 
 
     const finelhosteldata = TblHostel.filter((data) => data.hostel_id == adhardataschoolmisisonsikri as any).map((data) => data.hostel_name)
-    console.log("finelhosteldata", adhardataschoolmisisonsikri)
+   
 
     const adhardataschooltype = Schooldata.filter((data) => data.school_id == adhardataschool as any).map((data) => data)
     const adhardataschooltypemisison = Schooldata.filter((data) => data.school_id == adhardataschoolmisisonsikri as any).map((data) => data)
     // schooltypedata
     const schooldatatype = adhardataschooltype.map((data) => data.school_type)
     const schooldatatypemission = adhardataschooltypemisison.map((data) => data.school_type)
-    console.log("fsafasf", adhardataschoolmisisonsikri)
+
     const schooldataname = adhardataschooltype.map((data) => data.school_name)
     const schooldatanamemission = adhardataschooltypemisison.map((data) => data.school_id)
 
