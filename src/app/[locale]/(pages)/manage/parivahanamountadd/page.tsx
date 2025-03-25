@@ -70,6 +70,7 @@ const Page = async () => {
 
   const usersdata = Userdata.filter((user) => user.category_id === 35);
   const yojnamaster = yojanaMaster.filter((yojna) => yojna.status =="Active" );
+  const TblEvaluationfilter = TblEvaluation.filter((yojna) => yojna.evaluation_status =="Pending" );
   return (
     <div>
       <h1 className="card card-body mt-5">
@@ -87,7 +88,7 @@ const Page = async () => {
         Parivahantbl={Parivahantbl}
         Beneficiary={Beneficiary}
         Userdata={usersdata}
-        TblEvaluation={TblEvaluation}
+        TblEvaluation={TblEvaluationfilter}
         TblEvaluationAmount={TblEvaluationAmount}
       />
     </div>

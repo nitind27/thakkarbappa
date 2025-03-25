@@ -61,6 +61,7 @@ const Parivahanamountadd = ({
     TblEvaluationAmount
 }: Props) => {
     const t = useTranslations("parivahan");
+        const confirm = createConfirmation(ConfirmationDialog);
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [showimage, setShowimage] = useState("");
     const [OutwardNo, setOutwardNo] = useState("");
@@ -71,6 +72,7 @@ const Parivahanamountadd = ({
     const [OtherRemarks, setOtherRemarks] = useState("");
     const [parivahandata, setparivahandata] =
         useState<TblEvaluation[]>(TblEvaluation); // State for Sub Category data
+
 
     const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
         acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
@@ -140,12 +142,54 @@ const Parivahanamountadd = ({
 
     };
 
+
+    const handleDeactivate = async (category_id: any) => {
+        const confirmMessage = "Are you sure want to Add ?";
+        const confirmed = await confirm({ confirmation: confirmMessage } as any);
+        if (confirmed) {
+            try {
+                const response = await fetch(`/api/evaluationamount/updateevalutionamount/${category_id}`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        evaluation_status: "Received",
+                    }),
+                });
+
+                if (response.ok) {
+                    // Update local state without page reload
+                    setparivahandata((prevData) =>
+                        prevData.map((cluster) =>
+                            cluster.evaluation_id == category_id
+                                ? {
+                                    ...cluster,
+                                    evaluation_status: "Received",
+                                }
+                                : cluster
+                        )
+                    );
+                    toast.success(
+                        ` ${"Amount Added"
+                        } successfully!`
+                    );
+                } else {
+                    toast.error("Failed to change the Category status.");
+                }
+            } catch (error) {
+                console.error("Error changing the Category status:", error);
+                toast.error("An unexpected error occurred.");
+            }
+        }
+    };
+
     const data = parivahandata
         .map((parivhan) => ({
             evaluation_id: parivhan.evaluation_id,
             parivahan_id: parivhan.parivahan_id,
             outwardno: Parivahanbeneficiarys.filter((data) => data.parivahan_id == parivhan.parivahan_id).map((data) => data.outward_no),
-            dateparivahan: Parivahanbeneficiarys.filter((data) => data.parivahan_id == parivhan.parivahan_id).map((data) =>formatDate(data.parivahan_date as any)),
+            dateparivahan: Parivahanbeneficiarys.filter((data) => data.parivahan_id == parivhan.parivahan_id).map((data) => formatDate(data.parivahan_date as any)),
             parivahanadrees: Parivahanbeneficiarys.filter((data) => data.parivahan_id == parivhan.parivahan_id).map((data) => usersdataaddress[data.sup_id]),
             parivahanoutward_no: Parivahanbeneficiarys.filter((data) => data.parivahan_id == parivhan.parivahan_id).map((data) => data.outward_no + formatDate(data.parivahan_date as any)),
             username: Parivahanbeneficiarys.filter((data) => data.parivahan_id == parivhan.parivahan_id).map((data) => usersdata[data.sup_id] + usersdataaddress[data.sup_id]),
@@ -257,11 +301,13 @@ const Parivahanamountadd = ({
                                                         className="border px-2 py-1 w-full"
                                                     />
                                                 </td>
-                                                <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={handleShowPrint}>
+                                                <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={() =>
+                                                    handleDeactivate(row.original.evaluation_id)
+                                                }>
                                                     अदा
                                                 </td>
                                                 <td className="border px-4 py-2" style={{ color: "red", cursor: "pointer" }} onClick={() =>
-                                                   handleimageshow(row.original)
+                                                    handleimageshow(row.original)
                                                 }>
                                                     photo
                                                 </td>
@@ -278,11 +324,13 @@ const Parivahanamountadd = ({
                                                         className="border px-2 py-1 w-full"
                                                     />
                                                 </td>
-                                                <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={handleShowPrint}>
+                                                <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={() =>
+                                                    handleDeactivate(row.original.evaluation_id)
+                                                }>
                                                     अदा
                                                 </td>
                                                 <td className="border px-4 py-2" style={{ color: "red", cursor: "pointer" }} onClick={() =>
-                                                   handleimageshow(row.original)
+                                                    handleimageshow(row.original)
                                                 }>
                                                     photo
                                                 </td>
@@ -298,7 +346,9 @@ const Parivahanamountadd = ({
                                                         className="border px-2 py-1 w-full"
                                                     />
                                                 </td>
-                                                <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={handleShowPrint}>
+                                                <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={() =>
+                                                    handleDeactivate(row.original.evaluation_id)
+                                                }>
                                                     अदा
                                                 </td>
                                                 <td className="border px-4 py-2" style={{ color: "red", cursor: "pointer" }} onClick={() =>
@@ -332,8 +382,8 @@ const Parivahanamountadd = ({
         { label: "Longitude", content: Longitude },
         { label: "Address", content: Address },
         { label: "Other Remarks", content: OtherRemarks },
-      
-      ];
+
+    ];
 
     return (
         <div>
