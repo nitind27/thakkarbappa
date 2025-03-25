@@ -27,6 +27,7 @@ import ConfirmationDialog from "@/common/ConfirmationDialog";
 import { formatDate } from "@/lib/utils";
 import Tablefilter from "../table/Tablefilter";
 import { clippingParents } from "@popperjs/core";
+import { useRouter } from 'next/navigation';
 
 type Props = {
   initialcategoryData: SubCategory[];
@@ -58,8 +59,9 @@ const Parivahan = ({
   const [adhikanchaname, setAdhikanchaname] = useState("");
   const workofdates = new Date();
   const [selectedBeneficiaries, setSelectedBeneficiaries] = useState(new Set());
-  console.log("fnsddajfbsafd",selectedBeneficiaries)
+  console.log("fnsddajfbsafd", selectedBeneficiaries)
   const [installmentpers, setinstallmentpers] = useState<{ [key: string]: string }>({});
+  const router = useRouter();
 
   const [ParivahanDate, setParivahanDate] = useState(workofdates);
   const [yojnayear, setYojnaYear] = useState("");
@@ -75,7 +77,11 @@ const Parivahan = ({
   const [isLoading, setIsLoading] = useState(false);
   const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
   const [parivahandata, setparivahandata] =
-    useState<tblparivahan[]>(Parivahantbl); // State for Sub Category data
+    useState<tblparivahan[]>(Parivahantbl);
+  const [Beneficiarydata, setBeneficiarydata] =
+    useState<TblBeneficiary[]>(Beneficiary);
+  const [Parivahanbeneficiarysdata, setParivahanbeneficiarysdata] =
+    useState<TblParivahanBeneficiary[]>(Parivahanbeneficiarys);
   const confirm = createConfirmation(ConfirmationDialog);
   const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
     acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
@@ -97,7 +103,7 @@ const Parivahan = ({
     acc[year.user_id] = year.name; // Assuming taluka has id and name properties
     return acc;
   }, {} as Record<number, string>);
-  const beneficiaryname = Beneficiary.reduce((acc, year: TblBeneficiary) => {
+  const beneficiaryname = Beneficiarydata.reduce((acc, year: TblBeneficiary) => {
     acc[year.beneficiary_id] = year.fullname; // Assuming taluka has id and name properties
     return acc;
   }, {} as Record<number, string>);
@@ -144,7 +150,7 @@ const Parivahan = ({
       ins_date: parivhan.ins_date,
     }))
     .reverse(); // Reverse the order to show the last added items first
-  const data1 = Parivahanbeneficiarys.map((parivhan) => ({
+  const data1 = Parivahanbeneficiarysdata.map((parivhan) => ({
     parivahan_id: parivhan.parivahan_id,
     parivahan_no: parivhan.parivahan_no,
     parivahan_date:
@@ -152,7 +158,7 @@ const Parivahan = ({
         ? parivhan.parivahan_no + " " + formatDate(parivhan.parivahan_date)
         : parivhan.parivahan_no +
         " " +
-        formatDate(parivhan.parivahan_date.toISOString()),
+        formatDate(parivhan.parivahan_date as any),
     outward_no: parivhan.outward_no,
     sup_id: parivhan.sup_id,
     yojana_year_id: yojna_year[parivhan.yojana_year_id],
@@ -162,6 +168,18 @@ const Parivahan = ({
     status: parivhan.status,
     ins_date: parivhan.ins_date,
   })).reverse(); // Reverse the order to show the last added items first
+
+
+  useEffect(() => {
+    const datas = data.map((item) => item.parivahan_no);
+
+    // Convert all values to BigInt for comparison
+    const maxParivahanNo = datas.reduce((max, current) => {
+      return BigInt(current) > BigInt(max) ? BigInt(current) : BigInt(max);
+    }, BigInt(datas[0]));
+    setParivahanNo(maxParivahanNo.toString())
+    // Convert back to string if needed
+  }, []);
 
   // Displaying the result
   const columns = [
@@ -231,24 +249,24 @@ const Parivahan = ({
 
               {data1
                 .filter((item) => {
-                  // Split the original beneficiary_id by comma and trim whitespace
+
                   const beneficiaryIds = row.original.beneficiary_id.split(',').map((id: string) => id.trim());
                   return beneficiaryIds.includes(item.beneficiary_id) && row.original.parivahan_no == item.parivahan_no;
                 })
                 .map((item, index) => (
                   <tr key={index} className="hover:bg-gray-100">
                     <td className="border border-gray-300 px-4 py-2">
-                      {index + 1} 
+                      {index + 1}
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
-                      {Beneficiary.filter(
+                      {Beneficiarydata.filter(
                         (beneficiary) =>
                           beneficiary.beneficiary_id as any == item.beneficiary_id
                       ).map((filteredItem) => filteredItem.yojana_type == '2' ? filteredItem.gat_name : filteredItem.fullname).join(', ')}
                     </td>
 
                     <td className="border border-gray-300 px-4 py-2">
-                      {Beneficiary.filter(
+                      {Beneficiarydata.filter(
                         (beneficiary) =>
                           beneficiary.beneficiary_id as any == item.beneficiary_id
                       ).map((filteredItem) => filteredItem.tot_finance).join(', ')} {/* Joining multiple finance values with a comma */}
@@ -309,10 +327,15 @@ const Parivahan = ({
     try {
       let apiUrl = '';
       let updateField = '';
-      let updateValue = currentStatus === "No" ? "Yes" : "Yes";
-      const installmentValues = Object.values(installmentpers); // Example: ['40', '60']
+      let updateValue = currentStatus === "No" ? "Yes" : "No"; // Fixed toggle logic
+      const installmentValues = Object.values(installmentpers);
 
-      // Determine API endpoint and field to update based on installment percentage
+      // Create request body object first
+      const requestBody = {
+        [updateField]: updateValue
+      };
+
+      // Determine API endpoint based on installment percentage
       if (installmentValues.includes("40")) {
         apiUrl = `/api/parivahan/updatedata/${category_id}`;
         updateField = "fourty";
@@ -332,13 +355,33 @@ const Parivahan = ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          [updateField]: updateValue,
-        }),
+        body: JSON.stringify(requestBody), // Use the defined requestBody
       });
 
       if (response.ok) {
-        // Update local state logic here if needed
+
+        // Update state with the correct requestBody
+        setparivahandata((prevData) =>
+          prevData.map((cluster: any) =>
+            cluster.parivahan_id === category_id
+              ? { ...cluster, ...requestBody }
+              : cluster
+          )
+        );
+        setParivahanbeneficiarysdata((prevData) =>
+          prevData.map((cluster: any) =>
+            cluster.parivahan_id === category_id
+              ? { ...cluster, ...requestBody }
+              : cluster
+          )
+        );
+        setBeneficiarydata((prevData) =>
+          prevData.map((cluster: any) =>
+            cluster.beneficiary_id === category_id
+              ? { ...cluster, ...requestBody }
+              : cluster
+          )
+        );
         toast.success(`Beneficiary Updated successfully!`);
       } else {
         toast.error("Failed to update beneficiary status");
@@ -348,6 +391,7 @@ const Parivahan = ({
       toast.error("An unexpected error occurred");
     }
   };
+
   const handleDeactivate = async (category_id: any, currentStatus: any) => {
     const confirmMessage =
       currentStatus === "Active"
@@ -392,7 +436,7 @@ const Parivahan = ({
     }
   };
 
-  const datafilter = Beneficiary.filter((data) => data.yojana_year_id as any == yojnayear && data.yojana_type == yojanatype && data.yojana_id as any == yojnaname && data.status == "Active").map((data) => ({
+  const datafilter = Beneficiarydata.filter((data) => data.yojana_year_id as any == yojnayear && data.yojana_type == yojanatype && data.yojana_id as any == yojnaname && data.status == "Active").map((data) => ({
     gat_name: data.yojana_type == '2' ? data.gat_name : data.fullname,
     tot_finance: data.tot_finance,
     installmentcheck: data.fourty + data.sixty + data.hundred,
@@ -409,7 +453,7 @@ const Parivahan = ({
 
   const beneficiaryidArray = beneficiaryid.split(',').map(id => id.trim());
 
-  const datafilterupdate = Beneficiary.filter((data) =>
+  const datafilterupdate = Beneficiarydata.filter((data) =>
     beneficiaryidArray.includes(data.beneficiary_id.toString()) && data.status === "Active").map((data) => ({
       gat_name: data.yojana_type == '2' ? data.gat_name : data.fullname,
       tot_finance: data.tot_finance,
@@ -423,7 +467,7 @@ const Parivahan = ({
     }))
 
   const handleCheckboxChange = (beneficiaryId: any, installmentPercentage: any) => {
-
+    // alert(beneficiaryId)
     setSelectedBeneficiaries(prev => {
       const newSelection = new Set(prev);
       if (newSelection.has(beneficiaryId)) {
@@ -466,7 +510,7 @@ const Parivahan = ({
             [row.id]: e.target.value, // Row-wise state store
           }));
         };
-    
+
         return (
           <div style={{ display: "flex", whiteSpace: "nowrap" }}>
             <select
@@ -511,7 +555,7 @@ const Parivahan = ({
             {row.original.amount_paid[0].split(',').length > 0 && (
               <Form.Check
                 inline
-                disabled={conditions[firstValue] ? true : false}
+                disabled={!updateClusterId && conditions[firstValue] ? true : false}
                 name="group2"
 
                 type="checkbox"
@@ -524,7 +568,7 @@ const Parivahan = ({
                 // }
                 checked={selectedBeneficiaries.has(row.original.beneficiary_id)} // Controlled component
                 onChange={() => handleCheckboxChange(row.original.beneficiary_id, row.original.fourty)} // Use onChange
-              
+
               />
             )}
           </div>
@@ -536,79 +580,109 @@ const Parivahan = ({
 
   ];
 
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     setIsLoading(true); // Start loading
     const parivahan_no_string = parivahanno ? parivahanno.toString() : "";
+    const stringFormat = [...selectedBeneficiaries].join(',');
 
     try {
       const method = updateClusterId ? "PUT" : "POST"; // Changed to POST for new entries
       const url = updateClusterId
         ? `/api/parivahan/update`
-        : `/api/parivahan/insert`; // Assuming a different endpoint for creating new entries
+        : null; // Set to null for new entries
 
       // Prepare the request body
       const requestBody = {
         parivahan_date: ParivahanDate,
         outward_no: javaksr,
         sup_id: adhikanchaname,
-        parivahan_no: parivahan_no_string,
+        parivahan_no: Number(parivahan_no_string) + 1, // Convert to number and add 1
         yojana_year_id: yojnayear,
         yojana_type: yojanatype,
         yojana_id: yojnaname,
-        beneficiary_id: selectedBeneficiaries,
+        beneficiary_id: stringFormat,
 
         ...(updateClusterId && { parivahan_id: updateClusterId }),
       };
-console.log("fsadfsdafsaf",beneficiaryid)
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
 
-      if (response.ok) {
-        if (updateClusterId) {
+
+      if (updateClusterId) {
+        // Update existing entry
+        const response = await fetch(url as any, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        if (response.ok) {
           setparivahandata((prevData) =>
             prevData.map((cluster: any) =>
               cluster.parivahan_id === updateClusterId
-                ? {
-                  ...cluster,
-                  parivahan_date: ParivahanDate,
-                  outward_no: javaksr,
-                  sup_id: adhikanchaname,
-                  parivahan_no: parivahan_no_string,
-                  yojana_year_id: yojnayear,
-                  yojana_type: yojanatype,
-                  yojana_id: yojnaname,
-                  beneficiary_id: beneficiaryid,
-                }
+                ? { ...cluster, ...requestBody }
+                : cluster
+            )
+          );
+          setParivahanbeneficiarysdata((prevData) =>
+            prevData.map((cluster: any) =>
+              cluster.parivahan_id === updateClusterId
+                ? { ...cluster, ...requestBody }
+                : cluster
+            )
+          );
+          setBeneficiarydata((prevData) =>
+            prevData.map((cluster: any) =>
+              cluster.beneficiary_id === updateClusterId
+                ? { ...cluster, ...requestBody }
                 : cluster
             )
           );
           toast.success("Sub Category updated successfully!");
         } else {
-          const createdData = await response.json();
-          setparivahandata((prevData) => [...prevData, createdData]);
-          toast.success("Sub Category inserted successfully!");
+          toast.error(`Failed to update cluster.`);
         }
-
-        // Handle multiple checkbox updates here
-        for (let beneficiaryId of selectedBeneficiaries) {
-          const currentStatus = 'Yes'
-          await handleDeactivateupdatebeneficry(beneficiaryId, currentStatus);
-        }
-
-        handleClosePrint();
       } else {
-        toast.error(
-          `Failed to ${updateClusterId ? "update" : "insert"} cluster.`
-        );
+        // Insert new entry into both APIs
+        const response1 = await fetch(`/api/parivahan/sapreteinsert`, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        const response2 = await fetch(`/api/parivahan/insert`, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        if (response1.ok && response2.ok) {
+          const createdData1 = await response1.json();
+          const createdData2 = await response2.json();
+          router.refresh()
+          setparivahandata((prevData) => [...prevData, createdData2]);
+          setParivahanbeneficiarysdata((prevData) => [...prevData, createdData1]);
+          window.location.reload()
+          // setParivahanbeneficiarysdata((prevData) => [...prevData, createdData1]);
+          toast.success("Sub Category inserted successfully!");
+        } else {
+          toast.error(`Failed to insert cluster.`);
+        }
       }
+
+      // Handle multiple checkbox updates here
+      for (let beneficiaryId of selectedBeneficiaries) {
+        const currentStatus = 'Yes';
+        await handleDeactivateupdatebeneficry(beneficiaryId, currentStatus);
+      }
+
+      handleClosePrint();
     } catch (error) {
       console.error("Error during operation:", error);
       toast.error("An unexpected error occurred.");
@@ -616,6 +690,7 @@ console.log("fsadfsdafsaf",beneficiaryid)
       setIsLoading(false); // End loading 
     }
   };
+
 
 
   const handleEdit = (cluster: any) => {

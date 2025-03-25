@@ -6,10 +6,10 @@ export async function POST(req: Request) {
     try {
         // Get the request body
         const body = await req.json();
-        const { parivahan_date, outward_no, sup_id, yojana_year_id, yojana_type, yojana_id, beneficiary_id } = body;
+        const { parivahan_date, outward_no,parivahan_no, sup_id, yojana_year_id, yojana_type, yojana_id, beneficiary_id } = body;
 
         // Ensure parivahan_no is treated as a bigint
-        const parivahan_no = BigInt(100); // Replace 100 with the actual value you want to use
+        // const parivahan_no  // Replace 100 with the actual value you want to use
 
         // Validate and format parivahan_date
         const formattedDate = new Date(parivahan_date);
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
         const yojana_yearid = Number(yojana_year_id);
         const yojanaid = Number(yojana_id);
         const beneficiaryid = beneficiary_id.toString();
-console.log("fsdafsdafsad",beneficiaryid)
+
         const newCategory = await prisma.tblparivahan.create({
             data: {
                 parivahan_no: parivahan_no, // Convert BigInt to string
