@@ -199,11 +199,11 @@ const SidebarMenuMain = () => {
               onClick={() => handleItemClick(`/${localActive}/yojna/schemes/parivahan`)}
             />
             <SidebarMenuItem
-              to={`/${localActive}/manage/representative`}
+              to={`/${localActive}/manage/parivahanamountadd`}
               title={t("Nidhi_Ada_Transport")}
               hasBullet={true}
               onClick={() =>
-                handleItemClick(`/${localActive}/manage/representative`)
+                handleItemClick(`/${localActive}/manage/parivahanamountadd`)
               }
             />
             <SidebarMenuItem
@@ -267,6 +267,13 @@ const SidebarMenuMain = () => {
           title={"Mission Peak"}
           fontIcon="bi-app-notification"
           onClick={() => handleItemClick(`/${localActive}/missionPeak`)}
+        />
+        <SidebarMenuItem
+          to={`/${localActive}/anudaanadaa`}
+          icon="notification"
+          title={"Anudan Ada"}
+          fontIcon="bi-app-notification"
+          onClick={() => handleItemClick(`/${localActive}/anudaanadaa`)}
         />
       </div>
     </>

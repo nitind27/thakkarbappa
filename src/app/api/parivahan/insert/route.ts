@@ -1,4 +1,5 @@
 import prisma from '@/lib/db';
+import { clippingParents } from '@popperjs/core';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -20,7 +21,7 @@ export async function POST(req: Request) {
         const yojana_yearid = Number(yojana_year_id);
         const yojanaid = Number(yojana_id);
         const beneficiaryid = beneficiary_id.toString();
-
+console.log("fsdafsdafsad",beneficiaryid)
         const newCategory = await prisma.tblparivahan.create({
             data: {
                 parivahan_no: parivahan_no, // Convert BigInt to string

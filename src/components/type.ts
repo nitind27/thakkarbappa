@@ -620,3 +620,15 @@ export type MissionShikari = {
   parentsnumber?: string | null;
   imgupload?: string | null;
 };
+
+
+export type TblEvaluationAmount = {
+  id: number;
+  beneficiary_id: number;
+  evaluation_id: number;
+  amount: any;
+  ins_date: Date;
+  ins_date_time: Date;
+  verification: any; // Assuming it can be "No" or "Yes"
+  status: any;// Assuming possible values
+};

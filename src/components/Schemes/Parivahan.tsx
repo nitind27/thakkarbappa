@@ -26,6 +26,7 @@ import { createConfirmation } from "react-confirm";
 import ConfirmationDialog from "@/common/ConfirmationDialog";
 import { formatDate } from "@/lib/utils";
 import Tablefilter from "../table/Tablefilter";
+import { clippingParents } from "@popperjs/core";
 
 type Props = {
   initialcategoryData: SubCategory[];
@@ -57,8 +58,9 @@ const Parivahan = ({
   const [adhikanchaname, setAdhikanchaname] = useState("");
   const workofdates = new Date();
   const [selectedBeneficiaries, setSelectedBeneficiaries] = useState(new Set());
+  console.log("fnsddajfbsafd",selectedBeneficiaries)
   const [installmentpers, setinstallmentpers] = useState<{ [key: string]: string }>({});
-console.log("installmentpers",installmentpers)
+
   const [ParivahanDate, setParivahanDate] = useState(workofdates);
   const [yojnayear, setYojnaYear] = useState("");
   const [beneficiaryid, setbeneficryid] = useState("");
@@ -236,7 +238,7 @@ console.log("installmentpers",installmentpers)
                 .map((item, index) => (
                   <tr key={index} className="hover:bg-gray-100">
                     <td className="border border-gray-300 px-4 py-2">
-                      {index + 1}
+                      {index + 1} 
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
                       {Beneficiary.filter(
@@ -421,6 +423,7 @@ console.log("installmentpers",installmentpers)
     }))
 
   const handleCheckboxChange = (beneficiaryId: any, installmentPercentage: any) => {
+
     setSelectedBeneficiaries(prev => {
       const newSelection = new Set(prev);
       if (newSelection.has(beneficiaryId)) {
@@ -555,11 +558,11 @@ console.log("installmentpers",installmentpers)
         yojana_year_id: yojnayear,
         yojana_type: yojanatype,
         yojana_id: yojnaname,
-        beneficiary_id: beneficiaryid,
+        beneficiary_id: selectedBeneficiaries,
 
         ...(updateClusterId && { parivahan_id: updateClusterId }),
       };
-
+console.log("fsadfsdafsaf",beneficiaryid)
       const response = await fetch(url, {
         method,
         headers: {

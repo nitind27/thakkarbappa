@@ -693,6 +693,22 @@ model tbl_evaluation {
   @@map("tbl_evaluation")
 }
 
+
+model tbl_evaluation_amount {
+  id             Int      @id @default(autoincrement())
+  beneficiary_id Int
+  evaluation_id  Int
+  amount         Decimal  @db.Decimal(10, 2)
+  ins_date       DateTime @db.Date
+  ins_date_time  DateTime
+  verification   String   @default("No") @db.VarChar(10)
+  status         String   @default("Active") @db.VarChar(10)
+
+  @@map("tbl_evaluation_amount")
+}
+
+
+
 model tbl_hostels {
   hostel_id                Int     @id @default(autoincrement())
   aapar_aayukt             String
