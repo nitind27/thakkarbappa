@@ -373,6 +373,7 @@ const Parivahan = ({
       });
 
       if (response.ok) {
+        window.location.reload()
         toast.success(`Beneficiary Updated successfully!`);
       } else {
         toast.error("Failed to update beneficiary status");
@@ -526,7 +527,7 @@ const Parivahan = ({
 
                 return (
                   <option key={index} value={value} disabled={!conditions[value]}>
-                    {updateClusterId ? `${value}%` :conditions[value] ? `${value}%` : "N/A"}
+                    {updateClusterId ? `${value}%` : conditions[value] ? `${value}%` : "N/A"}
                   </option>
                 );
               })}
@@ -637,7 +638,7 @@ const Parivahan = ({
                 : cluster
             )
           );
-
+          window.location.reload()
           toast.success("Sub Category updated successfully!");
         } else {
           toast.error(`Failed to update cluster.`);
@@ -676,8 +677,12 @@ const Parivahan = ({
 
       // Handle multiple checkbox updates here
       for (let beneficiaryId of selectedBeneficiaries) {
-        const currentStatus = 'Yes';
-        await handleDeactivateupdatebeneficry(beneficiaryId, currentStatus);
+        const installmentValue = installmentpers[beneficiaryId as any];
+        if (installmentValue) {
+          const currentStatus = 'Yes';
+
+          await handleDeactivateupdatebeneficry(beneficiaryId, currentStatus);
+        }
       }
 
       handleClosePrint();
