@@ -59,13 +59,15 @@ const Parivahan = ({
   const [adhikanchaname, setAdhikanchaname] = useState("");
   const workofdates = new Date();
   const [selectedBeneficiaries, setSelectedBeneficiaries] = useState(new Set());
-  console.log("fnsddajfbsafd", selectedBeneficiaries)
+
   const [installmentpers, setinstallmentpers] = useState<{ [key: string]: string }>({});
+
   const router = useRouter();
 
   const [ParivahanDate, setParivahanDate] = useState(workofdates);
   const [yojnayear, setYojnaYear] = useState("");
   const [beneficiaryid, setbeneficryid] = useState("");
+
   const [bankname, setBankname] = useState("");
   const [javaksr, setJavakSr] = useState("");
   const [yojanatype, setYojnatype] = useState("");
@@ -134,7 +136,7 @@ const Parivahan = ({
         " " +
         "(" +
         Userdata.filter((user) => user.user_id == parivhan.sup_id).map((users) => users.address) +
-        ")" + Userdata.filter((user) => user.user_id == parivhan.sup_id).map((users) => users.contact_no),
+        ")" + "  " + Userdata.filter((user) => user.user_id == parivhan.sup_id).map((users) => users.contact_no),
       yojana_year_id: yojna_year[parivhan.yojana_year_id],
       yojana_yearid: parivhan.yojana_year_id,
 
@@ -142,7 +144,7 @@ const Parivahan = ({
         parivhan.sup_id,
       yojana_type: yojna_type[parivhan.yojana_type as any],
       yojanatype: parivhan.yojana_type,
-      yojana_id: yojnamster[parivhan.yojana_id] + "Amount" + yojnamsteramount[parivhan.yojana_id],
+      yojana_id: yojnamster[parivhan.yojana_id] + "(" + "Amount :" + yojnamsteramount[parivhan.yojana_id] + ")",
       yojanaid: parivhan.yojana_id,
       beneficiary_id: parivhan.beneficiary_id,
       beneficiaryid: beneficiaryname[parivhan.beneficiary_id as any],
@@ -173,11 +175,13 @@ const Parivahan = ({
   useEffect(() => {
     const datas = data.map((item) => item.parivahan_no);
 
-    // Convert all values to BigInt for comparison
-    const maxParivahanNo = datas.reduce((max, current) => {
-      return BigInt(current) > BigInt(max) ? BigInt(current) : BigInt(max);
-    }, BigInt(datas[0]));
-    setParivahanNo(maxParivahanNo.toString())
+    if (datas.length > 0) {
+
+      const maxParivahanNo = datas.reduce((max, current) => {
+        return BigInt(current) > BigInt(max) ? BigInt(current) : BigInt(max);
+      }, BigInt(datas[0]));
+      setParivahanNo(maxParivahanNo.toString())
+    }
     // Convert back to string if needed
   }, []);
 
@@ -327,15 +331,10 @@ const Parivahan = ({
     try {
       let apiUrl = '';
       let updateField = '';
-      let updateValue = currentStatus === "No" ? "Yes" : "No"; // Fixed toggle logic
-      const installmentValues = Object.values(installmentpers);
+      let updateValue = currentStatus === "No" ? "Yes" : "Yes";
+      const installmentValues = Object.values(installmentpers); // Example: ['40', '60']
 
-      // Create request body object first
-      const requestBody = {
-        [updateField]: updateValue
-      };
-
-      // Determine API endpoint based on installment percentage
+      // Determine API endpoint and field to update based on installment percentage
       if (installmentValues.includes("40")) {
         apiUrl = `/api/parivahan/updatedata/${category_id}`;
         updateField = "fourty";
@@ -355,33 +354,13 @@ const Parivahan = ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(requestBody), // Use the defined requestBody
+        body: JSON.stringify({
+          [updateField]: updateValue,
+        }),
       });
 
       if (response.ok) {
-
-        // Update state with the correct requestBody
-        setparivahandata((prevData) =>
-          prevData.map((cluster: any) =>
-            cluster.parivahan_id === category_id
-              ? { ...cluster, ...requestBody }
-              : cluster
-          )
-        );
-        setParivahanbeneficiarysdata((prevData) =>
-          prevData.map((cluster: any) =>
-            cluster.parivahan_id === category_id
-              ? { ...cluster, ...requestBody }
-              : cluster
-          )
-        );
-        setBeneficiarydata((prevData) =>
-          prevData.map((cluster: any) =>
-            cluster.beneficiary_id === category_id
-              ? { ...cluster, ...requestBody }
-              : cluster
-          )
-        );
+        // Update local state logic here if needed
         toast.success(`Beneficiary Updated successfully!`);
       } else {
         toast.error("Failed to update beneficiary status");
@@ -391,7 +370,6 @@ const Parivahan = ({
       toast.error("An unexpected error occurred");
     }
   };
-
   const handleDeactivate = async (category_id: any, currentStatus: any) => {
     const confirmMessage =
       currentStatus === "Active"
@@ -437,7 +415,7 @@ const Parivahan = ({
   };
 
   const datafilter = Beneficiarydata.filter((data) => data.yojana_year_id as any == yojnayear && data.yojana_type == yojanatype && data.yojana_id as any == yojnaname && data.status == "Active").map((data) => ({
-    gat_name: data.yojana_type == '2' ? data.gat_name : data.fullname,
+    gat_name: data.yojana_type == '2' ? data.beneficiary_id : data.fullname,
     tot_finance: data.tot_finance,
     installmentcheck: data.fourty + data.sixty + data.hundred,
     fourty: data.fourty,
@@ -452,14 +430,15 @@ const Parivahan = ({
 
 
   const beneficiaryidArray = beneficiaryid.split(',').map(id => id.trim());
-
+  console.log("beneficiaryidArray", beneficiaryidArray)
   const datafilterupdate = Beneficiarydata.filter((data) =>
     beneficiaryidArray.includes(data.beneficiary_id.toString()) && data.status === "Active").map((data) => ({
-      gat_name: data.yojana_type == '2' ? data.gat_name : data.fullname,
+      gat_name: data.yojana_type == '2' ? data.beneficiary_id : data.fullname,
       tot_finance: data.tot_finance,
       installmentcheck: data.fourty + data.sixty + data.hundred,
       fourty: data.fourty,
       sixty: data.sixty,
+      installmentdata: Parivahanbeneficiarys.filter((datas) => datas.beneficiary_id == data.beneficiary_id as any).map((installmets) => installmets.installment),
       hundred: data.hundred,
       amount_paid: [data.amount_paid],
       caste_id: data.caste_id,
@@ -505,26 +484,29 @@ const Parivahan = ({
       header: `${t("table4")}`,
       cell: ({ row }: any) => {
         const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+          const beneficiaryId = row.original.beneficiary_id; // Get the beneficiary ID
+
+          // Update state for the specific beneficiary_id
           setinstallmentpers((prev) => ({
             ...prev,
-            [row.id]: e.target.value, // Row-wise state store
+            [beneficiaryId]: e.target.value, // Store selected value for this beneficiary_id
           }));
         };
 
         return (
           <div style={{ display: "flex", whiteSpace: "nowrap" }}>
             <select
-              name=""
-              id=""
               className="form-control"
-              onChange={handleChange}
-              value={installmentpers[row.id] || ""}
+              onChange={handleChange} // Call handleChange directly
+              value={updateClusterId ? row.original.installmentdata : installmentpers[row.original.beneficiary_id] || ""} // Use installmentdata in edit mode
             >
+
+              <option value="">select</option>
               {row.original.amount_paid[0].split(",").map((value: any, index: any) => {
                 const conditions = {
-                  40: row.original.fourty == "No",
-                  60: row.original.sixty == "No",
-                  100: row.original.hundred == "No",
+                  40: row.original.fourty === "No",
+                  60: row.original.sixty === "No",
+                  100: row.original.hundred === "No",
                 } as any;
 
                 return (
@@ -539,6 +521,7 @@ const Parivahan = ({
       },
     },
 
+
     {
       accessorKey: "actions3",
       header: `${t("table5")}`,
@@ -549,39 +532,37 @@ const Parivahan = ({
           "60": row.original.sixty == "Yes",
           "100": row.original.hundred == "Yes",
         } as any;
+        const rowid = String(row.original.beneficiary_id).trim();
+        // Trim whitespace
+        const paridata = Parivahanbeneficiarys.map(data => data.beneficiary_id.trim());
+        const isChecked = paridata.includes(rowid)
 
         return (
           <div style={{ display: "flex", whiteSpace: "nowrap" }} className="mt-3">
+
             {row.original.amount_paid[0].split(',').length > 0 && (
               <Form.Check
                 inline
-                disabled={!updateClusterId && conditions[firstValue] ? true : false}
+                disabled={updateClusterId ? false : !updateClusterId && conditions[firstValue]}
                 name="group2"
-
                 type="checkbox"
                 id={`inline-checkbox-1`}
-                // onClick={() =>
-                //   handleDeactivateupdatebeneficry(
-                //     row.original.beneficiary_id,
-                //     row.original.fourty
-                //   )
-                // }
-                checked={selectedBeneficiaries.has(row.original.beneficiary_id)} // Controlled component
-                onChange={() => handleCheckboxChange(row.original.beneficiary_id, row.original.fourty)} // Use onChange
-
+                checked={selectedBeneficiaries.has(row.original.beneficiary_id)}
+                onChange={() => handleCheckboxChange(
+                  row.original.beneficiary_id,
+                  updateClusterId ? row.original.installmentdata : row.original.fourty
+                )}
               />
             )}
           </div>
         );
       },
     }
-
-
-
   ];
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    const installmentValues = Object.values(installmentpers);
 
     setIsLoading(true); // Start loading
     const parivahan_no_string = parivahanno ? parivahanno.toString() : "";
@@ -598,9 +579,10 @@ const Parivahan = ({
         parivahan_date: ParivahanDate,
         outward_no: javaksr,
         sup_id: adhikanchaname,
-        parivahan_no: Number(parivahan_no_string) + 1, // Convert to number and add 1
+        parivahan_no: updateClusterId ? Number(parivahan_no_string) : Number(parivahan_no_string) + 1, // Convert to number and add 1
         yojana_year_id: yojnayear,
         yojana_type: yojanatype,
+        installment: installmentValues,
         yojana_id: yojnaname,
         beneficiary_id: stringFormat,
 
@@ -705,6 +687,19 @@ const Parivahan = ({
     setYojnatype(cluster.yojanatype)
     setBankname(cluster.bankid);
     setYojnaname(cluster.yojanaid)
+    setSelectedBeneficiaries(prev => {
+      const newSet = new Set(prev); // Create a new Set based on previous values
+
+      // Convert beneficiary_id to a number before adding it
+      String(cluster.beneficiary_id)
+        .split(",")
+        .forEach(id => newSet.add(Number(id.trim())));
+
+      return newSet; // Return the updated Set
+    });
+
+
+
     handleShowPrint();
   };
 
@@ -717,6 +712,8 @@ const Parivahan = ({
     setBankname("");
     setError("");
     setJavakSr("");
+
+    setSelectedBeneficiaries(new Set())
   };
   const handleClosePrint = () => {
     reset();
@@ -762,7 +759,7 @@ const Parivahan = ({
         />
         }
         // title={updateClusterId ? `${parivahanno}` : `${parivahanno}`}
-        title={updateClusterId ? `${t("updatepage")}` : `${t("updatepage")}`}
+        title={`${yojnayear} + ${yojanatype} + ${yojnaname}`}
         formData={{
           fields: [
             {
