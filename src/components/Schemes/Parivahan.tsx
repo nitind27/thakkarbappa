@@ -428,7 +428,7 @@ const Parivahan = ({
   };
 
   const datafilter = Beneficiarydata.filter((data) => data.yojana_year_id as any == yojnayear && data.yojana_type == yojanatype && data.yojana_id as any == yojnaname && data.status == "Active").map((data) => ({
-    gat_name: data.yojana_type == '2' ? data.beneficiary_id : data.fullname,
+    gat_name: data.yojana_type == '2' ? data.gat_name : data.fullname,
     tot_finance: data.tot_finance,
     installmentcheck: data.fourty + data.sixty + data.hundred,
     fourty: data.fourty,
