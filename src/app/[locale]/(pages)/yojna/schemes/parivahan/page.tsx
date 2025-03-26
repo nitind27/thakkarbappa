@@ -41,7 +41,7 @@ const Page = async () => {
     Parivahanbeneficiarys = await prisma.parivahanbeneficiary.findMany();
     Parivahantbl = await prisma.tblparivahan.findMany();
     Userdata = await prisma.tblusers.findMany();
-    
+
   } catch (error) {
     console.error("Error fetching cluster data:", error);
     return (
@@ -59,7 +59,8 @@ const Page = async () => {
   }
 
   const usersdata = Userdata.filter((user) => user.category_id === 35);
-  const yojnamaster = yojanaMaster.filter((yojna) => yojna.status =="Active" );
+  const yojnamaster = yojanaMaster.filter((yojna) => yojna.status == "Active");
+  const Parivahantblfilter = Parivahantbl.filter((yojna) => yojna.beneficiary_id !== "" && yojna.beneficiary_id !== '0');
   return (
     <div>
       <h1 className="card card-body mt-5">
@@ -74,7 +75,7 @@ const Page = async () => {
         yojanaMaster={yojnamaster}
         category={category}
         Parivahanbeneficiarys={Parivahanbeneficiarys}
-        Parivahantbl={Parivahantbl}
+        Parivahantbl={Parivahantblfilter}
         Beneficiary={Beneficiary}
         Userdata={usersdata}
       />

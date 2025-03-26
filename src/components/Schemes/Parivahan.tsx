@@ -329,25 +329,38 @@ const Parivahan = ({
 
   const handleDeactivateupdatebeneficry = async (category_id: any, currentStatus: any) => {
     try {
-      let apiUrl = '';
-      let updateField = '';
-      let updateValue = currentStatus === "No" ? "Yes" : "Yes";
-      const installmentValues = Object.values(installmentpers); // Example: ['40', '60']
+      // Get the installment value for the specific category_id
+      const installmentValue = installmentpers[category_id];
 
-      // Determine API endpoint and field to update based on installment percentage
-      if (installmentValues.includes("40")) {
-        apiUrl = `/api/parivahan/updatedata/${category_id}`;
-        updateField = "fourty";
-      } else if (installmentValues.includes("60")) {
-        apiUrl = `/api/parivahan/updatesixty/${category_id}`;
-        updateField = "sixty";
-      } else if (installmentValues.includes("100")) {
-        apiUrl = `/api/parivahan/updatehundred/${category_id}`;
-        updateField = 'hundred';
-      } else {
-        toast.error("Invalid installment percentage");
+      if (!installmentValue) {
+        toast.error("No installment percentage found for this category");
         return;
       }
+
+      // Determine API endpoint and field based on category_id's value
+      let apiUrl = '';
+      let updateField = '';
+
+      switch (installmentValue) {
+        case '40':
+          apiUrl = `/api/parivahan/updatedata/${category_id}`;
+          updateField = "fourty";
+          break;
+        case '60':
+          apiUrl = `/api/parivahan/updatesixty/${category_id}`;
+          updateField = "sixty";
+          break;
+        case '100':
+          apiUrl = `/api/parivahan/updatehundred/${category_id}`;
+          updateField = 'hundred';
+          break;
+        default:
+          toast.error("Invalid installment percentage");
+          return;
+      }
+
+      // Determine the new value based on current status
+      const updateValue = updateClusterId ? "No" : currentStatus === "No" ? "Yes" : "Yes";
 
       const response = await fetch(apiUrl, {
         method: "PATCH",
@@ -360,7 +373,6 @@ const Parivahan = ({
       });
 
       if (response.ok) {
-        // Update local state logic here if needed
         toast.success(`Beneficiary Updated successfully!`);
       } else {
         toast.error("Failed to update beneficiary status");
@@ -370,6 +382,7 @@ const Parivahan = ({
       toast.error("An unexpected error occurred");
     }
   };
+
   const handleDeactivate = async (category_id: any, currentStatus: any) => {
     const confirmMessage =
       currentStatus === "Active"
@@ -485,13 +498,15 @@ const Parivahan = ({
       cell: ({ row }: any) => {
         const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
           const beneficiaryId = row.original.beneficiary_id; // Get the beneficiary ID
+          const selectedValue = e.target.value; // Get the selected value
 
           // Update state for the specific beneficiary_id
           setinstallmentpers((prev) => ({
             ...prev,
-            [beneficiaryId]: e.target.value, // Store selected value for this beneficiary_id
+            [beneficiaryId]: selectedValue, // Store selected value for this beneficiary_id
           }));
         };
+
 
         return (
           <div style={{ display: "flex", whiteSpace: "nowrap" }}>
@@ -511,7 +526,7 @@ const Parivahan = ({
 
                 return (
                   <option key={index} value={value} disabled={!conditions[value]}>
-                    {conditions[value] ? `${value}%` : "N/A"}
+                    {updateClusterId ? `${value}%` :conditions[value] ? `${value}%` : "N/A"}
                   </option>
                 );
               })}
@@ -622,6 +637,7 @@ const Parivahan = ({
                 : cluster
             )
           );
+
           toast.success("Sub Category updated successfully!");
         } else {
           toast.error(`Failed to update cluster.`);
@@ -650,7 +666,7 @@ const Parivahan = ({
           router.refresh()
           setparivahandata((prevData) => [...prevData, createdData2]);
           setParivahanbeneficiarysdata((prevData) => [...prevData, createdData1]);
-          window.location.reload()
+
           // setParivahanbeneficiarysdata((prevData) => [...prevData, createdData1]);
           toast.success("Sub Category inserted successfully!");
         } else {
@@ -759,7 +775,7 @@ const Parivahan = ({
         />
         }
         // title={updateClusterId ? `${parivahanno}` : `${parivahanno}`}
-        title={`${yojnayear} + ${yojanatype} + ${yojnaname}`}
+        title={`${t('updatepage')}`}
         formData={{
           fields: [
             {
