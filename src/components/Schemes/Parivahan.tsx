@@ -443,10 +443,10 @@ const Parivahan = ({
 
 
   const beneficiaryidArray = beneficiaryid.split(',').map(id => id.trim());
-  console.log("beneficiaryidArray", beneficiaryidArray)
+
   const datafilterupdate = Beneficiarydata.filter((data) =>
     beneficiaryidArray.includes(data.beneficiary_id.toString()) && data.status === "Active").map((data) => ({
-      gat_name: data.yojana_type == '2' ? data.beneficiary_id : data.fullname,
+      gat_name: data.yojana_type == '2' ? data.gat_name : data.fullname,
       tot_finance: data.tot_finance,
       installmentcheck: data.fourty + data.sixty + data.hundred,
       fourty: data.fourty,
