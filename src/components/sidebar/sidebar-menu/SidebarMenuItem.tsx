@@ -62,8 +62,10 @@ const SidebarMenuItem: FC<Props & WithChildren> = ({
           })}
         >
 
+          <span style={{whiteSpace:"nowrap"}}>
 
-          {title}
+            {title}
+          </span>
 
         </div>
       </Link>

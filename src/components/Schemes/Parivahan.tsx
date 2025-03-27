@@ -60,6 +60,8 @@ const Parivahan = ({
   const workofdates = new Date();
   const [selectedBeneficiaries, setSelectedBeneficiaries] = useState(new Set());
 
+  const [unselectedBeneficiaries, setUnselectedBeneficiaries] = useState(new Set());
+
   const [installmentpers, setinstallmentpers] = useState<{ [key: string]: string }>({});
 
   const router = useRouter();
@@ -110,8 +112,10 @@ const Parivahan = ({
     return acc;
   }, {} as Record<number, string>);
   const [currentDate, setCurrentDate] = useState("");
-
-
+  const unselectedBeneficiariesString = [...unselectedBeneficiaries].join(', ');
+  console.log("unselectedBeneficiariesString",unselectedBeneficiariesString)
+  const parivahanidfilterd = Parivahanbeneficiarysdata.filter((data) => unselectedBeneficiariesString.includes(data.beneficiary_id) as any).map((data) => data.parivahan_id)
+console.log("parivahanidfilterd",parivahanidfilterd)
   const data = parivahandata
     .map((parivhan) => ({
       parivahan_id: parivhan.parivahan_id,
@@ -374,9 +378,9 @@ const Parivahan = ({
 
       if (response.ok) {
         window.location.reload()
-        toast.success(`Beneficiary Updated successfully!`);
+        // toast.success(`Beneficiary Updated successfully!`);
       } else {
-        toast.error("Failed to update beneficiary status");
+        // toast.error("Failed to update beneficiary status");
       }
     } catch (error) {
       console.error("Error updating beneficiary:", error);
@@ -415,18 +419,37 @@ const Parivahan = ({
             )
           );
           toast.success(
-            `Sub Category ${currentStatus === "Active" ? "deactivated" : "activated"
+            `${currentStatus === "Active" ? "deactivated" : "activated"
             } successfully!`
           );
         } else {
-          toast.error("Failed to change the Sub Category status.");
+          toast.error("Failed to change status.");
         }
       } catch (error) {
-        console.error("Error changing the Sub Category status:", error);
+        console.error("Error changing status:", error);
         toast.error("An unexpected error occurred.");
       }
     }
   };
+
+  const handleDeleteparivahan = async () => {
+
+    try {
+      const response = await fetch(`/api/parivahan/deleteparivahanbenf/${parivahanidfilterd}`, {
+        method: "DELETE", // Change PATCH to DELETE
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+      });
+
+    } catch (error) {
+      console.error("Error changing status:", error);
+      toast.error("An unexpected error occurred.");
+    }
+  }
+
+
 
   const datafilter = Beneficiarydata.filter((data) => data.yojana_year_id as any == yojnayear && data.yojana_type == yojanatype && data.yojana_id as any == yojnaname && data.status == "Active").map((data) => ({
     gat_name: data.yojana_type == '2' ? data.gat_name : data.fullname,
@@ -459,18 +482,31 @@ const Parivahan = ({
       beneficiary_id: data.beneficiary_id,
     }))
 
-  const handleCheckboxChange = (beneficiaryId: any, installmentPercentage: any) => {
-    // alert(beneficiaryId)
-    setSelectedBeneficiaries(prev => {
-      const newSelection = new Set(prev);
-      if (newSelection.has(beneficiaryId)) {
-        newSelection.delete(beneficiaryId); // Uncheck
-      } else {
-        newSelection.add(beneficiaryId); // Check
-      }
-      return newSelection;
-    });
+    const handleCheckboxChange = (beneficiaryId: any, installmentPercentage: any) => {
+      setSelectedBeneficiaries(prev => {
+          const newSelection = new Set(prev);
+          if (newSelection.has(beneficiaryId)) {
+              // Uncheck
+              newSelection.delete(beneficiaryId); // Remove from selected
+              setUnselectedBeneficiaries(prevUnselected => {
+                  const newUnselected = new Set(prevUnselected);
+                  newUnselected.add(beneficiaryId); // Add to unselected
+                  return newUnselected;
+              });
+          } else {
+              // Check
+              newSelection.add(beneficiaryId); // Add to selected
+              setUnselectedBeneficiaries(prevUnselected => {
+                  const newUnselected = new Set(prevUnselected);
+                  newUnselected.delete(beneficiaryId); // Remove from unselected
+                  return newUnselected;
+              });
+          }
+          return newSelection;
+      });
   };
+  
+
   const filtercolumns = [
     {
       accessorKey: "serial_number",
@@ -542,38 +578,37 @@ const Parivahan = ({
       accessorKey: "actions3",
       header: `${t("table5")}`,
       cell: ({ row }: any) => {
-        const firstValue = row.original.amount_paid[0].split(',')[0];
-        const conditions = {
-          "40": row.original.fourty == "Yes",
-          "60": row.original.sixty == "Yes",
-          "100": row.original.hundred == "Yes",
-        } as any;
-        const rowid = String(row.original.beneficiary_id).trim();
-        // Trim whitespace
-        const paridata = Parivahanbeneficiarys.map(data => data.beneficiary_id.trim());
-        const isChecked = paridata.includes(rowid)
-
-        return (
-          <div style={{ display: "flex", whiteSpace: "nowrap" }} className="mt-3">
-
-            {row.original.amount_paid[0].split(',').length > 0 && (
-              <Form.Check
-                inline
-                disabled={updateClusterId ? false : !updateClusterId && conditions[firstValue]}
-                name="group2"
-                type="checkbox"
-                id={`inline-checkbox-1`}
-                checked={selectedBeneficiaries.has(row.original.beneficiary_id)}
-                onChange={() => handleCheckboxChange(
-                  row.original.beneficiary_id,
-                  updateClusterId ? row.original.installmentdata : row.original.fourty
-                )}
-              />
-            )}
-          </div>
-        );
+          const firstValue = row.original.amount_paid[0].split(',')[0];
+          const conditions = {
+              "40": row.original.fourty === "Yes",
+              "60": row.original.sixty === "Yes",
+              "100": row.original.hundred === "Yes",
+          } as any;
+          const rowid = String(row.original.beneficiary_id).trim();
+          const paridata = Parivahanbeneficiarys.map(data => data.beneficiary_id.trim());
+          const isChecked = paridata.includes(rowid);
+  
+          return (
+              <div style={{ display: "flex", whiteSpace: "nowrap" }} className="mt-3">
+                  {row.original.amount_paid[0].split(',').length > 0 && (
+                      <Form.Check
+                          inline
+                          disabled={updateClusterId ? false : !updateClusterId && conditions[firstValue]}
+                          name="group2"
+                          type="checkbox"
+                          id={`inline-checkbox-${rowid}`} // Ensure unique ID for each checkbox
+                          checked={selectedBeneficiaries.has(row.original.beneficiary_id)}
+                          onChange={() => handleCheckboxChange(
+                              row.original.beneficiary_id,
+                              updateClusterId ? row.original.installmentdata : row.original.fourty
+                          )}
+                      />
+                  )}
+              </div>
+          );
       },
-    }
+  }
+  
   ];
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -639,7 +674,7 @@ const Parivahan = ({
             )
           );
           window.location.reload()
-          toast.success("Sub Category updated successfully!");
+          toast.success("Updated successfully!");
         } else {
           toast.error(`Failed to update cluster.`);
         }
@@ -667,17 +702,22 @@ const Parivahan = ({
           router.refresh()
           setparivahandata((prevData) => [...prevData, createdData2]);
           setParivahanbeneficiarysdata((prevData) => [...prevData, createdData1]);
-
+          window.location.reload()
           // setParivahanbeneficiarysdata((prevData) => [...prevData, createdData1]);
-          toast.success("Sub Category inserted successfully!");
+          toast.success("Inserted successfully!");
+          
         } else {
           toast.error(`Failed to insert cluster.`);
         }
       }
-
+      handleDeleteparivahan()
       // Handle multiple checkbox updates here
       for (let beneficiaryId of selectedBeneficiaries) {
         const installmentValue = installmentpers[beneficiaryId as any];
+
+     
+         
+        
         if (installmentValue) {
           const currentStatus = 'Yes';
 

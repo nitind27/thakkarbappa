@@ -54,7 +54,7 @@ const SidebarMenuMain = () => {
           onClick={() => handleItemClick(`/${localActive}/dashboard`)} // Store path on click
         />
         {
-          supervisorName !== "Desk Clerk" &&
+          supervisorName !== "Desk Clerk" &&  supervisorName !== "Cashier" &&
           <SidebarMenuItemWithSub
             to="/apps/chat"
             title={t("manage")}
@@ -145,8 +145,8 @@ const SidebarMenuMain = () => {
           </SidebarMenuItemWithSub>
         }
 
-        {
-          supervisorName == "Desk Clerk" &&
+        { 
+          supervisorName == "Desk Clerk" &&   
           <SidebarMenuItemWithSub
             to="/apps/chat"
             title={t("nbschemes")}
@@ -198,14 +198,7 @@ const SidebarMenuMain = () => {
               hasBullet={true}
               onClick={() => handleItemClick(`/${localActive}/yojna/schemes/parivahan`)}
             />
-            <SidebarMenuItem
-              to={`/${localActive}/manage/parivahanamountadd`}
-              title={t("Nidhi_Ada_Transport")}
-              hasBullet={true}
-              onClick={() =>
-                handleItemClick(`/${localActive}/manage/parivahanamountadd`)
-              }
-            />
+
             <SidebarMenuItem
               to={`/${localActive}/manage/supervisor`}
               title={t("Costmatters")}
@@ -223,7 +216,7 @@ const SidebarMenuMain = () => {
           </SidebarMenuItemWithSub>
         }
         {
-          supervisorName !== "Desk Clerk" &&
+          supervisorName !== "Desk Clerk" &&  supervisorName !== "Admin" && 
           <SidebarMenuItemWithSub
             to={`/${localActive}/workmaster`}
             title={"Workmaster"}
@@ -247,34 +240,59 @@ const SidebarMenuMain = () => {
             />
           </SidebarMenuItemWithSub>
         }
-        <SidebarMenuItem
-          to={`/${localActive}/manage/studentlist`}
-          icon="search-list"
-          title={"Student List"}
-          fontIcon="bi-app-notification"
-          onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)}
-        />
-        <SidebarMenuItem
-          to={`/${localActive}/notification`}
-          icon="notification"
-          title={"Notification"}
-          fontIcon="bi-app-notification"
-          onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)}
-        />
-        <SidebarMenuItem
-          to={`/${localActive}/missionPeak`}
-          icon="notification"
-          title={"Mission Peak"}
-          fontIcon="bi-app-notification"
-          onClick={() => handleItemClick(`/${localActive}/missionPeak`)}
-        />
-        <SidebarMenuItem
-          to={`/${localActive}/anudaanadaa`}
-          icon="notification"
-          title={"Anudan Ada"}
-          fontIcon="bi-app-notification"
-          onClick={() => handleItemClick(`/${localActive}/anudaanadaa`)}
-        />
+        {
+          supervisorName !== "Desk Clerk" &&  supervisorName !== "Cashier" &&
+          <SidebarMenuItem
+            to={`/${localActive}/manage/studentlist`}
+            icon="search-list"
+            title={"Student List"}
+            fontIcon="bi-app-notification"
+            onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)}
+          />
+        }
+        {
+          supervisorName !== "Desk Clerk" &&  supervisorName !== "Cashier" &&
+          <SidebarMenuItem
+            to={`/${localActive}/notification`}
+            icon="notification"
+            title={"Notification"}
+            fontIcon="bi-app-notification"
+            onClick={() => handleItemClick(`/${localActive}/disbursementfunds`)}
+          />
+        }
+        {
+          supervisorName !== "Desk Clerk" &&  supervisorName !== "Cashier" &&
+          <SidebarMenuItem
+            to={`/${localActive}/missionPeak`}
+            icon="notification"
+            title={"Mission Peak"}
+            fontIcon="bi-app-notification"
+            onClick={() => handleItemClick(`/${localActive}/missionPeak`)}
+          />
+        }
+        {
+          supervisorName !== "Desk Clerk" &&  supervisorName !== "Admin" && 
+          <SidebarMenuItem
+            to={`/${localActive}/anudaanadaa`}
+            icon="notification"
+            title={"Anudan Ada"}
+            fontIcon="bi-app-notification"
+            onClick={() => handleItemClick(`/${localActive}/anudaanadaa`)}
+          />
+        }
+        {
+          supervisorName !== "Cashier" &&  supervisorName !== "Admin" && 
+          <SidebarMenuItem
+            to={`/${localActive}/manage/parivahanamountadd`}
+            title={t("Nidhi_Ada_Transport")}
+            icon="notification"
+
+            fontIcon="bi-app-notification"
+            onClick={() =>
+              handleItemClick(`/${localActive}/manage/parivahanamountadd`)
+            }
+          />
+        }
       </div>
     </>
   );
