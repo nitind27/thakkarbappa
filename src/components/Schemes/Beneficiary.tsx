@@ -816,7 +816,7 @@ Beneficiary = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary
                     String(type.sub_category_id) == subcategoryName
                 )
                 .map((yojna) => ({
-                    value: yojna.yojana_year_id,
+                    value: yojna.yojana_id,
                     label: yojna.yojana_name,
                 })),
             placeholder: `${t("yojnaname")}`, // Optional placeholder for select input
