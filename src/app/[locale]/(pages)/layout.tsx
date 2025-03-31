@@ -11,6 +11,7 @@ import { AuthInit, AuthProvider } from "@/modules/auth";
 
 import { LocationProvider } from "@/common/LocationComponent";
 import { ScholarshipProvider } from "@/components/table/ScholarshipContext";
+import { AppProvider } from "@/components/Schemes/Contaxt/AppContext";
 
 export const metadata: Metadata = {
   title: "thakkarbappa",
@@ -43,15 +44,18 @@ export default async function RootLayout({
           {/* Uncomment these if needed */}
           {/* <ThemeModeProvider> */}
           {/* <ServiceProvider> */}
-          <AuthInit>
-            <MasterLayout>
-              <AuthProvider>
-                <ToastContainer />
-                <LocationProvider>   <ScholarshipProvider>{children}</ScholarshipProvider></LocationProvider>
-              </AuthProvider>
-            </MasterLayout>
-            <MasterInit />
-          </AuthInit>
+
+          <AppProvider>
+            <AuthInit>
+              <MasterLayout>
+                <AuthProvider>
+                  <ToastContainer />
+                  <LocationProvider>   <ScholarshipProvider>{children}</ScholarshipProvider></LocationProvider>
+                </AuthProvider>
+              </MasterLayout>
+              <MasterInit />
+            </AuthInit>
+          </AppProvider>
           {/* </ServiceProvider> */}
           {/* </ThemeModeProvider> */}
         </LayoutProvider>

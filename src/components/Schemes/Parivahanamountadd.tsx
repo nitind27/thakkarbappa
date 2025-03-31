@@ -30,6 +30,8 @@ import { formatDate } from "@/lib/utils";
 import Tablefilter from "../table/Tablefilter";
 import { clippingParents } from "@popperjs/core";
 import Custommodellable from "@/common/Custommodellable";
+import ParivahanInput from "./ParivahanInput";
+import { useAppContext } from "./Contaxt/AppContext";
 
 type Props = {
     subCategory: SubCategory[];
@@ -61,7 +63,7 @@ const Parivahanamountadd = ({
     TblEvaluationAmount
 }: Props) => {
     const t = useTranslations("parivahan");
-        const confirm = createConfirmation(ConfirmationDialog);
+    const confirm = createConfirmation(ConfirmationDialog);
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [showimage, setShowimage] = useState("");
     const [OutwardNo, setOutwardNo] = useState("");
@@ -72,7 +74,10 @@ const Parivahanamountadd = ({
     const [OtherRemarks, setOtherRemarks] = useState("");
     const [parivahandata, setparivahandata] =
         useState<TblEvaluation[]>(TblEvaluation); // State for Sub Category data
-
+    const [TblEvaluationAmountdata, setTblEvaluationAmountdata] =
+        useState<TblEvaluationAmount[]>(TblEvaluationAmount); // State for Sub Category data
+    const { inputData, setInputData } = useAppContext(); // Use Context
+console.log("inputData",inputData)
 
     const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
         acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
@@ -201,7 +206,9 @@ const Parivahanamountadd = ({
             lat: parivhan.lat,
             log: parivhan.log,
             address: parivhan.address,
+            editconditioncheckfor: TblEvaluationAmountdata.filter((data) => data.evaluation_id == parivhan.evaluation_id).map((data) => data.verification),
             // yojana_id: parivhan.yojana_id,
+
             yojana_year_id: Parivahanbeneficiarys.filter((data) => data.parivahan_id == parivhan.parivahan_id).map((data) => yojna_year[data.yojana_year_id]),
 
             yojana_type: Parivahanbeneficiarys.filter((data) => data.parivahan_id == parivhan.parivahan_id).map((data) => yojna_type[data.yojana_type as any]),
@@ -263,111 +270,122 @@ const Parivahanamountadd = ({
                 }));
 
                 return (
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full border border-gray-300">
-                            <thead className="bg-gray-200">
-                                <tr>
-                                    <th className="border px-4 py-2">{t("SrNo")}</th>
-                                    <th className="border px-4 py-2">{t("name")}</th>
-                                    <th className="border px-4 py-2">{t("total")}</th>
-                                    <th className="border px-4 py-2">{t("AmountPaid")}</th>
-                                    <th className="border px-4 py-2">{t("Interest")}</th>
-                                    <th className="border px-4 py-2">{"Action"}</th>
-                                    <th className="border px-4 py-2">{"Photo"}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {beneficiaryData.map((data: any, index: number) => (
-                                    <React.Fragment key={index}>
-                                        <tr className="border border-gray-300">
-                                            <td className="border px-4 py-2" rowSpan={4}>
-                                                {index + 1}
-                                            </td>
-                                            <td className="border px-4 py-2" rowSpan={4}>
-                                                {data.yojana_type === "2" ? data.gat_name : data.fullname}
-                                            </td>
-                                            <td className="border px-4 py-2" rowSpan={4}>
-                                                {data.tot_finance}
-                                            </td>
+                    // <div className="overflow-x-auto">
+                    //     <table className="min-w-full border border-gray-300">
+                    //         <thead className="bg-gray-200">
+                    //             <tr>
+                    //                 <th className="border px-4 py-2">{t("SrNo")}</th>
+                    //                 <th className="border px-4 py-2">{t("name")}</th>
+                    //                 <th className="border px-4 py-2">{t("total")}</th>
+                    //                 <th className="border px-4 py-2">{t("AmountPaid")}</th>
+                    //                 <th className="border px-4 py-2">{t("Interest")}</th>
+                    //                 <th className="border px-4 py-2">{"Action"}</th>
+                    //                 <th className="border px-4 py-2">{"Photo"}</th>
+                    //             </tr>
+                    //         </thead>
+                    //         <tbody>
+                    //             {beneficiaryData.map((data: any, index: number) => (
+                    //                 <React.Fragment key={index}>
+                    //                     <tr className="border border-gray-300">
+                    //                         <td className="border px-4 py-2" rowSpan={4}>
+                    //                             {index + 1}
+                    //                         </td>
+                    //                         <td className="border px-4 py-2" rowSpan={4}>
+                    //                             {data.yojana_type === "2" ? data.gat_name : data.fullname}
+                    //                         </td>
+                    //                         <td className="border px-4 py-2" rowSpan={4}>
+                    //                             {data.tot_finance}
+                    //                         </td>
 
-                                        </tr>
-                                        {data.fourty === "Yes" && (
-                                            <tr className="border border-gray-300">
-                                                <td className="border px-4 py-2">40%</td>
-                                                <td className="border px-4 py-2">
-                                                    <input
-                                                        type="text"
-                                                        defaultValue={data.fortyPercent}
-                                                        className="border px-2 py-1 w-full"
-                                                    />
-                                                </td>
-                                                <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={() =>
-                                                    handleDeactivate(row.original.evaluation_id)
-                                                }>
-                                                    अदा
-                                                </td>
-                                                <td className="border px-4 py-2" style={{ color: "red", cursor: "pointer" }} onClick={() =>
-                                                    handleimageshow(row.original)
-                                                }>
-                                                    photo
-                                                </td>
+                    //                     </tr>
+                    //                     {data.fourty === "Yes" && (
+                    //                         <tr className="border border-gray-300">
+                    //                             <td className="border px-4 py-2">40%</td>
+                    //                             <td className="border px-4 py-2">
+                    //                                 <input
+                    //                                     type="text"
+                    //                                     defaultValue={data.fortyPercent}
+                    //                                     className="border px-2 py-1 w-full"
+                    //                                 />
+                    //                             </td>
+                    //                             <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={() =>
+                    //                                 handleDeactivate(row.original.evaluation_id)
+                    //                             }>
+                    //                                 अदा
+                    //                             </td>
+                    //                             <td className="border px-4 py-2" style={{ color: "red", cursor: "pointer" }} onClick={() =>
+                    //                                 handleimageshow(row.original)
+                    //                             }>
+                    //                                 photo
+                    //                             </td>
 
-                                            </tr>
-                                        )}
-                                        {data.sixty === "Yes" && (
-                                            <tr className="border border-gray-300">
-                                                <td className="border px-4 py-2">60%</td>
-                                                <td className="border px-4 py-2">
-                                                    <input
-                                                        type="text"
-                                                        defaultValue={data.sixtyPercent}
-                                                        className="border px-2 py-1 w-full"
-                                                    />
-                                                </td>
-                                                <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={() =>
-                                                    handleDeactivate(row.original.evaluation_id)
-                                                }>
-                                                    अदा
-                                                </td>
-                                                <td className="border px-4 py-2" style={{ color: "red", cursor: "pointer" }} onClick={() =>
-                                                    handleimageshow(row.original)
-                                                }>
-                                                    photo
-                                                </td>
-                                            </tr>
-                                        )}
-                                        {data.hundred === "Yes" && (
-                                            <tr className="border border-gray-300">
-                                                <td className="border px-4 py-2">100%</td>
-                                                <td className="border px-4 py-2">
-                                                    <input
-                                                        type="text"
-                                                        defaultValue={data.hundredPercent}
-                                                        className="border px-2 py-1 w-full"
-                                                    />
-                                                </td>
-                                                <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={() =>
-                                                    handleDeactivate(row.original.evaluation_id)
-                                                }>
-                                                    अदा
-                                                </td>
-                                                <td className="border px-4 py-2" style={{ color: "red", cursor: "pointer" }} onClick={() =>
-                                                    handleimageshow(row.original)
-                                                }>
-                                                    photo
-                                                </td>
+                    //                         </tr>
+                    //                     )}
+                    //                     {data.sixty === "Yes" && (
+                    //                         <tr className="border border-gray-300">
+                    //                             <td className="border px-4 py-2">60%</td>
+                    //                             <td className="border px-4 py-2">
+                    //                                 <input
+                    //                                     type="text"
+                    //                                     defaultValue={data.sixtyPercent}
+                    //                                     className="border px-2 py-1 w-full"
+                    //                                 />
+                    //                             </td>
+                    //                             <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={() =>
+                    //                                 handleDeactivate(row.original.evaluation_id)
+                    //                             }>
+                    //                                 अदा
+                    //                             </td>
+                    //                             <td className="border px-4 py-2" style={{ color: "red", cursor: "pointer" }} onClick={() =>
+                    //                                 handleimageshow(row.original)
+                    //                             }>
+                    //                                 photo
+                    //                             </td>
+                    //                         </tr>
+                    //                     )}
+                    //                     {data.hundred === "Yes" && (
+                    //                         <tr className="border border-gray-300">
+                    //                             <td className="border px-4 py-2">100%</td>
+                    //                             <td className="border px-4 py-2">
+                    //                                 <input
+                    //                                     type="text"
+                    //                                     defaultValue={data.hundredPercent}
+                    //                                     className="border px-2 py-1 w-full"
+                    //                                 />
+                    //                             </td>
+                    //                             <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={() =>
+                    //                                 handleDeactivate(row.original.evaluation_id)
+                    //                             }>
+                    //                                 {/* अदा */}
+                    //                                 {/* {row.original.evaluation_id} */}
+                    //                                 {row.original.editconditioncheckfor == "Yes" ? "अदा" : "Edit"}
 
-                                            </tr>
-                                        )}
+                    //                             </td>
+                    //                             <td className="border px-4 py-2" style={{ color: "red", cursor: "pointer" }} onClick={() =>
+                    //                                 handleimageshow(row.original)
+                    //                             }>
+                    //                                 photo
+                    //                             </td>
+
+                    //                         </tr>
+                    //                     )}
 
 
 
-                                    </React.Fragment>
+                    //                 </React.Fragment>
 
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                    //             ))}
+                    //         </tbody>
+                    //     </table>
+                    // </div>
+                    <>
+                        <ParivahanInput
+                            beneficiaryData={beneficiaryData}
+                            row={row}
+                            handleDeactivate={handleDeactivate}
+                            handleimageshow={handleimageshow}
+                        />
+                    </>
                 );
             },
         }
