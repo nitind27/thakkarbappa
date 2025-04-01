@@ -72,12 +72,17 @@ const Parivahanamountadd = ({
     const [Longitude, setLongitude] = useState("");
     const [Address, setAddress] = useState("");
     const [OtherRemarks, setOtherRemarks] = useState("");
+    const [beneficiaryid, setBeneficiaryid] = useState("");
+    const [evaluationid, setEvaluationid] = useState("");
+    const [hundredPercent, setHundredPercent] = useState("");
+
+    const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
     const [parivahandata, setparivahandata] =
         useState<TblEvaluation[]>(TblEvaluation); // State for Sub Category data
     const [TblEvaluationAmountdata, setTblEvaluationAmountdata] =
         useState<TblEvaluationAmount[]>(TblEvaluationAmount); // State for Sub Category data
     const { inputData, setInputData } = useAppContext(); // Use Context
-console.log("inputData",inputData)
+
 
     const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
         acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
@@ -147,8 +152,44 @@ console.log("inputData",inputData)
 
     };
 
+    const handleSubmit = async () => {
 
+        try {
+            const method = updateClusterId ? "POST" : "POST";
+            const url = updateClusterId
+                ? `/api/parivahan/parivahanamountadd`
+                : `/api/parivahan/parivahanamountadd`;
+
+            // Prepare the request body
+            const requestBody = {
+                beneficiary_id: beneficiaryid,
+                evaluation_id: evaluationid,
+                amount: hundredPercent as any, // Assuming this should be converted to string too
+                ...(updateClusterId && { beneficiary_id: String(updateClusterId) }),
+            };
+
+
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestBody),
+            });
+
+
+
+
+            handleClosePrint();
+        }
+
+        catch (error) {
+            console.error("Error during operation:", error);
+            toast.error("An unexpected error occurred.");
+        }
+    };
     const handleDeactivate = async (category_id: any) => {
+
         const confirmMessage = "Are you sure want to Add ?";
         const confirmed = await confirm({ confirmation: confirmMessage } as any);
         if (confirmed) {
@@ -175,10 +216,12 @@ console.log("inputData",inputData)
                                 : cluster
                         )
                     );
+                    handleSubmit()
                     toast.success(
                         ` ${"Amount Added"
                         } successfully!`
                     );
+
                 } else {
                     toast.error("Failed to change the Category status.");
                 }
@@ -270,120 +313,15 @@ console.log("inputData",inputData)
                 }));
 
                 return (
-                    // <div className="overflow-x-auto">
-                    //     <table className="min-w-full border border-gray-300">
-                    //         <thead className="bg-gray-200">
-                    //             <tr>
-                    //                 <th className="border px-4 py-2">{t("SrNo")}</th>
-                    //                 <th className="border px-4 py-2">{t("name")}</th>
-                    //                 <th className="border px-4 py-2">{t("total")}</th>
-                    //                 <th className="border px-4 py-2">{t("AmountPaid")}</th>
-                    //                 <th className="border px-4 py-2">{t("Interest")}</th>
-                    //                 <th className="border px-4 py-2">{"Action"}</th>
-                    //                 <th className="border px-4 py-2">{"Photo"}</th>
-                    //             </tr>
-                    //         </thead>
-                    //         <tbody>
-                    //             {beneficiaryData.map((data: any, index: number) => (
-                    //                 <React.Fragment key={index}>
-                    //                     <tr className="border border-gray-300">
-                    //                         <td className="border px-4 py-2" rowSpan={4}>
-                    //                             {index + 1}
-                    //                         </td>
-                    //                         <td className="border px-4 py-2" rowSpan={4}>
-                    //                             {data.yojana_type === "2" ? data.gat_name : data.fullname}
-                    //                         </td>
-                    //                         <td className="border px-4 py-2" rowSpan={4}>
-                    //                             {data.tot_finance}
-                    //                         </td>
 
-                    //                     </tr>
-                    //                     {data.fourty === "Yes" && (
-                    //                         <tr className="border border-gray-300">
-                    //                             <td className="border px-4 py-2">40%</td>
-                    //                             <td className="border px-4 py-2">
-                    //                                 <input
-                    //                                     type="text"
-                    //                                     defaultValue={data.fortyPercent}
-                    //                                     className="border px-2 py-1 w-full"
-                    //                                 />
-                    //                             </td>
-                    //                             <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={() =>
-                    //                                 handleDeactivate(row.original.evaluation_id)
-                    //                             }>
-                    //                                 अदा
-                    //                             </td>
-                    //                             <td className="border px-4 py-2" style={{ color: "red", cursor: "pointer" }} onClick={() =>
-                    //                                 handleimageshow(row.original)
-                    //                             }>
-                    //                                 photo
-                    //                             </td>
-
-                    //                         </tr>
-                    //                     )}
-                    //                     {data.sixty === "Yes" && (
-                    //                         <tr className="border border-gray-300">
-                    //                             <td className="border px-4 py-2">60%</td>
-                    //                             <td className="border px-4 py-2">
-                    //                                 <input
-                    //                                     type="text"
-                    //                                     defaultValue={data.sixtyPercent}
-                    //                                     className="border px-2 py-1 w-full"
-                    //                                 />
-                    //                             </td>
-                    //                             <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={() =>
-                    //                                 handleDeactivate(row.original.evaluation_id)
-                    //                             }>
-                    //                                 अदा
-                    //                             </td>
-                    //                             <td className="border px-4 py-2" style={{ color: "red", cursor: "pointer" }} onClick={() =>
-                    //                                 handleimageshow(row.original)
-                    //                             }>
-                    //                                 photo
-                    //                             </td>
-                    //                         </tr>
-                    //                     )}
-                    //                     {data.hundred === "Yes" && (
-                    //                         <tr className="border border-gray-300">
-                    //                             <td className="border px-4 py-2">100%</td>
-                    //                             <td className="border px-4 py-2">
-                    //                                 <input
-                    //                                     type="text"
-                    //                                     defaultValue={data.hundredPercent}
-                    //                                     className="border px-2 py-1 w-full"
-                    //                                 />
-                    //                             </td>
-                    //                             <td className="border px-4 py-2" style={{ color: "green", cursor: "pointer" }} onClick={() =>
-                    //                                 handleDeactivate(row.original.evaluation_id)
-                    //                             }>
-                    //                                 {/* अदा */}
-                    //                                 {/* {row.original.evaluation_id} */}
-                    //                                 {row.original.editconditioncheckfor == "Yes" ? "अदा" : "Edit"}
-
-                    //                             </td>
-                    //                             <td className="border px-4 py-2" style={{ color: "red", cursor: "pointer" }} onClick={() =>
-                    //                                 handleimageshow(row.original)
-                    //                             }>
-                    //                                 photo
-                    //                             </td>
-
-                    //                         </tr>
-                    //                     )}
-
-
-
-                    //                 </React.Fragment>
-
-                    //             ))}
-                    //         </tbody>
-                    //     </table>
-                    // </div>
                     <>
                         <ParivahanInput
                             beneficiaryData={beneficiaryData}
                             row={row}
+                            TblEvaluationAmount={TblEvaluationAmount}
                             handleDeactivate={handleDeactivate}
                             handleimageshow={handleimageshow}
+
                         />
                     </>
                 );
@@ -402,6 +340,27 @@ console.log("inputData",inputData)
         { label: "Other Remarks", content: OtherRemarks },
 
     ];
+    const mappedData = Object.entries(inputData).map(([key, value]: any) => {
+        return {
+            id: key,
+            ...value
+        };
+    });
+
+    // const inputmapdata = [mappedData[0]]
+    const inputmapdata = mappedData.length > 0 ? [mappedData[0]] : [];
+    console.log("inputmapdata",inputmapdata)
+    useEffect(() => {
+        if (inputmapdata.length > 0) {
+            setHundredPercent(inputmapdata.map((data: any) => data.hundredPercent).join() as any)
+            setEvaluationid(inputmapdata.map((data: any) => data.evaluation_id).join() as any)
+            setBeneficiaryid(inputmapdata.map((data: any) => data.beneficiary_id).join() as any)
+            // console.log("inputmapdata", inputmapdata.map((data: any) => data));
+        } else {
+            console.log("No data available");
+        }
+    }, [])
+
 
     return (
         <div>
