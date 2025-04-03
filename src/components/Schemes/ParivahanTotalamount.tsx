@@ -106,7 +106,6 @@ const ParivahanTotalamount = ({
 
     const allevaluationid = parivahandatatotalamount.map((data) => data.evaluation_id)
 
-    console.log("allevaluationid", allevaluationid)
     const data = parivahandata.filter((data) => allevaluationid.includes(data.evaluation_id) as any)
         .map((parivhan) => ({
             evaluation_id: parivhan.evaluation_id,

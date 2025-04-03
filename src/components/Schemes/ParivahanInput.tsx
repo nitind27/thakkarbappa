@@ -1,8 +1,11 @@
 import { useTranslations } from 'next-intl';
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from './Contaxt/AppContext';
-import { TblEvaluationAmount } from '../type';
-
+import { TblEvaluation, TblEvaluationAmount } from '../type';
+import { toast } from 'react-toastify';
+import { createConfirmation } from 'react-confirm';
+import ConfirmationDialog from '@/common/ConfirmationDialog';
+import { useRouter } from 'next/navigation';
 interface BeneficiaryData {
     evaluation_id: string;
     yojana_type: string;
@@ -21,23 +24,54 @@ interface BeneficiaryData {
 interface ParivahanInputProps {
     beneficiaryData: BeneficiaryData[];
     TblEvaluationAmount: TblEvaluationAmount[];
+    TblEvaluation: TblEvaluation[];
     row: any;
-    handleDeactivate: (evaluation_id: string) => void;
+    // handleDeactivate: (evaluation_id: string) => void;
     handleimageshow: (data: any) => void;
 }
 
-const ParivahanInput: React.FC<ParivahanInputProps> = ({ beneficiaryData, row, handleDeactivate, handleimageshow, TblEvaluationAmount }) => {
+const ParivahanInput: React.FC<ParivahanInputProps> = ({ beneficiaryData, row, handleimageshow, TblEvaluation, TblEvaluationAmount }) => {
     const t = useTranslations("parivahan");
     const [inputValues, setInputValues] = useState<Record<string, { fortyPercent?: string; sixtyPercent?: string; hundredPercent?: string }>>({});
-    const { inputData, setInputData } = useAppContext(); // Use Context
-    // Default value format
-    const defaultInputData = {
-        evaluation_id: "",
-        beneficiary_id: "",
-        field: "",
-    };
 
-    // Initialize input values based on beneficiaryData
+    const [beneficiaryid, setBeneficiaryid] = useState("");
+    const [evaluationid, setEvaluationid] = useState("");
+    const [hundredPercent, setHundredPercent] = useState("");
+    const { inputData, setInputData } = useAppContext(); // Use Context
+    const confirm = createConfirmation(ConfirmationDialog);
+    const [parivahandata, setparivahandata] =
+        useState<TblEvaluation[]>(TblEvaluation);
+        const router = useRouter();
+    useEffect(() => {
+        const mappedData = Object.entries(inputValues).map(([key, value]: any) => {
+            return {
+                id: key,
+                ...value
+            };
+        });
+
+
+        const inputmapdata = mappedData.length > 0 ? [mappedData[0]] : [];
+
+        if (inputmapdata.length > 0) {
+            const beneficiaryId = inputmapdata.map((data: any) => data.beneficiary_id).join() as any;
+            const evaluationId = inputmapdata.map((data: any) => data.evaluation_id).join() as any;
+            const hundredPercentValue = inputmapdata.map((data: any) => data.hundredPercent).join() as any;
+
+            setBeneficiaryid(beneficiaryId);
+            setEvaluationid(evaluationId);
+            setHundredPercent(hundredPercentValue);
+
+            // Only call handleSubmit when all values are available
+            if (beneficiaryId && evaluationId && hundredPercentValue) {
+
+                handleSubmit(beneficiaryId, evaluationId, hundredPercentValue);
+            }
+
+        } else {
+            console.log("No data available");
+        }
+    }, [inputValues])
     useEffect(() => {
         const initialValues: Record<string, { fortyPercent?: string; sixtyPercent?: string; hundredPercent?: string }> = {};
         beneficiaryData.forEach(data => {
@@ -53,48 +87,135 @@ const ParivahanInput: React.FC<ParivahanInputProps> = ({ beneficiaryData, row, h
 
 
 
-    // Handle input changes
-    const handleInputChange = (evaluation_id: string, field: keyof typeof inputValues[string], value: string, beneficiary_id: any) => {
-
-        setInputValues(prevValues => ({
-
+    const handleDeactivateWithLogging = (
+        evaluation_id: string,
+        field: keyof typeof inputValues[string],
+        value: string,
+        beneficiary_id: any
+    ) => {
+        setInputValues((prevValues) => ({
             ...prevValues,
             [evaluation_id]: {
-                evaluation_id,
-                beneficiary_id,
-                ...prevValues[evaluation_id],
-                ...prevValues[beneficiary_id],
-                [field]: value
-            }
+                ...prevValues[evaluation_id], // Preserve existing properties of evaluation_id
+                evaluation_id,               // Update evaluation_id explicitly
+                beneficiary_id,              // Update beneficiary_id explicitly
+                [field]: value,              // Update the specific field with the new value
+            },
         }));
+
+
     };
 
-    // Log input values
-    const logInputValues = () => {
 
-        setInputData(inputValues as any);
+
+    const handleDeactivate = async (category_id: any) => {
+
+        try {
+            const response = await fetch(`/api/evaluationamount/updateevalutionamount/${category_id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    evaluation_status: "Received",
+                }),
+            });
+
+            if (response.ok) {
+                // Update local state without page reload
+                setparivahandata((prevData) =>
+                    prevData.map((cluster) =>
+                        cluster.evaluation_id == category_id
+                            ? {
+                                ...cluster,
+                                evaluation_status: "Received",
+                            }
+                            : cluster
+                    )
+                );
+
+                toast.success(
+                    ` ${"Amount Added"
+                    } successfully!`
+                );
+
+            } else {
+                toast.error("Failed to change the Category status.");
+            }
+        } catch (error) {
+            console.error("Error changing the Category status:", error);
+            toast.error("An unexpected error occurred.");
+        }
+
     };
 
-    // Wrap handleDeactivate to include logInputValues
-    const handleDeactivateWithLogging = (evaluation_id: string) => {
-      
-        logInputValues();
-        setInputValues(prevValues => ({
+    const handleSubmit = async (beneficiaryid: any, evaluationid: any, hundredPercent: any) => {
 
-            ...prevValues,
-            [evaluation_id]: {
-                evaluation_id,
-               
-                ...prevValues[evaluation_id],
+        const confirmMessage = "Are you sure want to Add ?";
+        const confirmed = await confirm({ confirmation: confirmMessage } as any);
+        if (confirmed) {
+            try {
+                const method = "POST";
+                const url = `/api/parivahan/parivahanamountadd`;
+
+                // Prepare the request body
+                const requestBody = {
+                    beneficiary_id: beneficiaryid,
+                    evaluation_id: evaluationid,
+                    amount: hundredPercent as any,
+
+                };
+
+
+                const response = await fetch(url, {
+                    method,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(requestBody),
+                }); if (response.ok) {
+                    router.refresh();
+                    handleDeactivate(evaluationid);
+                }
+            }
+
+            catch (error) {
+                console.error("Error during operation:", error);
+                toast.error("An unexpected error occurred.");
+            }
+        }
+    };
+
+
+    const handleDelete = async (category_id: any) => {
+        const categoryid = String(category_id)
+
+        const confirmMessage = "Are you sure you want to activate this category?";
+        const confirmed = await confirm({ confirmation: confirmMessage } as any);
+        if (confirmed) {
+            try {
+                const response = await fetch(`/api/evaluationamount/deletedata/${categoryid}`, {
+                    method: "DELETE",
+
+                });
+
+                if (response.ok) {
+                    router.refresh();
+                } 
                 
+            } catch (error) {
+                console.error("Error changing the Category status:", error);
+                toast.error("An unexpected error occurred.");
             }
-        }));
-        handleDeactivate(evaluation_id);
+        }
     };
-    const tblinputparivahandata = TblEvaluationAmount.filter((data) => data.evaluation_id == row.original.evaluation_id).map((data) => data.verification)
+    const tblinputparivahandata = TblEvaluationAmount.filter((data) => data.evaluation_id == row.original.evaluation_id).map((data) => data.evaluation_id)
+    const tblinputparivahandataid = TblEvaluationAmount.filter((data) => data.evaluation_id == row.original.evaluation_id).map((data) => data.id)
+
     return (
         <div>
             <div className="overflow-x-auto">
+
                 <table className="min-w-full border border-gray-300">
                     <thead className="bg-gray-200">
                         <tr>
@@ -122,14 +243,14 @@ const ParivahanInput: React.FC<ParivahanInputProps> = ({ beneficiaryData, row, h
 
                                             <input
                                                 type="text"
-                                                value={inputValues[row.original.evaluation_id]?.fortyPercent || inputValues[data.evaluation_id]?.fortyPercent}
-                                                onChange={(e) => handleInputChange(row.original.evaluation_id, 'hundredPercent', e.target.value, row.original.beneficiary_id)}
+                                                value={inputValues[data.evaluation_id]?.fortyPercent}
+                                                disabled
                                                 className="border px-2 py-1 w-full"
                                             />
                                         </td>
                                         <td
                                             className="border px-4 py-2 text-green-600 cursor-pointer"
-                                            onClick={() => handleDeactivateWithLogging(row.original.evaluation_id)}>  {tblinputparivahandata == "Yes" as any ? "Edit" : "अदा"}</td>
+                                            onClick={() => handleDeactivateWithLogging(row.original.evaluation_id, 'hundredPercent', inputValues[data.evaluation_id]?.fortyPercent as any, row.original.beneficiary_id)}>      {tblinputparivahandata == row.original.evaluation_id ? "Delete" : "अदा"}</td>
                                         <td
                                             className="border px-4 py-2 text-red-600 cursor-pointer"
                                             onClick={() => handleimageshow(data)}>photo</td>
@@ -141,14 +262,16 @@ const ParivahanInput: React.FC<ParivahanInputProps> = ({ beneficiaryData, row, h
                                         <td className="border px-4 py-2">
                                             <input
                                                 type="text"
-                                                value={inputValues[row.original.evaluation_id]?.sixtyPercent || inputValues[data.evaluation_id]?.sixtyPercent}
-                                                onChange={(e) => handleInputChange(row.original.evaluation_id, 'hundredPercent', e.target.value, row.original.beneficiary_id)}
+                                                value={inputValues[data.evaluation_id]?.sixtyPercent}
+                                                disabled
                                                 className="border px-2 py-1 w-full"
                                             />
                                         </td>
                                         <td
                                             className="border px-4 py-2 text-green-600 cursor-pointer"
-                                            onClick={() => handleDeactivateWithLogging(row.original.evaluation_id)}>  {tblinputparivahandata == "Yes" as any ? "Edit" : "अदा"}</td>
+                                            onClick={() => handleDeactivateWithLogging(row.original.evaluation_id, 'hundredPercent', inputValues[data.evaluation_id]?.sixtyPercent as any, row.original.beneficiary_id) as any}>      {tblinputparivahandata == row.original.evaluation_id ? "Delete" : "अदा"}
+
+                                        </td>
                                         <td
                                             className="border px-4 py-2 text-red-600 cursor-pointer"
                                             onClick={() => handleimageshow(data)}>photo</td>
@@ -160,19 +283,28 @@ const ParivahanInput: React.FC<ParivahanInputProps> = ({ beneficiaryData, row, h
                                         <td className="border px-4 py-2">
                                             <input
                                                 type="text"
-                                                value={inputValues[row.original.evaluation_id]?.hundredPercent || inputValues[data.evaluation_id]?.hundredPercent}
-                                                onChange={(e) => handleInputChange(row.original.evaluation_id, 'hundredPercent', e.target.value, row.original.beneficiary_id)}
+                                                value={inputValues[data.evaluation_id]?.hundredPercent}
+                                                disabled
+
                                                 className="border px-2 py-1 w-full"
                                             />
 
                                         </td>
+
                                         <td
                                             className="border px-4 py-2 text-green-600 cursor-pointer"
-                                            onClick={() => handleDeactivateWithLogging(row.original.evaluation_id)}>
+                                            onClick={() => tblinputparivahandata != row.original.evaluation_id ? handleDeactivateWithLogging(row.original.evaluation_id, 'hundredPercent', inputValues[data.evaluation_id]?.hundredPercent as any, row.original.beneficiary_id) : handleDelete(TblEvaluationAmount.filter((data) => data.evaluation_id == row.original.evaluation_id).map((data) => data.id))}>
 
+                                            {tblinputparivahandata == row.original.evaluation_id ? "Delete" : "अदा"}
 
-                                            {tblinputparivahandata == "Yes" as any ? "Edit" : "अदा"}
                                         </td>
+
+                                        {/* <td
+                                            className="border px-4 py-2 text-green-600 cursor-pointer"
+                                            onClick={() => handleDelete(TblEvaluationAmount.filter((data) => data.evaluation_id == row.original.evaluation_id).map((data) => data.id))}>
+                                            Delete
+                                        </td> */}
+
                                         <td
                                             className="border px-4 py-2 text-red-600 cursor-pointer"
                                             onClick={() => handleimageshow(data)}>photo</td>

@@ -83,7 +83,6 @@ const Parivahanamountadd = ({
         useState<TblEvaluationAmount[]>(TblEvaluationAmount); // State for Sub Category data
     const { inputData, setInputData } = useAppContext(); // Use Context
 
-
     const yojna_year = YojnaYear.reduce((acc, year: YojanaYear) => {
         acc[year.yojana_year_id] = year.yojana_year; // Assuming taluka has id and name properties
         return acc;
@@ -216,7 +215,7 @@ const Parivahanamountadd = ({
                                 : cluster
                         )
                     );
-                    handleSubmit()
+                    // handleSubmit()
                     toast.success(
                         ` ${"Amount Added"
                         } successfully!`
@@ -319,7 +318,7 @@ const Parivahanamountadd = ({
                             beneficiaryData={beneficiaryData}
                             row={row}
                             TblEvaluationAmount={TblEvaluationAmount}
-                            handleDeactivate={handleDeactivate}
+                            TblEvaluation={TblEvaluation}
                             handleimageshow={handleimageshow}
 
                         />
@@ -349,7 +348,7 @@ const Parivahanamountadd = ({
 
     // const inputmapdata = [mappedData[0]]
     const inputmapdata = mappedData.length > 0 ? [mappedData[0]] : [];
-    console.log("inputmapdata",inputmapdata)
+
     useEffect(() => {
         if (inputmapdata.length > 0) {
             setHundredPercent(inputmapdata.map((data: any) => data.hundredPercent).join() as any)
