@@ -41,7 +41,7 @@ const ParivahanInput: React.FC<ParivahanInputProps> = ({ beneficiaryData, row, h
     const confirm = createConfirmation(ConfirmationDialog);
     const [parivahandata, setparivahandata] =
         useState<TblEvaluation[]>(TblEvaluation);
-        const router = useRouter();
+    const router = useRouter();
     useEffect(() => {
         const mappedData = Object.entries(inputValues).map(([key, value]: any) => {
             return {
@@ -190,7 +190,7 @@ const ParivahanInput: React.FC<ParivahanInputProps> = ({ beneficiaryData, row, h
     const handleDelete = async (category_id: any) => {
         const categoryid = String(category_id)
 
-        const confirmMessage = "Are you sure you want to activate this category?";
+        const confirmMessage = "Are you sure you want to Delete?";
         const confirmed = await confirm({ confirmation: confirmMessage } as any);
         if (confirmed) {
             try {
@@ -200,9 +200,13 @@ const ParivahanInput: React.FC<ParivahanInputProps> = ({ beneficiaryData, row, h
                 });
 
                 if (response.ok) {
+                    toast.success(
+                        ` ${"Deleted"
+                        } successfully!`
+                    );
                     router.refresh();
-                } 
-                
+                }
+
             } catch (error) {
                 console.error("Error changing the Category status:", error);
                 toast.error("An unexpected error occurred.");
