@@ -53,6 +53,7 @@
     "notificaiton": "सूचना",
     "workmaster": "कार्य मास्टर",
     "work": "कार्य",
+    "anudanadda": "अनुदान आदा",
     "representativeid": "प्रतिनिधि",
     "dist": "जिला",
     "grampanchayatname": "ग्राम पंचायत",
@@ -60,7 +61,8 @@
     "estimateamounttotal": "अनुमानित कुल राशि",
     "date": "कार्य की तिथि",
     "sports": "खेल",
-    "Sportswise": "खेल के लिहाज से"
+    "Sportswise": "खेल के लिहाज से",
+    "Add": "जोड़ना"
   },
   "Townpage": {
     "title": "नगर प्रबंधन",

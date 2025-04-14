@@ -53,8 +53,10 @@
     "notificaiton": "Notification",
     "workmaster": "Work Master",
     "work": "Works",
+    "anudanadda": "Anudan Adda",
     "sports": "Sports",
-    "Sportswise": "Sports Wise"
+    "Sportswise": "Sports Wise",
+    "Add": "Add"
   },
   "Townpage": {
     "title": "Taluka",
@@ -602,7 +604,6 @@
     "editsubmit": "Edit",
     "Status": "Status",
     "Action": "Action",
-   
     "Active": "Active",
     "Deactive": "Delete"
   }

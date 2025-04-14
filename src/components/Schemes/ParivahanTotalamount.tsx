@@ -30,6 +30,7 @@ import ConfirmationDialog from "@/common/ConfirmationDialog";
 import { formatDate } from "@/lib/utils";
 import Tablefilter from "../table/Tablefilter";
 import { clippingParents } from "@popperjs/core";
+import { useRouter } from 'next/navigation'
 
 type Props = {
     subCategory: SubCategory[];
@@ -105,19 +106,23 @@ const ParivahanTotalamount = ({
     }, {} as Record<number, string>);
 
     const allevaluationid = parivahandatatotalamount.map((data) => data.evaluation_id)
+    const router = useRouter()
 
     const data = parivahandata.filter((data) => allevaluationid.includes(data.evaluation_id) as any)
         .map((parivhan) => ({
             evaluation_id: parivhan.evaluation_id,
             parivahan_id: parivhan.parivahan_id,
             parivahanoutward_no: Parivahanbeneficiarys.filter((data) => data.parivahan_id == parivhan.parivahan_id).map((data) => data.outward_no + formatDate(data.parivahan_date as any)),
-            username: Parivahanbeneficiarys.filter((data) => data.parivahan_id == parivhan.parivahan_id).map((data) => usersdata[data.sup_id] + data.sup_id  + usersdataaddress[data.sup_id]),
+            username: Parivahanbeneficiarys.filter((data) => data.parivahan_id == parivhan.parivahan_id).map((data) => usersdata[data.sup_id] + data.sup_id + usersdataaddress[data.sup_id]),
 
             beneficiary_id: parivhan.beneficiary_id,
             amounttotal: Beneficiary.filter((data) => data.beneficiary_id == parivhan.beneficiary_id).map((data) => data.tot_finance),
             amounttotalpending: parivahandatatotalamount.filter((data) => data.evaluation_id == parivhan.evaluation_id && data.verification == "No").map((data) => data.amount),
-            amounttotalpendingdetails: parivahandatatotalamount.filter((data) => data.evaluation_id == parivhan.evaluation_id && data.verification == "No").map((data) => data.verification),
-            amounttotalpendingdetailsid: parivahandatatotalamount.filter((data) => data.evaluation_id == parivhan.evaluation_id && data.verification == "No").map((data) => data.id),
+            amounttotalpendingdetails: parivahandatatotalamount.filter((data) => data.evaluation_id == parivhan.evaluation_id).map((data) => data.verification),
+
+
+
+            amounttotalpendingdetailsid: parivahandatatotalamount.filter((data) => data.evaluation_id == parivhan.evaluation_id).map((data) => data.id),
             photo: parivhan.photo,
             remarks: parivhan.remarks,
             other_remraks: parivhan.other_remraks,
@@ -187,12 +192,14 @@ const ParivahanTotalamount = ({
             header: `${t("beneficiary")}`,
             cell: ({ row }: any) => (
                 <div className="overflow-x-auto">
-                    {row.original.amounttotalpendingdetails == "No" ?
 
-                        <input type="checkbox" onClick={() =>
-                            handleDeactivate(row.original.amounttotalpendingdetailsid)
-                        } /> : <span style={{ color: "red" }}>Virified</span>
-                    }
+                    <button
+                        className={`btn btn-sm ${row.original.amounttotalpendingdetails == "Yes" ? "btn-success" : "btn-warning"
+                            } ms-5`} onClick={() =>
+                                handleDeactivate(row.original.amounttotalpendingdetailsid, row.original.amounttotalpendingdetails, row.original.evaluation_id)
+                            } >  {row.original.amounttotalpendingdetails == "No" ? "Unverified" : "Virified"}
+                    </button>
+
 
                 </div>
             ),
@@ -200,8 +207,12 @@ const ParivahanTotalamount = ({
 
     ];
 
-    const handleDeactivate = async (category_id: any) => {
-        const confirmMessage = "Are you sure you want to activate this category?";
+    const handleDeactivate = async (category_id: any, vairficationstatus: any, evaluation_id: any) => {
+        const confirmMessage =
+            vairficationstatus == "No"
+                ? "Are you sure you want to Verify ?"
+                : "Are you sure you want to Unverify ?";
+
         const confirmed = await confirm({ confirmation: confirmMessage } as any);
         if (confirmed) {
             try {
@@ -211,7 +222,7 @@ const ParivahanTotalamount = ({
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        verification: "Yes",
+                        verification: vairficationstatus == 'No' ? "Yes" : "No",
                     }),
                 });
 
@@ -222,11 +233,12 @@ const ParivahanTotalamount = ({
                             cluster.id == category_id
                                 ? {
                                     ...cluster,
-                                    verification: "Active",
+                                    verification: vairficationstatus == 'No' ? "Yes" : "No",
                                 }
                                 : cluster
                         )
                     );
+                    router.refresh
                     toast.success(
                         ` ${"Amount Updated"
                         } successfully!`
@@ -246,20 +258,7 @@ const ParivahanTotalamount = ({
             <Table
                 data={data}
                 columns={columns}
-                Button={
-                    <Button
-                        variant="primary"
-                        // onClick={handleShowPrint}
-                        className="btn btn-sm"
-                    >
-                        <KTIcon
-                            iconName={"plus-circle"}
-                            className="fs-3"
-                            iconType="solid"
-                        />
-                        {t("submit")}
-                    </Button>
-                }
+
             />
 
 

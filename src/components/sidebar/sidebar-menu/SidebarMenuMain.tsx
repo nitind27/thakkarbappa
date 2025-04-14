@@ -54,7 +54,7 @@ const SidebarMenuMain = () => {
           onClick={() => handleItemClick(`/${localActive}/dashboard`)} // Store path on click
         />
         {
-          supervisorName !== "Desk Clerk" &&  supervisorName !== "Cashier" &&
+          supervisorName !== "Desk Clerk" && supervisorName !== "Cashier" &&
           <SidebarMenuItemWithSub
             to="/apps/chat"
             title={t("manage")}
@@ -145,8 +145,8 @@ const SidebarMenuMain = () => {
           </SidebarMenuItemWithSub>
         }
 
-        { 
-          supervisorName == "Desk Clerk" &&   
+        {
+          supervisorName == "Desk Clerk" &&
           <SidebarMenuItemWithSub
             to="/apps/chat"
             title={t("nbschemes")}
@@ -216,17 +216,17 @@ const SidebarMenuMain = () => {
           </SidebarMenuItemWithSub>
         }
         {
-          supervisorName !== "Desk Clerk" &&  supervisorName !== "Admin" && 
+          supervisorName !== "Desk Clerk" && supervisorName !== "Admin" &&
           <SidebarMenuItemWithSub
             to={`/${localActive}/workmaster`}
-            title={"Workmaster"}
+            title={t("workmaster")}
             fontIcon="bi-chat-left"
             icon="abstract-2"
           >
             {/* List of Manage Submenu Items */}
             <SidebarMenuItem
               to={`/${localActive}/workmaster`}
-              title={"Add"}
+              title={t("Add")}
               hasBullet={true}
               onClick={() => handleItemClick(`/${localActive}/workmaster`)}
             />
@@ -241,7 +241,7 @@ const SidebarMenuMain = () => {
           </SidebarMenuItemWithSub>
         }
         {
-          supervisorName !== "Desk Clerk" &&  supervisorName !== "Cashier" &&
+          supervisorName !== "Desk Clerk" && supervisorName !== "Cashier" &&
           <SidebarMenuItem
             to={`/${localActive}/manage/studentlist`}
             icon="search-list"
@@ -251,7 +251,7 @@ const SidebarMenuMain = () => {
           />
         }
         {
-          supervisorName !== "Desk Clerk" &&  supervisorName !== "Cashier" &&
+          supervisorName !== "Desk Clerk" && supervisorName !== "Cashier" &&
           <SidebarMenuItem
             to={`/${localActive}/notification`}
             icon="notification"
@@ -261,7 +261,7 @@ const SidebarMenuMain = () => {
           />
         }
         {
-          supervisorName !== "Desk Clerk" &&  supervisorName !== "Cashier" &&
+          supervisorName !== "Desk Clerk" && supervisorName !== "Cashier" &&
           <SidebarMenuItem
             to={`/${localActive}/missionPeak`}
             icon="notification"
@@ -271,17 +271,17 @@ const SidebarMenuMain = () => {
           />
         }
         {
-          supervisorName !== "Desk Clerk" &&  supervisorName !== "Admin" && 
+          supervisorName !== "Desk Clerk" && supervisorName !== "Admin" &&
           <SidebarMenuItem
             to={`/${localActive}/anudaanadaa`}
             icon="notification"
-            title={"Anudan Ada"}
+            title={t("anudanadda")}
             fontIcon="bi-app-notification"
             onClick={() => handleItemClick(`/${localActive}/anudaanadaa`)}
           />
         }
         {
-          supervisorName !== "Cashier" &&  supervisorName !== "Admin" && 
+          supervisorName !== "Cashier" && supervisorName !== "Admin" &&
           <SidebarMenuItem
             to={`/${localActive}/manage/parivahanamountadd`}
             title={t("Nidhi_Ada_Transport")}

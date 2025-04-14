@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Table from "../table/Table"; // Adjust path as necessary
 import '../../assets/parivahan.css'
+
 import {
     Bank,
     Categorys,
