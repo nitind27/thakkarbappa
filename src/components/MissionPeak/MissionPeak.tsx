@@ -122,8 +122,8 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                             width={100}
                         />
                         <br />
-                        <Link href={photoSrc} target="_blank" rel="noopener noreferrer">
-                            view
+                        <Link href={`${photoSrc}`} target="_blank" rel="noopener noreferrer">
+                            View
                         </Link>
                     </div>
                 );
@@ -300,7 +300,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
 
 
     const finelhosteldata = TblHostel.filter((data) => data.hostel_id == adhardataschoolmisisonsikri as any).map((data) => data.hostel_name)
-   
+
 
     const adhardataschooltype = Schooldata.filter((data) => data.school_id == adhardataschool as any).map((data) => data)
     const adhardataschooltypemisison = Schooldata.filter((data) => data.school_id == adhardataschoolmisisonsikri as any).map((data) => data)

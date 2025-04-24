@@ -27,9 +27,9 @@ export function middleware(request: NextRequest) {
   return i18nMiddleware(request);
 }
 
-// Apply middleware to all routes except API and static files
+// Apply middleware to all routes except API, static files, and image requests
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)' // Apply to all except static assets
+    '/((?!api|_next/static|_next/image|favicon.ico|uploads).*)', // Exclude images and static assets
   ],
 };
