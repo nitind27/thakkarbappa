@@ -1,32 +1,60 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-export async function GET(req: NextRequest, { params }: { params: { filename: string } }) {
+export async function GET(
+  request: Request,
+  { params }: { params: { filename: string } }
+) {
   const { filename } = params;
-
-  const filePath = path.join(process.cwd(), 'tmp', 'uploads', filename);
-
-  if (!fs.existsSync(filePath)) {
-    return new NextResponse('Image not found', { status: 404 });
+  
+  // Security check: Prevent directory traversal
+  if (filename.includes('..') || filename.includes('/')) {
+    return NextResponse.json({ error: 'Invalid filename' }, { status: 400 });
   }
 
-  const fileBuffer = fs.readFileSync(filePath);
-  const ext = path.extname(filename).toLowerCase();
+  const filePath = path.join(process.cwd(), 'tmp/uploads', filename);
 
-  const contentTypeMap: Record<string, string> = {
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.png': 'image/png',
-    '.gif': 'image/gif',
-    '.webp': 'image/webp',
+  try {
+    // Check if file exists
+    await fs.promises.access(filePath, fs.constants.F_OK);
+    
+    // Get file stats
+    const stats = await fs.promises.stat(filePath);
+    
+    // Create read stream
+    const fileStream = fs.createReadStream(filePath) as any;
+    
+    // Determine content type (you might need a proper mime-type library)
+    const contentType = getContentType(filename) || 'application/octet-stream';
+
+    return new NextResponse(fileStream, {
+      headers: {
+        'Content-Type': contentType,
+        'Content-Length': stats.size.toString(),
+        'Cache-Control': 'public, max-age=31536000, immutable',
+      },
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'File not found' },
+      { status: 404 }
+    );
+  }
+}
+
+// Helper function to determine content type
+function getContentType(filename: string): string | null {
+  const extension = filename.split('.').pop()?.toLowerCase();
+  
+  const typeMap: Record<string, string> = {
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    png: 'image/png',
+    gif: 'image/gif',
+    webp: 'image/webp',
+    svg: 'image/svg+xml',
   };
 
-  const contentType = contentTypeMap[ext] || 'application/octet-stream';
-
-  return new NextResponse(fileBuffer, {
-    headers: {
-      'Content-Type': contentType,
-    },
-  });
+  return typeMap[extension as string] || null;
 }

@@ -35,6 +35,7 @@ const Page = async () => {
     { label: 'dashboard', href: '/dashboard' },
     { label: 'clustermenu', href: '/manage/cluster' },
   ];
+  
   return (
     <div>
 

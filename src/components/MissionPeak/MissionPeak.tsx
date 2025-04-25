@@ -115,7 +115,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                 return (
                     <div style={{ textAlign: "center" }}>
                         <Image
-                            src={photoSrc}
+                            src={`/api/uploads${photoSrc}`}
                             alt={t("img")}
                             style={{ objectFit: "cover" }}
                             height={100} // Adjust size as needed

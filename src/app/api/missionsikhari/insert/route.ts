@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       const uniqueFileName = `${nanoid()}.${fileExt}`;
       
       // ✅ परिवर्तन 2: imagePath में /uploads न जोड़ें (सर्वर-साइड पाथ)
-      imagePath = `/tmp/uploads/${uniqueFileName}`;
+      imagePath = `/${uniqueFileName}`;
       
       // ✅ परिवर्तन 3: फुल फाइल पाथ बनाएं
       const filePath = path.join(process.cwd(), uploadDir, uniqueFileName);

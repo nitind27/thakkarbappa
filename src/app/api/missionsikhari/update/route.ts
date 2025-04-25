@@ -57,7 +57,7 @@ export async function PATCH(req: Request) {
       const filePath = path.join(uploadDir, uniqueFileName);
       
       // ✅ परिवर्तन 3: imagePath को सर्वर-साइड पाथ के साथ सेट करें
-      updatedData.imgupload = `/tmp/uploads/${uniqueFileName}`;
+      updatedData.imgupload = `/${uniqueFileName}`;
 
       const buffer = await imgupload.arrayBuffer();
       await fs.writeFile(filePath, Buffer.from(buffer));
