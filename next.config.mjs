@@ -4,7 +4,7 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const nextConfig = {
     
         images: {
-            domains: ["localhost", "thakkarbappa.vercel.app"],
+            domains: ["localhost", "thakkarbappa.vercel.app","thakkarbappa.nrcjewels.com"],
         },
 
 
