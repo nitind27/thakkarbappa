@@ -2,11 +2,10 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { promises as fs } from "fs";
 import path from "path";
-import { nanoid } from "nanoid"; // For generating unique file names
+import { nanoid } from "nanoid";
 
 export async function PATCH(req: Request) {
   try {
-
     const contentType = req.headers.get("content-type") || "";
 
     if (!contentType.includes("multipart/form-data")) {
@@ -31,9 +30,6 @@ export async function PATCH(req: Request) {
     const aadharcard = formData.get("aadharcard");
     const parentsnumber = formData.get("parentsnumber");
     const imgupload = formData.get("imgupload") as File;
-    // Validate that ID is provided and other required fields as necessary
-
-    // Convert work_master_id and id to BigInt
 
     let updatedData: any = {
       designation: designation?.toString(),
@@ -47,42 +43,40 @@ export async function PATCH(req: Request) {
       percentage: percentage?.toString(),
       aadharcard: aadharcard?.toString(),
       parentsnumber: parentsnumber?.toString(),
-
     };
 
     if (imgupload) {
-
-      const uploadDir = path.join(process.cwd(), "public/uploads");
+      // ✅ परिवर्तन 1: tmp/uploads डायरेक्टरी का उपयोग करें
+      const uploadDir = path.join(process.cwd(), "tmp/uploads");
       await fs.mkdir(uploadDir, { recursive: true });
 
-      const fileExt = imgupload.name.split(".").pop(); // Extract the file extension
+      const fileExt = imgupload.name.split(".").pop();
       const uniqueFileName = `${nanoid()}.${fileExt}`;
+      
+      // ✅ परिवर्तन 2: फुल फाइल पाथ बनाएं
       const filePath = path.join(uploadDir, uniqueFileName);
+      
+      // ✅ परिवर्तन 3: imagePath को सर्वर-साइड पाथ के साथ सेट करें
+      updatedData.imgupload = `/tmp/uploads/${uniqueFileName}`;
 
       const buffer = await imgupload.arrayBuffer();
       await fs.writeFile(filePath, Buffer.from(buffer));
-
-      // Add photo path to the updated data
-      updatedData.imgupload = `/uploads/${uniqueFileName}`;
     }
 
-    // Update the record in the database using Prisma
     const updatedDisbursement = await prisma.missionshikari.update({
       where: { id: Number(id) },
       data: updatedData,
     });
 
-    // Convert BigInt fields to string for the response
-    const responseData = {
+    return NextResponse.json({
       ...updatedDisbursement,
-      id: updatedDisbursement.id.toString(),
-    };
+      id: updatedDisbursement.id.toString()
+    }, { status: 200 });
 
-    return NextResponse.json(responseData, { status: 200 });
   } catch (error) {
-    console.error("Error during disbursement update:", error);
+    console.error("Error during update:", error);
     return NextResponse.json(
-      { error: error || "Internal Server Error" },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }

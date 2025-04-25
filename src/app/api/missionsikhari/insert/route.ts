@@ -2,11 +2,10 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { promises as fs } from "fs";
 import path from "path";
-import { nanoid } from "nanoid"; // For generating unique file names
+import { nanoid } from "nanoid";
 
 export async function POST(req: Request) {
   try {
-    // First, check if the content type is multipart/form-data (file upload)
     const contentType = req.headers.get("content-type") || "";
 
     if (!contentType.includes("multipart/form-data")) {
@@ -16,10 +15,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // Get the form data
     const formData = await req.formData();
 
-    // Extract all fields
+    // Extract fields
     const designation = formData.get("designation");
     const studentname = formData.get("studentname");
     const schoolhosteltype = formData.get("schoolhosteltype");
@@ -33,26 +31,27 @@ export async function POST(req: Request) {
     const parentsnumber = formData.get("parentsnumber");
     const imgupload = formData.get("imgupload") as File;
 
-    // Ensure 'public/uploads' directory exists
-    const uploadDir = 'public/uploads'; // Change to /tmp directory
+    // ✅ परिवर्तन 1: tmp/uploads डायरेक्टरी का उपयोग करें
+    const uploadDir = 'tmp/uploads';
     await fs.mkdir(uploadDir, { recursive: true });
 
     let imagePath;
     
-    // Check if an image file was uploaded
     if (imgupload) {
-      // Generate a unique filename using nanoid
-      const fileExt = imgupload.name.split(".").pop(); // Extract the file extension
+      const fileExt = imgupload.name.split(".").pop();
       const uniqueFileName = `${nanoid()}.${fileExt}`;
-      imagePath = `/uploads/${uniqueFileName}`;
-      const filePath = path.join(uploadDir, uniqueFileName);
-
-      // Save the file to the local filesystem
+      
+      // ✅ परिवर्तन 2: imagePath में /uploads न जोड़ें (सर्वर-साइड पाथ)
+      imagePath = `/tmp/uploads/${uniqueFileName}`;
+      
+      // ✅ परिवर्तन 3: फुल फाइल पाथ बनाएं
+      const filePath = path.join(process.cwd(), uploadDir, uniqueFileName);
+      
       const buffer = await imgupload.arrayBuffer();
       await fs.writeFile(filePath, Buffer.from(buffer));
     }
 
-    // Insert into the database using Prisma
+    // डेटाबेस में स्टोर करें
     const newDisbursement = await prisma.missionshikari.create({
       data: {
         designation: designation?.toString(),
@@ -66,21 +65,15 @@ export async function POST(req: Request) {
         percentage: percentage?.toString(),
         aadharcard: aadharcard?.toString(),
         parentsnumber: parentsnumber?.toString(),
-        ...(imagePath && { imgupload: imagePath }), // Conditionally add imgupload only if an image was uploaded
+        ...(imagePath && { imgupload: imagePath }),
       },
     });
 
-    // Convert BigInt fields to string for the response
-    const responseData = {
-      ...newDisbursement,
-      id: newDisbursement.id,
-    };
-
-    return NextResponse.json(responseData, { status: 201 });
+    return NextResponse.json(newDisbursement, { status: 201 });
   } catch (error) {
-    console.error("Error during disbursement creation:", error);
+    console.error("Error:", error);
     return NextResponse.json(
-      { error: error || "Internal Server Error" },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }
