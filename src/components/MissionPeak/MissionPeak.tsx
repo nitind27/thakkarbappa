@@ -16,6 +16,7 @@ import Loader from "@/common/Loader ";
 import Image from "next/image";
 import Link from "next/link";
 import Tablemission from "../table/Tablemission";
+import noimg from '../../../tmp/uploads/defulatimagenoimage.png'
 
 type Props = {
     initialClusterData: clusterdata[];
@@ -111,7 +112,7 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                         ? row.original.imgupload
                         : row.original.imgupload
                             ? `/${row.original.imgupload}`
-                            : "/default-image.jpg"; // Provide a fallback image
+                            : "/defulatimagenoimage.png"; // Provide a fallback image
                 return (
                     <div style={{ textAlign: "center" }}>
                         <Image
@@ -122,7 +123,11 @@ const MissionPeak = ({ initialClusterData, Schooldata, TblHostel, MissionShikari
                             width={100}
                         />
                         <br />
-                        <Link href={`${photoSrc}`} target="_blank" rel="noopener noreferrer">
+                        <Link
+                            href={photoSrc.includes("://") ? photoSrc : `/api/uploads${photoSrc}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
                             View
                         </Link>
                     </div>
