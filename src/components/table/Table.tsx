@@ -135,9 +135,11 @@ export default function Table({ data, columns, Button }: any) {
           <tbody>
             {table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map((row) => (
-                <tr key={row.id} className="text-start p-2">
+                <tr key={row.id} className="text-start " style={{whiteSpace:"nowrap"}}>
+                
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="text-start p-2">
+                      
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
