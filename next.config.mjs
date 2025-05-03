@@ -7,8 +7,6 @@ const nextConfig = {
         domains: ["localhost", "thakkarbappa.vercel.app", "thakkarbappa.nrcjewels.com", "itdpdeori.weclocks.online"],
     },
 
-
-
 };
 
 const withNextIntl = createNextIntlPlugin();
