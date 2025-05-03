@@ -6,7 +6,7 @@ import HeaderNotificationsMenu from "@/_metronic/partials/layout/header-menus/He
 import Image from "next/image";
 import { useLayout } from "@/layout/core";
 import LocalSwitcher from "../LanguageSwitcher/local-switcher";
-
+import avtar from "../../../public/media/images/avtar.jpg"
 const itemClass = "ms-1 ms-md-4";
 const btnClass = "btn btn-icon btn-active-light-primary btn-custom";
 const userAvatarClass = "symbol-35px";
@@ -86,7 +86,7 @@ const Navbar = ({ increase, decrease, resetsize }: any) => {
           data-kt-menu-placement="bottom-end"
         >
           <Image
-            src={"/media/images/avtar.jpg"}
+            src={avtar}
             alt="Profile"
             width={100}
             height={100}

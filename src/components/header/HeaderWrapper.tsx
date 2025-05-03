@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { KTIcon, toAbsoluteUrl } from "@/_metronic/helpers";
 import { LayoutSetup, useLayout } from "@/layout/core";
-
+import logo2 from "../../../public/media/logos/logos.png"
 export function HeaderWrapper({ increase,decrease ,resetsize}: any) {
   const { config, classes } = useLayout();
   if (config.app?.header?.default?.container === "fluid") {
@@ -57,11 +57,12 @@ export function HeaderWrapper({ increase,decrease ,resetsize}: any) {
                       width={55}
                       height={55}
                       alt="Logo"
-                      src={"/media/logos/logos.png"}
+                      src={logo2}
                       // className="h-65px"
                 
                     />
                   </Link>
+                  
                 </div>
               </div>
             ) : null}

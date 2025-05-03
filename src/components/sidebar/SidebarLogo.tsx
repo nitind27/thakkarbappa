@@ -8,7 +8,8 @@ import Image from "next/image";
 import { ToggleComponent } from "@/_metronic/assets/ts/components/_ToggleComponent";
 import { KTIcon } from "@/_metronic/helpers";
 import { useLayout } from "@/layout/core";
-
+import logo5 from "../../../public/media/logos/clocks horizntal.png"
+import logo2 from "../../../public/media/logos/logos.png"
 type PropsType = {
   sidebarRef: MutableRefObject<HTMLDivElement | null>;
 };
@@ -66,27 +67,29 @@ const SidebarLogo = (props: PropsType) => {
           //   src="/media/logos/clocks horizntal.png"
           //   className="app-sidebar-logo-default"
           // />
+          <>
           <Image
             width={185}
             height={10}
             alt="Logo5"
-            src="/media/logos/clocks horizntal.png"
+            src={logo5}
             className="app-sidebar-logo-default img-fluid"
-          />
+            />
+            </>
         ) : (
           <>
             <Image
               width={200}
               height={200}
               alt="Logo2"
-              src={"/media/logos/logos.png"}
+              src={logo2}
               className="h-25px app-sidebar-logo-default theme-light-show"
             />
             <Image
               width={200}
               height={200}
               alt="Logo3"
-              src={"/media/logos/logos.png"}
+              src={logo2}
               className="h-25px app-sidebar-logo-default theme-dark-show"
             />
           </>
@@ -96,7 +99,7 @@ const SidebarLogo = (props: PropsType) => {
           width={80}
           height={85}
           alt="logo4"
-          src={"/media/logos/logos.png"}
+          src={logo2}
           className="app-sidebar-logo-minimize"
         />
       </Link>
