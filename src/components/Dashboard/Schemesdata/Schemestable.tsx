@@ -87,8 +87,8 @@ const Schemestable = ({ initialClusterData, initialcategoryData, YojnaYear, Bank
             header: `${t("Action")}`,
             cell: ({ row }: any) => (
                 <div style={{ display: "flex", whiteSpace: "nowrap" }} className="btn btn-sm btn-primary">
-
-                    <Schemesbeneficry initialcategoryData={initialcategoryData} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={castdata} membersadd={membersadd} Bankmasterdata={Bankmasterdata} />
+              
+                    <Schemesbeneficry initialcategoryData={initialcategoryData} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={castdata} membersadd={membersadd} Bankmasterdata={Bankmasterdata} yojnaiddata={row.original}/>
 
 
                 </div>

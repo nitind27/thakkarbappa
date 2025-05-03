@@ -18,6 +18,7 @@ import { diskStorage } from "multer";
 import { usePathname } from "next/navigation";
 import Addmembers from "@/components/Schemes/Addmembers";
 import Table from "@/components/table/Table";
+import { clippingParents } from "@popperjs/core";
 type Props = {
     initialcategoryData: SubCategory[];
     YojnaYear: YojanaYear[];
@@ -32,10 +33,11 @@ type Props = {
     castdata: TblCaste[];
     membersadd: TblMembers[];
     Bankmasterdata: Tblbankmaster[];
+    yojnaiddata: String;
 };
 
 const
-    Schemesbeneficry = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata, membersadd, Bankmasterdata }: Props) => {
+    Schemesbeneficry = ({ initialcategoryData, YojnaYear, Bankdata, category, beneficiary, yojnatype, yojnamaster, talukas, grampanchayat, Villages, castdata, membersadd, Bankmasterdata, yojnaiddata }: Props) => {
         const t = useTranslations("beneficiary");
         const router = useRouter();
         const pathname = usePathname(); // Gets the current URL pathname
@@ -198,180 +200,7 @@ const
                         : formatDate(beneficiary.work_order_date as any),
             })).reverse()
             ;
-        const columns = [
-            {
-                accessorKey: "serial_number",
-                header: () => (
-                    <div style={{ fontWeight: 'bold', padding: '5px' }}>
-                        {t("SrNo")}
-                    </div>
-                ),
-                cell: ({ row }: any) => (
-                    <div>
-                        {row.index + 1}
-                    </div>
-                ),
-            },
 
-            {
-                accessorKey: "actions",
-                header: `${t("Action")}`,
-                cell: ({ row }: any) => (
-                    <div style={{ display: "flex", whiteSpace: "nowrap", cursor: "pointer", color: 'green', fontWeight: "bold" }} onClick={() => handlepassdatamembers(row.original)}>
-                        {row.original.yojanatype == 2 && 'सदस्य टाका'}
-                    </div>
-
-                ),
-            },
-
-            {
-                accessorKey: "category_id",
-                header: `${t("categoryname")}`,
-            },
-            {
-                accessorKey: "sub_category_id",
-                header: `${t("subcategoryname")}`,
-            },
-            {
-                accessorKey: "yojana_year_id",
-                header: `${t("year")}`,
-            },
-            {
-                accessorKey: "yojana_type",
-                header: `${t("yojnatype")}`,
-            },
-            {
-                accessorKey: "yojana_id",
-                header: `${t("yojnaname")}`,
-            },
-            {
-                accessorKey: "taluka_id",
-                header: `${t("dist")}`,
-            },
-            {
-                accessorKey: "gp_id",
-                header: `${t("GramPanchayat")}`,
-            },
-            {
-                accessorKey: "village_id",
-                header: `${t("Village")}`,
-            },
-
-            {
-                accessorKey: "gat_name",
-                header: `${t("bachtgat")}`,
-            },
-            {
-                accessorKey: "gat_certificate",
-                header: `${t("registerdcert")}`,
-            },
-            {
-                accessorKey: "member",
-                header: `${t("members")}`,
-            },
-
-            {
-                accessorKey: "organization", // Organization managing the scheme
-                header: `${t("Organization")}`
-            },
-            {
-                accessorKey: "work_order_date", // Date related to work orders issued
-                header: `${t("Commencementorderdate")}`
-            },
-            {
-                accessorKey: "fullname",
-                header: `${t("FullName")}`,
-            },
-
-
-
-            {
-                accessorKey: "casteid",
-                header: `${t("Cast")}`,
-            },
-            {
-                accessorKey: "beneficiary_type",
-                header: `${t("beneficiarytype")}`,
-            },
-            {
-                accessorKey: "rashion_no",
-                header: `${t("Registrationcard")}`,
-            },
-            {
-                accessorKey: "aadhar",
-                header: `${t("aadharcard")}`,
-            },
-            {
-                accessorKey: "mobile",
-                header: `${t("Contact")}`,
-            },
-            {
-                accessorKey: "bank_name",
-                header: `${t("BankName")}`,
-            },
-            {
-                accessorKey: "ifsc",
-                header: `${t("IFSCCode")}`,
-            },
-            {
-                accessorKey: "ac_no",
-                header: `${t("AccountNo")}`,
-            },
-            {
-                accessorKey: "tot_finance",
-                header: `${t("TotalFinanceAllocated")}`,
-            },
-            {
-                accessorKey: "amount_paid",
-                header: `${t("AmountPaid")}`,
-            },
-            {
-                accessorKey: "fourty", // Assuming this is a status indicator
-                header: `${t("Eligible40")}`,
-            },
-            {
-                accessorKey: "sixty", // Assuming this is a status indicator
-                header: `${t("Eligible60")}`,
-            },
-            {
-                accessorKey: "hundred", // Assuming this is a status indicator
-                header: `${t("Eligible100")}`,
-            },
-            {
-                accessorKey: "status", // Current status of the beneficiary
-                header: `${t("Status")}`,
-            },
-
-
-            {
-                accessorKey: "actions",
-                header: `${t("Action")}`,
-                cell: ({ row }: any) => (
-                    <div style={{ display: "flex", whiteSpace: "nowrap" }}>
-                        <button
-                            className="btn btn-sm btn-primary"
-                            onClick={() => handleEdit(row.original)}
-                        >
-                            {" "}
-                            <KTIcon iconName={"pencil"} className="fs-6" iconType="solid" />
-                            {t("edit")}
-                        </button>
-                        <button
-                            className={`btn btn-sm ${row.original.status == "Active" ? "btn-danger" : "btn-warning"
-                                } ms-5`}
-                            onClick={() =>
-                                handleDeactivate(row.original.beneficiary_id, row.original.status)
-                            }
-                        >
-                            <KTIcon iconName={"status"} className="fs-6" iconType="solid" />
-                            {row.original.status == "Active"
-                                ? `${t("Deactive")}`
-                                : `${t("Active")}`}
-                        </button>
-                    </div>
-                ),
-            },
-        ];
 
         const handleDeactivate = async (category_id: any, currentStatus: any) => {
             const confirmMessage =
@@ -699,6 +528,17 @@ const
             setPopulation("");
         }
         const handleShowPrint = () => setShowPrintModal(true);
+        const handleshowprintwithdata = (rowid: any) => {
+          
+            setShowPrintModal(true);
+            setCategoryName(rowid.category_id);
+            setSubCategoryName(rowid.sub_category_id);
+            setYojnaYear(rowid.yojana_year_id);
+            setYojnatype(rowid.yojana_type);
+            setYojnaName(rowid.yojana_id)
+            
+
+        }
         const handleShowPrintgp = () => setShowPrintModalgp(true);
         const handleShowPrintvi = () => setShowPrintModalvi(true);
 
@@ -1279,7 +1119,7 @@ const
 
                 <Addmembers initialcategoryData={initialcategoryData} YojnaYear={[]} Bankdata={[]} category={[]} beneficiary={[]} yojnatype={yojnatype} yojnamaster={[]} talukas={[]} grampanchayat={[]} Villages={[]} castdata={castdata} showPrintModalMembers={showPrintModalMembers} showNumberMembers={showNumberMembers} membersadd={membersadd} showBachatNameMembers={showBachatNameMembers} />
 
-                <span onClick={handleShowPrint}>अर्ज करा </span>
+                <span onClick={() => handleshowprintwithdata(yojnaiddata)}>अर्ज करा </span>
 
                 <CustomModal
                     show={showPrintModal}
