@@ -15,6 +15,7 @@ import { Bank, Categorys, grampanchayat, SubCategory, talukasdata, Tblbankmaster
 
 import SchemesTable from "@/components/table/SchemesTable";
 import Schemesbeneficry from "./Schemesbeneficry";
+import TitleCard from "@/app/[locale]/title/breadcums/Titilecard";
 
 type Props = {
     initialClusterData: YojanaMaster[];
@@ -87,8 +88,8 @@ const Schemestable = ({ initialClusterData, initialcategoryData, YojnaYear, Bank
             header: `${t("Action")}`,
             cell: ({ row }: any) => (
                 <div style={{ display: "flex", whiteSpace: "nowrap" }} className="btn btn-sm btn-primary">
-              
-                    <Schemesbeneficry initialcategoryData={initialcategoryData} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={castdata} membersadd={membersadd} Bankmasterdata={Bankmasterdata} yojnaiddata={row.original}/>
+
+                    <Schemesbeneficry initialcategoryData={initialcategoryData} YojnaYear={YojnaYear} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={castdata} membersadd={membersadd} Bankmasterdata={Bankmasterdata} yojnaiddata={row.original} />
 
 
                 </div>
@@ -167,46 +168,63 @@ const Schemestable = ({ initialClusterData, initialcategoryData, YojnaYear, Bank
         setUpdateClusterId(null); // Reset update ID when closing
     };
 
+    const supervisorName = sessionStorage.getItem("supervisorName");
+
+    const breadcrumbs = [
+
+        { label: 'Planname', href: '/dashboard' },
+
+    ];
 
     return (
-        <div>
-            <SchemesTable
-                data={data}
-                columns={columns}
-                Button={[]
-                }
-            />
+        <>
+            {supervisorName == "Desk Clerk" &&
+                <div>
 
-            <CustomModal
-                show={showPrintModal}
-                handleClose={handleClosePrint}
-                handleSubmit={handleSubmit}
-                title={updateClusterId ? `${t("updatepage")}` : `${t("insertpage")}`}
-                formData={{
-                    fields: [
-                        {
-                            label: `${t("enterclustername")}`,
-                            value: clusterName,
-                            type: "text",
-                            placeholder: `${t("enterclustername")}`,
-                            required: true,
-                            onChange: (e: any) => setClusterName(e.target.value),
-                        },
-                    ],
-                    error,
-                }}
-                submitButtonLabel={
-                    updateClusterId
-                        ? isLoading
-                            ? "Submitting..."
-                            : t("editsubmit")
-                        : isLoading
-                            ? "Submitting..."
-                            : t("submit")
-                }
-                disabledButton={isLoading}
-            />
-        </div>
+                    <div className="card mt-8 p-3 ">
+                        <TitleCard breadcrumbs={breadcrumbs} />
+
+                    </div>
+
+                    <SchemesTable
+                        data={data}
+                        columns={columns}
+                        Button={[]
+                        }
+                    />
+
+                    <CustomModal
+                        show={showPrintModal}
+                        handleClose={handleClosePrint}
+                        handleSubmit={handleSubmit}
+                        title={updateClusterId ? `${t("updatepage")}` : `${t("insertpage")}`}
+                        formData={{
+                            fields: [
+                                {
+                                    label: `${t("enterclustername")}`,
+                                    value: clusterName,
+                                    type: "text",
+                                    placeholder: `${t("enterclustername")}`,
+                                    required: true,
+                                    onChange: (e: any) => setClusterName(e.target.value),
+                                },
+                            ],
+                            error,
+                        }}
+                        submitButtonLabel={
+                            updateClusterId
+                                ? isLoading
+                                    ? "Submitting..."
+                                    : t("editsubmit")
+                                : isLoading
+                                    ? "Submitting..."
+                                    : t("submit")
+                        }
+                        disabledButton={isLoading}
+                    />
+                </div>
+            }
+        </>
     );
 };
 
