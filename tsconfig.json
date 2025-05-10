@@ -19,11 +19,17 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@lib/*": ["./lib/*"],
       "@components/*": ["./src/app/layout/components/*"]
     },
-    // Optional: Specify a target if needed, but esnext should already be sufficient
-    "target": "esnext" 
+    "target": "esnext"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/table/Tabletable.jsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/components/table/Tabletable.jsx"
+  ],
   "exclude": ["node_modules"]
 }

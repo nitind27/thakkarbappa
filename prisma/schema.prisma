@@ -176,7 +176,8 @@ model YojanaYear {
   yojana_year   String  @db.VarChar(20)
   is_delete     String   @default("No") @db.VarChar(20)
   year_status   String   @db.VarChar(10)
-
+  app   String   @db.VarChar(10)
+  
   @@map("tbl_yojana_year")
 }
 
@@ -650,6 +651,19 @@ model SportsInfo {
   @@map(name: "tbl_sports_info_new")
 }
 
+model tblapp {
+  apps_id       Int    @id @default(autoincrement()) // Primary key, auto-incremented
+  apps_title    String @db.VarChar(100)
+  apps_link     String // Use String for text fields
+  ios_link      String
+  apps_version  String @db.VarChar(100)
+  apps_status   String @db.VarChar(20)
+
+  
+  @@map("tbl_apps")
+}
+
+
 model tbl_achivments {
   achivment_id      Int      @id @default(autoincrement())
   sports_id        Int
@@ -667,6 +681,27 @@ model tbl_achivments {
   ins_date_time    DateTime
   update_date_time DateTime?
 
+}
+
+model Illness {
+  illness_id        Int      @id @default(autoincrement()) // Primary key, auto-increment
+  illness_name      String   @db.VarChar(50)
+  status            String   @db.VarChar(10) @default("Active")
+  ins_date_time     DateTime
+  update_date_time  DateTime?
+
+   @@map("tbl_illness")
+}
+
+
+model Language {
+  lang_id           Int      @id @default(autoincrement()) // Primary key, auto-increment
+  lang_name         String   @db.VarChar(50)
+  status            String   @db.VarChar(20) @default("Active")
+  ins_date_time     DateTime
+  update_date_time  DateTime
+
+   @@map("tbl_language")
 }
 
 
