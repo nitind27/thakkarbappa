@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
     try {
         const form = await req.formData();
-     
+
         // Extract fields from FormData
         const serial_number = form.get('serial_number') as string;
         const uid = form.get('uid') as string;
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
         const first_name = form.get('first_name') as string;
         const middle_name = form.get('middle_name') as string;
         const last_name = form.get('last_name') as string;
-        const full_name = form.get('full_name') as string;
+        const full_name = first_name + " " + middle_name + " " + last_name;
         const date_of_birth_raw = form.get('date_of_birth') as string;
         const place_of_birth = form.get('place_of_birth') as string;
         const gender = form.get('gender') as string;

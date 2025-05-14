@@ -18,8 +18,8 @@ export async function POST(req: Request) {
         }
 
         // Fetch records matching yojana_type_id
-        const result = await prisma.yojanaMasterApp.findFirst({
-            where: { yojana_year_id: Number(yojana_year_id), sub_category_id: sub_category_id, status: "Active" },
+        const result = await prisma.yojanaMasterApp.findMany({
+            where: { yojana_year_id: Number(yojana_year_id), sub_category_id: Number(sub_category_id), status: "Active" },
             orderBy: {
                 yojana_id: 'desc'
             }
