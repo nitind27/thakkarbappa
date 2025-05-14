@@ -43,13 +43,14 @@ const Page = async () => {
   }
 
   const yojnayearfilter = YojnaYear.filter((data) => data.year_status == "Y")
+  const subCategoryfilter = subCategory.filter((data) => data.status == "Active")
   return (
     <div><div>
-      
+
       <DashboradMain />
     </div><div>
-       
-        <Schemestable initialClusterData={yojnamaster} initialcategoryData={subCategory} YojnaYear={yojnayearfilter} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={cast} membersadd={membersadd} Bankmasterdata={Bankmasterdata} />
+
+        <Schemestable initialClusterData={yojnamaster} initialcategoryData={subCategoryfilter} YojnaYear={yojnayearfilter} Bankdata={Bankdata} category={category} beneficiary={beneficiary} yojnatype={yojnatype} yojnamaster={yojnamaster} talukas={talukas} grampanchayat={grampanchayat} Villages={Villages} castdata={cast} membersadd={membersadd} Bankmasterdata={Bankmasterdata} />
       </div>
     </div>
   )
