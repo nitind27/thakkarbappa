@@ -202,10 +202,8 @@ const Schemestable = ({ initialClusterData, initialcategoryData, YojnaYear, Bank
                         columns={columns}
                         filteroptions={
                             <>
-                                <div className="d-flex gap-5">
-
-                                    <span>
-
+                                <div className="row g-3"> {/* g-3 adds gutter spacing */}
+                                    <div className="col-12 col-md-4 ">
                                         <select
                                             value={categoryName}
                                             className="form-select"
@@ -221,15 +219,12 @@ const Schemestable = ({ initialClusterData, initialcategoryData, YojnaYear, Bank
                                                 </option>
                                             ))}
                                         </select>
-                                    </span>
-
-
-                                    <span>
-
+                                    </div>
+                                    <div className="col-12 col-md-4">
                                         <select
                                             value={subcategoryName}
                                             onChange={(e) => setSubCategoryName(e.target.value)}
-                                            disabled={!categoryName} // Disable until category is selected
+                                            disabled={!categoryName}
                                             className="form-select"
                                         >
                                             <option value="">{t("subcategory")}</option>
@@ -239,9 +234,8 @@ const Schemestable = ({ initialClusterData, initialcategoryData, YojnaYear, Bank
                                                 </option>
                                             ))}
                                         </select>
-                                    </span>
-                                    <span>
-
+                                    </div>
+                                    <div className="col-12 col-md-4">
                                         <select
                                             value={yojnayear}
                                             onChange={(e) => setyojnayear(e.target.value)}
@@ -254,8 +248,9 @@ const Schemestable = ({ initialClusterData, initialcategoryData, YojnaYear, Bank
                                                 </option>
                                             ))}
                                         </select>
-                                    </span>
+                                    </div>
                                 </div>
+
                             </>}
                         Button={[]
                         }

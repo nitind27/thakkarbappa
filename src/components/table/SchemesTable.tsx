@@ -93,7 +93,7 @@ export default function SchemesTable({ data, columns, Button, filteroptions }: a
   return (
     <div className="container mt-5 card card-body p-5">
       <div className="row mb-3 align-items-center" style={{ display: "flex" }}>
-        <div className="col-auto">
+        <div className="col-12 col-md-auto">
           <input
             type="text"
             className="form-control"
