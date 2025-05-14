@@ -39,13 +39,27 @@ const Schemestable = ({ initialClusterData, initialcategoryData, YojnaYear, Bank
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [clusterName, setClusterName] = useState("");
     const [error, setError] = useState<string>("");
+    const [categoryName, setCategoryName] = useState("");
+    const [subcategoryName, setSubCategoryName] = useState("");
+    const [yojnayear, setyojnayear] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [updateClusterId, setUpdateClusterId] = useState<number | null>(null);
     const [clusterData, setClusterData] =
-        useState<YojanaMaster[]>(initialClusterData); // State for cluster data
-    const confirm = createConfirmation(ConfirmationDialog);
+        useState<YojanaMaster[]>(initialClusterData);
+
+    const isAllEmpty = !categoryName && !subcategoryName && !yojnayear;
 
     const data = clusterData
+        .filter((datas) => {
+            if (isAllEmpty) return true; // Show all data if all filters are empty
+
+            // Otherwise, filter as per selected values (if provided)
+            return (
+                (!categoryName || datas.category_id == Number(categoryName)) &&
+                (!subcategoryName || datas.sub_category_id == Number(subcategoryName)) &&
+                (!yojnayear || datas.yojana_year_id == Number(yojnayear))
+            );
+        })
         .map((cluster) => ({
             yojana_id: cluster.yojana_id,
             category_id: cluster.category_id,
@@ -60,12 +74,9 @@ const Schemestable = ({ initialClusterData, initialcategoryData, YojnaYear, Bank
             yojana_year_id: cluster.yojana_year_id,
             yojana_type: cluster.yojana_type,
             amount: cluster.amount,
-
             status: cluster.status,
-
         }))
-        .reverse(); // Reverse the order to show the last added items first
-
+        .reverse();
     const columns = [
         {
             accessorKey: "serial_number", // Use a new accessor for the serial number
@@ -153,11 +164,7 @@ const Schemestable = ({ initialClusterData, initialcategoryData, YojnaYear, Bank
         }
     };
 
-    const handleEdit = (cluster: any) => {
-        setUpdateClusterId(cluster.cluster_id); // Set ID for updating
-        setClusterName(cluster.cluster_name); // Set current name for editing
-        handleShowPrint(); // Open modal for editing
-    };
+
 
     const handleShowPrint = () => setShowPrintModal(true);
 
@@ -175,9 +182,13 @@ const Schemestable = ({ initialClusterData, initialcategoryData, YojnaYear, Bank
         { label: 'Planname', href: '/dashboard' },
 
     ];
-
+    const filteredSubcategories = initialcategoryData.filter(
+        (subcat) => String(subcat.category_id) == categoryName
+    );
     return (
         <>
+
+
             {supervisorName == "Desk Clerk" &&
                 <div>
 
@@ -189,6 +200,63 @@ const Schemestable = ({ initialClusterData, initialcategoryData, YojnaYear, Bank
                     <SchemesTable
                         data={data}
                         columns={columns}
+                        filteroptions={
+                            <>
+                                <div className="d-flex gap-5">
+
+                                    <span>
+
+                                        <select
+                                            value={categoryName}
+                                            className="form-select"
+                                            onChange={(e) => {
+                                                setCategoryName(e.target.value);
+                                                setSubCategoryName(""); // Reset subcategory when category changes
+                                            }}
+                                        >
+                                            <option value="">{t("category")}</option>
+                                            {category.map((cat) => (
+                                                <option key={cat.category_id} value={cat.category_id}>
+                                                    {cat.category_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </span>
+
+
+                                    <span>
+
+                                        <select
+                                            value={subcategoryName}
+                                            onChange={(e) => setSubCategoryName(e.target.value)}
+                                            disabled={!categoryName} // Disable until category is selected
+                                            className="form-select"
+                                        >
+                                            <option value="">{t("subcategory")}</option>
+                                            {filteredSubcategories.map((subcat) => (
+                                                <option key={subcat.sub_category_id} value={subcat.sub_category_id}>
+                                                    {subcat.sub_category_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </span>
+                                    <span>
+
+                                        <select
+                                            value={yojnayear}
+                                            onChange={(e) => setyojnayear(e.target.value)}
+                                            className="form-select"
+                                        >
+                                            <option value="">{t("yojna")}</option>
+                                            {YojnaYear.map((subcat) => (
+                                                <option key={subcat.yojana_year_id} value={subcat.yojana_year_id}>
+                                                    {subcat.yojana_year}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </span>
+                                </div>
+                            </>}
                         Button={[]
                         }
                     />

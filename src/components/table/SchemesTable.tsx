@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-table";
 import { useTranslations } from "next-intl";
 
-export default function SchemesTable({ data, columns, Button }: any) {
+export default function SchemesTable({ data, columns, Button, filteroptions }: any) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
   const [currentPageIndex, setCurrentPageIndex] = useState(0); // State for current page index
@@ -102,7 +102,9 @@ export default function SchemesTable({ data, columns, Button }: any) {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        
+        <div className="col-auto">
+          {filteroptions}
+        </div>
         <div className="col-auto ms-auto">{Button}</div>
       </div>
       <div className="table-responsive">

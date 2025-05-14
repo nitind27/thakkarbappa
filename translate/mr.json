@@ -18,7 +18,10 @@
     "updatepage": "क्लस्टर नाव अपडेट करा",
     "enterclustername": "क्लस्टर नाव प्रविष्ट करा",
     "submit": "सबमिट करा",
-    "editsubmit": "संपादित करा"
+    "editsubmit": "संपादित करा",
+    "category": "श्रेणी",
+    "subcategory": "उप श्रेणी",
+    "yojna": "योजना वर्ष"
   },
   "Sidebar": {
     "dashboard": "डॅशबोर्ड",
@@ -53,7 +56,7 @@
     "notificaiton": "सूचना",
     "workmaster": "कार्य मास्टर",
     "work": "कार्य",
-    "anudanadda":"अनुदन अदा",
+    "anudanadda": "अनुदन अदा",
     "representativeid": "प्रतिनिधी",
     "dist": "जिल्हा",
     "grampanchayatname": "ग्रामपंचायत",
@@ -62,7 +65,7 @@
     "date": "कामाची तारीख",
     "sports": "क्रीडा",
     "Sportswise": "खेळाप्रमाणे",
-       "Add": "जोडा"
+    "Add": "जोडा"
   },
   "Townpage": {
     "title": "तालुका व्यवस्थापन",

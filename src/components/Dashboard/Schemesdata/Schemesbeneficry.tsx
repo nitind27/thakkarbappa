@@ -139,110 +139,10 @@ const
             }));
 
         const totalEstimatedAmount = calculateTotalEstimatedAmount(sumcategory);
-        const handlepassdatamembers = (number: any) => {
-            setShowPrintModalMembers(prev => !prev)
-            setShowNumberMembers(number.beneficiary_id)
-            setShowBachatnameMembers(number.gat_name)
-        }
 
-        const data = clusterData
-            .map((beneficiary) => ({
-                beneficiary_id: beneficiary.beneficiary_id,
-                category_id: categorydata[beneficiary.category_id],
-                categoryid: beneficiary.category_id,
-                sub_category_id: subcat[beneficiary.sub_category_id],
-                subcategoryid: beneficiary.sub_category_id,
-                yojana_year_id: yojna_year[beneficiary.yojana_year_id],
-                yojanayearid: beneficiary.yojana_year_id,
-                yojana_type: yojnatypes[beneficiary.yojana_type as any],
-                yojanatype: beneficiary.yojana_type,
-                // Addmember: beneficiary.yojana_type == '2' ? "Nitin" : "",
-                yojana_id: yojnamastername[beneficiary.yojana_id],
-                yojanaid: beneficiary.yojana_id,
-                taluka_id: talukaMap[beneficiary.taluka_id],
-                talukaid: beneficiary.taluka_id,
-                gp_id: gpmap[beneficiary.gp_id],
-                gpid: beneficiary.gp_id,
-                village_id: village[beneficiary.village_id],
-                villageid: beneficiary.village_id,
-                surname: beneficiary.surname,
-                firstname: beneficiary.firstname,
-                middlename: beneficiary.middlename,
-                fullname: beneficiary.surname + beneficiary.firstname + beneficiary.middlename,
-                gat_name: beneficiary.gat_name,
-                gat_certificate: beneficiary.gat_certificate,
-                member: beneficiary.member,
-                caste_id: beneficiary.caste_id,
-                casteid: usercastdata[beneficiary.caste_id],
-                beneficiary_type: beneficiary.beneficiary_type,
-                rashion_no: beneficiary.rashion_no,
-                aadhar: beneficiary.aadhar,
-                mobile: beneficiary.mobile,
-                bank_name: beneficiary.bank_name,
-                ifsc: beneficiary.ifsc,
-                ac_no: beneficiary.ac_no,
-                tot_finance: beneficiary.tot_finance,
-                amount_paid: beneficiary.amount_paid,
-                fourty: beneficiary.fourty == '1' ? "Yes" : "No",
-                sixty: beneficiary.sixty == '1' ? "Yes" : "No",
-                hundred: beneficiary.hundred == '1' ? "Yes" : "No",
-                status: beneficiary.status,
-                date_ins: beneficiary.date_ins,
-                date_update: beneficiary.date_update,
-                organization: beneficiary.organization,
-                // work_order_date: beneficiary.work_order_date,    
-
-                work_order_date:
-                    typeof beneficiary.work_order_date == "string"
-                        ? formatDate(beneficiary.work_order_date)
-                        : formatDate(beneficiary.work_order_date as any),
-            })).reverse()
-            ;
+    
 
 
-        const handleDeactivate = async (category_id: any, currentStatus: any) => {
-            const confirmMessage =
-                currentStatus == "Active"
-                    ? "Are you sure you want to deactivate this Beneficiary?"
-                    : "Are you sure you want to activate this Beneficiary?";
-            const confirmed = await confirm({ confirmation: confirmMessage });
-            if (confirmed) {
-                try {
-                    const response = await fetch(`/api/benefucuary/delete/${category_id}`, {
-                        method: "PATCH",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            status: currentStatus == "Active" ? "Deactive" : "Active",
-                        }),
-                    });
-
-                    if (response.ok) {
-                        // Update local state without page reload
-                        setClusterData((prevData) =>
-                            prevData.map((cluster) =>
-                                cluster.beneficiary_id == category_id
-                                    ? {
-                                        ...cluster,
-                                        status: currentStatus == "Active" ? "Deactive" : "Active",
-                                    }
-                                    : cluster
-                            )
-                        );
-                        toast.success(
-                            `Beneficiary ${currentStatus == "Active" ? "deactivated" : "activated"
-                            } successfully!`
-                        );
-                    } else {
-                        toast.error("Failed to change the Beneficiary status.");
-                    }
-                } catch (error) {
-                    console.error("Error changing the Beneficiary status:", error);
-                    toast.error("An unexpected error occurred.");
-                }
-            }
-        };
 
         const handleSubmit = async (event: React.FormEvent) => {
             event.preventDefault();
@@ -414,20 +314,7 @@ const
 
                 if (response.ok) {
 
-                    //   if (!updateTownId) {
-                    //     // If inserting a new entry
-                    //     const newVillage = await response.json(); // Assuming API returns the new village object
-
-                    //     setMahsulgaav((prevData) => [...prevData, newVillage]);
-                    //   } else {
-                    //     // If updating an existing entry
-                    //     setMahsulgaav((prevData: any) =>
-                    //       prevData.map((gp: any) =>
-                    //         gp.id === updateTownId ? { ...gp, ...bodyData } : gp
-                    //       )
-                    //     );
-                    //   }
-
+                  
                     toast.success(
                         `Village inserted successfully!`
                     );
@@ -448,39 +335,6 @@ const
 
         };
 
-        const handleEdit = (benefit: any) => {
-            setUpdateClusterId(benefit.beneficiary_id); // Set ID for updating
-            setCategoryName(benefit.categoryid);
-            setSubCategoryName(benefit.subcategoryid);
-            setYojnaYear(benefit.yojanayearid);
-            setYojnatype(benefit.yojanatype);
-            setYojnaName(benefit.yojanaid);
-            setDist(benefit.talukaid);
-            setTown(benefit.gpid);
-            setMahsulgaav(benefit.villageid);
-            setBankname(benefit.bank_name);
-            setIFCcode(benefit.ifsc);
-            setAccountno(benefit.ac_no);
-            setAmount(benefit.amount_paid);
-            setSurname(benefit.surname);
-            setFistname(benefit.firstname);
-            setParentsname(benefit.middlename);
-            setorganizationname(benefit.organization);
-            setCommencementdate(benefit.work_order_date);
-            setcast(benefit.caste_id);
-            setbeneficiariestype(benefit.beneficiary_type);
-            setrationcardnumber(benefit.rashion_no);
-            setaddharcardnumber(benefit.aadhar);
-            setmobilenumber(benefit.mobile);
-            setsavinggroupname(benefit.gat_name);
-            setRegistrationerti(benefit.gat_certificate);
-            setnumberofmember(benefit.member);
-            setfourty(benefit.fourty);
-            setsixty(benefit.sixty);
-            sethundred(benefit.hundred);
-            handleShowPrint(); // Open modal for editing
-
-        };
 
 
         const reset = () => {
@@ -1021,22 +875,7 @@ const
                     placeholder: `${t('members')}`,
                     onChange: (e: any) => setnumberofmember(e.target.value),
                 },
-                // {
-                //     label: `${t('sansthaname')}`,
-                //     value: organizationname || "",
-                //     type: "text",
-                //     required: true,
-                //     placeholder: `${t('sansthaname')}`,
-                //     onChange: (e: any) => setorganizationname(e.target.value),
-                // },
-                // {
-                //     label: `${t('Commencementorderdate')}`,
-                //     value: Commencementdate || "",
-                //     type: "date",
-                //     required: true,
-                //     placeholder: `${t('Commencementorderdate')}`,
-                //     onChange: (e: any) => setCommencementdate(e.target.value),
-                // },
+               
                 {
                     label: `${t('Eligible40')}`,
                     value: fourty || "",

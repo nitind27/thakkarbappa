@@ -18,7 +18,10 @@
     "updatepage": "Cluster",
     "enterclustername": "Cluster Name",
     "submit": "Add",
-    "editsubmit": "Edit"
+    "editsubmit": "Edit",
+    "category": "Category",
+    "subcategory": "SubCategory",
+    "yojna": "Yojana Year"
   },
   "Sidebar": {
     "dashboard": "Dashboard",
