@@ -6,7 +6,7 @@ export async function GET() {
         const categories = await prisma.yojanaYear.findMany({
             where: {
                 year_status: 'Y',
-                app: 'Y',
+                app: 'Yes',
             }
         });
 
