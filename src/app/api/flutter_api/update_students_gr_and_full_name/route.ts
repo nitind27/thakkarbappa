@@ -33,7 +33,11 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json(updatedStudent, { status: 201 });
+    return NextResponse.json({
+      error: false,
+      message: 'Record updated successfully',
+
+    }, { status: 200 });
   } catch (error) {
     console.error("Error during insertion:", error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
