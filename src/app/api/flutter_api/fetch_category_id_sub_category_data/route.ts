@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
         }
         // Delete records matching student_id
-        const result = await prisma.subCategory.findFirst({
+        const result = await prisma.subCategory.findMany({
             where: { category_id: Number(category_id), for_app: "Yes" },
 
         });
