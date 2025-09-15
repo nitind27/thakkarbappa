@@ -627,6 +627,7 @@ model tbl_slider {
   slider_name String  @db.VarChar(255)
   slider_img  String  @db.VarChar(255)
   img_type    String  @db.VarChar(50)
+  slider_status   String  @db.VarChar(100)
 }
 
 

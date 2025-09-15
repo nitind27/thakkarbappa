@@ -519,6 +519,7 @@ export type TblSlider = {
   slider_id: number;
   slider_name: string;
   slider_img: string;
+  slider_status: string;
   img_type: string;
 };
 

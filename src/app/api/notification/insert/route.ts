@@ -43,19 +43,18 @@ export async function POST(req: Request) {
     }
 
     // Ensure 'public/uploads' directory exists
-    const uploadDir = '/tmp'; // Change to /tmp directory
-
-    await fs.mkdir(uploadDir, { recursive: true });
-
-    // Generate a unique filename using nanoid
-    const fileExt = photoFile.name.split(".").pop(); // Extract the file extension
-    const uniqueFileName = `${nanoid()}.${fileExt}`;
-    const filePath = path.join(uploadDir, uniqueFileName);
-
-    // Save the file to the local filesystem
-    const buffer = await photoFile.arrayBuffer();
-    await fs.writeFile(filePath, Buffer.from(buffer));
-
+       // Ensure uploads directory exists under project tmp/uploads
+       const uploadDir = path.join(process.cwd(), "tmp/uploads");
+       await fs.mkdir(uploadDir, { recursive: true });
+   
+       // Generate a unique filename using nanoid
+       const fileExt = photoFile.name.split(".").pop(); // Extract the file extension
+       const uniqueFileName = `${nanoid()}.${fileExt}`;
+       const filePath = path.join(uploadDir, uniqueFileName);
+   
+       // Save the file to the local filesystem
+       const buffer = await photoFile.arrayBuffer();
+       await fs.writeFile(filePath, Buffer.from(buffer));
     // Insert into the database using Prisma
     const newDisbursement = await prisma.notification.create({
       data: {
@@ -63,7 +62,7 @@ export async function POST(req: Request) {
         details: details.toString(),
         links: links.toString(),
         new_icon: new_icon.toString(),
-        img: `/uploads/${uniqueFileName}`, // Store the relative path of the uploaded image
+        img: `/api/uploads/${uniqueFileName}`, // Store the served URL of the uploaded image
         header: header.toString(),
         status: "Start",
       },

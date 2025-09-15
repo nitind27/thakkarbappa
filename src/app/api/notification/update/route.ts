@@ -53,23 +53,24 @@ export async function PATCH(req: Request) {
     };
 
     // If a new photo file is uploaded, hanfasdfedle file storage and update the photo path
-    if (photoFile) {
-      // Ensure 'public/uploads' directory exists
-      const uploadDir = path.join(process.cwd(), "public/uploads");
-      await fs.mkdir(uploadDir, { recursive: true });
-
-      // Generate a unique filename using nanoid
-      const fileExt = photoFile.name.split(".").pop(); // Extract the file extension
-      const uniqueFileName = `${nanoid()}.${fileExt}`;
-      const filePath = path.join(uploadDir, uniqueFileName);
-
-      // Save the new file to the local filesystem
-      const buffer = await photoFile.arrayBuffer();
-      await fs.writeFile(filePath, Buffer.from(buffer));
-
-      // Add photo path to the updated data
-      updatedData.img = `/uploads/${uniqueFileName}`;
-    }
+      // If a new photo file is uploaded, handle file storage and update the photo path
+      if (photoFile) {
+        // Ensure uploads directory exists under project tmp/uploads
+        const uploadDir = path.join(process.cwd(), "tmp/uploads");
+        await fs.mkdir(uploadDir, { recursive: true });
+  
+        // Generate a unique filename using nanoid
+        const fileExt = photoFile.name.split(".").pop(); // Extract the file extension
+        const uniqueFileName = `${nanoid()}.${fileExt}`;
+        const filePath = path.join(uploadDir, uniqueFileName);
+  
+        // Save the new file to the local filesystem
+        const buffer = await photoFile.arrayBuffer();
+        await fs.writeFile(filePath, Buffer.from(buffer));
+  
+        // Add photo URL to the updated data
+        updatedData.img = `/api/uploads/${uniqueFileName}`;
+      }
 
     // Update the record in the database using Prisma
     const updatedDisbursement = await prisma.notification.update({

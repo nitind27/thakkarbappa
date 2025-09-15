@@ -29,15 +29,13 @@ export async function POST(req: Request) {
 
         // Ensure 'public/uploads' directory exists
      
-   const uploadDir = path.join(process.cwd(), 'public/uploads');
+        const uploadDir = path.join(process.cwd(), "tmp/uploads");
         await fs.mkdir(uploadDir, { recursive: true });
 
-        // Generate a unique filename using nanoid
-        const fileExt = slider_img.name.split(".").pop(); // Extract the file extension
+        const fileExt = slider_img.name.split(".").pop();
         const uniqueFileName = `${nanoid()}.${fileExt}`;
         const filePath = path.join(uploadDir, uniqueFileName);
 
-        // Save the file to the local filesystem
         const buffer = await slider_img.arrayBuffer();
         await fs.writeFile(filePath, Buffer.from(buffer));
 
@@ -46,8 +44,7 @@ export async function POST(req: Request) {
             data: {
                 slider_name: slider_name,
 
-                slider_img: `/uploads/${uniqueFileName}`, // Store the relative path of the uploaded image
-
+                slider_img: `/api/uploads/${uniqueFileName}`, // Store served URL
                 img_type: img_type,
             },
         });

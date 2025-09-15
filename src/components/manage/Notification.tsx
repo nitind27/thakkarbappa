@@ -33,6 +33,7 @@ const Notification = ({ initialnotificationdata }: Props) => {
 
   const [imagePreview, setImagePreview] = React.useState<string>("");
   const data = notificationData
+    .filter((notificaiton) => notificaiton.status === "Start")
     .map((notificaiton) => ({
       notifi_id: notificaiton.notifi_id,
       notifications_type: notificaiton.notifications_type,
@@ -194,9 +195,8 @@ const Notification = ({ initialnotificationdata }: Props) => {
     setLinks("");
     setNewicon("");
     setHeader("");
-
+    setInsertImage(null);
     setImagePreview("");
-
     setUpdateClusterId(null);
   };
 
@@ -287,8 +287,8 @@ const Notification = ({ initialnotificationdata }: Props) => {
     setLinks(noti.links);
     setNewicon(noti.new_icon);
     setHeader(noti.header);
-    setImagePreview(noti.img);
-
+    const photoSrc = noti.img?.startsWith("/") ? noti.img : `/${noti.img ?? ""}`;
+    setImagePreview(photoSrc);
     handleShowPrint(); // Show the modal for editing
   };
 
