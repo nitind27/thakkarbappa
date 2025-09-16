@@ -43,7 +43,7 @@ export async function POST(req: Request) {
         const newDisbursement = await prisma.tbl_slider.create({
             data: {
                 slider_name: slider_name,
-
+                slider_status: "Start",
                 slider_img: `/api/uploads/${uniqueFileName}`, // Store served URL
                 img_type: img_type,
             },
